@@ -1,0 +1,107 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html ng-app="app">
+<head>
+	<% include ../partials/head %>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script> -->
+	<style>
+		.wellpadding {
+			padding-top: 35px;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		function setTournamentID(t_id){
+			var data = <%-JSON.stringify(tournaments)%>;
+			for (var i = 0; i < data.length; i++){
+				if (data[i].id == t_id){
+					document.getElementById("name").innerHTML = data[i].name;
+					document.getElementById("format").innerHTML = data[i].format;
+					document.getElementById("league").innerHTML = data[i].league;
+					document.getElementById("accommodation").innerHTML = data[i].accommodation;
+					document.getElementById("speakerprice").innerHTML = data[i].speakerprice;
+					document.getElementById("judgeprice").innerHTML = data[i].judgeprice;
+					document.getElementById("link").innerHTML = data[i].link;
+					document.getElementById("comments").innerHTML = data[i].comments;
+				}
+			}
+		}
+	</script>
+
+	<header>
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">
+						<span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
+						BDUDB
+					</a>
+				</div>
+
+				<ul class="nav navbar-nav">
+					<li><a href="/profile">Profile</a></li>
+					<li><a href="/">Meine Turniere</a></li>
+					<li><a href="/">Meine Finanzen</a></li>
+				</ul>
+				
+			</div>
+		</nav>
+	</header>
+
+	<div class="container">
+
+		<div class="page-header text-center">
+			<h1><span class="fa fa-comments"></span> Turniere</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-8">
+
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Ort</th>
+							<th>Zeitraum</th>
+							<th>Spots</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% tournaments.forEach(function (model) { %>
+						<tr>
+							<td><%= model.get('name') %></td>
+							<td><%= model.get('ort') %></td>
+							<td><%= model.get('startdate') %> - <%= model.get('enddate') %></td>
+							<td>Teams: <%= model.get('teamspots') %>, Judges: <%= model.get('judgespots') %></td>
+							<td><button onClick="setTournamentID(<%= model.get('id') %>)" class="btn btn-info">Details</button></td>
+						</tr>
+						<% }) %>
+					</tbody>
+				</table>
+
+			</div>			
+			<div class="col-sm-4 wellpadding">
+				<div class="well">
+					<h4><span class="fa fa-book"></span> Details</h4>
+					<strong>Name: </strong><p style="display:inline" id="name"></p><br>
+					<strong>Format: </strong><p style="display:inline" id="format"></p><br>
+					<strong>Liga: </strong><p style="display:inline" id="league"></p><br>
+					<strong>Unterkunft: </strong><p style="display:inline" id="accommodation"></p><br>
+					<strong>Preis Speaker: </strong><p style="display:inline" id="speakerprice"></p><br>
+					<strong>Preis Judge: </strong><p style="display:inline" id="judgeprice"></p><br>
+					<strong>Link: </strong><p style="display:inline" id="link"></p><br>
+					<strong>Comments: </strong><p style="display:inline" id="comments"></p><br>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<footer>
+		<% include ../partials/footer %>
+	</footer>
+</body>
+
+</html>

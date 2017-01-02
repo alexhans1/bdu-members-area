@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
-
-// set up DB conn
-var DBName = 'BDUDBdev';
-//create mysql connection
-var conn = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: DBName
+var _ = require('lodash');
+var knex = require('knex')({
+	client: 'mysql',
+	connection: {
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'BDUDBdev',
+		charset: 'utf8'
+	}
 });
+var Bookshelf = require('bookshelf')(knex);
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -28,139 +29,146 @@ function isAuthenticated (req, res, next) {
 
 //Register the authentication middleware
 //for all URI with /index/posts use the isAuthenticated function
-router.use('/posts', isAuthenticated);
+router.use('/', isAuthenticated);
 
-//api for all posts
-router.route('/posts')
-	
-	//create a new post
-	.post(function(req, res){
-		var name = req.body.name;
-		var ort = req.body.ort;
-		var startdate = req.body.startdate;
-		var enddate = req.body.enddate;
-		var deadline = req.body.deadline;
-		var format = req.body.format;
-		var league = req.body.league;
-		var accommodation = req.body.accommodation;
-		var speakerprice = req.body.speakerprice;
-		var judgeprice = req.body.judgeprice;
-		var rankingvalue = req.body.rankingvalue;
-		var link = req.body.link;
-		var teamspots = req.body.teamspots;
-		var judgespots = req.body.judgespots;
-		var comments = req.body.comments;
+// Post model
+var Tournament = Bookshelf.Model.extend({
+	tableName: 'tournaments'
+});
 
-		var createTournamentQuery = "INSERT INTO tournaments (id, name, ort, startdate, enddate, deadline, format, league, accommodation, speakerprice, judgeprice, rankingvalue, link, teamspots, judgespots, comments) " + 
-									"VALUES (NULL, '" + name + "', '" + ort + "', '" + startdate + "', '" + enddate + "', '" + deadline + 
-									"', '" + format + "', '" + league + "', '" + accommodation + "', '" + speakerprice + "', '" + judgeprice + 
-									"', '" + rankingvalue + "', '" + link + "', '" + teamspots + "', '" + judgespots + "', '" + comments + "')";
-		console.info('createTournamentQuery: ' + createTournamentQuery);
+var Tournaments = Bookshelf.Collection.extend({
+	model: Tournament
+});
 
-		conn.query(createTournamentQuery, function(err,rows){
-			if (err){
-				console.error('Error in the createTournamentQuery');
-				return res.send(err);
-			}
-	        // all is well, return created tournament
-	        console.log('Create tournament was successful');
-	        return res.json(rows);	
+router.route('/')
+	// fetch all tournaments
+	.get(function (req, res) {
+		Tournaments.forge()
+		.fetch()
+		.then(function (collection) {
+			console.log('Getting all tournaments successful');
+			res.render('pages/tournaments.ejs', { tournaments: collection });
+		})
+		.catch(function (err) {
+			console.error('Error while getting all tournaments. Error message:\n' + err);
 		});
 	})
 
-	.get(function(req, res){
-
-		var getAllTournamentsQuery = "SELECT * FROM tournaments";
-		console.info('getAllTournamentsQuery: ' + getAllTournamentsQuery);
-
-		conn.query(getAllTournamentsQuery, function(err,rows){
-			if (err){
-				console.error('Error in the getAllTournamentsQuery');
-				return res.send(err);
-			}
-	        // all is well, return tournaments
-	        console.log('Getting all tournaments successful');
-	        return res.json(rows);	
-		});
+	// create a tournament
+	.post(function (req, res) {
+		//Check if session user is authorized
+		if(req.user.role == 1){
+			Tournament.forge({
+				name: req.body.name,
+				ort: req.body.ort,
+				startdate: req.body.startdate,
+				enddate: req.body.enddate,
+				deadline: req.body.deadline,
+				format: req.body.format,
+				league: req.body.league,
+				accommodation: req.body.accommodation,
+				speakerprice: req.body.speakerprice,
+				judgeprice: req.body.judgeprice,
+				rankingvalue: req.body.rankingvalue,
+				link: req.body.link,
+				teamspots: req.body.teamspots,
+				judgespots: req.body.judgespots,
+				comments: req.body.comments
+			})
+			.save()
+			.then(function (tournament) {
+				res.json({error: false, data: {id: tournament.get('id')}});
+			})
+			.catch(function (err) {
+				res.status(500).json({error: true, data: {message: err.message}});
+			});
+		} else {
+			console.log('User is not authorized to create a new tournament');
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	});
 
-//api for a specfic post
-router.route('/posts/:id')
-	
-	//create
-	.put(function(req,res){
-		var name = req.body.name;
-		var ort = req.body.ort;
-		var startdate = req.body.startdate;
-		var enddate = req.body.enddate;
-		var deadline = req.body.deadline;
-		var format = req.body.format;
-		var league = req.body.league;
-		var accommodation = req.body.accommodation;
-		var speakerprice = req.body.speakerprice;
-		var judgeprice = req.body.judgeprice;
-		var rankingvalue = req.body.rankingvalue;
-		var link = req.body.link;
-		var teamspots = req.body.teamspots;
-		var judgespots = req.body.judgespots;
-		var comments = req.body.comments;
-
-		var updateTournamentQuery = 	"UPDATE tournaments SET name = '" + name + 
-										"', ort = '" + ort + 
-										"', startdate = '" + startdate + 
-										"', enddate = '" + enddate + 
-										"', deadline = '" + deadline + 
-										"', format = '" + format + 
-										"', league = '" + league + 
-										"', accommodation = '" + accommodation + 
-										"', speakerprice = '" + speakerprice + 
-										"', judgeprice = '" + judgeprice + 
-										"', rankingvalue = '" + rankingvalue + 
-										"', link = '" + link + 
-										"', teamspots = '" + teamspots + 
-										"', judgespots = '" + judgespots + 
-										"', comments	= '" + comments + "' WHERE tournaments.id = " + req.params.id;
-		console.info('updateTournamentQuery: ' + updateTournamentQuery);
-
-		conn.query(updateTournamentQuery, function(err,rows){
-			if (err){
-				console.error('Error in the updateTournamentQuery');
-				return res.send(err);
+router.route('/:id')
+	// fetch tournament
+	.get(function (req, res) {
+		Tournament.forge({id: req.params.id})
+		.fetch()
+		.then(function (tournament) {
+			if (!tournament) {
+				console.error('The tournament with the ID "' + req.params.id + '" is not in the database.');
+				res.status(404).json({error: true, data: {}, message: 'The tournament with the ID "' + req.params.id + '" is not in the database.'});
 			}
-	        // all is well
-	        console.log('Update tournament successful');
-	        return res.json(rows);	
+			else {
+				console.log('Getting specfic tournament successful');
+				res.json({error: false, data: tournament.toJSON()});
+			}
+		})
+		.catch(function (err) {
+			console.error('Error while getting specfic tournament. Error message:\n' + err);
+			res.status(500).json({error: true, data: {message: err.message}});
 		});
 	})
 
-	.get(function(req,res){
-		var getSingleTournamentQuery = "SELECT * FROM tournaments WHERE tournaments.id = " + req.params.id;
-		console.info('getSingleTournamentQuery: ' + getSingleTournamentQuery);
-
-		conn.query(getSingleTournamentQuery, function(err,rows){
-			if (err){
-				console.error('Error in the getSingleTournamentQuery');
-				return res.send(err);
-			}
-	        // all is well, return tournament
-	        console.log('Getting single tournament was successful');
-	        return res.json(rows);	
-		});
+	// update tournament details
+	.put(function (req, res) {
+		//Check if session user is authorized
+		if(req.user.role == 1){
+			Tournament.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (tournament) {
+				tournament.save({
+					name: req.body.name,
+					ort: req.body.ort,
+					startdate: req.body.startdate,
+					enddate: req.body.enddate,
+					deadline: req.body.deadline,
+					format: req.body.format,
+					league: req.body.league,
+					accommodation: req.body.accommodation,
+					speakerprice: req.body.speakerprice,
+					judgeprice: req.body.judgeprice,
+					rankingvalue: req.body.rankingvalue,
+					link: req.body.link,
+					teamspots: req.body.teamspots,
+					judgespots: req.body.judgespots,
+					comments: req.body.comments
+				})
+			})
+			.then(function () {
+				console.log('Updating tournament successful');
+				res.json({error: false, data: {message: 'Tournament details updated'}});
+			})
+			.catch(function (err) {
+				console.error('Error while updating tournament.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		} else {
+			console.log('User is not authorized to update tournament');
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	})
 
-	.delete(function(req,res){
-		var deleteTournamentQuery = "DELETE FROM tournaments WHERE tournaments.id = " + req.params.id;
-		console.info('deleteTournamentQuery: ' + deleteTournamentQuery);
-
-		conn.query(deleteTournamentQuery, function(err,rows){
-			if (err){
-				console.error('Error in the deleteTournamentQuery');
-				return res.send(err);
-			}
-	        // all is well, return success message
-	        console.log('Delete tournament successful');
-	        return res.send({state: 'success', message: "Delete tournament successful"});	
-		});	
+	// delete a tournament
+	.delete(function (req, res) {
+		//Check if session user is authorized
+		if(req.user.role == 1){
+			Tournament.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (tournament) {
+				tournament.destroy()
+			})
+			.then(function () {
+				console.log('Deleting tournament successful');
+				res.json({error: false, data: {message: 'Tournament successfully deleted'}});
+			})
+			.catch(function (err) {
+				console.error('Error while deleting tournament.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		} else {
+			console.log('User is not authorized to delete tournament');
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	});
 
 module.exports = router;

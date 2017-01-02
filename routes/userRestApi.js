@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
-
-// set up DB conn
-var DBName = 'BDUDBdev';
-//create mysql connection
-var conn = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: DBName
+var _ = require('lodash');
+var knex = require('knex')({
+	client: 'mysql',
+	connection: {
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'BDUDBdev',
+		charset: 'utf8'
+	}
 });
+var Bookshelf = require('bookshelf')(knex);
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -27,98 +28,117 @@ function isAuthenticated (req, res, next) {
 };
 
 //Register the authentication middleware
-//for all URI with /index/posts use the isAuthenticated function
-router.use('/posts', isAuthenticated);
+//for all URI with /index/users use the isAuthenticated function
+router.use('/', isAuthenticated);
 
-//api for all posts
-router.route('/posts')
+// User model
+var User = Bookshelf.Model.extend({
+	tableName: 'users'
+});
 
-	//no create user function here as we do that already in signup during authentication
+var Users = Bookshelf.Collection.extend({
+	model: User
+});
 
-	.get(function(req, res){
+router.route('/')
+	// fetch all users
+	.get(function (req, res) {
+		//Check if session user is authorized
+		if(req.user.role == 1){
+			Users.forge()
+			.fetch()
+			.then(function (collection) {
+				console.log('Getting all users successful');
+				res.json({error: false, data: collection.toJSON()});
+			})
+			.catch(function (err) {
+				console.error('Error while getting all users. Error message:\n' + err);
+				res.status(500).json({error: true, data: {message: err.message}});
+			});
+		} else {
+			console.log('User is not authorized to get all user information');
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
+	})
 
-		var getAllUsersQuery = 	"SELECT * FROM users";
-		console.info('getAllUsersQuery: ' + getAllUsersQuery);
+  // no create user function here as we do that in the passport-init.js.js
 
-		conn.query(getAllUsersQuery, function(err,rows){
-			if (err){
-				console.error('Error in the getAllUsersQuery');
-				return res.send(err);
-			}
-	        // all is well, return successful user
-	        console.log('Getting all users successful');
-	        return res.json(rows);	
-		});
-	});
-
-//api for a specfic post
-router.route('/posts/:id')
-	
-	//create
-	.put(function(req,res){
-		var newUserName = req.body.name;
-		var newUserVorname = req.body.vorname;
-		var newUserEmail = req.body.email;
-		var newUserGender = req.body.gender;
-		//update password will be handled in seperate route
-
-		var updateUserQuery = 	"UPDATE users SET email = '" + newUserEmail + 
-										"', name = '" + newUserName + 
-										"', vorname	= '" + newUserVorname + 
-										"', gender = '" + newUserGender + "' WHERE users.id = " + req.params.id;
-		console.info('updateUserQuery: ' + updateUserQuery);
-
-		conn.query(updateUserQuery, function(err){
-			if (err){
-				console.error('Error in the updateUserQuery');
-				return res.send(err);
-			}
-	        // all is well
-	        console.log('Update user successful');
-
-	        //get updated user and return it
-	        var getUpdatedUserQuery = "SELECT * FROM users WHERE users.id = " + req.params.id;
-
-			conn.query(getUpdatedUserQuery, function(err,rows){
-				if (err){
-					console.error('Error in the getUpdatedUserQuery');
-					return res.send(err);
+  router.route('/:id')
+	// fetch user
+	.get(function (req, res) {
+		//check if session user is the requested user
+		if(req.params.id == req.user.id || req.user.role == 1){
+			User.forge({id: req.params.id})
+			.fetch()
+			.then(function (user) {
+				if (!user) {
+					console.error('The user with the ID "' + req.params.id + '" is not in the database.');
+					res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id + '" is not in the database.'});
 				}
-		        // all is well, return successful user
-		        console.log('Return updated user');
-		        return res.json(rows);		
-			});	
-		});
+				else {
+					console.log('Getting specfic user successful');
+					res.json({error: false, data: user.toJSON()});
+				}
+			})
+			.catch(function (err) {
+				console.error('Error while getting specfic user. Error message:\n' + err);
+				res.status(500).json({error: true, data: {message: err.message}});
+			});
+		} else {
+			console.log('User is not authorized to get user information of user with the ID: ' + req.params.id);
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	})
 
-	.get(function(req,res){
-		var getSingleUserQuery = "SELECT * FROM users WHERE users.id = " + req.params.id;
-		console.info('getSingleUserQuery: ' + getSingleUserQuery);
-
-		conn.query(getSingleUserQuery, function(err,rows){
-			if (err){
-				console.error('Error in the getSingleUserQuery');
-				return res.send(err);
-			}
-	        // all is well, return successful user
-	        console.log('Getting single user was successful');
-	        return res.json(rows);	
-		});
+	// update user details
+	.put(function (req, res) {
+		//check if session user is the requested user
+		if(req.params.id == req.user.id || req.user.role == 1){
+			User.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (user) {
+				user.save({
+					email: req.body.email,
+					name: req.body.name,
+					vorname: req.body.vorname,
+					gender: req.body.gender
+				})
+			})
+			.then(function () {
+				console.log('Updating user successful');
+				res.json({error: false, data: {message: 'User details updated'}});
+			})
+			.catch(function (err) {
+				console.error('Error while updating user.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		} else {
+			console.log('User is not authorized to update user information of user with the ID: ' + req.params.id);
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	})
 
-	.delete(function(req,res){
-		var deleteUserQuery = "DELETE FROM users WHERE users.id = " + req.params.id;
-		console.info('deleteUserQuery: ' + deleteUserQuery);
-
-		conn.query(deleteUserQuery, function(err,rows){
-			if (err){
-				console.error('Error in the deleteUserQuery');
-				return res.send(err);
-			}
-	        // all is well, return success message
-	        console.log('Delete user successful');
-	        return res.send({state: 'success', message: "Delete user successful"});	
-		});
+	// delete a user
+	.delete(function (req, res) {
+		//check if session user is the requested user
+		if(req.params.id == req.user.id || req.user.role == 1){
+			User.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (user) {
+				user.destroy()
+			})
+			.then(function () {
+				console.log('Deleting user successful');
+				res.json({error: false, data: {message: 'User successfully deleted'}});
+			})
+			.catch(function (err) {
+				console.error('Error while deleting user.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			});
+		} else {
+			console.log('User is not authorized to delete user with the ID: ' + req.params.id);
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}			
 	});
 
 module.exports = router;

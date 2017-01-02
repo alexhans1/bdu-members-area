@@ -1,26 +1,30 @@
 var express = require('express');
 var router = express.Router();
+var _ = require('lodash');
+var knex = require('knex')({
+	client: 'mysql',
+	connection: {
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'BDUDBdev',
+		charset: 'utf8'
+	}
+});
+var Bookshelf = require('bookshelf')(knex);
 
 module.exports = function(passport){
 
 	//sends successful login state back to angular
 	router.get('/successLogin', function(req, res){
-		res.send(req.flash());
+		res.send(req.flash('loginMessage'));
 		// res.send({state: 'success', user: req.user ? req.user : null, message: "Login successful"});
 	});
 
-	//sends successful login state back to angular
+	//placeholder for insert user date route
 	router.get('/insertUserData', function(req, res) {
 		res.send({state: 'success', user: req.user ? req.user : null, message: "signup successful"});
 	})
-
-	//sends successful login state back to angular
-	router.get('/successSignup', function(req, res){
-		// res.send(req.flash());
-		// res.send({state: 'success', user: req.user ? req.user : null, message: "Login successful"});
-
-		res.redirect('/auth/insertUserData')
-	});
 
 	//sends failure login state back to angular
 	router.get('/failure', function(req, res){
@@ -31,13 +35,15 @@ module.exports = function(passport){
 	//log in
 	router.post('/login', passport.authenticate('login', {
 		successRedirect: '/auth/successLogin',
-		failureRedirect: '/auth/failure'
+		failureRedirect: '/',
+		failureFlash : true // allow flash messages
 	}));
 
 	//sign up
 	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/auth/insertUserData',
-		failureRedirect: '/auth/failure'
+		successRedirect: '/profile',
+		failureRedirect: '/signup',
+		failureFlash : true // allow flash messages
 	}));
 
 	//log out

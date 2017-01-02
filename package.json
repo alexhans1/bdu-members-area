@@ -1,6 +1,7 @@
 {
   "name": "nodesql",
   "version": "0.0.0",
+  "author": "Alexander Hans",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
