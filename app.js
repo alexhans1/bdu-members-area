@@ -14,9 +14,9 @@ var passport = require('passport'); //Passport is the library we will use to han
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables
-var index = require('./routes/index.js');
-var restApi = require('./routes/restApi.js');
-var authenticate = require('./routes/authenticate.js')(passport);
+var index = require('./routes/index');
+var restApi = require('./routes/restAPI');
+var authenticate = require('./routes/authenticate')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
