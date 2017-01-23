@@ -10,7 +10,7 @@ require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds
 var flash = require('req-flash'); //lets me parse individual messages to requests
 var session = require('express-session'); //browser sessions for authentification
 var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
-var mysql = require('mysql');
+// var mysql = require('mysql');
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables
