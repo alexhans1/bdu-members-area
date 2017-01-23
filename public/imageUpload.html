@@ -1,0 +1,33 @@
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="intro-text">
+					<span class="name"><span class="fa fa-picture-o"></span> Load Profile Pic</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="col-sm-6 col-sm-offset-3 file-upload">
+	<form name="myForm">
+		<h2>Crop Image and Upload</h2>
+		<button ng-hide="submit" class="btn btn-default" ngf-select ng-model="picFile" accept="image/*" ng-click="submit = !submit">Select Picture</button>
+		<div ng-show="submit">
+			<a href="#/profile"><button class="btn btn-danger">Cancel</button></a>
+			<button class="btn btn-success" ng-click="upload(croppedDataUrl, picFile.name)">Submit</button>
+		</div>
+		<div ngf-drop ng-model="picFile" ngf-pattern="image/*" class="cropArea">
+			<img-crop image="picFile  | ngfDataUrl" result-image="croppedDataUrl" ng-init="croppedDataUrl=''"></img-crop>
+		</div>
+		<div>
+			<img ng-src="{{croppedDataUrl}}" />
+		</div>
+
+		<span class="progress" ng-show="progress >= 0">
+			<div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+		</span>
+		<span ng-show="result">Upload Successful</span>
+		<span class="err" ng-show="errorMsg">{{errorMsg}}</span>
+	</form>
+</div>

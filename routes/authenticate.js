@@ -1,17 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
-var knex = require('knex')({
-	client: 'mysql',
-	connection: {
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'BDUDBdev',
-		charset: 'utf8'
-	}
-});
-var Bookshelf = require('bookshelf')(knex);
 
 module.exports = function(passport){
 

@@ -12,28 +12,10 @@ var session = require('express-session'); //browser sessions for authentificatio
 var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
 var mysql = require('mysql');
 
-var DBName = 'BDUDBdev';
-//create mysql connection
-var conn = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: DBName
-});
-
-conn.connect(function (err) {
-	if (err) {
-		console.log('Error while connecting to mySQL DB');
-	} else {
-		console.log('Successfully connected to mySQL ' + DBName + ' DB');
-	}
-});
-
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables
-// var routes = require('./routes/routes')(app, passport);
-var tournamentRest = require('./routes/tournamentRestApi');
-var userRest = require('./routes/userRestApi');
+var index = require('./routes/index');
+var restApi = require('./routes/restApi');
 var authenticate = require('./routes/authenticate')(passport);
 
 // view engine setup
@@ -58,6 +40,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/static', express.static('public'));
 
 //use passport & sessions
 app.use(passport.initialize());
@@ -68,10 +51,9 @@ var initPassport = require('./config/passport-init');
 initPassport(passport);
 
 //setup routes URIs
+app.use('/', index);
 app.use('/auth', authenticate);
-app.use('/tournament', tournamentRest);
-app.use('/user', userRest)
-// app.use('/', routes);
+app.use('/app', restApi);
 require('./routes/routes.js')(app, passport);
 
 // catch 404 and forward to error handler

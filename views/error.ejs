@@ -1,3 +1,26 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html>
+<head>
+	<% include ./partials/head %>
+</head>
+<body>
+	<% include ./partials/header %>
+	
+	<div class="container">
+		<h1><%= message %></h1>
+		<% if(error.length > 0) { %>
+			<h2><%= error.status %></h2>
+			<pre><%= error.stack %></pre>
+		<% }%>
+	</div>
+	<div class="container">
+		<h2>There was an error. Sorry! You can read this instead:</h2>
+		<iframe src="http://docs.google.com/gview?url=https://www.amherst.edu/system/files/media/1650/butler_performative_acts.pdf&embedded=true" style="width:70vw; height:60vw;" frameborder="0"></iframe>
+	</div>
+	<footer>
+		<% include ./partials/footer %>
+	</footer>
+</body>
+</html>
+
+	

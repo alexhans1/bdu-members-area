@@ -1,8 +1,304 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	/*padding: 50px;*/
+	font: 14px "Montserrat", Helvetica, Arial, sans-serif;
+	overflow-x: hidden;
 }
 
 a {
-  color: #00B7FF;
+	color: #00B7FF;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+header {
+	text-align: center;
+	background: #FFF;
+}
+header .container {
+	padding-top: 100px;
+	padding-bottom: 50px;
+}
+header img {
+	display: block;
+	margin: 0 auto 20px;
+}
+header .intro-text .name {
+	display: block;
+	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	font-weight: 700;
+	color: #000;
+	font-size: 2em;
+}
+header .intro-text .skills {
+	font-size: 1.25em;
+	font-weight: 300;
+}
+@media (min-width: 768px) {
+	header .container {
+		padding-top: 80px;
+		padding-bottom: 50px;
+	}
+	header .intro-text .name {
+		font-size: 4.75em;
+	}
+	header .intro-text .skills {
+		font-size: 1.75em;
+	}
+}
+
+footer {
+	margin-bottom: 70px;
+}
+
+section {
+  padding: 30px 0;
+}
+section h2 {
+  margin: 0;
+  font-size: 3em;
+}
+
+hr.star-light, hr.star-user, hr.star-comments {
+	padding: 0;
+	border: none;
+	border-top: solid 5px;
+	text-align: center;
+	max-width: 250px;
+	margin: 25px auto 30px;
+}
+hr.star-light:after {
+	content: "\f111";
+	font-family: FontAwesome;
+	display: inline-block;
+	position: relative;
+	top: -0.8em;
+	font-size: 2em;
+	padding: 0 0.25em;
+}
+hr.star-user:after {
+	content: "\f007";
+	font-family: FontAwesome;
+	display: inline-block;
+	position: relative;
+	top: -0.8em;
+	font-size: 2em;
+	padding: 0 0.25em;
+}
+hr.star-comments:after {
+	content: "\f086";
+	font-family: FontAwesome;
+	display: inline-block;
+	position: relative;
+	top: -0.8em;
+	font-size: 2em;
+	padding: 0 0.25em;
+}
+hr.star-light, hr.star-user, hr.star-comments {
+	border-color: black;
+}
+hr.star-light:after, hr.star-comments:after {
+	background-color: #FFF;
+	color: black;
+}
+hr.star-user:after {
+	background-color: #F4FCFB;
+	color: black;
+}
+
+#tournament-info {
+	text-align: center;
+	background: #FFF;
+}
+#tournament-info .container {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#user-info {
+	text-align: center;
+	background: #F4FCFB;
+}
+#user-info .container {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#user-info .user-info-table {
+	font-size: 1.25em;
+	font-weight: 300;
+}
+
+.my-tournaments-table {
+	font-size: 1.25em;
+	font-weight: 300;
+}
+
+.footer {
+	height: 70px;
+}
+
+.nav-img {
+	height: 50px;
+	padding-left: 50px;
+}
+
+.bottom-content {
+	position: absolute;
+	bottom: 0;
+}
+
+.image-cropper {
+	position: relative;
+	overflow: hidden;
+	width: 250px;
+	height: 250px;
+	margin: 0 auto;
+	border:4px solid gainsboro;
+	border-radius: 50%;
+}
+
+.image-cropper label{
+}
+
+.image-cropper .img-hor {
+	position: absolute;
+	height: 100%;
+	width: auto;
+	cursor: pointer;
+}
+
+.image-cropper .img-vert {
+	position: absolute;
+	height: auto;
+	width: 100%;
+	cursor: pointer;
+}
+
+.wellpadding {
+	padding-top: 35px;
+	border:0px;
+	border-color: #74907C;
+	border-style: solid;
+	border-radius: 1%;
+}
+.details td {
+	text-align: right;
+}
+
+.btnpadding {
+	padding-top: 35px;
+	padding-bottom: 35px;
+}
+.btnpadding_top {			
+	padding-top: 15px;
+}
+.btnpadding_top2 {			
+	padding-top: 85px;
+}
+
+.form-control {
+	height: 30px;
+}
+
+.reg {
+	position: absolute;
+	right: 10px;
+	top: 0px;
+	padding: 10px;
+}
+
+.edit {
+	position: absolute;
+	right: 10px;
+	top: 80px;
+	padding: 10px;
+}
+
+.delete {
+	position: absolute;
+	right: 10px;
+	top: 120px;
+	padding: 10px;
+}
+
+.image-upload img
+{
+	width: 80px;
+	cursor: pointer;
+}
+
+.animate {
+    -webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+/*++++++++++++++++++++++++++*/
+/*+++BOOTSTRAP NAVBAR+++++++*/
+/*++++++++++++++++++++++++++*/
+
+@media(max-width:992px) {
+    #nav1.navbar .navbar-brand {
+        float:none;
+        display: block;
+    }
+    #nav1.navbar .navbar-nav>.nav-item {
+        float: none;
+        margin-left: .1rem;
+    }
+    #nav1.navbar .navbar-nav {
+        float:none !important;
+    }
+}
+
+/*+++++++++++++++++++++++++++*/
+/*ng file upload and img crop*/
+/*+++++++++++++++++++++++++++*/
+
+/* line 1, ../../source/scss/ng-img-crop.scss */
+img-crop {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: relative;
+	overflow: hidden;
+}
+/* line 7, ../../source/scss/ng-img-crop.scss */
+img-crop canvas {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	outline: none;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	/* mobile webkit */
+}
+.cropArea {
+	background: #E4E4E4;
+	overflow: hidden;
+	width:500px;
+	height:350px;
+}
+form .progress {
+	line-height: 15px;
+}
+.progress {
+	display: inline-block;
+	width: 100px;
+	border: 3px groove #CCC;
+}
+.progress div {
+	font-size: smaller;
+	background: orange;
+	width: 0;
+}
+
+.file-upload .btn {
+	margin: 10px;
 }

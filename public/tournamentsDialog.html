@@ -1,0 +1,32 @@
+<nav>
+	<div>
+		<h3><span class="fa fa-comments"></span> Anmeldung</h3>
+		<span flex></span>
+	</div>
+</nav>
+
+<div class="ngdialog-message">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				<label>Rolle</label>
+				<select name="role" class="form-control" ng-options="role as role.label for role in roles track by role.id" ng-model="selected" ng-change="setRole()"></select>
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-show="isSpeaker">
+		<div class="col-md-12">
+			<div class="form-group">
+				<label>Teamname</label><br><p>Don't have a teampartner yet? Just leave blank.</p>
+				<input type="text" ng-model="team" class="form-control" name="team" list="teamnames">
+				<datalist id="teamnames">
+					<option ng-repeat="t in teams" value="{{t}}"></option>
+				</datalist>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ngdialog-buttons">
+	<button class="btn btn-success pull-right" ng-click="reg()">Anmelden</button>
+</div>

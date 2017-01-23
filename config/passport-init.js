@@ -2,10 +2,10 @@ var _ = require('lodash');
 var knex = require('knex')({
 	client: 'mysql',
 	connection: {
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'BDUDBdev',
+		host: 'db.hosting-agency.de',
+		user: 'dbuser30796',
+		password: 'berlindebating',
+		database: 'db6107x1',
 		charset: 'utf8'
 	}
 });
@@ -55,20 +55,22 @@ module.exports = function(passport){
 			.fetch()
 			.then(function (user) {
 				if(!user){
-					return done(null, false, req.flash('loginMessage', 'No user found with that email: ' + userEmail + '.')); // req.flash is the way to set flashdata using connect-flash
+					console.error('No user found with that email: ' + userEmail + '.');
+					return done(null, false, req.flash('authMsg', 'No user found with that email: ' + userEmail + '.')); // req.flash is the way to set flashdata using connect-flash
 				}
 				if(!isValidPassword(password, user.get('password'))){
-					return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
+					console.error('Oops! Wrong password.');
+					return done(null, false, req.flash('authMsg', 'Oops! Wrong password.'));
 				}
 
 				// all is well, return successful user
 				console.log('Login successful');
 				console.info(user.toJSON());
-				return done(null, user, req.flash('loginMessage', 'Login successful. email: ' + userEmail));
+				return done(null, user, req.flash('authMsg', 'Login successful. email: ' + userEmail));
 			})
 			.catch(function (err) {
 				console.error('Error during login. Error message:' + err)
-				return done(null, false, req.flash('loginMessage', 'Error during login'));
+				return done(null, false, req.flash('authMsg', 'Error during login'));
 			});
 		}
 	));
@@ -92,7 +94,7 @@ module.exports = function(passport){
 			.then(function (user) {
 				if(user){
 					console.info('User already exists:' + user.toJSON());
-					return done(null, false, req.flash('signupMessage', 'A User with that email already exists.'));
+					return done(null, false, req.flash('authMsg', 'A User with that email already exists.'));
 				}
 				else {
 					// if there is no user with that email
@@ -104,17 +106,17 @@ module.exports = function(passport){
 					.save()
 					.then(function (user) {
 						console.log('Signup user successful');
-						return done(null, user, req.flash('signupMessage', 'Signup successful.' + user.toJSON));
+						return done(null, user, req.flash('authMsg', 'Signup successful.' + user.toJSON));
 					})
 					.catch(function (err) {
 						console.error('Error during saving new user. Error message:' + err)
-						return done(null, false, req.flash('signupMessage', 'Error during signup.'));
+						return done(null, false, req.flash('authMsg', 'Error during signup.'));
 					});
 				}
 			})
 			.catch(function (err) {
 				console.error('Error during fetching user during signup. Error message:' + err)
-				return done(null, false, req.flash('signupMessage', 'Error during signup.'));
+				return done(null, false, req.flash('authMsg', 'Error during signup.'));
 			});
 		}
 	));

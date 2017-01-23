@@ -1,0 +1,195 @@
+<!-- views/login.ejs -->
+<!doctype html>
+<html>
+<head>
+	<% include ../partials/head %>
+	<link href="http://localhost:3000/static/timepicker/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="http://localhost:3000/static/timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+</head>
+<body ng-app="PrflApp">
+
+	<% include ../partials/header %>
+	
+	<div class="container">
+
+		<div class="col-sm-10 col-sm-offset-1">
+
+			<h1><span class="fa fa-comments"></span> Edit Tournament</h1>
+
+			<!-- show any messages that come back with update -->
+			<% if (message.length > 0) { %>
+				<% if (message == 'User details updated') { %>
+					<div class="alert alert-success"><%= message %></div>
+				<%} else { %>
+					<div class="alert alert-danger"><%= message %></div>
+				<% } %>
+			<% } %>
+
+			<!-- UPDATE TOURNAMENT INFO FORM -->
+			<div class="well clearfix">
+
+				<form action="/app/tournament/<%= tournament.id %>" method="post">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Name</label>
+								<input type="text" class="form-control" name="name" value="<%= tournament.name %>" required="true">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">						
+								<div class="form-group">
+									<label>Ort</label>
+									<input type="text" class="form-control" name="ort" value="<%= tournament.ort %>">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">						
+								<div class="form-group">
+									<label>Unterkunft</label>
+									<input type="text" class="form-control" name="accommodation" value="<%= tournament.accommodation %>">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Startdatum</label>
+								<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+									<input type="text" class="form-control" size="16" readonly >
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+								<input type="hidden" id="dtp_input2" name="startdate" value="<%= tournament.startdate %>">
+							</div>
+						</div>
+						<div class="col-md-4">						
+							<div class="form-group">
+								<label>Enddatum</label>
+								<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
+									<input class="form-control" size="16" type="text" readonly >
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+								<input type="hidden" id="dtp_input3" name="enddate" value="<%= tournament.enddate %>"/>
+							</div>
+						</div>
+						<div class="col-md-4">	
+							<div class="form-group">
+								<label>Deadline zur Anmeldung</label>
+								<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
+									<input class="form-control" size="16" type="text" readonly >
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+								<input type="hidden" id="dtp_input4" name="deadline" value="<%= tournament.deadline %>">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Format</label>
+								<input type="text" class="form-control" name="format" value="<%= tournament.format %>">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Liga</label>
+								<input type="text" class="form-control" name="league" value="<%= tournament.league %>">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Sprache</label>
+								<select class="form-control" name="language" value="<%= tournament.language %>">
+									<option value=""></option>
+									<option value="de">deutsch</option>
+									<option value="en">englisch</option>
+									<option value="other">other</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">						
+								<div class="form-group">
+									<label>Wert im BDU Ranking</label>
+									<input type="text" class="form-control" name="rankingvalue" value="<%= tournament.rankingvalue %>">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Preis Speaker</label>
+								<input type="number" class="form-control" name="speakerprice" value="<%= tournament.speakerprice %>">
+							</div>
+						</div>
+						<div class="col-md-3">						
+							<div class="form-group">
+								<label>Preis Judge</label>
+								<input type="number" class="form-control" name="judgeprice" value="<%= tournament.judgeprice %>">
+							</div>
+						</div>
+						<div class="col-md-3">						
+							<div class="form-group">
+								<label>Teamspots</label>
+								<input type="number" class="form-control" name="teamspots" value="<%= tournament.teamspots %>">
+							</div>
+						</div>
+						<div class="col-md-3">						
+							<div class="form-group">
+								<label>Judgespots</label>
+								<input type="number" class="form-control" name="judgespots" value="<%= tournament.judgespots %>">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Link</label>
+								<input type="text" class="form-control" name="link" value="<%= tournament.link %>">
+							</div>
+						</div>
+						<div class="col-md-8">						
+							<div class="form-group">
+								<label>Comments</label>
+								<input type="text" class="form-control" name="comments" value="<%= tournament.comments %>">
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-lg btn-success pull-right">Submit</button>
+				</form>
+
+			</div>
+			<hr>
+
+		</div>
+
+	</div>
+	<footer>
+		<% include ../partials/footer %>
+	</footer>
+
+	<!-- for bootstrap timepicker -->
+	<script type="text/javascript" src="http://localhost:3000/static/timepicker/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="http://localhost:3000/static/timepicker/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://localhost:3000/static/timepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="http://localhost:3000/static/timepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+	<script type="text/javascript">
+		$('.form_date').datetimepicker({
+			weekStart: 1,
+			startView: 2,
+			minView: 2,
+			todayBtn: 1,
+			forceParse: 0,
+			viewDate:'23-04-2015'
+		});
+		
+		// var plus14days = "2017/03/12";
+		// $(".form_date").datetimepicker("setValue", plus14days);
+		// $(".form_date").datetimepicker('update');
+	</script>
+</body>
+</html>
