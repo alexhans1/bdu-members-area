@@ -3,11 +3,13 @@ var app = angular.module('bduApp', [
 	'ngResource', 
 	'ngDialog', 
 	'ngFileUpload', 
-	'ngImgCrop'
-])
+	'ngImgCrop',
+	'chrome-autofill-fix'
+	])
 .run(function($http, $rootScope, $location) {
 	
 	$rootScope.authenticated = false;
+	$rootScope.istVorstand = false;
 	$rootScope.user = null;
 	$rootScope.imgURL = null;
 
@@ -55,6 +57,11 @@ app.config(function($routeProvider){
 	.when('/tournaments', {
 		templateUrl: 'tournaments.html',
 		controller: 'TournamentCtrl'
+	})
+	//the vorstand display
+	.when('/vorstand', {
+		templateUrl: 'vorstand.html',
+		controller: 'VorstandCrtl'
 	})
 	//the tournaments display
 	.when('/editTournament', {
@@ -113,18 +120,24 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
 	}
 });
 
-app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, ngDialog) {
+app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, ngDialog, anchorSmoothScroll) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
 	} else {
 
-		$http.get('/app/tournament')
-		.then(function successCallback(tournaments) {
-			$scope.tournaments = tournaments.data;
-		});
+		//get all Tournaments
+		var getAllTournaments = function () {
+			$http.get('/app/tournament')
+			.then(function successCallback(tournaments) {
+				$scope.tournaments = tournaments.data;
+			});
+		}
 
-		$scope.setTournament = function(id) {
+		getAllTournaments();
+			
+
+		$scope.setTournament = function(id, scroll) {
 			$scope.tournament = _.find($scope.tournaments, {id: id});
 			$scope.showDetails = true;
 			$scope.teams = [];
@@ -138,6 +151,10 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			}, function errorCallback(err) {
 				console.log(err);
 			});
+
+			if(scroll) {
+				anchorSmoothScroll.scrollTo('details');
+			}
 		};
 
 		$scope.roles = [{
@@ -191,12 +208,86 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				confirm(response.data);
 				$scope.closeThisDialog();
 			});
-		}
+		};
+
+		//DELETE TOURNAMENT FUNCTION
+		$scope.delete = function () {
+			$http.delete('/app/tournament/' + $scope.tournament.id)
+			.then(function successCallback(response) {
+				if (!response.error) {
+					$scope.SuccessMessage = response.data.message;
+					//TODO update Tournaments resource
+					//for now:
+					getAllTournaments();
+				} else {
+					$scope.ErrorMessage = response.data.message;
+				}
+			}, function errorCallback(err) {
+				$scope.ErrorMessage = err.data.message;
+			});
+		};
+	}
+});
+
+app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
+
+	if(!$rootScope.authenticated) {
+		$location.path('/');
+	} else {
+
+		//get all Tournaments
+		$http.get('/app/tournament')
+		.then(function successCallback(tournaments) {
+			$scope.tournaments = tournaments.data;
+		});
+
+		$scope.newTournament = {
+			name: '',
+			ort: '',
+			startdate: new Date(),
+			enddate:  new Date(),
+			deadline:  new Date(),
+			format: '',
+			league: '',
+			accommodation: '',
+			speakerprice: '',
+			judgeprice: '',
+			rankingvalue: '',
+			link: '',
+			teamspots: '',
+			judgespots: '',
+			comments: '',
+			language: ''
+		};
+
+		$scope.SuccessMessage = '';
+		$scope.ErrorMessage = '';
+
+		$scope.submit = function () {
+			if ($scope.newTournament.name == '') {
+				$scope.ErrorMessage = 'Du musst mindestens einen Namen eintragen.'
+			} else {
+				$http.post('/app/tournament', $scope.newTournament)
+				.then(function successCallback(response) {
+					if (!response.error) {
+						$scope.SuccessMessage = 'Neues Turnier erstellt.';
+						//TODO update Tournaments resource
+					} else {
+						$scope.ErrorMessage = response.data.message;
+					}
+				}, function errorCallback(err) {
+					confirm(err.data);
+				});
+			}
+		};
 	}
 });
 
 app.controller('authCtrl', function($scope, $http, $rootScope, $location){
-	$scope.user = {email: '', password: ''};
+	$scope.user = {
+		email: '',
+		password: ''
+	};
 	$scope.error_message = '';
 
 	$scope.login = function(){
@@ -235,26 +326,82 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootScope', '$location',
 	function ($scope, Upload, $timeout, $http, $rootScope, $location) {
 
-	$scope.submit = false;
+		$scope.submit = false;
 
-	$scope.upload = function (dataUrl, name) {
-		Upload.upload({
-			url: '/app/user/image',
-			data: {
-				pic: Upload.dataUrltoBlob(dataUrl, name)
-			},
-		}).then(function (response) {
-			$timeout(function () {
-				$scope.result = response.data;
+		$scope.upload = function (dataUrl, name) {
+			Upload.upload({
+				url: '/app/user/image',
+				data: {
+					pic: Upload.dataUrltoBlob(dataUrl, name)
+				},
+			}).then(function (response) {
+				$timeout(function () {
+					$scope.result = response.data;
+				});
+			}, function (response) {
+				if (response.status > 0) $scope.errorMsg = response.status 
+					+ ': ' + response.data;
+			}, function (evt) {
+				$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
 			});
-		}, function (response) {
-			if (response.status > 0) $scope.errorMsg = response.status 
-				+ ': ' + response.data;
-		}, function (evt) {
-			$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
-		});
 
-		$rootScope.signout();
-		$location.path('/#');
-	}
-}]);
+			$rootScope.signout();
+			$location.path('/#');
+		}
+	}]);
+
+//NG-SCROLL
+
+app.service('anchorSmoothScroll', function(){
+
+	this.scrollTo = function(eID) {
+
+	// This scrolling function 
+	// is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript
+
+		var startY = currentYPosition();
+		var stopY = elmYPosition(eID);
+		var distance = stopY > startY ? stopY - startY : startY - stopY;
+		if (distance < 100) {
+			scrollTo(0, stopY); return;
+		}
+		var speed = Math.round(distance / 100);
+		if (speed >= 20) speed = 20;
+		var step = Math.round(distance / 25);
+		var leapY = stopY > startY ? startY + step : startY - step;
+		var timer = 0;
+		if (stopY > startY) {
+			for ( var i=startY; i<stopY; i+=step ) {
+				setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
+				leapY += step; if (leapY > stopY) leapY = stopY; timer++;
+			} return;
+		}
+		for ( var i=startY; i>stopY; i-=step ) {
+			setTimeout("window.scrollTo(0, "+leapY+")", timer * speed);
+			leapY -= step; if (leapY < stopY) leapY = stopY; timer++;
+		}
+
+		function currentYPosition() {
+		// Firefox, Chrome, Opera, Safari
+		if (self.pageYOffset) return self.pageYOffset;
+		// Internet Explorer 6 - standards mode
+		if (document.documentElement && document.documentElement.scrollTop)
+			return document.documentElement.scrollTop;
+		// Internet Explorer 6, 7 and 8
+		if (document.body.scrollTop) return document.body.scrollTop;
+		return 0;
+		}
+
+		function elmYPosition(eID) {
+			var elm = document.getElementById(eID);
+			var y = elm.offsetTop;
+			var node = elm;
+			while (node.offsetParent && node.offsetParent != document.body) {
+				node = node.offsetParent;
+				y += node.offsetTop;
+			} return y;
+		}
+
+	};
+
+});

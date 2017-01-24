@@ -1,0 +1,195 @@
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="intro-text">
+					<span class="name"><span class="fa fa-group"></span> Vorstand</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<!-- SHOWN ONLY TO PEOPLE WITHOUT PROPPER RIGHTS -->
+<section id="user-info" ng-hide="istVorstand">
+	<div class="container">
+		<div class="row">
+			<!-- Table -->
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="user-info-table">
+
+					<h2>
+						Sorry you don't have the right to see this.<br><br>
+						Please stop reading here!<br><br><br><br><br><br><br>
+					</h2>
+
+					<h2>
+						Uhm.. seems like you kept going! :/<br>
+						Well, if you like reading so much,<br>maybe you'll enjoy this:<br><br>
+					</h2>
+
+				</div>
+			</div>
+			<embed src="/files/privacy.pdf" width="100%" height="1000px" />
+		</div>
+	</div>
+</section>
+
+<section id="user-info" ng-show='istVorstand'>
+
+	<!-- NEW TOURNAMENT -->
+	<div class="container">
+		<div class="clearfix">
+
+			<h3><span class="fa fa-comments"></span> Neues Turnier</h3>
+
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Name</label>
+						<input type="text" class="form-control" ng-model="newTournament.name">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">						
+						<div class="form-group">
+							<label>Ort</label>
+							<input type="text" class="form-control" ng-model="newTournament.ort">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">						
+						<div class="form-group">
+							<label>Unterkunft</label>
+							<input type="text" class="form-control" ng-model="newTournament.accommodation">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Startdatum</label>
+						<input type="date" class="form-control" ng-model="newTournament.startdate" />
+					</div>
+				</div>
+				<div class="col-sm-4">						
+					<div class="form-group">
+						<label>Enddatum</label>
+						<input type="date" class="form-control" ng-model="newTournament.enddate" />
+					</div>
+				</div>
+				<div class="col-sm-4">	
+					<div class="form-group">
+						<label>Deadline zur Anmeldung</label>
+						<input type="date" class="form-control" ng-model="newTournament.deadline" />
+						<!-- <div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
+							<input class="form-control" size="16" type="text" value="" readonly >
+							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+						<input type="hidden" id="dtp_input4" value="" ng-model="newTournament.deadline" /> -->
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Format</label>
+						<input type="text" class="form-control" ng-model="newTournament.format">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Liga</label>
+						<input type="text" class="form-control" ng-model="newTournament.league">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="language">Sprache</label>
+						<select id="language" class="form-control" style="height:auto;" ng-model="newTournament.language">
+							<option value=""></option>
+							<option value="de">deutsch</option>
+							<option value="en">englisch</option>
+							<option value="other">other</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="">
+						<label>Wert im BDU Ranking</label>
+						<select class="form-control" style="height:auto;" ng-model="newTournament.rankingvalue">
+							<option value=""></option>
+							<option value="2">2 - Einstiegsturnier</option>
+							<option value="3">3 - DDL Turniere (DDL-Mindestgröße = <12 Teams)</option>
+							<option value="4">4 - DDL Turniere (>DDL-Mindestgröße = <12 Teams)</option>
+							<option value="5">5 - Regionalmeisterschaften</option>
+							<option value="6">6 - ZEIT DEBATTEN; Nat. eng. IV´s & Opens ESL; Masters Cup</option>
+							<option value="7">7 - Nat. eng. IV´s & Opens open break/Int. IV´s & Opens ESL; Einladungsturnier</option>
+							<option value="8">8 - Int. IV´s & Opens open break</option>
+							<option value="9">9 - DDM; Euros ESL</option>
+							<option value="10">10 - Worlds ESL</option>
+							<option value="11">11 - Oxford; Cambridge IV open break</option>
+							<option value="12">12 - Euros; Worlds Open-Break</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Preis Speaker</label>
+						<input type="number" class="form-control" ng-model="newTournament.speakerprice">
+					</div>
+				</div>
+				<div class="col-sm-3">						
+					<div class="form-group">
+						<label>Preis Judge</label>
+						<input type="number" class="form-control" ng-model="newTournament.judgeprice">
+					</div>
+				</div>
+				<div class="col-sm-3">						
+					<div class="form-group">
+						<label>Teamspots</label>
+						<input type="number" class="form-control" ng-model="newTournament.teamspots">
+					</div>
+				</div>
+				<div class="col-sm-3">						
+					<div class="form-group">
+						<label>Judgespots</label>
+						<input type="number" class="form-control" ng-model="newTournament.judgespots">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Link</label>
+						<input type="text" class="form-control" ng-model="newTournament.link">
+					</div>
+				</div>
+				<div class="col-sm-8">						
+					<div class="form-group">
+						<label>Comments</label>
+						<input type="text" class="form-control" ng-model="newTournament.comments">
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-lg btn-success pull-right" ng-click="submit()">Turnier erstellen</button>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3">
+				<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
+				<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
+			</div>
+		</div>
+	</div>
+
+</section>
+
+<section id="tournament-info" ng-show='istVorstand'>
+	<div class="container">
+		<h3><span class="fa fa-comments"></span> Neues Turnier</h3>
+	</div>
+</section>

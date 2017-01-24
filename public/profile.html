@@ -1,7 +1,7 @@
 <header>
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12">
 			
 				<div>
 
@@ -23,13 +23,13 @@
 <section id="user-info">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12">
 				<h2>User Info</h2>
 				<hr class="star-user">
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2">
+			<div class="col-sm-8 col-sm-offset-2">
 				<div class="user-info-table">
 
 					<table class="table">
@@ -56,7 +56,7 @@
 							<th>gender:</th>
 							<td ng-hide="update">{{gender}}</td>
 							<td ng-show="update">
-								<select class="form-control" ng-model="gender">
+								<select class="form-control" style="height:auto;" ng-model="gender">
 									<option value=""></option>
 									<option value="f">female</option>
 									<option value="m">male</option>
@@ -69,7 +69,7 @@
 							<td ng-hide="update">{{food}}</td>
 							<td ng-show="update"><input class="form-control" ng-model="food"></td>
 
-							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-primary btn-lg" role="button">Update Info</button></td>
+							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-primary btn-responsive" role="button">Update Info</button></td>
 							<td ng-show="update">
 								<button ng-click="update = false" class="btn btn-danger" role="button">Cancel</button>
 								<button ng-click="updateUser()" class="btn btn-primary" role="button">Submit</button>
@@ -88,13 +88,13 @@
 <section id="tournament-info">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12">
 				<h2>Your Tournaments</h2>
 				<hr class="star-comments">
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-sm-12">
 				<div class="my-tournaments-table">
 
 					<table class="table table-hover table-responsive">
@@ -136,168 +136,3 @@
 		</div>
 	</div>
 </section>
-
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- Dieser Teil wird nur dem Vorstand und anderen Leuten mit Rolle 1 angezeigt -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-<div class="page-header text-center" ng-show='istVorstand'>
-	<h1><span class="fa fa-group"></span> Vorstandssachen</h1>
-</div>
-
-<div class="row" ng-show='istVorstand'>
-
-	<!-- NEW TOURNAMENT -->
-	<div class="container">
-		<div class="well clearfix">
-
-			<h3><span class="fa fa-comments"></span> Neues Turnier</h3>
-
-			<form action="/app/tournament" method="post">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Name</label>
-							<input type="text" class="form-control" name="name" required="true">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">						
-							<div class="form-group">
-								<label>Ort</label>
-								<input type="text" class="form-control" name="ort">
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group">						
-							<div class="form-group">
-								<label>Unterkunft</label>
-								<input type="text" class="form-control" name="accommodation">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Startdatum</label>
-							<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-								<input class="form-control" size="16" type="text" value="" readonly >
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-							<input type="hidden" id="dtp_input2" value="" name="startdate" />
-						</div>
-					</div>
-					<div class="col-md-4">						
-						<div class="form-group">
-							<label>Enddatum</label>
-							<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input3" data-link-format="yyyy-mm-dd">
-								<input class="form-control" size="16" type="text" value="" readonly >
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-							<input type="hidden" id="dtp_input3" value="" name="enddate" />
-						</div>
-					</div>
-					<div class="col-md-4">	
-						<div class="form-group">
-							<label>Deadline zur Anmeldung</label>
-							<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
-								<input class="form-control" size="16" type="text" value="" readonly >
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-							<input type="hidden" id="dtp_input4" value="" name="deadline" />
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Format</label>
-							<input type="text" class="form-control" name="format">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Liga</label>
-							<input type="text" class="form-control" name="league">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Sprache</label>
-							<select class="form-control" name="language">
-								<option value=""></option>
-								<option value="de">deutsch</option>
-								<option value="en">englisch</option>
-								<option value="other">other</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Wert im BDU Ranking</label>
-							<select class="form-control" name="rankingvalue">
-								<option value=""></option>
-								<option value="2">2 - Einstiegsturnier</option>
-								<option value="3">3 - DDL Turniere (DDL-Mindestgröße = <12 Teams)</option>
-								<option value="4">4 - DDL Turniere (>DDL-Mindestgröße = <12 Teams)</option>
-								<option value="5">5 - Regionalmeisterschaften</option>
-								<option value="6">6 - ZEIT DEBATTEN; Nat. eng. IV´s & Opens ESL; Masters Cup</option>
-								<option value="7">7 - Nat. eng. IV´s & Opens open break/Int. IV´s & Opens ESL; Einladungsturnier</option>
-								<option value="8">8 - Int. IV´s & Opens open break</option>
-								<option value="9">9 - DDM; Euros ESL</option>
-								<option value="10">10 - Worlds ESL</option>
-								<option value="11">11 - Oxford; Cambridge IV open break</option>
-								<option value="12">12 - Euros; Worlds Open-Break</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Preis Speaker</label>
-							<input type="number" class="form-control" name="speakerprice">
-						</div>
-					</div>
-					<div class="col-md-3">						
-						<div class="form-group">
-							<label>Preis Judge</label>
-							<input type="number" class="form-control" name="judgeprice">
-						</div>
-					</div>
-					<div class="col-md-3">						
-						<div class="form-group">
-							<label>Teamspots</label>
-							<input type="number" class="form-control" name="teamspots">
-						</div>
-					</div>
-					<div class="col-md-3">						
-						<div class="form-group">
-							<label>Judgespots</label>
-							<input type="number" class="form-control" name="judgespots">
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label>Link</label>
-							<input type="text" class="form-control" name="link">
-						</div>
-					</div>
-					<div class="col-md-8">						
-						<div class="form-group">
-							<label>Comments</label>
-							<input type="text" class="form-control" name="comments">
-						</div>
-					</div>
-				</div>
-				<button type="submit" class="btn btn-lg btn-success pull-right">Turnier erstellen</button>
-			</form>
-
-		</div>
-	</div>
-
-</div>

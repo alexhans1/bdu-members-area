@@ -17,7 +17,7 @@
 			<div class="col-lg-8">
 				<div class="user-info-table">
 
-					<table class="table table-hover">
+					<table class="table table-hover table-responsive">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -32,7 +32,8 @@
 								<td>{{t.ort}}</td>
 								<td>{{t.startdate | date:'dd.MM.yyyy'}} -<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
 								<td>Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
-								<td><button class="btn btn-info" ng-click="setTournament(t.id)">Details</button></td>
+								<td><button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button></td>
+								<td><button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button></td>
 							</tr>
 						</tbody>
 					</table>
@@ -41,7 +42,7 @@
 			</div>
 
 			<!-- Details -->
-			<div class="col-lg-4 wellpadding">
+			<div id="details" class="col-lg-4 wellpadding">
 				<table class="table table-hover details">
 					<tr>
 						<th><h4><span class="fa fa-book"></span> Details</h4><br></th>
@@ -86,10 +87,16 @@
 						<th></th>
 						<td ng-show="showDetails && istVorstand">
 							<a href="/#/editTournament"><button class="btn btn-primary">Edit</button></a>
-							<button class="btn btn-danger">Delete</button>
+							<button class="btn btn-danger" ng-click="delete()">Delete</button>
 						</td>
 					</tr>
 				</table>
+				<div class="row">
+					<div class="col-sm-12">
+						<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
+						<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
+					</div>
+				</div>
 			</div>
 
 		</div>

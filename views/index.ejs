@@ -1,6 +1,8 @@
 <!doctype html>
 <html ng-app="bduApp">
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 	<title>BDUDB</title>
 	
 	<!-- load javascripts -->
@@ -31,8 +33,6 @@
 	<!-- ngDialog -->
 	<script src="/ng-dialog/js/ngDialog.js"></script>
 
-	<script src="/javascripts/bduApp.js"></script>
-
 	<!-- ng-file-upload -->
 	<script src="/javascripts/ng-file-upload/ng-file-upload-shim.min.js"></script>
 	<script src="/javascripts/ng-file-upload/ng-file-upload.min.js"></script>
@@ -40,13 +40,14 @@
 	<!-- ng-img-crop -->
 	<script src="/javascripts/ng-img-crop/js/ng-img-crop.js"></script>
 
+	<script src="/javascripts/bduApp.js"></script>
+	<script src="/javascripts/chrome-autofill-fix.js"></script>
+
 
 	<!-- load stylesheets -->
 
 	<!-- bootstrap -->
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"> -->
 	
 	<!-- load fontawesome -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
@@ -68,7 +69,7 @@
 
 		<!--++++++++++++++++++++++++++ NAVBAR ++++++++++++++++++++++++++-->
 
-		<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md animate">
+		<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md bg-inverse">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBDUDB" aria-controls="navbarBDUDB" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -81,9 +82,18 @@
 					</a>
 				</div>
 				<ul class="nav navbar-nav" ng-hide="!authenticated">
-					<li><a href="/#/profile">Profile</a></li>
-					<li><a href="/#/tournaments">Turniere</a></li>
-					<li><a href="/#/myTournaments">Meine Turniere</a></li>
+					<li>
+						<a href="/#/profile" class="hidden-xs">Profile</a>
+						<a href="/#/profile" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
+					</li>
+					<li>
+						<a href="/#/tournaments" class="hidden-xs">Turniere</a>
+						<a href="/#/tournaments" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Turniere</a>
+					</li>
+					<li ng-show="istVorstand">
+						<a href="/#/vorstand" class="hidden-xs">Vorstand</a>
+						<a href="/#/vorstand" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>
+					</li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">

@@ -56,11 +56,11 @@ footer {
 }
 
 section {
-  padding: 30px 0;
+	padding: 30px 0;
 }
 section h2 {
-  margin: 0;
-  font-size: 3em;
+	margin: 0;
+	font-size: 3em;
 }
 
 hr.star-light, hr.star-user, hr.star-comments {
@@ -201,10 +201,6 @@ hr.star-user:after {
 	padding-top: 85px;
 }
 
-.form-control {
-	height: 30px;
-}
-
 .reg {
 	position: absolute;
 	right: 10px;
@@ -233,7 +229,7 @@ hr.star-user:after {
 }
 
 .animate {
-    -webkit-transition: all 0.3s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
@@ -244,17 +240,37 @@ hr.star-user:after {
 /*++++++++++++++++++++++++++*/
 
 @media(max-width:992px) {
-    #nav1.navbar .navbar-brand {
-        float:none;
-        display: block;
-    }
-    #nav1.navbar .navbar-nav>.nav-item {
-        float: none;
-        margin-left: .1rem;
-    }
-    #nav1.navbar .navbar-nav {
-        float:none !important;
-    }
+	#nav1.navbar .navbar-brand {
+		float:none;
+		display: block;
+	}
+	#nav1.navbar .navbar-nav>.nav-item {
+		float: none;
+		margin-left: .1rem;
+	}
+	#nav1.navbar .navbar-nav {
+		float:none !important;
+	}
+}
+
+/*+++++++++++++++++++++++++++*/
+/*responsive button sizes*/
+/*+++++++++++++++++++++++++++*/
+
+@media (max-width: 768px) {
+	.btn-responsive {
+		padding:2px 4px;
+		font-size:80%;
+		line-height: 1;
+	}
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+	.btn-responsive {
+		padding:4px 9px;
+		font-size:90%;
+		line-height: 1.2;
+	}
 }
 
 /*+++++++++++++++++++++++++++*/

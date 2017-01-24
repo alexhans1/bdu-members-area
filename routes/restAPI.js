@@ -289,12 +289,11 @@ router.route('/tournament')
 			})
 			.save()
 			.then(function (tournament) {
-				console.log('Create Tournament successful.')
-				req.flash('message', 'Create Tournament successful.')
-				res.redirect('/app/tournament')
-				// res.json({error: false, data: {id: tournament.get('id')}});
+				console.log('Create Tournament successful.');
+				res.status(200).json({error: false, tournament: tournament});
 			})
 			.catch(function (err) {
+				console.log('Error while adding new Tournament. Error: \n' + err);
 				res.status(500).json({error: true, data: {message: err.message}});
 			});
 		} else {
@@ -365,6 +364,29 @@ router.route('/tournament/:id')
 			console.log('User is not authorized to update tournament');
 			res.status(401).json({error: true, message: 'Unauthorized'});
 		}			
+	})
+
+	// delete a tournament
+	.delete(function (req, res) {
+		//Check if session user is authorized
+		if(req.user.role == 1){
+			Tournament.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (tournament) {
+				tournament.destroy()
+			})
+			.then(function () {
+				console.log('Deleting tournament successful');
+				res.status(200).json({error: false, message: 'Deleting tournament successful.'});
+			})
+			.catch(function (err) {
+				console.error('Error while deleting tournament.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		} else {
+			console.log('User is not authorized to delete tournament');
+			res.status(401).json({error: true, message: 'Unauthorized'});
+		}
 	});
 
 //links to the edit tournament view
@@ -403,8 +425,8 @@ router.route('/tournament/edit/:id')
 
 //delete tournament method als get request da hmtl delete nicht kennt.. macht aber REST Stil kaputt =/
 router.route('/tournament/delete/:id')
-// delete a tournament
-.get(function (req, res) {
+	// delete a tournament
+	.delete(function (req, res) {
 		//Check if session user is authorized
 		if(req.user.role == 1){
 			Tournament.forge({id: req.params.id})
