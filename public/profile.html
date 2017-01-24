@@ -76,29 +76,13 @@
 							</td>
 						</tr>
 					</table>
+					<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
+					<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
 				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="text-center">
-				<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
-				<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
 			</div>
 		</div>
 	</div>
 </section>
-
-<datetimepicker data-ng-model="date"></datetimepicker>
-
-<!-- <div class="dropdown">
-  <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown">
-    <div class="input-group"><input type="text" class="form-control" data-ng-model="data.dateDropDownInput"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-    </div>
-  </a>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-    <datetimepicker data-ng-model="data.dateDropDownInput" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
-  </ul>
-</div> -->
 
 <!-- My Tournaments Section -->
 <section id="tournament-info">

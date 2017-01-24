@@ -3,8 +3,7 @@ var app = angular.module('bduApp', [
 	'ngResource', 
 	'ngDialog', 
 	'ngFileUpload', 
-	'ngImgCrop', 
-	'ui.bootstrap.datetimepicker'
+	'ngImgCrop'
 ])
 .run(function($http, $rootScope, $location) {
 	
@@ -111,16 +110,6 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
 				$scope.update = false;
 			});
 		}
-
-		// //timepicker
-		// $scope.datepickerOptions = {
-		// 	format: 'dd.mm.yyyy',
-		// 	language: 'en',
-		// 	autoclose: true,
-		// 	weekStart: 0
-		// }
-
-		$scope.date = new Date();
 	}
 });
 
