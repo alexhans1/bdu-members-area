@@ -40,17 +40,17 @@
 						<tr>
 							<th>email:</th>
 							<td ng-hide="update">{{email}}</td>
-							<td ng-show="update"><input class="form-control" ng-model="email"></td>
+							<td ng-show="update"><input class="form-control" name="email" ng-model="email" required="true"></td>
 						</tr>
 						<tr>
 							<th>vorname:</th>
 							<td ng-hide="update">{{vorname}}</td>
-							<td ng-show="update"><input class="form-control" ng-model="vorname"></td>
+							<td ng-show="update"><input class="form-control" name="vorname" ng-model="vorname"></td>
 						</tr>
 						<tr>
 							<th>name:</th>
 							<td ng-hide="update">{{name}}</td>
-							<td ng-show="update"><input class="form-control" ng-model="name"></td>
+							<td ng-show="update"><input class="form-control" name="name" ng-model="name"></td>
 						</tr>
 						<tr>
 							<th>gender:</th>
@@ -67,7 +67,7 @@
 						<tr>
 							<th>food preference:</th>
 							<td ng-hide="update">{{food}}</td>
-							<td ng-show="update"><input class="form-control" ng-model="food"></td>
+							<td ng-show="update"><input class="form-control" name="food" ng-model="food"></td>
 
 							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-primary btn-responsive" role="button">Update Info</button></td>
 							<td ng-show="update">
