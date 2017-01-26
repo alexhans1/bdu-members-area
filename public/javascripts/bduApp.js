@@ -3,8 +3,7 @@ var app = angular.module('bduApp', [
 	'ngResource', 
 	'ngDialog', 
 	'ngFileUpload', 
-	'ngImgCrop',
-	'chrome-autofill-fix'
+	'ngImgCrop'
 	])
 .run(function($http, $rootScope, $location) {
 	

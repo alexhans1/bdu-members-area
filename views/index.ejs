@@ -98,12 +98,17 @@
 
 				<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
 					<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>
-					<li><a href="/#" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+					<li>
+						<a href="/#" class="hidden-xs" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+						<a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+					</li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right" ng-show="!authenticated">
-					<li><a href="/#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-					<li><a href="/#/signup"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+					<li><a href="/#" class="hidden-xs"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					<li><a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					<li><a href="/#/signup" class="hidden-xs"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+					<li><a href="/#/signup" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
 				</ul>
 				
 			</div>
