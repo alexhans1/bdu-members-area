@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<% include ./partials/head %>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>BDUDB</title>
+	
+	<!-- load javascripts -->
+
+	<!-- bootstrap -->
+	<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+	<!-- load stylesheets -->
+
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	
+	<!-- load fontawesome -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="/stylesheets/style.css">
+
 </head>
 <body>
-	<% include ./partials/header %>
+	<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md bg-inverse">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBDUDB" aria-controls="navbarBDUDB" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarBDUDB">
+
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">
+					<span class="glyphicon glyphicon-cloud"></span>
+					BDUDB
+				</a>
+			</div>
+
+		</div>
+	</nav>
 	
+	<br>
 	<div class="container">
 		<h1><%= message %></h1>
 		<% if(error.length > 0) { %>
-			<h2><%= error.status %></h2>
-			<pre><%= error.stack %></pre>
+		<h2><%= error.status %></h2>
+		<pre><%= error.stack %></pre>
 		<% }%>
 	</div>
 	<div class="container">
-		<h2>There was an error. Sorry! You can read this instead:</h2>
-		<iframe src="http://docs.google.com/gview?url=https://www.amherst.edu/system/files/media/1650/butler_performative_acts.pdf&embedded=true" style="width:70vw; height:60vw;" frameborder="0"></iframe>
+		<br><br><br><h2>There was an error. Sorry! You can read this instead:</h2>
+		<embed src="https://www.amherst.edu/system/files/media/1650/butler_performative_acts.pdf" width="100%" height="1000px" />
+		<!-- <iframe src="http://docs.google.com/gview?url=https://www.amherst.edu/system/files/media/1650/butler_performative_acts.pdf&embedded=true" style="width:70vw; height:60vw;" frameborder="0"></iframe> -->
 	</div>
-	<footer>
-		<% include ./partials/footer %>
-	</footer>
 </body>
 </html>
 
-	
+

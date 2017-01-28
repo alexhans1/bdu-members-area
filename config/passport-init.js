@@ -1,53 +1,36 @@
 var _ = require('lodash');
-var knex = require('knex')({
-	client: 'mysql',
-	connection: {
-		host: 'db.hosting-agency.de',
-		user: 'dbuser30796',
-		password: 'berlindebating',
-		database: 'db6107x1',
-		charset: 'utf8'
-	}
-});
-var Bookshelf = require('bookshelf')(knex);
-
 var LocalStrategy   = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
 
-// User model
-var User = Bookshelf.Model.extend({
-	tableName: 'users'
-});
-
-var Users = Bookshelf.Collection.extend({
-	model: User
-});
-
-module.exports = function(passport){
+module.exports = function(passport, Bookshelf){
+	// User model
+	var User = Bookshelf.Model.extend({
+		tableName: 'users'
+	});
 
 	// passport session setup ==================================================
-    // =========================================================================
-    // required for persistent login sessions
-    // passport needs ability to serialize and deserialize users out of session
+	// =========================================================================
+	// required for persistent login sessions
+	// passport needs ability to serialize and deserialize users out of session
 	// Passport needs to be able to serialize and deserialize users to support persistent login sessions
 	
 	passport.serializeUser(function(user, done) {
-	  done(null, user);
+		done(null, user);
 	});
 
 	passport.deserializeUser(function(user, done) {
-	  done(null, user);
+		done(null, user);
 	});
 
 	// LOCAL LOGIN =============================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
+	// =========================================================================
+	// we are using named strategies since we have one for login and one for signup
 
 	passport.use('login', new LocalStrategy({
 		// by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
+		usernameField : 'email',
+		passwordField : 'password',
+		passReqToCallback : true // allows us to pass back the entire request to the callback
 	},
 		function(req, userEmail, password, done) { // callback with email and password from our form
 
@@ -73,23 +56,23 @@ module.exports = function(passport){
 				return done(null, false, req.flash('authMsg', 'Error during login'));
 			});
 		}
-	));
+		));
 
 	// LOCAL SIGNUP ============================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
+	// =========================================================================
+	// we are using named strategies since we have one for login and one for signup
 
 	passport.use('signup', new LocalStrategy({
-        // by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
-    },
-	    function(req, userEmail, password, done) {
+		// by default, local strategy uses username and password, we will override with email
+		usernameField : 'email',
+		passwordField : 'password',
+		passReqToCallback : true // allows us to pass back the entire request to the callback
+	},
+	function(req, userEmail, password, done) {
 
 			// find a user whose email is the same as the forms email
 			// check if user already exists in DB
-	    	new User({email: userEmail})
+			new User({email: userEmail})
 			.fetch()
 			.then(function (user) {
 				if(user){
@@ -119,7 +102,7 @@ module.exports = function(passport){
 				return done(null, false, req.flash('authMsg', 'Error during signup.'));
 			});
 		}
-	));
+		));
 
 	var isValidPassword = function(pwd, pwdHash){
 		try {
