@@ -47,6 +47,11 @@ app.config(function($routeProvider){
 		templateUrl: 'signup.html',
 		controller: 'authCtrl'
 	})
+	//the forgot password display
+	.when('/forgot', {
+		templateUrl: 'forgot.html',
+		controller: 'ResetCtrl'
+	})
 	//the profile display
 	.when('/profile', {
 		templateUrl: 'profile.html',
@@ -280,6 +285,22 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 			}
 		};
 	}
+});
+
+app.controller('ResetCtrl', function($scope, $http, $location) {
+
+	$scope.email = '';
+
+	$scope.message = '';
+
+	$scope.submit = function(){
+		$http.post('/forgot', {email: $scope.email})
+		.then(function successCallback(response) {
+			$scope.message = res.data;
+		}, function errorCallback(err) {
+			$scope.message = err;
+		});
+	};
 });
 
 app.controller('authCtrl', function($scope, $http, $rootScope, $location){

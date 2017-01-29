@@ -20,6 +20,10 @@ function isAuthenticated (req, res, next) {
 };
 
 module.exports = function(Bookshelf){
+	// User model
+	var User = Bookshelf.Model.extend({
+		tableName: 'users'
+	});
 
 	//Register the authentication middleware
 	//for all URIs use the isAuthenticated function

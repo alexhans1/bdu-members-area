@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "angular-bootstrap-datetimepicker": "^1.1.3",
+    "async": "^2.1.4",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.15.2",
     "bookshelf": "^0.10.2",
@@ -23,9 +24,12 @@
     "multer": "^1.2.1",
     "mysql": "^2.5.4",
     "ng-file-upload": "^12.2.13",
+    "nodemailer": "^2.7.2",
+    "nodemailer-smtp-transport": "^2.7.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "req-flash": "0.0.3",
+    "sendgrid": "^4.7.1",
     "serve-favicon": "~2.3.0"
   }
 }

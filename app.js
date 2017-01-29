@@ -56,7 +56,7 @@ initPassport(passport, Bookshelf);
 app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/app', restApi);
-require('./routes/routes.js')(app, passport);
+require('./routes/routes.js')(app, passport, Bookshelf);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
