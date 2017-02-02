@@ -21,19 +21,19 @@
 					<table class="table table-hover table-responsive">
 						<thead>
 							<tr>
-								<th>Name</th>
-								<th>Place</th>
-								<th>Dates</th>
-								<th>Spots</th>
-								<th><button class="btn btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
+								<th class="col-md-2 text-center">Name</th>
+								<th class="col-md-2 text-center hidden-xs">Place</th>
+								<th class="col-md-2 text-center">Date</th>
+								<th class="col-md-2 text-center hidden-xs">Spots</th>
+								<th class="col-md-2 text-center"><button class="btn btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="t in tournaments">
 								<td>{{t.name}}</td>
-								<td>{{t.ort}}</td>
+								<td class="hidden-xs">{{t.ort}}</td>
 								<td>{{t.startdate | date:'dd.MM.yyyy'}} -<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
-								<td>Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
+								<td class="hidden-xs">Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
 								<td>{{t.language}}</td>
 								<td><button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button></td>
 								<td><button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button></td>
@@ -54,6 +54,22 @@
 					<tr>
 						<th>Name:</th>
 						<td>{{tournament.name}}</td>
+					</tr>
+					<tr>
+						<th>Place:</th>
+						<td>{{tournament.ort}}</td>
+					</tr>
+					<tr>
+						<th>Date:</th>
+						<td>{{tournament.startdate | date:'dd.MM.yyyy'}} - {{tournament.enddate | date:'dd.MM.yyyy'}}</td>
+					</tr>
+					<tr>
+						<th>Teamspots:</th>
+						<td>{{tournament.teamspots}}</td>
+					</tr>
+					<tr>
+						<th>Judgespots:</th>
+						<td>{{tournament.judgespots}}</td>
 					</tr>
 					<tr>
 						<th>Format:</th>

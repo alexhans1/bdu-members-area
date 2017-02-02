@@ -249,20 +249,20 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		}
 
 		//TOGGLE THROUGH LANGUAGES
-		$toggleVal = 'all';
+		$scope.toggleVal = 'all';
 		$scope.toggle = function () {
-			if ($toggleVal == 'en') {
+			if ($scope.toggleVal == 'en') {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'other'});
-				$toggleVal = 'other';
-			} else if ($toggleVal == 'de') {
+				$scope.toggleVal = 'other';
+			} else if ($scope.toggleVal == 'de') {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'en'});
-				$toggleVal = 'en';
-			} else if ($toggleVal == 'other') {
+				$scope.toggleVal = 'en';
+			} else if ($scope.toggleVal == 'other') {
 				$scope.tournaments = $scope.alltournaments;
-				$toggleVal = 'all';
+				$scope.toggleVal = 'all';
 			} else {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'de'});
-				$toggleVal = 'de';
+				$scope.toggleVal = 'de';
 			}
 		}
 	}
