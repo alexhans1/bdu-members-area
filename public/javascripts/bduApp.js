@@ -249,7 +249,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		}
 
 		//TOGGLE THROUGH LANGUAGES
-		$toggleVal = '';
+		$toggleVal = 'all';
 		$scope.toggle = function () {
 			if ($toggleVal == 'en') {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'other'});
@@ -257,6 +257,9 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			} else if ($toggleVal == 'de') {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'en'});
 				$toggleVal = 'en';
+			} else if ($toggleVal == 'other') {
+				$scope.tournaments = $scope.alltournaments;
+				$toggleVal = 'all';
 			} else {
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'de'});
 				$toggleVal = 'de';
