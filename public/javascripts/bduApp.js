@@ -124,7 +124,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
 	}
 });
 
-app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, ngDialog, anchorSmoothScroll) {
+app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -134,7 +134,8 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		var getAllTournaments = function () {
 			$http.get('/app/tournament')
 			.then(function successCallback(tournaments) {
-				$scope.tournaments = tournaments.data;
+				$scope.alltournaments = tournaments.data;
+				$scope.tournaments = $scope.alltournaments;
 			});
 		}
 
@@ -142,7 +143,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			
 
 		$scope.setTournament = function(id, scroll) {
-			$scope.tournament = _.find($scope.tournaments, {id: id});
+			$scope.tournament = _.find($scope.alltournaments, {id: id});
 			$scope.showDetails = true;
 			$scope.teams = [];
 			$http.get('app/teamnames/' + id)
@@ -216,19 +217,22 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		//DELETE TOURNAMENT FUNCTION
 		$scope.delete = function () {
-			$http.delete('/app/tournament/' + $scope.tournament.id)
-			.then(function successCallback(response) {
-				if (!response.error) {
-					$scope.SuccessMessage = response.data.message;
-					//TODO update Tournaments resource
-					//for now:
-					getAllTournaments();
-				} else {
-					$scope.ErrorMessage = response.data.message;
-				}
-			}, function errorCallback(err) {
-				$scope.ErrorMessage = err.data.message;
-			});
+			var deleteTournament = $window.confirm('Are you absolutely sure you want to delete the tournament?');
+			if (deleteTournament) {
+				$http.delete('/app/tournament/' + $scope.tournament.id)
+				.then(function successCallback(response) {
+					if (!response.error) {
+						$scope.SuccessMessage = response.data.message;
+						//TODO update Tournaments resource
+						//for now:
+						getAllTournaments();
+					} else {
+						$scope.ErrorMessage = response.data.message;
+					}
+				}, function errorCallback(err) {
+					$scope.ErrorMessage = err.data.message;
+				});
+			}
 		};
 
 		//UPDATE TOURNAMENT FUNCTION
@@ -242,6 +246,21 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			}, function errorCallback(err) {
 				$scope.ErrorMessage = res.data.data.message;	
 			});
+		}
+
+		//TOGGLE THROUGH LANGUAGES
+		$toggleVal = '';
+		$scope.toggle = function () {
+			if ($toggleVal == 'en') {
+				$scope.tournaments = _.filter($scope.alltournaments, {language: 'other'});
+				$toggleVal = 'other';
+			} else if ($toggleVal == 'de') {
+				$scope.tournaments = _.filter($scope.alltournaments, {language: 'en'});
+				$toggleVal = 'en';
+			} else {
+				$scope.tournaments = _.filter($scope.alltournaments, {language: 'de'});
+				$toggleVal = 'de';
+			}
 		}
 	}
 });
