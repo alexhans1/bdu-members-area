@@ -10,20 +10,22 @@
 	</div>
 </header>
 
-<section id="user-info">
-	<div class="container">
-		<div class="row">
+<!-- NORMAL VIEW -->
+<section id="user-info" ng-hide="showUpdate">
+	<div class="row">
+		<div class="col-sm-10 col-sm-offset-1">
 			<!-- Table -->
-			<div class="col-lg-8">
+			<div class="col-md-8">
 				<div class="user-info-table">
 
 					<table class="table table-hover table-responsive">
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>Ort</th>
-								<th>Zeitraum</th>
+								<th>Place</th>
+								<th>Dates</th>
 								<th>Spots</th>
+								<th><button class="btn btn-warning">de / en</button></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -32,6 +34,7 @@
 								<td>{{t.ort}}</td>
 								<td>{{t.startdate | date:'dd.MM.yyyy'}} -<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
 								<td>Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
+								<td>{{t.language}}</td>
 								<td><button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button></td>
 								<td><button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button></td>
 							</tr>
@@ -42,7 +45,7 @@
 			</div>
 
 			<!-- Details -->
-			<div id="details" class="col-lg-4 wellpadding">
+			<div id="details" class="col-md-4 wellpadding">
 				<table class="table table-hover details">
 					<tr>
 						<th><h4><span class="fa fa-book"></span> Details</h4><br></th>
@@ -77,6 +80,10 @@
 						<td>{{tournament.deadline | date:'dd.MM.yyyy'}}</td>
 					</tr>
 					<tr>
+						<th>BDU ranking factor:</th>
+						<td>{{tournament.rankingvalue}}</td>
+					</tr>
+					<tr>
 						<th>Link:</th>
 						<td>{{tournament.link}}</td>
 					</tr>
@@ -86,7 +93,7 @@
 					</tr>
 						<th></th>
 						<td ng-show="showDetails && istVorstand">
-							<a href="/#/editTournament"><button class="btn btn-primary">Edit</button></a>
+							<button class="btn btn-primary" ng-click="showUpdate = true">Edit</button>
 							<button class="btn btn-danger" ng-click="delete()">Delete</button>
 						</td>
 					</tr>
@@ -101,6 +108,165 @@
 
 		</div>
 	</div>
+</section>
+
+<!-- EDIT TOURNAMENT VIEW -->
+<section id="user-info" ng-show='istVorstand && showUpdate'>
+
+	<!-- NEW TOURNAMENT -->
+	<div class="container">
+		<div class="clearfix">
+
+			<h3><span class="fa fa-comments"></span> Neues Turnier</h3>
+
+			<form ng-submit="submitUpdate()">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" name="name" class="form-control" ng-model="tournament.name" required="true">
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">						
+							<div class="form-group">
+								<label>Ort</label>
+								<input type="text" name="ort" class="form-control" ng-model="tournament.ort">
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">						
+							<div class="form-group">
+								<label>Unterkunft</label>
+								<input type="text" name="accommodation" class="form-control" ng-model="tournament.accommodation">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label>Startdatum</label>
+							<input type="date" name="startdate" class="form-control" ng-model="tournament.startdate" />
+						</div>
+					</div>
+					<div class="col-sm-4">						
+						<div class="form-group">
+							<label>Enddatum</label>
+							<input type="date" name="enddate" class="form-control" ng-model="tournament.enddate" />
+						</div>
+					</div>
+					<div class="col-sm-4">	
+						<div class="form-group">
+							<label>Deadline zur Anmeldung</label>
+							<input type="date" name="deadline" class="form-control" ng-model="tournament.deadline" />
+							<!-- <div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
+								<input class="form-control" size="16" type="text" value="" readonly >
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+							<input type="hidden" id="dtp_input4" value="" ng-model="tournament.deadline" /> -->
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label>Format</label>
+							<input type="text" name="format" class="form-control" ng-model="tournament.format">
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label>Liga</label>
+							<input type="text" name="league" class="form-control" ng-model="tournament.league">
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label for="language">Sprache</label>
+							<select id="language" class="form-control" style="height:auto;" ng-model="tournament.language">
+								<option value=""></option>
+								<option value="de">deutsch</option>
+								<option value="en">englisch</option>
+								<option value="other">other</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="">
+							<label>Wert im BDU Ranking</label>
+							<select class="form-control" style="height:auto;" ng-model="tournament.rankingvalue">
+								<option value=""></option>
+								<option value="2">2 - Einstiegsturnier</option>
+								<option value="3">3 - DDL Turniere (DDL-Mindestgröße = <12 Teams)</option>
+								<option value="4">4 - DDL Turniere (>DDL-Mindestgröße = <12 Teams)</option>
+								<option value="5">5 - Regionalmeisterschaften</option>
+								<option value="6">6 - ZEIT DEBATTEN; Nat. eng. IV´s & Opens ESL; Masters Cup</option>
+								<option value="7">7 - Nat. eng. IV´s & Opens open break/Int. IV´s & Opens ESL; Einladungsturnier</option>
+								<option value="8">8 - Int. IV´s & Opens open break</option>
+								<option value="9">9 - DDM; Euros ESL</option>
+								<option value="10">10 - Worlds ESL</option>
+								<option value="11">11 - Oxford; Cambridge IV open break</option>
+								<option value="12">12 - Euros; Worlds Open-Break</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label>Preis Speaker</label>
+							<input type="number" name="speakerprice" class="form-control" ng-model="tournament.speakerprice">
+						</div>
+					</div>
+					<div class="col-sm-3">						
+						<div class="form-group">
+							<label>Preis Judge</label>
+							<input type="number" name="judgeprice" class="form-control" ng-model="tournament.judgeprice">
+						</div>
+					</div>
+					<div class="col-sm-3">						
+						<div class="form-group">
+							<label>Teamspots</label>
+							<input type="number" name="teamspots" class="form-control" ng-model="tournament.teamspots">
+						</div>
+					</div>
+					<div class="col-sm-3">						
+						<div class="form-group">
+							<label>Judgespots</label>
+							<input type="number" name="judgespots" class="form-control" ng-model="tournament.judgespots">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label>Link</label>
+							<input type="text" name="link" class="form-control" ng-model="tournament.link">
+						</div>
+					</div>
+					<div class="col-sm-8">						
+						<div class="form-group">
+							<label>Comments</label>
+							<input type="text" name="comments" class="form-control" ng-model="tournament.comments">
+						</div>
+					</div>
+				</div>
+
+				<button type="submit" class="btn btn-lg btn-success pull-right btnpadding">Update Tournament</button>
+				<button class="btn btn-danger btn-lg pull-right btnpadding" ng-click="showUpdate = false">Cancel</button>
+			</form>
+
+		</div>
+		<div class="row">
+			<div class="col-sm-6 col-sm-offset-3">
+				<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
+				<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
+			</div>
+		</div>
+	</div>
+
 </section>
 
 </html>

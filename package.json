@@ -1,5 +1,5 @@
 {
-  "name": "nodesql",
+  "name": "bdudb",
   "version": "0.0.0",
   "author": "Alexander Hans",
   "private": true,

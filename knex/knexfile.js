@@ -13,6 +13,17 @@ module.exports = {
 		}
 	},
 
+	test: {
+		client: 'mysql',
+		connection: {
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'bdudbdev',
+			charset: 'utf8'
+		}
+	},
+
 	production: {
 		client: 'postgresql',
 		connection: process.env.DATABASE_URL,

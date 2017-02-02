@@ -289,7 +289,6 @@ module.exports = function(Bookshelf){
 		})
 
 		// update tournament details
-		//made to post and not put because html forms only know get and post methods
 		.put(function (req, res) {
 			//Check if session user is authorized
 			if(req.user.role == 1){

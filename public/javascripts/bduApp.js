@@ -188,7 +188,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		$scope.FormData={accountNum: ''};
 		$scope.ShowNgDialog = function () {
-			ngDialog.open({ 
+			ngDialog.open({
 				template: 'tournamentsDialog.html',
 				controller: 'TournamentCtrl',
 				scope: $scope,
@@ -230,6 +230,19 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				$scope.ErrorMessage = err.data.message;
 			});
 		};
+
+		//UPDATE TOURNAMENT FUNCTION
+		$scope.showUpdate = false;
+
+		$scope.submitUpdate = function () {
+			$http.put('/app/tournament/' + $scope.tournament.id, $scope.tournament)
+			.then(function successCallback(res) {
+				$scope.SuccessMessage = res.data.data.message;
+				$scope.showUpdate = false;
+			}, function errorCallback(err) {
+				$scope.ErrorMessage = res.data.data.message;	
+			});
+		}
 	}
 });
 
