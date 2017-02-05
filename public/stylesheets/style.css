@@ -190,6 +190,9 @@ hr.star-user:after {
 .details td {
 	text-align: right;
 }
+.left-align td {
+	text-align: left;
+}
 
 .btnpadding {
 	margin-left: 20px;

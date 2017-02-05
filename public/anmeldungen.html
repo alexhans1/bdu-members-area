@@ -1,0 +1,59 @@
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="intro-text">
+					<span class="name"><span class="fa fa-group"></span> Reg Overview</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<section id="tournament-info">
+	<div class="col-sm-10 col-sm-offset-1">
+		<table class="table table-hover table-responsive">
+			<thead>
+				<tr>
+					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('id')">ID</button></th>
+					<th class="col-md-2"><button class="btn btn-info btn-sm" ng-click="sort('name')">Name</button></th>
+					<th class="col-md-6">Users</th>
+				</tr>
+			</thead>
+			<tbody class="left-align">
+				<tr ng-repeat="tournaments in tournamentsusers">
+					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.id}}</a></td>
+					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.vorname}} {{tournaments.name}}</a></td>
+					<td ng-hide="detailedTournament == tournaments.id">{{tournaments.users.length}}</td>
+					<td ng-show="detailedTournament == tournaments.id">
+						<span ng-repeat="users in tournaments.users">
+							<table class="table">
+								<tr>
+									<th class="col-md-2">Name:</th>
+									<td class="col-md-2">{{users.vorname}} {{users.name}}</td>
+									<td class="col-md-2"><button class="btn btn-primary btn-sm">Edit</button></td>
+								</tr>
+								<tr>
+									<th class="col-md-2">Role:</th>
+									<td>{{users.role}}</td>
+								</tr>
+								<tr ng-show="users.role == 'speaker'">
+									<th class="col-md-2">Teamname:</th>
+									<td>{{users.teamname}}</td>
+								</tr>
+								<tr>
+									<th class="col-md-2">Went:</th>
+									<td ng-show="users.attended == null">
+										<span class="glyphicon glyphicon-remove"></span>
+										<button ng-show="users.id == user.id" class="btn btn-sm btn-primary" style="margin-left: 15px" ng-click="went(users.t_u_id)">Went</button>
+									</td>
+									<td ng-hide="users.attended == null"><span class="glyphicon glyphicon-ok"></span></td>
+								</tr>
+							</table>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>

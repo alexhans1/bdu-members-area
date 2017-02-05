@@ -8,7 +8,7 @@ var Schema = {
 		gender: {type: 'string', maxlength: 150, nullable: false},
 		food: {type: 'string', maxlength: 20, nullable: true},
 		image: {type: 'string', maxlength: 150, nullable: true},
-		role: {type: 'integer', maxlength: 150, nullable: true},
+		position: {type: 'integer', maxlength: 150, nullable: true},
 		resetPasswordToken: {type: 'string', maxlength: 100, nullable: true},
 		resetPasswordExpires: {type: 'integer', nullable: true}
 	},
@@ -32,16 +32,17 @@ var Schema = {
 		language: {type: 'string', maxlength: 150, nullable: true},
 	},
 	tournaments_users: {
-		user_id: {type: 'integer', nullable: false, primary: true},
-		tournament_id: {type: 'integer', nullable: false, primary: true},
+		t_u_id: {type: 'increments', nullable: false, primary: true},
+		user_id: {type: 'integer', nullable: false},
+		tournament_id: {type: 'integer', nullable: false},
 		role: {type: 'string', maxlength: 150, nullable: false},
-		teamname: {type: 'string', maxlength: 150, nullable: false, unique: true},
-		attended: {type: 'integer', maxlength: 3, fieldtype: 'medium', nullable: false},
-		price_owed: {type: 'decimal', fieldtype: 'medium', nullable: false},
-		price_paid: {type: 'decimal', fieldtype: 'medium', nullable: false},
-		comment: {type: 'text', maxlength: 16777215, fieldtype: 'medium', nullable: false},
-		created_at: {type: 'dateTime', nullable: false},
-		updated_at: {type: 'dateTime', nullable: true}
+		teamname: {type: 'string', maxlength: 150, nullable: true},
+		attended: {type: 'integer', maxlength: 3, fieldtype: 'medium', nullable: true},
+		price_owed: {type: 'decimal', fieldtype: 'medium', nullable: true},
+		price_paid: {type: 'decimal', fieldtype: 'medium', nullable: true},
+		comment: {type: 'text', maxlength: 16777215, fieldtype: 'medium', nullable: true},
+		created_at: {type: 'dateTime'},
+		updated_at: {type: 'dateTime'}
 	}
 };
 module.exports = Schema;

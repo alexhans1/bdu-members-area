@@ -16,7 +16,7 @@ var app = angular.module('bduApp', [
 	.then(function (user) {
 		if (user.status != 204) {
 			$rootScope.authenticated = true;
-			$rootScope.istVorstand = (user.data.role == 1) ? true : false;
+			$rootScope.istVorstand = (user.data.position == 1) ? true : false;
 			$rootScope.user = user.data;
 			$rootScope.imgURL = '/images/userPics/' + user.data.image;
 		}
@@ -66,6 +66,11 @@ app.config(function($routeProvider){
 	.when('/vorstand', {
 		templateUrl: 'vorstand.html',
 		controller: 'VorstandCrtl'
+	})
+	//the reg overview display
+	.when('/anmeldungen', {
+		templateUrl: 'anmeldungen.html',
+		controller: 'OverviewCtrl'
 	})
 	//the tournaments display
 	.when('/editTournament', {
@@ -132,7 +137,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		//get all Tournaments
 		var getAllTournaments = function () {
-			$http.get('/app/tournament')
+			$http.get('/app/getAllTournamentsUsers')
 			.then(function successCallback(tournaments) {
 				$scope.alltournaments = tournaments.data;
 				$scope.tournaments = $scope.alltournaments;
@@ -140,7 +145,6 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		}
 
 		getAllTournaments();
-			
 
 		$scope.setTournament = function(id, scroll) {
 			$scope.tournament = _.find($scope.alltournaments, {id: id});
@@ -179,7 +183,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.selected = $scope.roles[0];
 
 		$scope.isSpeaker = false;
-		$scope.role;
+		$scope.role = 'judge';
 		$scope.setRole = function () {
 			$scope.isSpeaker = ($scope.selected.id == 2) ? true : false;
 			$scope.role = $scope.selected.value;
@@ -274,12 +278,6 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 		$location.path('/');
 	} else {
 
-		//get all Tournaments
-		$http.get('/app/tournament')
-		.then(function successCallback(tournaments) {
-			$scope.tournaments = tournaments.data;
-		});
-
 		$scope.newTournament = {
 			name: '',
 			ort: '',
@@ -322,6 +320,50 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 	}
 });
 
+app.controller('OverviewCtrl', function($scope, $http, $rootScope) {
+
+	if(!$rootScope.authenticated) {
+		$location.path('/');
+	} else {
+
+		//UEBERSICHT ANMELDUNGEN
+
+		//get all Users and their Tournaments
+		$http.get('/app/getAllTournamentsUsers')
+		.then(function successCallback(collection) {
+			$scope.tournamentsusers = collection.data;
+		});
+		$scope.dir = 'asc';
+		$scope.sort = function(key, dir){
+			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], $scope.dir);
+			$scope.dir = ($scope.dir == 'asc') ? 'desc' : 'asc';
+		}
+
+		$scope.detailedTournament = '';
+
+		$scope.open = function (user_id) {
+			if (user_id == $scope.detailedTournament) $scope.detailedTournament = ''
+			else $scope.detailedTournament = user_id;
+		};
+
+		$scope.went = function(t_u_id){
+			$http.put('/app/setAttended/' + t_u_id)
+			.then(function successCallback(response) {
+				if (!response.error) {
+					$http.get('/app/getAllTournamentsUsers')
+					.then(function successCallback(collection) {
+						$scope.tournamentsusers = collection.data;
+					});
+				} else {
+					confirm(response.data.message);
+				}
+			}, function errorCallback(err) {
+				confirm(err.data);
+			});
+		};
+	}
+});
+
 app.controller('ResetCtrl', function($scope, $http, $location) {
 
 	$scope.email = '';
@@ -351,7 +393,7 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
 				$rootScope.imgURL = '/images/userPics/' + data.user.image;
-				$rootScope.istVorstand = (data.user.role == 1) ? true : false;
+				$rootScope.istVorstand = (data.user.position == 1) ? true : false;
 				$location.path('/profile');
 			}
 			else{
@@ -366,7 +408,7 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
 				$rootScope.imgURL = '/images/userPics/' + data.user.image;
-				$rootScope.istVorstand = (data.user.role == 1) ? true : false;
+				$rootScope.istVorstand = (data.user.position == 1) ? true : false;
 				$location.path('/profile');
 			}
 			else{

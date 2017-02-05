@@ -3,6 +3,7 @@ var router = express.Router();
 var _ = require('lodash');
 var fs = require('fs');
 var multer  = require('multer');
+async = require('async');
 var upload = multer({ dest: 'public/images/userPics/' });
 
 //Used for routes that must be authenticated.
@@ -51,7 +52,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User);
+			return this.belongsToMany(User);//.withPivot(['t_u_id','role','attended','teamname']);
 		}
 	});
 
@@ -75,7 +76,7 @@ module.exports = function(Bookshelf){
 		// fetch all users
 		.get(function (req, res) {
 			//Check if session user is authorized
-			if(req.user.role == 1){
+			if(req.user.position == 1){
 				Users.forge()
 				.fetch()
 				.then(function (collection) {
@@ -135,7 +136,7 @@ module.exports = function(Bookshelf){
 		//show update user info form
 		.get(function (req, res) {
 			//check if session user is the requested user
-			if(req.params.id == req.user.id || req.user.role == 1){
+			if(req.params.id == req.user.id || req.user.position == 1){
 				User.forge({id: req.params.id})
 				.fetch()
 				.then(function (user) {
@@ -161,7 +162,7 @@ module.exports = function(Bookshelf){
 		// update user details
 		.put(function (req, res) {
 			//check if session user is the requested user
-			if(req.params.id == req.user.id || req.user.role == 1){
+			if(req.params.id == req.user.id || req.user.position == 1){
 				User.forge({id: req.params.id})
 				.fetch({require: true})
 				.then(function (user) {
@@ -192,7 +193,7 @@ module.exports = function(Bookshelf){
 		// delete a user
 		.delete(function (req, res) {
 			//check if session user is the requested user
-			if(req.params.id == req.user.id || req.user.role == 1){
+			if(req.params.id == req.user.id || req.user.position == 1){
 				User.forge({id: req.params.id})
 				.fetch({require: true})
 				.then(function (user) {
@@ -233,7 +234,7 @@ module.exports = function(Bookshelf){
 		// create a tournament
 		.post(function (req, res) {
 			//Check if session user is authorized
-			if(req.user.role == 1){
+			if(req.user.position == 1){
 				Tournament.forge({
 					name: req.body.name,
 					ort: req.body.ort,
@@ -291,7 +292,7 @@ module.exports = function(Bookshelf){
 		// update tournament details
 		.put(function (req, res) {
 			//Check if session user is authorized
-			if(req.user.role == 1){
+			if(req.user.position == 1){
 				Tournament.forge({id: req.params.id})
 				.fetch({require: true})
 				.then(function (tournament) {
@@ -325,13 +326,13 @@ module.exports = function(Bookshelf){
 			} else {
 				console.log('User is not authorized to update tournament');
 				res.status(401).json({error: true, message: 'Unauthorized'});
-			}			
+			}
 		})
 
 		// delete a tournament
 		.delete(function (req, res) {
 			//Check if session user is authorized
-			if(req.user.role == 1){
+			if(req.user.position == 1){
 				Tournament.forge({id: req.params.id})
 				.fetch({require: true})
 				.then(function (tournament) {
@@ -443,7 +444,7 @@ module.exports = function(Bookshelf){
 	// router to get all tournaments the logged in user is registered for
 	router.route('/getUserTournaments')
 		.get(function (req, res) {
-			User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})  
+			User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})
 			.then(function(user) {
 				var tournaments = user.related('tournaments').toJSON();
 				Tournaments_Users_Col.query(function(qb) {
@@ -451,7 +452,7 @@ module.exports = function(Bookshelf){
 				}).fetch()
 				.then(function (data) {
 					var merge = _.map(tournaments, function(item) {
-					    return _.merge(item, _.find(data.toJSON(), { 'tournament_id' : item.id }));
+						return _.merge(item, _.find(data.toJSON(), { 'tournament_id' : item.id }));
 					});
 					res.send(merge);
 				})
@@ -475,6 +476,82 @@ module.exports = function(Bookshelf){
 			})
 		});
 
+	//for finances
+	router.route('/getAllUserTournaments')
+		.get(function (req, res) {
+			Users.forge().fetch({withRelated: ['tournaments']})
+			.then(function (collection) {
+				res.send(collection.toJSON());
+			})
+			.catch(function (err) {
+				res.status(500).send(err);
+			})
+		});
+
+	// //for overview of tournament registrations
+	// router.route('/getAllTournamentsUsers')
+	// 	.get(function (req, res) {
+	// 		Tournaments.forge().fetch({withRelated: ['users']})
+	// 		.then(function(tournaments) {
+	// 			_.forEach(tournaments.toJSON(), function(value, key){
+	// 				_.forEach(value.users, function(entry, key2){
+	// 					var arr = JSON.parse(entry);
+	// 					console.info(entry);
+	// 				})
+	// 			})
+	// 			res.send(tournaments.toJSON());
+	// 		})
+	// 		.catch(function (err) {
+	// 			res.status(500).send(err);
+	// 		})
+	// 	});
+
+	//for overview of tournament registrations
+	router.route('/getAllTournamentsUsers')
+		.get(function (req, res) {
+			
+			var merge = [];
+			Tournaments.forge().fetch({withRelated: ['users']})
+			.then(function(tournaments) {
+				_.forEach(tournaments.toJSON(), function(value, key){
+					Tournaments_Users_Col.query(function(qb) {
+						qb.where('tournament_id', '=', value.id);
+					}).fetch()
+					.then(function (data) {
+						_.forEach(value.users, function(user, key){
+							_.assign(user, _.find(data.toJSON(), { 'user_id' : user.id }));
+						});
+						merge.push(value);
+						if(merge.length == tournaments.length) res.send(merge);
+					})
+					.catch(function (err) {
+						res.send(err);
+						done(new Error("Error:" + err));
+					});
+				});
+			})
+			.catch(function (err) {
+				res.send(err);
+				done(new Error("Error:" + err));
+			});
+		});
+
+	router.route('/setAttended/:id')
+		.get(function (req, res) {
+			Tournaments_Users.forge({t_u_id: req.params.id})
+			.fetch({require: true})
+			.then(function (entry) {
+				entry.save({
+					attended: 1
+				})
+				console.log('Updating tournament successful.');
+				res.status(200).json({error: false, data: entry});
+			})
+			.catch(function (err) {
+				console.error('Error while updating tournament.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		});
 
 	return router;
 }
