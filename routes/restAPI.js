@@ -476,7 +476,7 @@ module.exports = function(Bookshelf){
 			})
 		});
 
-	//for finances
+	// overview for finances
 	router.route('/getAllUserTournaments')
 		.get(function (req, res) {
 			Users.forge().fetch({withRelated: ['tournaments']})
@@ -488,23 +488,22 @@ module.exports = function(Bookshelf){
 			})
 		});
 
-	// //for overview of tournament registrations
-	// router.route('/getAllTournamentsUsers')
-	// 	.get(function (req, res) {
-	// 		Tournaments.forge().fetch({withRelated: ['users']})
-	// 		.then(function(tournaments) {
-	// 			_.forEach(tournaments.toJSON(), function(value, key){
-	// 				_.forEach(value.users, function(entry, key2){
-	// 					var arr = JSON.parse(entry);
-	// 					console.info(entry);
-	// 				})
-	// 			})
-	// 			res.send(tournaments.toJSON());
-	// 		})
-	// 		.catch(function (err) {
-	// 			res.status(500).send(err);
-	// 		})
-	// 	});
+	//for delete registration
+	router.route('/deleteReg')
+		.delete(function (req, res) {
+
+			var rawSql = 'DELETE FROM tournaments_users WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
+
+			Bookshelf.knex.raw(rawSql)
+			.then(function () {
+				console.log('Deleting registration successful.');
+				res.status(200).json({error: false, message: 'Deleting registration successful.'});
+			})
+			.catch(function (err) {
+				console.error('Error while deleting registration.');
+				res.status(500).json({error: true, data: {message: err.message}});
+			})
+		});
 
 	//for overview of tournament registrations
 	router.route('/getAllTournamentsUsers')
@@ -536,16 +535,14 @@ module.exports = function(Bookshelf){
 			});
 		});
 
-	router.route('/setAttended/:id')
-		.get(function (req, res) {
-			Tournaments_Users.forge({t_u_id: req.params.id})
-			.fetch({require: true})
-			.then(function (entry) {
-				entry.save({
-					attended: 1
-				})
-				console.log('Updating tournament successful.');
-				res.status(200).json({error: false, data: entry});
+	router.route('/setAttended')
+		.put(function (req, res) {
+			
+			var rawSql = 'UPDATE tournaments_users SET attended =1 WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
+
+			Bookshelf.knex.raw(rawSql)
+			.then(function() {
+				res.status(200).json({error: false, data: {message: 'works'}});
 			})
 			.catch(function (err) {
 				console.error('Error while updating tournament.');

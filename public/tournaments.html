@@ -21,22 +21,26 @@
 					<table class="table table-hover table-responsive">
 						<thead>
 							<tr>
-								<th class="col-md-2 text-center">Name</th>
-								<th class="col-md-2 text-center hidden-xs">Place</th>
-								<th class="col-md-2 text-center">Date</th>
-								<th class="col-md-2 text-center hidden-xs">Spots</th>
-								<th class="col-md-2 text-center"><button class="btn btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
+								<th class="col-md-2">Name</th>
+								<th class="col-md-2 hidden-xs">Place</th>
+								<th class="col-md-2">Date</th>
+								<th class="col-md-2 hidden-xs">Spots</th>
+								<th class="col-md-2"><button class="btn btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody class="left-align">
 							<tr ng-repeat="t in tournaments">
 								<td>{{t.name}}</td>
 								<td class="hidden-xs">{{t.ort}}</td>
 								<td>{{t.startdate | date:'dd.MM.yyyy'}} -<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
 								<td class="hidden-xs">Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
 								<td>{{t.language}}</td>
-								<td><button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button></td>
-								<td><button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button></td>
+								<td>
+									<button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button>
+								</td>
+								<td>
+									<button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -45,11 +49,14 @@
 			</div>
 
 			<!-- Details -->
-			<div id="details" class="col-md-4 wellpadding">
+			<div ng-show="showDetails" id="details" class="col-md-4 wellpadding">
 				<table class="table table-hover details">
 					<tr>
 						<th><h4><span class="fa fa-book"></span> Details</h4><br></th>
-						<td><button ng-show="showDetails" class="btn btn-success btn-lg" ng-click="ShowNgDialog()">Anmelden</button></td>
+						<td>
+							<button ng-show="isReged" class="btn btn-danger btn-lg" ng-click="unreg(tournament.id, user.id)">Abmelden</button>
+							<button ng-hide="isReged" class="btn btn-success btn-lg" ng-click="ShowNgDialog()">Anmelden</button>
+						</td>
 					</tr>
 					<tr>
 						<th>Name:</th>

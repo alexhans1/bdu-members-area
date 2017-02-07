@@ -15,23 +15,35 @@
 		<table class="table table-hover table-responsive">
 			<thead>
 				<tr>
-					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('id')">ID</button></th>
-					<th class="col-md-2"><button class="btn btn-info btn-sm" ng-click="sort('name')">Name</button></th>
+					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('id')">Tournament ID</button></th>
+					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('name')">Name</button></th>
+					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('startdate')">Startdate</button></th>
+					<th class="col-md-1"><button class="btn btn-info btn-sm" ng-click="sort('language')">Language</button></th>
 					<th class="col-md-6">Users</th>
 				</tr>
 			</thead>
 			<tbody class="left-align">
 				<tr ng-repeat="tournaments in tournamentsusers">
 					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.id}}</a></td>
-					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.vorname}} {{tournaments.name}}</a></td>
+					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.name}}</a></td>
+					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.startdate | date:'dd.MM.yyyy'}}</a></td>
+					<td><a class="text-primary" href="" ng-click="open(tournaments.id)">{{tournaments.language}}</a></td>
 					<td ng-hide="detailedTournament == tournaments.id">{{tournaments.users.length}}</td>
 					<td ng-show="detailedTournament == tournaments.id">
 						<span ng-repeat="users in tournaments.users">
 							<table class="table">
 								<tr>
 									<th class="col-md-2">Name:</th>
-									<td class="col-md-2">{{users.vorname}} {{users.name}}</td>
-									<td class="col-md-2"><button class="btn btn-primary btn-sm">Edit</button></td>
+									<td class="col-md-2">
+										<img style="height: 40px; width: 40px; border:1px solid gainsboro; border-radius: 50%;" class="img-hor" ng-src="/images/userPics/{{users.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/> 
+										{{users.vorname}} {{users.name}}
+									</td>
+									<td ng-show="users.id == user.id || istVorstand" class="col-md-2">
+										<button ng-click="delete(tournaments.id, users.id)" class="btn btn-danger btn-sm">
+											<span class="glyphicon glyphicon-trash"> </span>
+											Delete
+										</button>
+									</td>
 								</tr>
 								<tr>
 									<th class="col-md-2">Role:</th>
@@ -43,11 +55,11 @@
 								</tr>
 								<tr>
 									<th class="col-md-2">Went:</th>
-									<td ng-show="users.attended == null">
+									<td ng-hide="users.attended == 1">
 										<span class="glyphicon glyphicon-remove"></span>
-										<button ng-show="users.id == user.id" class="btn btn-sm btn-primary" style="margin-left: 15px" ng-click="went(users.t_u_id)">Went</button>
+										<button ng-show="users.id == user.id || istVorstand" class="btn btn-sm btn-primary" style="margin-left: 15px" ng-click="went(tournaments.id, users.id)">Went</button>
 									</td>
-									<td ng-hide="users.attended == null"><span class="glyphicon glyphicon-ok"></span></td>
+									<td ng-show="users.attended == 1"><span class="glyphicon glyphicon-ok"></span></td>
 								</tr>
 							</table>
 						</span>

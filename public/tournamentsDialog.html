@@ -20,7 +20,7 @@
 				<label>Teamname</label><br><p>Don't have a teampartner yet? Just leave blank.</p>
 				<input type="text" ng-model="team" class="form-control" name="team" list="teamnames">
 				<datalist id="teamnames">
-					<option ng-repeat="t in teams" value="{{t}}"></option>
+					<option ng-repeat="u in tournament.users" value="{{u.teamname}}"></option>
 				</datalist>
 			</div>
 		</div>

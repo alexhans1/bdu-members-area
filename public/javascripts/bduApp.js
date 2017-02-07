@@ -139,7 +139,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		var getAllTournaments = function () {
 			$http.get('/app/getAllTournamentsUsers')
 			.then(function successCallback(tournaments) {
-				$scope.alltournaments = tournaments.data;
+				$scope.alltournaments = _.orderBy(tournaments.data, ['startdate'], 'asc');
 				$scope.tournaments = $scope.alltournaments;
 			});
 		}
@@ -147,8 +147,10 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		getAllTournaments();
 
 		$scope.setTournament = function(id, scroll) {
+			getAllTournaments();
 			$scope.tournament = _.find($scope.alltournaments, {id: id});
 			$scope.showDetails = true;
+			//load teamnames for this tournament
 			$scope.teams = [];
 			$http.get('app/teamnames/' + id)
 			.then(function successCallback(col) {
@@ -161,6 +163,10 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				console.log(err);
 			});
 
+			//check if user is registered for this tournament
+			$scope.isReged = (!_.find($scope.tournament.users, {'id': $scope.user.id})) ? false : true;
+
+			//scroll if mobile
 			if(scroll) {
 				anchorSmoothScroll.scrollTo('details');
 			}
@@ -269,6 +275,39 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				$scope.toggleVal = 'de';
 			}
 		}
+
+		//DELETE REGISTRATION
+		$scope.unreg = function(t_id, u_id){
+			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+			if (deleteReg) {
+				var parameters = JSON.stringify({
+					t_id: t_id,
+					u_id: u_id
+				});
+				$http({
+					url: 'app/deleteReg',
+					method: 'DELETE',
+					data: {
+						t_id: t_id,
+						u_id: u_id
+					},
+					headers: {
+						"Content-Type": "application/json;charset=utf-8"
+					}
+				})
+				.then(function successCallback(response) {
+					if (!response.error) {
+						getAllTournaments();
+						$scope.isReged = false;
+						$scope.SuccessMessage = response.message;
+					} else {
+						$scope.ErrorMessage = response.data.message;
+					}
+				}, function errorCallback(err) {
+					$scope.ErrorMessage = err.data;
+				});
+			}
+		};
 	}
 });
 
@@ -320,7 +359,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -331,7 +370,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope) {
 		//get all Users and their Tournaments
 		$http.get('/app/getAllTournamentsUsers')
 		.then(function successCallback(collection) {
-			$scope.tournamentsusers = collection.data;
+			$scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
 		});
 		$scope.dir = 'asc';
 		$scope.sort = function(key, dir){
@@ -346,8 +385,13 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope) {
 			else $scope.detailedTournament = user_id;
 		};
 
-		$scope.went = function(t_u_id){
-			$http.put('/app/setAttended/' + t_u_id)
+		//SET ATTENDED TO 1
+		$scope.went = function(t_id, u_id){
+			var parameters = JSON.stringify({
+				t_id: t_id,
+				u_id: u_id
+			});
+			$http.put('/app/setAttended', parameters)
 			.then(function successCallback(response) {
 				if (!response.error) {
 					$http.get('/app/getAllTournamentsUsers')
@@ -360,6 +404,40 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope) {
 			}, function errorCallback(err) {
 				confirm(err.data);
 			});
+		};
+
+		//DELETE REGISTRATION
+		$scope.delete = function(t_id, u_id){
+			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+			if (deleteReg) {
+				var parameters = JSON.stringify({
+					t_id: t_id,
+					u_id: u_id
+				});
+				$http({
+					url: 'app/deleteReg',
+					method: 'DELETE',
+					data: {
+						t_id: t_id,
+						u_id: u_id
+					},
+					headers: {
+						"Content-Type": "application/json;charset=utf-8"
+					}
+				})
+				.then(function successCallback(response) {
+					if (!response.error) {
+						$http.get('/app/getAllTournamentsUsers')
+						.then(function successCallback(collection) {
+							$scope.tournamentsusers = collection.data;
+						});
+					} else {
+						confirm(response.data.message);
+					}
+				}, function errorCallback(err) {
+					confirm(err.data);
+				});
+			}
 		};
 	}
 });
