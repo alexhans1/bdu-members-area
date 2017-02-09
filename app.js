@@ -14,6 +14,8 @@ var conn = require('./knex/knexfile.js'); //read out the DB Conn Data
 var knex = require('knex')(conn['development']); //require knex query binder
 var Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 
+console.info(process.env.TEST_CONFIG_VAR);
+
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables
 var index = require('./routes/index');

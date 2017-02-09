@@ -134,6 +134,11 @@ hr.star-user:after {
 	font-weight: 300;
 }
 
+.table-overview {
+	font-size: 1.25em;
+	font-weight: 300;
+}
+
 .my-tournaments-table {
 	font-size: 1.25em;
 	font-weight: 300;

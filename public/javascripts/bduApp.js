@@ -147,6 +147,12 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		getAllTournaments();
 
 		$scope.setTournament = function(id, scroll) {
+
+			//scroll if mobile
+			if(scroll) {
+				anchorSmoothScroll.scrollTo('details');
+			}
+			
 			getAllTournaments();
 			$scope.tournament = _.find($scope.alltournaments, {id: id});
 			$scope.showDetails = true;
@@ -165,11 +171,6 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 			//check if user is registered for this tournament
 			$scope.isReged = (!_.find($scope.tournament.users, {'id': $scope.user.id})) ? false : true;
-
-			//scroll if mobile
-			if(scroll) {
-				anchorSmoothScroll.scrollTo('details');
-			}
 		};
 
 		$scope.roles = [{
@@ -340,12 +341,13 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 		$scope.ErrorMessage = '';
 
 		$scope.submit = function () {
-			if ($scope.newTournament.name == '') {
-				$scope.ErrorMessage = 'Du musst mindestens einen Namen eintragen.'
+			if ($scope.newTournament.name == '' || $scope.newTournament.language == '') {
+				$scope.ErrorMessage = 'Name und Sprache müssen gesetzt werden.';
 			} else {
 				$http.post('/app/tournament', $scope.newTournament)
 				.then(function successCallback(response) {
 					if (!response.error) {
+						$scope.ErrorMessage = '';
 						$scope.SuccessMessage = 'Neues Turnier erstellt.';
 						//TODO update Tournaments resource
 					} else {
@@ -359,7 +361,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anchorSmoothScroll) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -381,7 +383,10 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window) {
 		$scope.detailedTournament = '';
 
 		$scope.open = function (user_id) {
-			if (user_id == $scope.detailedTournament) $scope.detailedTournament = ''
+			if (user_id == $scope.detailedTournament){
+				$scope.detailedTournament = '';
+				$scope.showUsers = false;
+			}
 			else $scope.detailedTournament = user_id;
 		};
 
@@ -439,6 +444,18 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window) {
 				});
 			}
 		};
+
+		//FOR MOBILE VIEW
+		$scope.showUsers = false;
+		
+		$scope.goToUsers = function (tournament) {
+			$scope.overview_users = tournament.users;
+			$scope.showUsers = true;
+
+			//scroll if mobile
+			anchorSmoothScroll.scrollTo('users');
+		};
+
 	}
 });
 
