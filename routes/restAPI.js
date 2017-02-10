@@ -3,19 +3,20 @@ var router = express.Router();
 var _ = require('lodash');
 var fs = require('fs');
 var multer  = require('multer');
-var FTPStorage = require('multer-ftp');
-async = require('async');
+var FTPStorage = require('multer-ftp')
+ 
 var upload = multer({
 	storage: new FTPStorage({
-		basepath: '/public_html/BDUDBdev/userpics/',
+		basepath: '/remote/path',
 		ftp: {
 			host: 'ftp.hosting-agency.de',
-			secure: true, // enables FTPS/FTP with TLS 
+			// secure: true, // enables FTPS/FTP with TLS 
 			user: 'u0023243923',
-			password: process.env.BDU_ftp_server
+			password: 'berlindebating'
 		}
 	})
 });
+async = require('async');
 // var upload = multer({ dest: 'public/images/userPics/' });
 // var upload = multer({ dest: 'ftp://ftp.hosting-agency.de/public_html/BDUDBdev/userpics/' });
 
