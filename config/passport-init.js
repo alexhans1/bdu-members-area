@@ -3,7 +3,7 @@ var bCrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
 var async = require('async');
 var nodemailer = require('nodemailer');
-var sg = require('sendgrid')('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');
+var sg = require('sendgrid')(process.env.SENDGRID_KEY);
 var helper = require('sendgrid').mail;
 
 module.exports = function(passport, Bookshelf){
@@ -88,7 +88,10 @@ module.exports = function(passport, Bookshelf){
 				// create the user
 				User.forge({
 					email: req.body.email,
-					password: createHash(req.body.password)
+					password: createHash(req.body.password),
+					vorname: req.body.vorname,
+					name: req.body.name,
+					gender: req.body.gender
 				})
 				.save()
 				.then(function (user) {

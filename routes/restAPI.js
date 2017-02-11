@@ -3,21 +3,21 @@ var router = express.Router();
 var _ = require('lodash');
 var fs = require('fs');
 var multer  = require('multer');
-// var FTPStorage = require('multer-ftp')
+var FTPStorage = require('multer-ftp')
  
-// var upload = multer({
-// 	storage: new FTPStorage({
-// 		basepath: '/public_html/BDUDBdev/userpics/',
-// 		ftp: {
-// 			host: 'ftp.hosting-agency.de',
-// 			// secure: true, // enables FTPS/FTP with TLS 
-// 			user: 'u0023243923',
-// 			password: 'berlindebating'
-// 		}
-// 	})
-// });
+var upload = multer({
+	storage: new FTPStorage({
+		basepath: '/public_html/BDUDBdev/userpics/',
+		ftp: {
+			host: 'ftp.hosting-agency.de',
+			// secure: true, // enables FTPS/FTP with TLS 
+			user: 'u0023243923',
+			password: 'berlindebating'
+		}
+	})
+});
 async = require('async');
-var upload = multer({ dest: 'public/images/userPics/' });
+// var upload = multer({ dest: 'public/images/userPics/' });
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -127,8 +127,9 @@ module.exports = function(Bookshelf){
 		.post(upload.single('pic'), function (req, res) {
 			User.forge({id: req.user.id}).fetch()
 			.then(function (user) {
+				console.log(req.file);
 				user.save({
-					image: req.file.filename
+					image: req.file.path.split("/")[req.file.path.split("/").length-1]
 				});
 				var deletePath = './public/images/userPics/' + user.get('image');
 				if (fs.existsSync(deletePath)) {

@@ -152,7 +152,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			if(scroll) {
 				anchorSmoothScroll.scrollTo('details');
 			}
-			
+
 			getAllTournaments();
 			$scope.tournament = _.find($scope.alltournaments, {id: id});
 			$scope.showDetails = true;
@@ -468,7 +468,7 @@ app.controller('ResetCtrl', function($scope, $http, $location) {
 	$scope.submit = function(){
 		$http.post('/forgot', {email: $scope.email})
 		.then(function successCallback(response) {
-			$scope.message = res.data;
+			$scope.message = 'An E-Mail has been sent to you with further instructions. Since we are financing this project by advertising penis enlargment instruments you should ALSO CHECK YOUR SPAM FOLDER.';
 		}, function errorCallback(err) {
 			$scope.message = err;
 		});
@@ -476,14 +476,22 @@ app.controller('ResetCtrl', function($scope, $http, $location) {
 });
 
 app.controller('authCtrl', function($scope, $http, $rootScope, $location){
-	$scope.user = {
+	$scope.loginuser = {
 		email: '',
 		password: ''
+	};
+
+	$scope.reguser = {
+		email: '',
+		password: '',
+		name: '',
+		vorname: '',
+		gender: ''
 	};
 	$scope.error_message = '';
 
 	$scope.login = function(){
-		$http.post('/login', $scope.user).success(function(data){
+		$http.post('/login', $scope.loginuser).success(function(data){
 			if(data.state == 'success'){
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
@@ -498,18 +506,33 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 	};
 
 	$scope.register = function(){
-		$http.post('/signup', $scope.user).success(function(data){
-			if(data.state == 'success'){
-				$rootScope.authenticated = true;
-				$rootScope.user = data.user;
-				$rootScope.imgURL = '/images/userPics/' + data.user.image;
-				$rootScope.istVorstand = (data.user.position == 1) ? true : false;
-				$location.path('/profile');
-			}
-			else{
-				$scope.error_message = data.message;
-			}
-		});
+		if ($scope.match) {
+			$http.post('/signup', $scope.reguser).success(function(data){
+				if(data.state == 'success'){
+					$rootScope.authenticated = true;
+					$rootScope.user = data.user;
+					$rootScope.imgURL = '/images/userPics/' + data.user.image;
+					$rootScope.istVorstand = (data.user.position == 1) ? true : false;
+					$location.path('/profile');
+				}
+				else{
+					$scope.error_message = data.message;
+				}
+			});
+		} else {
+			$scope.error_message = 'Passwords do not match.';
+		}
+			
+	};
+
+	//CHECK FOR PW MATCH
+	$scope.match = false;
+	$scope.confirmFill = false;
+	$scope.pwd2 = '';
+
+	$scope.checkMatch = function() {
+		if(($scope.reguser.password == $scope.pwd2) && $scope.confirmFill) $scope.match = true;
+		else $scope.match = false;
 	};
 });
 
