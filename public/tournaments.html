@@ -25,7 +25,7 @@
 								<th class="col-md-2 hidden-xs">Place</th>
 								<th class="col-md-2">Date</th>
 								<th class="col-md-2 hidden-xs">Spots</th>
-								<th class="col-md-2"><button class="btn btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
+								<th class="col-md-2"><button class="btn btn-raised btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
 							</tr>
 						</thead>
 						<tbody class="left-align">
@@ -36,10 +36,10 @@
 								<td class="hidden-xs">Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
 								<td>{{t.language}}</td>
 								<td>
-									<button class="btn btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button>
+									<button class="btn btn-raised btn-info hidden-xs" ng-click="setTournament(t.id, false)">Details</button>
 								</td>
 								<td>
-									<button class="btn btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button>
+									<button class="btn btn-raised btn-info visible-xs" ng-click="setTournament(t.id, true)">Details</button>
 								</td>
 							</tr>
 						</tbody>
@@ -54,8 +54,8 @@
 					<tr>
 						<th><h4><span class="fa fa-book"></span> Details</h4><br></th>
 						<td>
-							<button ng-show="isReged" class="btn btn-danger btn-lg" ng-click="unreg(tournament.id, user.id)">Abmelden</button>
-							<button ng-hide="isReged" class="btn btn-success btn-lg" ng-click="ShowNgDialog()">Anmelden</button>
+							<button ng-show="isReged" class="btn btn-raised btn-danger btn-lg" ng-click="unreg(tournament.id, user.id)">Abmelden</button>
+							<button ng-hide="isReged" class="btn btn-raised btn-success btn-lg" ng-click="ShowNgDialog()">Anmelden</button>
 						</td>
 					</tr>
 					<tr>
@@ -116,8 +116,8 @@
 					</tr>
 						<th></th>
 						<td ng-show="showDetails && istVorstand">
-							<button class="btn btn-primary" ng-click="showUpdate = true; SuccessMessage = ''; ErrorMessage = ''">Edit</button>
-							<button class="btn btn-danger" ng-click="delete()">Delete</button>
+							<button class="btn btn-raised btn-primary" ng-click="showUpdate = true; SuccessMessage = ''; ErrorMessage = ''">Edit</button>
+							<button class="btn btn-raised btn-danger" ng-click="delete()">Delete</button>
 						</td>
 					</tr>
 				</table>
@@ -277,8 +277,8 @@
 					</div>
 				</div>
 
-				<button type="submit" class="btn btn-lg btn-success pull-right btnpadding">Update Tournament</button>
-				<button class="btn btn-danger btn-lg pull-right btnpadding" ng-click="showUpdate = false">Cancel</button>
+				<button type="submit" class="btn btn-raised btn-lg btn-success pull-right btnpadding">Update Tournament</button>
+				<button class="btn btn-raised btn-danger btn-lg pull-right btnpadding" ng-click="showUpdate = false">Cancel</button>
 			</form>
 
 		</div>

@@ -69,10 +69,10 @@
 							<td ng-hide="update">{{food}}</td>
 							<td ng-show="update"><input class="form-control" name="food" ng-model="food"></td>
 
-							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-primary btn-responsive" role="button">Update Info</button></td>
+							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-raised btn-primary btn-responsive" role="button">Update Info</button></td>
 							<td ng-show="update">
-								<button ng-click="update = false" class="btn btn-danger" role="button">Cancel</button>
-								<button ng-click="updateUser()" class="btn btn-primary" role="button">Submit</button>
+								<button ng-click="update = false" class="btn btn-raised btn-danger" role="button">Cancel</button>
+								<button ng-click="updateUser()" class="btn btn-raised btn-primary" role="button">Submit</button>
 							</td>
 						</tr>
 					</table>

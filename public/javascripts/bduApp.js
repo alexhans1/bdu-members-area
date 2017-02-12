@@ -358,7 +358,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anchorSmoothScroll) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, anchorSmoothScroll) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -366,16 +366,22 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anch
 
 		//UEBERSICHT ANMELDUNGEN
 
-		//get all Users and their Tournaments
+		//get all Tournaments and their Users
 		$http.get('/app/getAllTournamentsUsers')
 		.then(function successCallback(collection) {
 			$scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
 		});
-		$scope.dir = 'asc';
-		$scope.sort = function(key, dir){
-			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], $scope.dir);
-			$scope.dir = ($scope.dir == 'asc') ? 'desc' : 'asc';
-		}
+		var tournamentDir = 'asc';
+		$scope.sortTournaments = function(key){
+			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
+            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
+		};
+
+		var userDir = 'asc';
+		$scope.sortUsers = function(key){
+            $scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
+			userDir = (userDir == 'asc') ? 'desc' : 'asc';
+		};
 
 		$scope.detailedTournament = '';
 
@@ -399,6 +405,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anch
 					$http.get('/app/getAllTournamentsUsers')
 					.then(function successCallback(collection) {
 						$scope.tournamentsusers = collection.data;
+                        $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
 					});
 				} else {
 					confirm(response.data.message);
@@ -432,6 +439,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anch
 						$http.get('/app/getAllTournamentsUsers')
 						.then(function successCallback(collection) {
 							$scope.tournamentsusers = collection.data;
+                            $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
 						});
 					} else {
 						confirm(response.data.message);
@@ -446,7 +454,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, anch
 		$scope.showUsers = false;
 		
 		$scope.goToUsers = function (tournament) {
-			$scope.overview_users = tournament.users;
+			$scope.tournament = tournament;
 			$scope.showUsers = true;
 
 			//scroll if mobile
