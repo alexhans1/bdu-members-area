@@ -2,22 +2,31 @@ var express = require('express');
 var router = express.Router();
 var _ = require('lodash');
 var fs = require('fs');
-var multer  = require('multer');
-var FTPStorage = require('multer-ftp')
+var multer = require('multer');
+async = require('async');
+var Client = require('ftp');
+var FTPStorage = require('multer-ftp');
  
 var upload = multer({
 	storage: new FTPStorage({
 		basepath: '/public_html/BDUDBdev/userpics/',
 		ftp: {
 			host: 'ftp.hosting-agency.de',
-			// secure: true, // enables FTPS/FTP with TLS 
+			// secure: true, // enables FTPS/FTP with TLS
 			user: 'u0023243923',
-			password: 'berlindebating'
+			password: process.env.db_password
 		}
 	})
 });
-async = require('async');
-// var upload = multer({ dest: 'public/images/userPics/' });
+
+var ftp = {
+    host: 'ftp.hosting-agency.de',
+    // secure: true, // enables FTPS/FTP with TLS
+    user: 'u0023243923',
+    password: process.env.db_password
+};
+
+
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -31,13 +40,9 @@ function isAuthenticated (req, res, next) {
 
 	// if the user is not authenticated then redirect him to the login page
 	return res.redirect('/');
-};
+}
 
 module.exports = function(Bookshelf){
-	// User model
-	var User = Bookshelf.Model.extend({
-		tableName: 'users'
-	});
 
 	//Register the authentication middleware
 	//for all URIs use the isAuthenticated function
@@ -125,17 +130,29 @@ module.exports = function(Bookshelf){
 	router.route('/user/image')
 		//upload new image for current user
 		.post(upload.single('pic'), function (req, res) {
+			console.log('Uploaded new user pic.');
+			//then get the current user
 			User.forge({id: req.user.id}).fetch()
 			.then(function (user) {
-				console.log(req.file);
+				//save the image path from the db
+                var deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
+
+                //update the file name in the db
 				user.save({
-					image: req.file.path.split("/")[req.file.path.split("/").length-1]
+					image: req.file.path.split("/")[req.file.path.split("/").length-1] //we only want to store the file name not the entire path
 				});
-				var deletePath = './public/images/userPics/' + user.get('image');
-				if (fs.existsSync(deletePath)) {
-					fs.unlinkSync(deletePath);
-				}			 
-				req.flash('updateMessage', 'Uploading new profile image successful.')
+
+				//lastly use node-ftp to delete the current profile pic using the deletePath
+                var c = new Client();
+                c.on('ready', function() {
+                    c.delete(deletePath, function(err) {
+                        if (err) console.error(err);
+                        else console.log('Successfully deleted old user pic: ' + deletePath);
+                        c.end();
+                    });
+                });
+                c.connect(ftp);
+
 				res.send('Uploading new profile image successful.');
 			})
 			.catch(function (err) {

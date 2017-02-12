@@ -12,6 +12,10 @@
 <div class="col-sm-6 col-sm-offset-3 file-upload">
 	<form name="myForm">
 		<h2>Crop Image and Upload</h2>
+		<p>
+			Your profile pic will be stored on the BDU server.<br>
+			If you upload a new profile pic, your old one will be deleted from the server.
+		</p>
 		<button ng-hide="submit" class="btn btn-default" ngf-select ng-model="picFile" accept="image/*" ng-click="submit = !submit">Select Picture</button>
 		<div ng-show="submit">
 			<a href="#/profile"><button class="btn btn-danger">Cancel</button></a>

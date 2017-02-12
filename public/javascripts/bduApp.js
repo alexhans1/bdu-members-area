@@ -10,15 +10,13 @@ var app = angular.module('bduApp', [
 	$rootScope.authenticated = false;
 	$rootScope.istVorstand = false;
 	$rootScope.user = null;
-	$rootScope.imgURL = null;
 
 	$http.get('/sendUser')
 	.then(function (user) {
 		if (user.status != 204) {
 			$rootScope.authenticated = true;
-			$rootScope.istVorstand = (user.data.position == 1) ? true : false;
+			$rootScope.istVorstand = (user.data.position == 1);
 			$rootScope.user = user.data;
-			$rootScope.imgURL = '/images/userPics/' + user.data.image;
 		}
 	}, function errorCallback(err) {
 		alert(err);
@@ -28,7 +26,6 @@ var app = angular.module('bduApp', [
 	$rootScope.signout = function(){
 		$http.get('/logout');
 		$rootScope.user = null;
-		$rootScope.imgURL = null;
 		$rootScope.authenticated = false;
 		$rootScope.istVorstand = false;
 	};
@@ -170,7 +167,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			});
 
 			//check if user is registered for this tournament
-			$scope.isReged = (!_.find($scope.tournament.users, {'id': $scope.user.id})) ? false : true;
+			$scope.isReged = (_.find($scope.tournament.users, {'id': $scope.user.id}));
 		};
 
 		$scope.roles = [{
@@ -192,7 +189,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.isSpeaker = false;
 		$scope.role = 'judge';
 		$scope.setRole = function () {
-			$scope.isSpeaker = ($scope.selected.id == 2) ? true : false;
+			$scope.isSpeaker = ($scope.selected.id == 2);
 			$scope.role = $scope.selected.value;
 		};
 
@@ -495,8 +492,7 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 			if(data.state == 'success'){
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
-				$rootScope.imgURL = '/images/userPics/' + data.user.image;
-				$rootScope.istVorstand = (data.user.position == 1) ? true : false;
+				$rootScope.istVorstand = (data.user.position == 1);
 				$location.path('/profile');
 			}
 			else{
@@ -511,8 +507,7 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 				if(data.state == 'success'){
 					$rootScope.authenticated = true;
 					$rootScope.user = data.user;
-					$rootScope.imgURL = '/images/userPics/' + data.user.image;
-					$rootScope.istVorstand = (data.user.position == 1) ? true : false;
+					$rootScope.istVorstand = (data.user.position == 1);
 					$location.path('/profile');
 				}
 				else{
