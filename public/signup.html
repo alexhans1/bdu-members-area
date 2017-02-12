@@ -10,69 +10,71 @@
 	</div>
 </header>
 
-<div class="col-sm-6 col-sm-offset-3">
+<section>
+	<div class="col-sm-6 col-sm-offset-3">
 
-	<!-- SIGNUP FORM -->
-	<form ng-submit="register()">
-		<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
-		<fieldset>					
-			<div class="form-group">
-				<label>Email</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-					<input type="email" name="email" pattern="[^ @]*@[^ @]*" ng-model="reguser.email" placeholder="Enter your email" class="form-control" name="email" required="true">
+		<!-- SIGNUP FORM -->
+		<form ng-submit="register()">
+			<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
+			<fieldset>
+				<div class="form-group">
+					<label>Email</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<input type="email" name="email" pattern="[^ @]*@[^ @]*" ng-model="reguser.email" placeholder="Enter your email" class="form-control" name="email" required="true">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label>Password</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-					<input type="password" ng-model="reguser.password" ng-change="checkMatch()" placeholder="Enter your password" class="form-control" name="password" id="password1" required="true">
+				<div class="form-group">
+					<label>Password</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<input type="password" ng-model="reguser.password" ng-change="checkMatch()" placeholder="Enter your password" class="form-control" name="password" id="password1" required="true">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label>Confirm password</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-					<input type="password" ng-model="pwd2" ng-change="checkMatch(); confirmFill = true" placeholder="Confirm your password" class="form-control" name="password-confirm" id="password2" required="true">
+				<div class="form-group">
+					<label>Confirm password</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<input type="password" ng-model="pwd2" ng-change="checkMatch(); confirmFill = true" placeholder="Confirm your password" class="form-control" name="password-confirm" id="password2" required="true">
+					</div>
+					<p ng-show="!match && confirmFill" class="alert alert-danger">Passwords don't match</p>
 				</div>
-				<p ng-show="!match && confirmFill" class="alert alert-danger">Passwords don't match</p>
-			</div>
-			<div class="form-group">
-				<label>First Name</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-glass"></i></span>
-					<input type="text" ng-model="reguser.vorname" placeholder="First Name" class="form-control" name="Vorname" id="Vorname" required="true">
+				<div class="form-group">
+					<label>First Name</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-glass"></i></span>
+						<input type="text" ng-model="reguser.vorname" placeholder="First Name" class="form-control" name="Vorname" id="Vorname" required="true">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label>Last Name</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-rocket"></i></span>
-					<input type="text" ng-model="reguser.name" placeholder="Last Name" class="form-control" name="Name" id="Name" required="true">
+				<div class="form-group">
+					<label>Last Name</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-rocket"></i></span>
+						<input type="text" ng-model="reguser.name" placeholder="Last Name" class="form-control" name="Name" id="Name" required="true">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label>Gender</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-circle"></i></span>
-					<select class="form-control" style="height:auto;" ng-model="reguser.gender">
-						<option value=""></option>
-						<option value="f">female</option>
-						<option value="m">male</option>
-						<option value="-">post</option>
-					</select>
+				<div class="form-group">
+					<label>Gender</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-circle"></i></span>
+						<select class="form-control" style="height:auto;" ng-model="reguser.gender">
+							<option value=""></option>
+							<option value="f">female</option>
+							<option value="m">male</option>
+							<option value="-">post</option>
+						</select>
+					</div>
 				</div>
-			</div>
 
-			<button type="submit" class="btn btn-raised btn-warning btn-lg">Signup</button>
+				<button type="submit" class="btn btn-raised btn-warning btn-lg">Signup</button>
 
-		</fieldset>
-	</form>
+			</fieldset>
+		</form>
 
-	<hr>
+		<hr>
 
-	<p>Already have an account? <a href="/#">Login</a></p>
-	<!-- <p>Or go <a href="/">home</a>.</p> -->
+		<p>Already have an account? <a href="/#">Login</a></p>
+		<!-- <p>Or go <a href="/">home</a>.</p> -->
 
-</div>
+	</div>
+</section>

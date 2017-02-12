@@ -70,9 +70,11 @@
 
 					<!--ATTENDED INFO AND BUTTON-->
 					<div class="hidden-xs">
-						<td ng-hide="users.attended == 1"><span class="glyphicon glyphicon-remove"></span>
-							<button ng-show="users.id == user.id || istVorstand" class="btn btn-raised btn-sm btn-primary" style="margin-left: 15px" ng-click="went(tournament.id, users.id)">Went</button></td>
-						<td ng-show="users.attended == 1"><span class="glyphicon glyphicon-ok"></span></td>
+						<td ng-hide="users.attended == 1" class="text-center">
+							<span class="glyphicon glyphicon-remove"></span><br>
+							<button ng-show="users.id == user.id || istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(tournament.id, users.id)">Went</button>
+						</td>
+						<td ng-show="users.attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 					</div>
 
 					<!--DELETE BUTTON-->
