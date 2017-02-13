@@ -14,7 +14,7 @@ var upload = multer({
 			host: 'ftp.hosting-agency.de',
 			// secure: true, // enables FTPS/FTP with TLS
 			user: 'u0023243923',
-			password: process.env.db_password
+			password: process.env.BDU_ftp_server
 		}
 	})
 });

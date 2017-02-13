@@ -5,10 +5,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// add timestamps in front of log messages
+var dotenv = require('dotenv'); //enables environment variables for development
+dotenv.load();
 require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds a timestamp to each console log
 var flash = require('req-flash'); //lets me parse individual messages to requests
-var session = require('express-session'); //browser sessions for authentification
+var session = require('express-session'); //browser sessions for authentication
 var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
 var conn = require('./knex/knexfile.js'); //read out the DB Conn Data
 var knex = require('knex')(conn['development']); //require knex query binder

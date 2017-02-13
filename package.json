@@ -15,6 +15,7 @@
     "console-stamp": "^0.2.4",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
+    "dotenv": "^4.0.0",
     "ejs": "~2.5.2",
     "express": "~4.14.0",
     "express-session": "^1.14.2",
