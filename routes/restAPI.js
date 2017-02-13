@@ -57,7 +57,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament);
+			return this.belongsToMany(Tournament).withPivot(['t_u_id','role','attended','teamname']);
 		}
 	});
 
@@ -70,7 +70,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User);//.withPivot(['t_u_id','role','attended','teamname']);
+			return this.belongsToMany(User);
 		}
 	});
 
@@ -477,21 +477,33 @@ module.exports = function(Bookshelf){
 		.get(function (req, res) {
 			User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})
 			.then(function(user) {
-				var tournaments = user.related('tournaments').toJSON();
-				Tournaments_Users_Col.query(function(qb) {
-					qb.where('user_id', '=', req.user.id);
-				}).fetch()
-				.then(function (data) {
-					var merge = _.map(tournaments, function(item) {
-						return _.merge(item, _.find(data.toJSON(), { 'tournament_id' : item.id }));
-					});
-					res.send(merge);
-				})
+                res.send(user);
 			})
 			.catch(function (err) {
 				res.send(err);
 			})
 		});
+    //
+	// // router to get all tournaments the logged in user is registered for
+	// router.route('/getUserTournaments')
+	// 	.get(function (req, res) {
+	// 		User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})
+	// 		.then(function(user) {
+	// 			var tournaments = user.related('tournaments').toJSON();
+	// 			Tournaments_Users_Col.query(function(qb) {
+	// 				qb.where('user_id', '=', req.user.id);
+	// 			}).fetch()
+	// 			.then(function (data) {
+	// 				var merge = _.map(tournaments, function(item) {
+	// 					return _.merge(item, _.find(data.toJSON(), { 'tournament_id' : item.id }));
+	// 				});
+	// 				res.send(merge);
+	// 			})
+	// 		})
+	// 		.catch(function (err) {
+	// 			res.send(err);
+	// 		})
+	// 	});
 
 	// router to render user tournaments
 	router.route('/teamnames/:id')
@@ -582,4 +594,4 @@ module.exports = function(Bookshelf){
 		});
 
 	return router;
-}
+};

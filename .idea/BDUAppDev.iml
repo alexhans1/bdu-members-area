@@ -8,5 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="angular" level="application" />
+    <orderEntry type="library" name="angular-route" level="application" />
+    <orderEntry type="library" name="angular-resource" level="application" />
+    <orderEntry type="library" name="lodash" level="application" />
   </component>
 </module>

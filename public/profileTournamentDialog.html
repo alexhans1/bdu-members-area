@@ -1,0 +1,64 @@
+<nav>
+    <div>
+        <h3 class="text-center"><span class="fa fa-comments"></span> {{tournament.name}}</h3>
+        <span flex></span>
+    </div>
+</nav>
+
+<div class="col-sm-10 col-sm-offset-1">
+    <div class="user-info-table">
+
+        <table class="table table-hover">
+            <tr>
+                <th>id:</th>
+                <td>{{tournament.id}}</td>
+            </tr>
+            <tr>
+                <th>name:</th>
+                <td>{{tournament.name}}</td>
+            </tr>
+            <tr>
+                <th>place:</th>
+                <td>{{tournament.ort}}</td>
+            </tr>
+            <tr>
+                <th>time:</th>
+                <td>{{tournament.startdate | date:'dd.MM.yyyy'}}<br>{{tournament.enddate | date:'dd.MM.yyyy'}}</td>
+            </tr>
+            <tr>
+                <th>price:</th>
+                <td>Speaker: {{tournament.speakerprice}} €<br>Judge: {{tournament.judgeprice}} €</td>
+            </tr>
+            <tr>
+                <th>language:</th>
+                <td>{{tournament.language}}</td>
+            </tr>
+            <tr>
+                <th>accommodation:</th>
+                <td>{{tournament.accommodation}}</td>
+            </tr>
+            <tr>
+                <th>format:</th>
+                <td>{{tournament.format}}</td>
+            </tr>
+            <tr>
+                <th>league:</th>
+                <td>{{tournament.league}}</td>
+            </tr>
+            <tr>
+                <th>link:</th>
+                <td>{{tournament.link}}</td>
+            </tr>
+            <tr>
+                <th>comments:</th>
+                <td>{{tournament.comments}}</td>
+            </tr>
+        </table>
+        <strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
+        <strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
+    </div>
+</div>
+
+<div class="ngdialog-buttons">
+    <button class="btn btn-raised btn-danger pull-right" ng-click="close()">Close</button>
+</div>

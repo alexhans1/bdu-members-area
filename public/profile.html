@@ -104,29 +104,16 @@
 								<th>Place</th>
 								<th>Time</th>
 								<th>Price</th>
-								<th>Language</th>
-								<th>Accommodation</th>
-								<th>Format</th>
-								<th>League</th>
-								<th>Link</th>
-								<th>Comments</th>
 								<th>Role</th>
-								<th>Teamname</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="x in myTournaments">
-								<td>{{x.name}}</td>
-								<td>{{x.ort}}</td>
-								<td>{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
-								<td>{{x.speakerprice}}</td>
-								<td>{{x.language}}</td>
-								<td>{{x.accommodation}}</td>
-								<td>{{x.format}}</td>
-								<td>{{x.league}}</td>
-								<td>{{x.link}}</td>
-								<td>{{x.comments}}</td>
-								<td>{{x.role}}</td>
+								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.name}}</td>
+								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.ort}}</td>
+								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
+								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.speakerprice}}</td>
+								<td>{{x.pivot_role}}</td>
 								<td>{{x.teamname}}</td>
 							</tr>
 						</tbody>

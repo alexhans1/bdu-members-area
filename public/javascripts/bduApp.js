@@ -84,7 +84,7 @@ app.config(function($routeProvider){
 	});
 });
 
-app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
+app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -93,7 +93,12 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
 		//if user is logged in then the user can see the profile page
 		$http.get('/app/getUserTournaments')
 		.then(function successCallback(res) {
-			$scope.myTournaments = res.data;
+			$scope.myTournaments = res.data.tournaments;
+			_.forEach($scope.myTournaments, function (t) {
+				_.forEach(t, function (value, key) {
+					console.log(_.replace(key, '_', ''));
+                })
+            })
 		});
 
 		$scope.update = false;
@@ -122,7 +127,21 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location) {
 				$scope.ErrorMessage = 'Error while updating.';
 				$scope.update = false;
 			});
-		}
+		};
+
+		//SHOW TOURNAMENT DETAILS DIALOG
+		$scope.openDetails = function (tournament) {
+			$scope.tournament = tournament;
+            ngDialog.open({
+                template: 'profileTournamentDialog.html',
+                controller: 'mainCtrl',
+                scope: $scope
+            });
+        };
+
+		$scope.close = function () {
+            $scope.closeThisDialog();
+        }
 	}
 });
 
@@ -139,7 +158,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				$scope.alltournaments = _.orderBy(tournaments.data, ['startdate'], 'asc');
 				$scope.tournaments = $scope.alltournaments;
 			});
-		}
+		};
 
 		getAllTournaments();
 
@@ -200,11 +219,11 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			ngDialog.open({
 				template: 'tournamentsDialog.html',
 				controller: 'TournamentCtrl',
-				scope: $scope,
-				width: '40%'
+				scope: $scope
 			});
-		}
+		};
 
+		//REG FUNCION TO BE CLICKED FROM THE DIALOG
 		$scope.reg = function() {
 
 			var url = '/app/reg/' + $scope.tournament.id;
@@ -254,7 +273,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			}, function errorCallback(err) {
 				$scope.ErrorMessage = res.data.data.message;	
 			});
-		}
+		};
 
 		//TOGGLE THROUGH LANGUAGES
 		$scope.toggleVal = 'all';

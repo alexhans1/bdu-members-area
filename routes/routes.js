@@ -2,7 +2,7 @@
 var crypto = require('crypto');
 var async = require('async');
 var nodemailer = require('nodemailer');
-var sg = require('sendgrid')('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');
+var sg = require('sendgrid')(process.env.SENDGRID_KEY);
 var helper = require('sendgrid').mail;
 
 module.exports = function(app, passport, Bookshelf) {
@@ -81,14 +81,14 @@ module.exports = function(app, passport, Bookshelf) {
 				.fetch()
 				.then(function (user) {
 					if (!user) {
-						console.error('No account with that email address exists.')
+						console.error('No account with that email address exists.');
 						res.status(404).json({error: true, data: {}, message: 'No account with that email address exists.\nEmail: ' + req.body.email});
 						return done(null, false, req.flash('authMsg', 'No account with that email address exists.'));
 					}
 					user.save({
 						resetPasswordToken: token,
-						resetPasswordExpires: Date.now() + 1800000 // 30 min
-					})
+						resetPasswordExpires: Date.now() + 1800000 // set the time to 30 minutes from now
+					});
 					done(null, token, user);
 				});
 			},
@@ -107,7 +107,7 @@ module.exports = function(app, passport, Bookshelf) {
 				var request = sg.emptyRequest({
 					method: 'POST',
 					path: '/v3/mail/send',
-					body: mail.toJSON(),
+					body: mail.toJSON()
 				});
 
 				sg.API(request, function(error, response) {
@@ -116,10 +116,13 @@ module.exports = function(app, passport, Bookshelf) {
 					console.info(response.headers);
 					if (error) console.error(error);
 				});
-				console.log('An e-mail has been sent to ' + req.body.email)
-				res.status(200).send('An e-mail has been sent to ' + req.body.email + ' with further instructions.');
+				console.log('An e-mail has been sent to ' + req.body.email);
+				res.status(200).send('An e-mail has been sent to ' + req.body.email + ' with further instructions. Please also check your ');
 			}
-		]);
+		], function (err, result) {
+            if(err) console.error(err);
+            else console.info(result);
+        });
 	});
 
 	//SECOND: RENDER THE RESET PASSWORD PAGE
@@ -152,5 +155,4 @@ module.exports = function(app, passport, Bookshelf) {
 	app.get('/resetFailure', function(req, res){
 		res.render('reset.ejs', {message: req.flash('reset'), user: null});
 	});
-
 };
