@@ -20,7 +20,7 @@ var app = angular.module('bduApp', [
 		}
 	}, function errorCallback(err) {
 		alert(err);
-	})
+	});
 
 
 	$rootScope.signout = function(){
@@ -291,7 +291,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				$scope.tournaments = _.filter($scope.alltournaments, {language: 'de'});
 				$scope.toggleVal = 'de';
 			}
-		}
+		};
 
 		//DELETE REGISTRATION
 		$scope.unreg = function(t_id, u_id){
@@ -377,7 +377,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, anchorSmoothScroll) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -480,6 +480,24 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 			anchorSmoothScroll.scrollTo('users');
 		};
 
+		//OPEN IMAGE DIALOG
+        $scope.ShowImageDialog = function (userID) {
+        	console.log(userID)
+            $http.get('/app/user/' + userID)
+                .then(function successCallback(user) {
+                    $scope.imageUser = user.data;
+                });
+            ngDialog.open({
+                template: 'showImageDialog.html',
+                controller: 'OverviewCtrl',
+                scope: $scope
+            });
+        };
+
+        $scope.close = function () {
+            $scope.closeThisDialog();
+        };
+
 	}
 });
 
@@ -492,7 +510,7 @@ app.controller('ResetCtrl', function($scope, $http, $location) {
 	$scope.submit = function(){
 		$http.post('/forgot', {email: $scope.email})
 		.then(function successCallback(response) {
-			$scope.message = 'An E-Mail has been sent to you with further instructions. Since we are financing this project by advertising penis enlargment instruments you should ALSO CHECK YOUR SPAM FOLDER.';
+			$scope.message = 'An E-Mail has been sent to you with further instructions. Since we are financing this project by advertising penis enlargement instruments you should ALSO CHECK YOUR SPAM FOLDER.';
 		}, function errorCallback(err) {
 			$scope.message = err;
 		});

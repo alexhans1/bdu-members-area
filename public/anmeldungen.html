@@ -12,7 +12,8 @@
 
 <section>
 	<!--TOURNAMENT TABLE-->
-	<div class="col-lg-5 col-lg-offset-1" style="padding-right: 40px">
+	<div class="col-md-5 col-md-offset-1">
+
 		<table class="table table-hover table-overview">
 			<thead>
 				<tr>
@@ -43,7 +44,7 @@
 	</div>
 
 	<!-- USER TABLE -->
-	<div id="users" class="col-lg-5">
+	<div id="users" class="col-md-5">
 		<h3>{{tournament.name}}</h3>
 		<table ng-show="showUsers" class="table table-hover table-responsive table-overview">
 			<thead>
@@ -60,7 +61,9 @@
 				<tr ng-repeat="users in tournament.users">
 					<td class="text-center hidden-xs">{{users.id}}</td>
 					<td>
-						<img style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;" class="img-hor" ng-src="http://debating.de/BDUDBdev/userpics/{{users.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
+						<a href="" ng-click="ShowImageDialog(users.id)">
+							<img style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;" class="img-hor" ng-src="http://debating.de/BDUDBdev/userpics/{{users.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
+						</a>
 					</td>
 					<td>
 						{{users.vorname}}<br>{{users.name}}

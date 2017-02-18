@@ -9,7 +9,7 @@
 
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-	
+
 	<!-- lodash -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
 
@@ -39,13 +39,12 @@
 
 	<script src="/javascripts/bduApp.js"></script>
 
-
 	<!-- load stylesheets -->
 
 	<!-- bootstrap -->
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	
-	
+
+
 	<!-- load fontawesome -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 
@@ -61,74 +60,58 @@
 
 </head>
 <body>
-	<!-- <div id='main'> -->
 
-		<!--++++++++++++++++++++++++++ NAVBAR ++++++++++++++++++++++++++-->
+<!--++++++++++++++++++++++++++ NAVBAR ++++++++++++++++++++++++++-->
 
-		<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-sm bg-inverse">
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBDUDB" aria-controls="navbarBDUDB" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarBDUDB">
+<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-sm bg-inverse">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBDUDB" aria-controls="navbarBDUDB" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarBDUDB">
 
-				<div class="navbar-header">
-					<a class="navbar-brand" href="/">
-						<span class="glyphicon glyphicon-cloud"></span>
-						BDUDB
-					</a>
-				</div>
-				<ul class="nav navbar-nav" ng-hide="!authenticated">
-					<li>
-						<a href="/#/profile" class="hidden-xs">Profile</a>
-						<a href="/#/profile" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
-					</li>
-					<li>
-						<a href="/#/tournaments" class="hidden-xs">Tournaments</a>
-						<a href="/#/tournaments" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Tournaments</a>
-					</li>
-					<li>
-						<a href="/#/anmeldungen" class="hidden-xs">Reg Overview</a>
-						<a href="/#/anmeldungen" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
-					</li>
-					<li ng-show="istVorstand">
-						<a href="/#/vorstand" class="hidden-xs">Vorstand</a>
-						<a href="/#/vorstand" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>
-					</li>
-				</ul>
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/">
+				<span class="glyphicon glyphicon-cloud"></span>
+				BDUDB
+			</a>
+		</div>
+		<ul class="nav navbar-nav" ng-hide="!authenticated">
+			<li>
+				<a href="/#/profile" class="hidden-xs">Profile</a>
+				<a href="/#/profile" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
+			</li>
+			<li>
+				<a href="/#/tournaments" class="hidden-xs">Tournaments</a>
+				<a href="/#/tournaments" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Tournaments</a>
+			</li>
+			<li>
+				<a href="/#/anmeldungen" class="hidden-xs">Reg Overview</a>
+				<a href="/#/anmeldungen" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
+			</li>
+			<li ng-show="istVorstand">
+				<a href="/#/vorstand" class="hidden-xs">Vorstand</a>
+				<a href="/#/vorstand" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>
+			</li>
+		</ul>
 
-				<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
-					<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>
-					<li>
-						<a href="/#" class="hidden-xs" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
-						<a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
-					</li>
-				</ul>
+		<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
+			<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>
+			<li>
+				<a href="/#" class="hidden-xs" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+				<a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+			</li>
+		</ul>
 
-				<ul class="nav navbar-nav navbar-right" ng-show="!authenticated">
-					<li><a href="/#" class="hidden-xs"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-					<li><a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-					<li><a href="/#/signup" class="hidden-xs"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
-					<li><a href="/#/signup" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
-				</ul>
+		<ul class="nav navbar-nav navbar-right" ng-show="!authenticated">
+			<li><a href="/#" class="hidden-xs"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/#" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/#/signup" class="hidden-xs"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+			<li><a href="/#/signup" class="visible-xs" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+		</ul>
 
-			</div>
-		</nav>
+	</div>
+</nav>
 
-		<div ng-view></div>
-
-		<!--++++++++++++++++++++++++++ FOOTER ++++++++++++++++++++++++++-->
-		<!-- <footer>
-			<nav class="navbar navbar-inverse navbar-fixed-bottom footer">
-				<div class="container">
-					<div class="navbar-text pull-right">
-						<img class="nav-img" src="/images/bdu_white_logo.png" />
-					</div>
-					
-					<p class="navbar-text bottom-content">© Copyright 2017 Berlin Debating Union e.V.</p>
-				</div>
-			</nav>
-		</footer> -->
-
-	<!-- </div> -->
+<div ng-view></div>
 </body>
 </html>
