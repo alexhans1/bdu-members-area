@@ -3,6 +3,14 @@ var router = express.Router();
 var _ = require('lodash');
 var fs = require('fs');
 var multer = require('multer');
+
+//rename-keys is used to change bookshelf's pivot table returns from _pivot_[attribute] to pivot_[attribute]
+// we need to change this because angular does not allow underscores as a first character of a key string
+var rename = require('rename-keys');
+var removeUnderscores = function(key) {
+    return _.replace(key,'_','');
+};
+
 async = require('async');
 var Client = require('ftp');
 var FTPStorage = require('multer-ftp');
@@ -46,7 +54,7 @@ module.exports = function(Bookshelf){
 
 	//Register the authentication middleware
 	//for all URIs use the isAuthenticated function
-	router.use('/', isAuthenticated);
+	// router.use('/', isAuthenticated);
 
 	// --------------------------------------------------------------------------
 	// ------------------------------MODELS--------------------------------------
@@ -70,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User);
+			return this.belongsToMany(User).withPivot(['t_u_id','role','attended','teamname']);
 		}
 	});
 
@@ -96,10 +104,17 @@ module.exports = function(Bookshelf){
 			//Check if session user is authorized
 			if(req.user.position == 1){
 				Users.forge()
-				.fetch()
+				.fetch({withRelated: ['tournaments']})
 				.then(function (collection) {
+					collection = collection.toJSON();
+					_.forEach(collection, function (user) {
+                        user.tournaments.forEach(function(part, index) {
+                            user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
+                        });
+                    });
 					console.log('Getting all users successful');
-					res.json({error: false, data: collection.toJSON()});
+					res.send(collection);
+					// res.json({error: false, data: collection.toJSON()});
 				})
 				.catch(function (err) {
 					console.error('Error while getting all users. Error message:\n' + err);
@@ -169,15 +184,19 @@ module.exports = function(Bookshelf){
 			//check if session user is the requested user
 			if(req.params.id == req.user.id || req.user.position == 1){
 				User.forge({id: req.params.id})
-				.fetch()
+				.fetch({withRelated: ['tournaments']})
 				.then(function (user) {
 					if (!user) {
 						console.error('The user with the ID "' + req.params.id + '" is not in the database.');
 						res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id + '" is not in the database.'});
 					}
 					else {
-						console.log('Getting specfic user successful');
-						res.status(200).send(user.toJSON());
+						user = user.toJSON();
+                        user.tournaments.forEach(function(part, index) {
+                            user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
+                        });
+						console.log('Getting specific user successful');
+						res.status(200).send(user);
 					}
 				})
 				.catch(function (err) {
@@ -207,13 +226,11 @@ module.exports = function(Bookshelf){
 				})
 				.then(function () {
 					console.log('Updating user successful');
-					req.flash('updateMessage', 'User details updated');
-					res.status(200).send('Success');
+					res.status(200).json({error: false, message: 'Update successful.'});
 				})
 				.catch(function (err) {
-					console.error('Error while updating user.');
-					req.flash('updateMessage', err.message);
-					res.status(500).send(err);
+					console.error('Error while updating user. Error message:\n ' + err);
+					res.status(500).json({error: true, message: 'Error while updating.'});
 				})
 			} else {
 				console.log('User is not authorized to update user information of user with the ID: ' + req.params.id);
@@ -252,13 +269,20 @@ module.exports = function(Bookshelf){
 		// fetch all tournaments
 		.get(function (req, res) {
 			Tournaments.forge()
-			.fetch()
+			.fetch({withRelated: ['users']})
 			.then(function (collection) {
+				collection = collection.toJSON();
+                _.forEach(collection, function (tournament) {
+                    tournament.users.forEach(function(part, index) {
+                        tournament.users[index] = rename(tournament.users[index], removeUnderscores);
+                    });
+                });
 				console.log('Getting all tournaments successful.');
-				return res.send(collection.toJSON());
+				return res.send(collection);
 			})
 			.catch(function (err) {
 				console.error('Error while getting all tournaments. Error message:\n' + err);
+                res.status(500).json({error: true, data: {message: err.message}});
 			});
 		})
 
@@ -303,15 +327,19 @@ module.exports = function(Bookshelf){
 		// fetch single tournament
 		.get(function (req, res) {
 			Tournament.forge({id: req.params.id})
-			.fetch()
+			.fetch({withRelated: ['users']})
 			.then(function (tournament) {
 				if (!tournament) {
 					console.error('The tournament with the ID "' + req.params.id + '" is not in the database.');
 					res.status(404).json({error: true, data: {}, message: 'The tournament with the ID "' + req.params.id + '" is not in the database.'});
 				}
 				else {
+                    tournament = tournament.toJSON();
+                    tournament.users.forEach(function(part, index) {
+                        tournament.users[index] = rename(tournament.users[index], removeUnderscores);
+                    });
 					console.log('Getting specfic tournament successful');
-					res.json({error: false, data: tournament.toJSON()});
+					res.json({error: false, data: tournament});
 				}
 			})
 			.catch(function (err) {

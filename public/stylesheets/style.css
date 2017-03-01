@@ -18,7 +18,9 @@ header {
 	text-align: center;
 	background-image: url('http://www.debating.de/BDUDBdev/Berlin_Panorama_mit_Fernsehturm.jpg');
 	background-repeat: no-repeat;
-	background-size: 100%;
+	background-size: 100% 600px;
+	background-position: center top;
+	background-attachment: fixed;
 }
 header .container {
 	padding-top: 100px;
@@ -257,18 +259,55 @@ hr.star-user:after {
 /*+++BOOTSTRAP NAVBAR+++++++*/
 /*++++++++++++++++++++++++++*/
 
-@media(max-width:992px) {
-	#nav1.navbar .navbar-brand {
-		float:none;
+@media (max-width: 991px) {
+	.navbar-header {
+		float: none;
+	}
+	.navbar-left,.navbar-right {
+		float: none !important;
+	}
+	.navbar-toggle {
 		display: block;
 	}
-	#nav1.navbar .navbar-nav>.nav-item {
+	.navbar-collapse {
+		border-top: 1px solid transparent;
+		box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+	}
+	.navbar-fixed-top {
+		top: 0;
+		border-width: 0 0 1px;
+	}
+	.navbar-collapse.collapse {
+		display: none!important;
+	}
+	.navbar-nav {
+		float: none!important;
+		margin-top: 7.5px;
+	}
+	.navbar-nav>li {
 		float: none;
-		margin-left: .1rem;
 	}
-	#nav1.navbar .navbar-nav {
-		float:none !important;
+	.navbar-nav>li>a {
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
+	.collapse.in{
+		display:block !important;
+	}
+}
+
+.navbar-toggler {
+	height: 35px;
+	width: 42px;
+	margin-top: 3px;
+}
+
+.nav-image {
+	margin-top: 9px;
+	height: 40px;
+	width: 40px;
+	border:0.1px solid gainsboro;
+	border-radius: 50%;
 }
 
 /*+++++++++++++++++++++++++++*/
@@ -422,4 +461,69 @@ form .progress {
 	.modal-content {
 		width: 100%;
 	}
+}
+
+/* SNACKBAR */
+#snackbarSuccess {
+	visibility: hidden;
+	min-width: 250px;
+	margin-left: -125px;
+	background-color: #DFF0D8;
+	color: #3C763D;
+	text-align: center;
+	border-radius: 60px;
+	padding: 26px;
+	position: fixed;
+	z-index: 1;
+	left: 50%;
+	bottom: 30px;
+	font-size: 27px;
+}
+
+#snackbarError {
+	visibility: hidden;
+	min-width: 250px;
+	margin-left: -125px;
+	background-color: #F2DEDE;
+	color: #B84442;
+	text-align: center;
+	border-radius: 80px;
+	padding: 26px;
+	position: fixed;
+	z-index: 1;
+	left: 50%;
+	bottom: 30px;
+	font-size: 27px;
+}
+
+#snackbarSuccess.show {
+	visibility: visible;
+	-webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+	animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+#snackbarError.show {
+	visibility: visible;
+	-webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+	animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+@-webkit-keyframes fadein {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+	from {bottom: 0; opacity: 0;}
+	to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+	from {bottom: 30px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+	from {bottom: 30px; opacity: 1;}
+	to {bottom: 0; opacity: 0;}
 }

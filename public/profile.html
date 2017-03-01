@@ -4,7 +4,6 @@
 			<div class="col-sm-12">
 			
 				<div>
-
 					<div class="image-cropper">
 						<a href="#/imageUpload"><img class="img-hor" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'"/></a>
 					</div>
@@ -39,24 +38,24 @@
 						</tr>
 						<tr>
 							<th>email:</th>
-							<td ng-hide="update">{{email}}</td>
-							<td ng-show="update"><input class="form-control" name="email" ng-model="email" required="true"></td>
+							<td ng-hide="update">{{user.email}}</td>
+							<td ng-show="update"><input class="form-control" name="email" ng-model="user.email" required="true"></td>
 						</tr>
 						<tr>
 							<th>vorname:</th>
-							<td ng-hide="update">{{vorname}}</td>
-							<td ng-show="update"><input class="form-control" name="vorname" ng-model="vorname"></td>
+							<td ng-hide="update">{{user.vorname}}</td>
+							<td ng-show="update"><input class="form-control" name="vorname" ng-model="user.vorname"></td>
 						</tr>
 						<tr>
 							<th>name:</th>
-							<td ng-hide="update">{{name}}</td>
-							<td ng-show="update"><input class="form-control" name="name" ng-model="name"></td>
+							<td ng-hide="update">{{user.name}}</td>
+							<td ng-show="update"><input class="form-control" name="name" ng-model="user.name"></td>
 						</tr>
 						<tr>
 							<th>gender:</th>
-							<td ng-hide="update">{{gender}}</td>
+							<td ng-hide="update">{{user.gender}}</td>
 							<td ng-show="update">
-								<select class="form-control" style="height:auto;" ng-model="gender">
+								<select class="form-control" style="height:auto;" ng-model="user.gender">
 									<option value=""></option>
 									<option value="f">female</option>
 									<option value="m">male</option>
@@ -66,18 +65,19 @@
 						</tr>
 						<tr>
 							<th>food preference:</th>
-							<td ng-hide="update">{{food}}</td>
-							<td ng-show="update"><input class="form-control" name="food" ng-model="food"></td>
-
-							<td ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-raised btn-primary btn-responsive" role="button">Update Info</button></td>
-							<td ng-show="update">
-								<button ng-click="update = false" class="btn btn-raised btn-danger" role="button">Cancel</button>
-								<button ng-click="updateUser()" class="btn btn-raised btn-primary" role="button">Submit</button>
-							</td>
+							<td ng-hide="update">{{user.food}}</td>
+							<td ng-show="update"><input class="form-control" name="food" ng-model="user.food"></td>
 						</tr>
 					</table>
-					<strong ng-show="SuccessMessage.length > 0" class="alert alert-success">{{SuccessMessage}}</strong>
-					<strong ng-show="ErrorMessage.length > 0" class="alert alert-danger">{{ErrorMessage}}</strong>
+
+					<div ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-raised btn-primary" role="button">Update Info</button></div>
+					<div ng-show="update">
+						<button ng-click="update = false" class="btn btn-raised btn-danger" role="button">Cancel</button>
+						<button ng-click="updateUser()" class="btn btn-raised btn-primary" role="button">Submit</button>
+					</div>
+
+					<strong id="snackbarSuccess" class="alert alert-success">{{SuccessMessage}}</strong>
+					<strong id="snackbarError" class="alert alert-danger">{{ErrorMessage}}</strong>
 				</div>
 			</div>
 		</div>
@@ -108,7 +108,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="x in myTournaments">
+							<tr ng-repeat="x in user.tournaments">
 								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.name}}</td>
 								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.ort}}</td>
 								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>

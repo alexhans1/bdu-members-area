@@ -5,7 +5,7 @@ var app = angular.module('bduApp', [
 	'ngFileUpload', 
 	'ngImgCrop'
 	])
-.run(function($http, $rootScope, $location) {
+.run(function($http, $rootScope, UserService, TournamentService) {
 	
 	$rootScope.authenticated = false;
 	$rootScope.istVorstand = false;
@@ -84,49 +84,63 @@ app.config(function($routeProvider){
 	});
 });
 
-app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog) {
+//RESOURCE SERVICE FACTORIES
+// app.factory('UserService', function ($resource) {
+//     return $resource('/app/user/:id');
+// });
+
+app.factory('UserService', function ($resource) {
+    return $resource('/app/user/:id', { id: 'id' }, {
+        update: {
+            method: 'PUT' // this method issues a PUT request
+        }
+    });
+});
+
+app.factory('TournamentService', function ($resource) {
+    return $resource('/app/tournament/:id');
+});
+
+app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService, TournamentService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
 	} else {
+        //if user is logged in then the user can see the profile page
 
-		//if user is logged in then the user can see the profile page
-		$http.get('/app/getUserTournaments')
-		.then(function successCallback(res) {
-			$scope.myTournaments = res.data.tournaments;
-			_.forEach($scope.myTournaments, function (t) {
-				_.forEach(t, function (value, key) {
-					console.log(_.replace(key, '_', ''));
-                })
-            })
+        //get the logged in user
+		var user = UserService.get({ id: $rootScope.user.id }, function() {
+			$scope.user = user;
 		});
 
 		$scope.update = false;
-		$scopeSuccessMessage = '';
-		$scopeErrorMessage = '';
-
-		$scope.email = $rootScope.user.email;
-		$scope.name = $rootScope.user.name;
-		$scope.vorname = $rootScope.user.vorname;
-		$scope.gender = $rootScope.user.gender;
-		$scope.food = $rootScope.user.food;
+		$scope.SuccessMessage = '';
+		$scope.ErrorMessage = '';
 
 		$scope.updateUser = function () {
 			var parameters = JSON.stringify({
-				email: $scope.email,
-				name: $scope.name,
-				vorname: $scope.vorname,
-				gender: $scope.gender,
-				food: $scope.food
+				email: $scope.user.email,
+				name: $scope.user.name,
+				vorname: $scope.user.vorname,
+				gender: $scope.user.gender,
+				food: $scope.user.food
 			});
-			$http.put('/app/user/' + $rootScope.user.id, parameters)
-			.then(function successCallback() {
-				$scope.SuccessMessage = 'Update successful.';
-				$scope.update = false;
-			}, function errorCallback(err) {
-				$scope.ErrorMessage = 'Error while updating.';
-				$scope.update = false;
-			});
+            UserService.update({ id: $rootScope.user.id }, parameters, function (result) {
+				if (!result.error) {
+					$scope.SuccessMessage = result.message;
+                    var x = document.getElementById("snackbarSuccess");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+                    $scope.update = false;
+                }
+				else {
+                    $scope.ErrorMessage = result.message;
+                    var x = document.getElementById("snackbarError");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+                    $scope.update = false;
+                }
+            });
 		};
 
 		//SHOW TOURNAMENT DETAILS DIALOG
@@ -141,7 +155,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 
 		$scope.close = function () {
             $scope.closeThisDialog();
-        }
+        };
 	}
 });
 

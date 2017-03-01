@@ -13,5 +13,8 @@
     <orderEntry type="library" name="angular-resource" level="application" />
     <orderEntry type="library" name="lodash" level="application" />
     <orderEntry type="library" name="jquery-2.1.3" level="application" />
+    <orderEntry type="library" name="tether" level="application" />
+    <orderEntry type="library" name="snackbar" level="application" />
+    <orderEntry type="library" name="bootstrap-material-design.iife" level="application" />
   </component>
 </module>
