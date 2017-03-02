@@ -73,39 +73,39 @@
 		</div>
 		<ul class="nav navbar-nav" ng-hide="!authenticated">
 			<li>
-				<a href="/#/profile" class="hidden-md">Profile</a>
-				<a href="/#/profile" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
+				<a href="/#/profile" class="hidden-xs hidden-sm">Profile</a>
+				<a href="/#/profile" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
 			</li>
 			<li>
-				<a href="/#/tournaments" class="hidden-md">Tournaments</a>
-				<a href="/#/tournaments" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse">Tournaments</a>
+				<a href="/#/tournaments" class="hidden-xs hidden-sm">Tournaments</a>
+				<a href="/#/tournaments" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Tournament</a>
 			</li>
 			<li>
-				<a href="/#/anmeldungen" class="hidden-md">Reg Overview</a>
-				<a href="/#/anmeldungen" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
+				<a href="/#/anmeldungen" class="hidden-xs hidden-sm">Reg Overview</a>
+				<a href="/#/anmeldungen" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
 			</li>
 			<li ng-show="istVorstand">
-				<a href="/#/vorstand" class="hidden-md">Vorstand</a>
-				<a href="/#/vorstand" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>
+				<a href="/#/vorstand" class="hidden-xs hidden-sm">Vorstand</a>
+				<a href="/#/vorstand" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>
 			</li>
 		</ul>
 
-		<ul class="nav navbar-nav navbar-right hidden-md" ng-hide="!authenticated">
-			<a href="/#/profile">
+		<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
+			<a href="/#/profile" class="hidden-xs hidden-sm">
 				<img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
 			</a>
 			<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>
 			<li>
-				<a href="/#" class="hidden-md" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
-				<a href="/#" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+				<a href="/#" class="hidden-xs hidden-sm" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+				<a href="/#" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
 			</li>
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right" ng-show="!authenticated">
-			<li><a href="/#" class="hidden-md"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			<li><a href="/#" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			<li><a href="/#/signup" class="hidden-md"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
-			<li><a href="/#/signup" class="visible-md" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+			<li><a href="/#" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/#" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="/#/signup" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+			<li><a href="/#/signup" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
 		</ul>
 
 	</div>
