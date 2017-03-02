@@ -121,17 +121,17 @@ hr.star-user:after {
 	padding-bottom: 20px;
 }
 
-#user-info {
+.user-info {
 	text-align: center;
 	background: #F4FCFB;
 }
 
-#user-info .container {
+.user-info .container {
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
 
-#user-info .user-info-table {
+.user-info .user-info-table {
 	font-size: 1.25em;
 	font-weight: 300;
 }
@@ -471,13 +471,17 @@ form .progress {
 	background-color: #DFF0D8;
 	color: #3C763D;
 	text-align: center;
-	border-radius: 60px;
-	padding: 26px;
+	border-radius: 28px;
+	border: 2px solid #3C763D;
+	padding-left: 26px;
+	padding-right: 26px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	position: fixed;
 	z-index: 1;
 	left: 50%;
 	bottom: 30px;
-	font-size: 27px;
+	font-size: 25px;
 }
 
 #snackbarError {
@@ -487,13 +491,17 @@ form .progress {
 	background-color: #F2DEDE;
 	color: #B84442;
 	text-align: center;
-	border-radius: 80px;
-	padding: 26px;
+	border-radius: 28px;
+	border: 2px solid #B84442;
+	padding-left: 26px;
+	padding-right: 26px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	position: fixed;
 	z-index: 1;
-	left: 50%;
+	left: 40%;
 	bottom: 30px;
-	font-size: 27px;
+	font-size: 25px;
 }
 
 #snackbarSuccess.show {

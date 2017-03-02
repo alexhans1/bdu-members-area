@@ -315,7 +315,7 @@ module.exports = function(Bookshelf){
 				})
 				.catch(function (err) {
 					console.log('Error while adding new Tournament. Error: \n' + err);
-					res.status(500).json({error: true, data: {message: err.message}});
+					res.status(500).json({ error: true, message: err.message });
 				});
 			} else {
 				console.log('User is not authorized to create a new tournament');
@@ -331,20 +331,20 @@ module.exports = function(Bookshelf){
 			.then(function (tournament) {
 				if (!tournament) {
 					console.error('The tournament with the ID "' + req.params.id + '" is not in the database.');
-					res.status(404).json({error: true, data: {}, message: 'The tournament with the ID "' + req.params.id + '" is not in the database.'});
+					res.status(404).json({error: true, message: 'The tournament with the ID "' + req.params.id + '" is not in the database.'});
 				}
 				else {
                     tournament = tournament.toJSON();
                     tournament.users.forEach(function(part, index) {
                         tournament.users[index] = rename(tournament.users[index], removeUnderscores);
                     });
-					console.log('Getting specfic tournament successful');
+					console.log('Getting specific tournament successful');
 					res.json({error: false, data: tournament});
 				}
 			})
 			.catch(function (err) {
-				console.error('Error while getting specfic tournament. Error message:\n' + err);
-				res.status(500).json({error: true, data: {message: err.message}});
+				console.error('Error while getting specific tournament. Error message:\n' + err);
+				res.status(500).json({error: true, message: err.message});
 			});
 		})
 
@@ -376,11 +376,11 @@ module.exports = function(Bookshelf){
 				})
 				.then(function () {
 					console.log('Updating tournament successful.');
-					res.status(200).json({error: false, data: {message: 'Updating tournament successful.'}});
+					res.status(200).json({error: false, message: 'Updating tournament successful.'});
 				})
 				.catch(function (err) {
 					console.error('Error while updating tournament.');
-					res.status(500).json({error: true, data: {message: err.message}});
+					res.status(500).json({error: true, message: err.message});
 				})
 			} else {
 				console.log('User is not authorized to update tournament');
@@ -399,15 +399,15 @@ module.exports = function(Bookshelf){
 				})
 				.then(function () {
 					console.log('Deleting tournament successful');
-					res.status(200).json({error: false, message: 'Deleting tournament successful.'});
+					res.status(200).json({ error: false, message: 'Deleting tournament successful.' });
 				})
 				.catch(function (err) {
 					console.error('Error while deleting tournament.');
-					res.status(500).json({error: true, data: {message: err.message}});
+					res.status(500).json({ error: true, message: err.message });
 				})
 			} else {
 				console.log('User is not authorized to delete tournament');
-				res.status(401).json({error: true, message: 'Unauthorized'});
+				res.status(401).json({ error: true, message: 'Unauthorized' });
 			}
 		});
 
@@ -509,41 +509,6 @@ module.exports = function(Bookshelf){
 			})
 			.catch(function (err) {
 				res.send(err);
-			})
-		});
-    //
-	// // router to get all tournaments the logged in user is registered for
-	// router.route('/getUserTournaments')
-	// 	.get(function (req, res) {
-	// 		User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})
-	// 		.then(function(user) {
-	// 			var tournaments = user.related('tournaments').toJSON();
-	// 			Tournaments_Users_Col.query(function(qb) {
-	// 				qb.where('user_id', '=', req.user.id);
-	// 			}).fetch()
-	// 			.then(function (data) {
-	// 				var merge = _.map(tournaments, function(item) {
-	// 					return _.merge(item, _.find(data.toJSON(), { 'tournament_id' : item.id }));
-	// 				});
-	// 				res.send(merge);
-	// 			})
-	// 		})
-	// 		.catch(function (err) {
-	// 			res.send(err);
-	// 		})
-	// 	});
-
-	// router to render user tournaments
-	router.route('/teamnames/:id')
-		.get(function (req, res) {
-			Tournaments_Users_Col.query(function(qb) {
-				qb.where('tournament_id', '=', req.params.id);
-			}).fetch()
-			.then(function (collection) {
-				res.send(collection.toJSON());
-			})
-			.catch(function (err) {
-				res.status(500).send(err);
 			})
 		});
 

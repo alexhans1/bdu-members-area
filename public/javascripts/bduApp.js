@@ -85,9 +85,6 @@ app.config(function($routeProvider){
 });
 
 //RESOURCE SERVICE FACTORIES
-// app.factory('UserService', function ($resource) {
-//     return $resource('/app/user/:id');
-// });
 
 app.factory('UserService', function ($resource) {
     return $resource('/app/user/:id', { id: 'id' }, {
@@ -98,10 +95,14 @@ app.factory('UserService', function ($resource) {
 });
 
 app.factory('TournamentService', function ($resource) {
-    return $resource('/app/tournament/:id');
+    return $resource('/app/tournament/:id', {}, {
+        update: {
+            method: 'PUT' // this method issues a PUT request
+        }
+    });
 });
 
-app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService, TournamentService) {
+app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -127,17 +128,11 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 			});
             UserService.update({ id: $rootScope.user.id }, parameters, function (result) {
 				if (!result.error) {
-					$scope.SuccessMessage = result.message;
-                    var x = document.getElementById("snackbarSuccess");
-                    x.className = "show";
-                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+                    showSnackbar(true, result.message);
                     $scope.update = false;
                 }
 				else {
-                    $scope.ErrorMessage = result.message;
-                    var x = document.getElementById("snackbarError");
-                    x.className = "show";
-                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
+					showSnackbar(false, result.message);
                     $scope.update = false;
                 }
             });
@@ -159,7 +154,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 	}
 });
 
-app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll) {
+app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll, TournamentService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -167,9 +162,8 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		//get all Tournaments
 		var getAllTournaments = function () {
-			$http.get('/app/getAllTournamentsUsers')
-			.then(function successCallback(tournaments) {
-				$scope.alltournaments = _.orderBy(tournaments.data, ['startdate'], 'asc');
+            var tournaments = TournamentService.query(function() {
+				$scope.alltournaments = _.orderBy(tournaments, ['startdate'], 'asc');
 				$scope.tournaments = $scope.alltournaments;
 			});
 		};
@@ -178,30 +172,20 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		$scope.setTournament = function(id, scroll) {
 
-			//scroll if mobile
-			if(scroll) {
-				anchorSmoothScroll.scrollTo('details');
-			}
-
-			getAllTournaments();
 			$scope.tournament = _.find($scope.alltournaments, {id: id});
 			$scope.showDetails = true;
-			//load teamnames for this tournament
-			$scope.teams = [];
-			$http.get('app/teamnames/' + id)
-			.then(function successCallback(col) {
-				for (var i = 0; i < col.data.length; i++) {
-					if (($scope.teams.indexOf(col.data[i].teamname) === -1) && (col.data[i].teamname != null)) {
-						$scope.teams.push(col.data[i].teamname);
-					}
-				}
-			}, function errorCallback(err) {
-				console.log(err);
-			});
 
 			//check if user is registered for this tournament
-			$scope.isReged = (_.find($scope.tournament.users, {'id': $scope.user.id}));
+			$scope.isReged = (_.find($scope.tournament.users, {'id': $rootScope.user.id}));
+
+            //scroll if mobile
+            if(scroll) {
+                anchorSmoothScroll.scrollTo('details');
+            }
 		};
+
+
+		// NG-DIALOG FOR REGISTRATION
 
 		$scope.roles = [{
 			id: 1,
@@ -220,10 +204,8 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.selected = $scope.roles[0];
 
 		$scope.isSpeaker = false;
-		$scope.role = 'judge';
 		$scope.setRole = function () {
 			$scope.isSpeaker = ($scope.selected.id == 2);
-			$scope.role = $scope.selected.value;
 		};
 
 		$scope.team = '';
@@ -237,21 +219,22 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			});
 		};
 
-		//REG FUNCION TO BE CLICKED FROM THE DIALOG
+		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
 		$scope.reg = function() {
 
 			var url = '/app/reg/' + $scope.tournament.id;
-			var parameters = JSON.stringify({role: $scope.role, team: $scope.team});
+			var parameters = JSON.stringify({role: $scope.selected.value, team: $scope.team});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
 				if (response.status == 200) {
-					confirm('Successfully registered.');
+                    showSnackbar(true, 'Successfully registered.');
+					$scope.isReged = true;
 				} else {
-					confirm(response.data);
+                    showSnackbar(false, response.data);
 				}
 				$scope.closeThisDialog();
 			}, function errorCallback(response) {
-				confirm(response.data);
+                showSnackbar(false, response.data);
 				$scope.closeThisDialog();
 			});
 		};
@@ -260,19 +243,19 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.delete = function () {
 			var deleteTournament = $window.confirm('Are you absolutely sure you want to delete the tournament?');
 			if (deleteTournament) {
-				$http.delete('/app/tournament/' + $scope.tournament.id)
-				.then(function successCallback(response) {
-					if (!response.error) {
-						$scope.SuccessMessage = response.data.message;
-						//TODO update Tournaments resource
-						//for now:
-						getAllTournaments();
-					} else {
-						$scope.ErrorMessage = response.data.message;
+				TournamentService.delete({id: $scope.tournament.id}, function (res) {
+					if (!res.error) {
+                        _.remove($scope.alltournaments, {
+                            id: $scope.tournament.id
+                        });
+                        _.remove($scope.tournaments, {
+                            id: $scope.tournament.id
+                        });
+                        showSnackbar(true, res.message);
+                    } else {
+						showSnackbar(false, res.message)
 					}
-				}, function errorCallback(err) {
-					$scope.ErrorMessage = err.data.message;
-				});
+                });
 			}
 		};
 
@@ -674,3 +657,22 @@ app.service('anchorSmoothScroll', function(){
 	};
 
 });
+
+//SNACKBAR FUNCTION
+var showSnackbar = function (success, message) {
+	if (success) {
+        var x = document.getElementById("snackbarSuccess");
+        x.className = "show";
+        x.innerHTML = message;
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 4000);
+    } else {
+        var x = document.getElementById("snackbarError");
+        x.className = "show";
+        x.innerHTML = message;
+        setTimeout(function () {
+            x.className = x.className.replace("show", "");
+        }, 4000);
+	}
+};
