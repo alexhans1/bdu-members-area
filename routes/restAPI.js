@@ -311,7 +311,7 @@ module.exports = function(Bookshelf){
 				.save()
 				.then(function (tournament) {
 					console.log('Create Tournament successful.');
-					res.status(200).json({error: false, tournament: tournament});
+					res.status(200).json({error: false, tournament: tournament, message: 'Create Tournament successful.'});
 				})
 				.catch(function (err) {
 					console.log('Error while adding new Tournament. Error: \n' + err);
@@ -509,18 +509,6 @@ module.exports = function(Bookshelf){
 			})
 			.catch(function (err) {
 				res.send(err);
-			})
-		});
-
-	// overview for finances
-	router.route('/getAllUserTournaments')
-		.get(function (req, res) {
-			Users.forge().fetch({withRelated: ['tournaments']})
-			.then(function (collection) {
-				res.send(collection.toJSON());
-			})
-			.catch(function (err) {
-				res.status(500).send(err);
 			})
 		});
 

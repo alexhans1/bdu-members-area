@@ -36,7 +36,7 @@
 					<td>{{tournaments.name}}</a></td>
 					<td class="hidden-xs">{{tournaments.startdate | date:'dd.MM.yyyy'}}</a></td>
 					<td>{{tournaments.language}}</a></td>
-					<td ng-hide="detailedTournament == tournaments.id">{{tournaments.users.length}}</td>
+					<td>{{tournaments.users.length}}</td>
 
 				</tr>
 			</tbody>
@@ -68,16 +68,16 @@
 					<td>
 						{{users.vorname}}<br>{{users.name}}
 					</td>
-					<td>{{users.role}}</td>
-					<td>{{users.teamname}}</td>
+					<td>{{users.pivot_role}}</td>
+					<td>{{users.pivot_teamname}}</td>
 
 					<!--ATTENDED INFO AND BUTTON-->
 					<div class="hidden-xs">
-						<td ng-hide="users.attended == 1" class="text-center">
+						<td ng-hide="users.pivot_attended == 1" class="text-center">
 							<span class="glyphicon glyphicon-remove"></span><br>
 							<button ng-show="users.id == user.id || istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(tournament.id, users.id)">Went</button>
 						</td>
-						<td ng-show="users.attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
+						<td ng-show="users.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 					</div>
 
 					<!--DELETE BUTTON-->

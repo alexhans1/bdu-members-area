@@ -241,7 +241,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		//DELETE TOURNAMENT FUNCTION
 		$scope.delete = function () {
-			var deleteTournament = $window.confirm('Are you absolutely sure you want to delete the tournament?');
+			var deleteTournament = $window.confirm('Are you absolutely sure you want to delete this tournament?');
 			if (deleteTournament) {
 				TournamentService.delete({id: $scope.tournament.id}, function (res) {
 					if (!res.error) {
@@ -253,7 +253,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
                         });
                         showSnackbar(true, res.message);
                     } else {
-						showSnackbar(false, res.message)
+						showSnackbar(false, 'Error while deleting that tournament.')
 					}
                 });
 			}
@@ -265,10 +265,10 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.submitUpdate = function () {
 			$http.put('/app/tournament/' + $scope.tournament.id, $scope.tournament)
 			.then(function successCallback(res) {
-				$scope.SuccessMessage = res.data.data.message;
+				showSnackbar(true, res.data.message);
 				$scope.showUpdate = false;
 			}, function errorCallback(err) {
-				$scope.ErrorMessage = res.data.data.message;	
+				showSnackbar(false, res.data.message);
 			});
 		};
 
@@ -294,10 +294,6 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.unreg = function(t_id, u_id){
 			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
-				var parameters = JSON.stringify({
-					t_id: t_id,
-					u_id: u_id
-				});
 				$http({
 					url: 'app/deleteReg',
 					method: 'DELETE',
@@ -309,13 +305,13 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 						"Content-Type": "application/json;charset=utf-8"
 					}
 				})
-				.then(function successCallback(response) {
-					if (!response.error) {
+				.then(function successCallback(res) {
+					if (!res.error) {
 						getAllTournaments();
 						$scope.isReged = false;
-						$scope.SuccessMessage = response.message;
+						showSnackbar(true, res.data.message);
 					} else {
-						$scope.ErrorMessage = response.data.message;
+						showSnackbar(false, 'Error while removing your registration.');
 					}
 				}, function errorCallback(err) {
 					$scope.ErrorMessage = err.data;
@@ -325,7 +321,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 	}
 });
 
-app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
+app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -350,31 +346,23 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope) {
 			language: ''
 		};
 
-		$scope.SuccessMessage = '';
-		$scope.ErrorMessage = '';
-
 		$scope.submit = function () {
 			if ($scope.newTournament.name == '' || $scope.newTournament.language == '') {
-				$scope.ErrorMessage = 'Name und Sprache müssen gesetzt werden.';
+				showSnackbar(false, 'Name und Sprache müssen gesetzt werden.');
 			} else {
-				$http.post('/app/tournament', $scope.newTournament)
-				.then(function successCallback(response) {
-					if (!response.error) {
-						$scope.ErrorMessage = '';
-						$scope.SuccessMessage = 'Neues Turnier erstellt.';
-						//TODO update Tournaments resource
+				TournamentService.save($scope.newTournament, function (res) {
+					if (!res.error) {
+                        showSnackbar(true, res.message);
 					} else {
-						$scope.ErrorMessage = response.data.message;
+                        showSnackbar(false, 'Error while adding new Tournament.');
 					}
-				}, function errorCallback(err) {
-					confirm(err.data);
-				});
+                });
 			}
 		};
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -383,30 +371,25 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 		//UEBERSICHT ANMELDUNGEN
 
 		//get all Tournaments and their Users
-		$http.get('/app/getAllTournamentsUsers')
-		.then(function successCallback(collection) {
-			$scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
-		});
+		var getAllTournaments = function () {
+            var tournaments = TournamentService.query(function() {
+                $scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'asc');
+            });
+        };
+		getAllTournaments();
+
+		// function to sort tournaments by key
 		var tournamentDir = 'asc';
 		$scope.sortTournaments = function(key){
 			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
             tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
 		};
 
+        // function to sort users by key
 		var userDir = 'asc';
 		$scope.sortUsers = function(key){
             $scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
 			userDir = (userDir == 'asc') ? 'desc' : 'asc';
-		};
-
-		$scope.detailedTournament = '';
-
-		$scope.open = function (user_id) {
-			if (user_id == $scope.detailedTournament){
-				$scope.detailedTournament = '';
-				$scope.showUsers = false;
-			}
-			else $scope.detailedTournament = user_id;
 		};
 
 		//SET ATTENDED TO 1
@@ -418,11 +401,15 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 			$http.put('/app/setAttended', parameters)
 			.then(function successCallback(response) {
 				if (!response.error) {
-					$http.get('/app/getAllTournamentsUsers')
-					.then(function successCallback(collection) {
-						$scope.tournamentsusers = collection.data;
-                        $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
-					});
+					getAllTournaments();
+					console.log(_.find($scope.tournamentsusers, { id: $scope.tournament.id }));
+                    $scope.tournament = _.find($scope.tournamentsusers, { id: $scope.tournament.id });
+
+					// $http.get('/app/getAllTournamentsUsers')
+					// .then(function successCallback(collection) {
+					// 	$scope.tournamentsusers = collection.data;
+                     //    $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
+					// });
 				} else {
 					confirm(response.data.message);
 				}
@@ -435,10 +422,6 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 		$scope.delete = function(t_id, u_id){
 			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
-				var parameters = JSON.stringify({
-					t_id: t_id,
-					u_id: u_id
-				});
 				$http({
 					url: 'app/deleteReg',
 					method: 'DELETE',
@@ -479,7 +462,6 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 
 		//OPEN IMAGE DIALOG
         $scope.ShowImageDialog = function (userID) {
-        	console.log(userID)
             $http.get('/app/user/' + userID)
                 .then(function successCallback(user) {
                     $scope.imageUser = user.data;
