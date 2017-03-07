@@ -11,36 +11,39 @@
 </header>
 
 <section>
-	<div class="col-sm-6 col-sm-offset-3">
+	<div class="container">
 
-		<!-- LOGIN FORM -->
-		<form ng-submit="login()">
-			<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
-			<div class="form-group">
-				<label>Email</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-					<input type="email" name="email" pattern="[^ @]*@[^ @]*" ng-model="loginuser.email" placeholder="Enter your email" class="form-control" required="true">
+		<div class="col-sm-6 col-sm-offset-3">
+
+			<!-- LOGIN FORM -->
+			<form ng-submit="login()">
+				<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
+				<div class="form-group">
+					<label>Email</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<input type="email" name="email" pattern="[^ @]*@[^ @]*" ng-model="loginuser.email" placeholder="Enter your email" class="form-control" required="true">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label>Password</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-					<input type="password" name="password" ng-model="loginuser.password" placeholder="Enter your password" class="form-control" name="password" required="true">
+				<div class="form-group">
+					<label>Password</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<input type="password" name="password" ng-model="loginuser.password" placeholder="Enter your password" class="form-control" name="password" required="true">
+					</div>
 				</div>
-			</div>
 
-			<button type="submit" class="btn btn-raised btn-warning btn-lg">Login</button>
-		</form>
+				<button type="submit" class="btn btn-raised btn-warning btn-lg">Login</button>
+			</form>
 
-		<hr>
+			<hr>
 
-		<p>Forgot your password? <a href="/#/forgot">Reset Password</a></p>
-		<!-- <p>Or go <a href="/">home</a>.</p> -->
+			<p>Forgot your password? <a href="/#/forgot">Reset Password</a></p>
+			<!-- <p>Or go <a href="/">home</a>.</p> -->
 
-		<p>Need an account? <a href="/#/signup">Signup</a></p>
-		<!-- <p>Or go <a href="/">home</a>.</p> -->
+			<p>Need an account? <a href="/#/signup">Signup</a></p>
+			<!-- <p>Or go <a href="/">home</a>.</p> -->
 
+		</div>
 	</div>
 </section>

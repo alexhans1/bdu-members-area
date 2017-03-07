@@ -11,56 +11,58 @@
 </header>
 
 <section>
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="container">
+        <div class="col-sm-6 col-sm-offset-3">
 
-        <!-- LOGIN FORM -->
-        <form ng-submit="reportBug()">
-            <div class="form-group">
-                <label>Type</label>
-                <div class="input-group">
-                    <select class="form-control" style="height:auto;" ng-model="newBug.type" required="true">
-                        <option value=""></option>
-                        <option value="UI/UX">UI/UX</option>
-                        <option value="Functionality">Functionality</option>
-                        <option value="-">Other</option>
-                    </select>
+            <!-- LOGIN FORM -->
+            <form ng-submit="reportBug()">
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="input-group">
+                        <select class="form-control" style="height:auto;" ng-model="newBug.type" required="true">
+                            <option value=""></option>
+                            <option value="UI/UX">UI/UX</option>
+                            <option value="Functionality">Functionality</option>
+                            <option value="-">Other</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <div class="input-group">
-                    <textarea rows="8" placeholder="Please describe the error that you've found" ng-model="newBug.description" class="form-control" required></textarea>
+                <div class="form-group">
+                    <label>Description</label>
+                    <div class="input-group">
+                        <textarea rows="8" placeholder="Please describe the error that you've found" ng-model="newBug.description" class="form-control" required></textarea>
+                    </div>
+                    <p ng-hide="newBug.description.length > 1500" class="pull-right">{{newBug.description.length}}</p>
+                    <p ng-show="newBug.description.length > 1500" class="pull-right" style="color: #ff3533;">{{newBug.description.length}}</p>
                 </div>
-                <p ng-hide="newBug.description.length > 1500" class="pull-right">{{newBug.description.length}}</p>
-                <p ng-show="newBug.description.length > 1500" class="pull-right" style="color: #ff3533;">{{newBug.description.length}}</p>
-            </div>
 
-            <button type="submit" class="btn btn-raised btn-warning btn-lg">Report</button>
-        </form>
+                <button type="submit" class="btn btn-raised btn-warning btn-lg">Report</button>
+            </form>
 
-    </div>
+        </div>
 
-    <div ng-show="istVorstand" class="col-sm-10 col-sm-offset-1" style="margin-top: 50px">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th class="col-md-1">ID</th>
-                <th class="col-md-2">Type</th>
-                <th>Description</th>
-                <th class="col-md-1">Status</th>
-            </tr>
-            </thead>
-            <tbody class="left-align">
-            <tr ng-repeat="b in bugs">
-                <td>{{b.id}}</td>
-                <td>{{b.type}}</td>
-                <td>{{b.description}}</td>
-                <td>
-                    <span ng-hide="b.status == 0" class="glyphicon glyphicon-ok"></span>
-                    <span ng-show="b.status == 0" class="glyphicon glyphicon-remove"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div ng-show="istVorstand" class="col-sm-10 col-sm-offset-1" style="margin-top: 50px">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="col-md-1">ID</th>
+                    <th class="col-md-2">Type</th>
+                    <th>Description</th>
+                    <th class="col-md-1">Status</th>
+                </tr>
+                </thead>
+                <tbody class="left-align">
+                <tr ng-repeat="b in bugs">
+                    <td>{{b.id}}</td>
+                    <td>{{b.type}}</td>
+                    <td>{{b.description}}</td>
+                    <td>
+                        <span ng-hide="b.status == 0" class="glyphicon glyphicon-ok"></span>
+                        <span ng-show="b.status == 0" class="glyphicon glyphicon-remove"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
