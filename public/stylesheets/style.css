@@ -35,13 +35,17 @@ header .intro-text .name {
 	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-transform: uppercase;
 	font-weight: 700;
-	color: #000;
+	color: #FFF;
 	font-size: 2em;
+    background: rgba(12,12,12,0.3);
 }
 header .intro-text .skills {
 	font-size: 1.25em;
 	font-weight: 300;
-	background-color: #FFF;
+    color: white;
+	background-color: rgba(12,12,12,0.3);
+    padding-right: 7px;
+    padding-left: 7px;
 	background-size: 1.40em;
 }
 @media (min-width: 768px) {
@@ -55,6 +59,9 @@ header .intro-text .skills {
 		padding-bottom: 50px;
 	}
 	header .intro-text .name {
+        display:inline;
+        padding-right: 15px;
+        padding-left: 15px;
 		font-size: 4.75em;
 	}
 	header .intro-text .skills {
@@ -137,8 +144,8 @@ hr.star-user:after {
 }
 
 .table-overview {
-	font-size: 1.25em;
-	font-weight: 300;
+	font-size: 1.15em;
+	font-weight: 250;
 }
 
 .my-tournaments-table {
@@ -534,4 +541,15 @@ form .progress {
 @keyframes fadeout {
 	from {bottom: 30px; opacity: 1;}
 	to {bottom: 0; opacity: 0;}
+}
+
+/*FOOTER*/
+
+.footer-bottom {
+    bottom : 0;
+    position: relative;
+    min-height: 30px;
+    width: 100%;
+    /*margin-top : 10px;*/
+    margin-bottom: 3px;
 }

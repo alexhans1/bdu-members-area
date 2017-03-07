@@ -79,6 +79,16 @@ app.config(function($routeProvider){
 		templateUrl: 'imageUpload.html',
 		controller: 'UploadCtrl'
 	})
+	//the bug report display
+	.when('/bugReport', {
+		templateUrl: 'bugReport.html',
+		controller: 'bugCtrl'
+	})
+	//the bugs overview display
+	// .when('/bugs', {
+	// 	templateUrl: 'bugs.html',
+	// 	controller: 'bugs'
+	// })
 	.otherwise({
 		redirectTo: '/'
 	});
@@ -100,6 +110,10 @@ app.factory('TournamentService', function ($resource) {
             method: 'PUT' // this method issues a PUT request
         }
     });
+});
+
+app.factory('BugReportService', function ($resource) {
+    return $resource('/bugs');
 });
 
 app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService) {
@@ -362,7 +376,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentSer
 	}
 });
 
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService, UserService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -461,11 +475,16 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 		};
 
 		//OPEN IMAGE DIALOG
-        $scope.ShowImageDialog = function (userID) {
-            $http.get('/app/user/' + userID)
-                .then(function successCallback(user) {
-                    $scope.imageUser = user.data;
-                });
+        $scope.ShowImageDialog = function (Vorname, URL) {
+            // var user = UserService.get({ id: userID }, function() {
+            //     $scope.imageUser = user;
+            // });
+            $scope.imgDialogVorname = Vorname;
+            $scope.imgDialogURL = URL;
+            // $http.get('/app/user/' + userID)
+            //     .then(function successCallback(user) {
+            //         $scope.imageUser = user.data;
+            //     });
             ngDialog.open({
                 template: 'showImageDialog.html',
                 controller: 'OverviewCtrl',
@@ -494,6 +513,40 @@ app.controller('ResetCtrl', function($scope, $http, $location) {
 			$scope.message = err;
 		});
 	};
+});
+
+app.controller('bugCtrl', function($scope, $http, BugReportService){
+	$scope.newBug = {
+		description: '',
+		type: ''
+	};
+
+	$http.get('/bugs').success(function(bugs){
+        $scope.bugs = bugs.data;
+    });
+
+    // var bugs = BugReportService.query(function() {
+    //     $scope.bugs = bugs;
+    // });
+
+    $scope.reportBug = function () {
+        if ($scope.newBug.description == '' || $scope.newBug.type == '') {
+            showSnackbar(false, 'Please choose a type and describe the problem.');
+        } else if ($scope.newBug.description.length > 1500) {
+            showSnackbar(false, 'Keep your description below 1500 letters');
+		} else {
+            BugReportService.save($scope.newBug, function (res) {
+                if (!res.error) {
+                    $http.get('/bugs').success(function(bugs){
+                        $scope.bugs = bugs.data;
+                    });
+                    showSnackbar(true, res.message);
+                } else {
+                    showSnackbar(false, 'Error while reporting your Bug. Ironic, right?');
+                }
+            });
+        }
+    };
 });
 
 app.controller('authCtrl', function($scope, $http, $rootScope, $location){

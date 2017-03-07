@@ -155,4 +155,53 @@ module.exports = function(app, passport, Bookshelf) {
 	app.get('/resetFailure', function(req, res){
 		res.render('reset.ejs', {message: req.flash('reset'), user: null});
 	});
+
+
+    // =========================================================================
+    // ========================== BUG REPORT SYSTEM ============================
+    // =========================================================================
+
+	//MODELS
+    var Bug = Bookshelf.Model.extend({
+        tableName: 'bugs'
+    });
+
+    var Bugs = Bookshelf.Collection.extend({
+        model: Bug
+    });
+
+	app.get('/bugs', function (req, res) {
+        //Check if session user is authorized
+        if(req.user.position == 1){
+			Bugs.forge().fetch()
+			.then(function (bugs) {
+				bugs = bugs.toJSON();
+				console.log('Getting all bugs successful');
+				res.json({error: false, data: bugs});
+			})
+			.catch(function (err) {
+				console.error('Error while getting all bugs. Error message:\n' + err);
+				res.json({error: true, err: err, message: 'Error while getting all bugs. Error message:\n' + err});
+			});
+        } else {
+            console.log('User is not authorized to get all bugs');
+            res.status(401).json({error: true, message: 'Unauthorized'});
+        }
+    });
+    
+    app.post('/bugs', function (req, res) {
+		Bug.forge({
+			description: req.body.description,
+			type: req.body.type
+		})
+		.save()
+		.then(function (bug) {
+			console.log('Report bug successful.');
+			res.json({error: false, message: 'Report bug successful.'});
+		})
+		.catch(function (err) {
+			console.log('Error while reporting new bug. Error: \n' + err);
+			res.json({ error: true, message: 'Error while reporting new bug. Error: \n' + err.message });
+		});
+    })
 };
