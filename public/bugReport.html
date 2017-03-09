@@ -19,9 +19,9 @@
                 <div class="form-group">
                     <label>Type</label>
                     <div class="input-group">
-                        <select class="form-control" style="height:auto;" ng-model="newBug.type" required="true">
+                        <select class="form-control" style="height:auto;" ng-model="newBug.type" required>
                             <option value=""></option>
-                            <option value="UI/UX">UI/UX</option>
+                            <option value="UI/UX">Optic & Usability (UI/UX)</option>
                             <option value="Functionality">Functionality</option>
                             <option value="-">Other</option>
                         </select>
@@ -48,6 +48,8 @@
                     <th class="col-md-1">ID</th>
                     <th class="col-md-2">Type</th>
                     <th>Description</th>
+                    <th>Created at</th>
+                    <th>Created by</th>
                     <th class="col-md-1">Status</th>
                 </tr>
                 </thead>
@@ -56,6 +58,8 @@
                     <td>{{b.id}}</td>
                     <td>{{b.type}}</td>
                     <td>{{b.description}}</td>
+                    <td>{{b.created_at | date:'medium'}}</td>
+                    <td>{{b.user.vorname}} {{b.user.name}}</td>
                     <td>
                         <span ng-hide="b.status == 0" class="glyphicon glyphicon-ok"></span>
                         <span ng-show="b.status == 0" class="glyphicon glyphicon-remove"></span>

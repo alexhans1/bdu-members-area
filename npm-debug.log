@@ -3,14 +3,14 @@
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'run',
 1 verbose cli   'start' ]
-2 info using npm@3.10.8
-3 info using node@v6.9.1
+2 info using npm@3.10.10
+3 info using node@v6.10.0
 4 verbose run-script [ 'prestart', 'start', 'poststart' ]
 5 info lifecycle bdudb@0.0.0~prestart: bdudb@0.0.0
 6 silly lifecycle bdudb@0.0.0~prestart: no script for prestart, continuing
 7 info lifecycle bdudb@0.0.0~start: bdudb@0.0.0
 8 verbose lifecycle bdudb@0.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle bdudb@0.0.0~start: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\alex.hans\Google Drive\UNI\Uni Beuth drive\E-Business Projekt\BDUAppDev\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Users\alex.hans\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files (x86)\Autodesk\Backburner\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\nodejs\;C:\Program Files (x86)\Heroku\bin;C:\Program Files (x86)\git\cmd;C:\Program Files (x86)\Git\cmd;C:\Javalib\;C:\Program Files\Java\jdk1.8.0_77\bin;;C:\Users\alex.hans\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Users\alex.hans\AppData\Roaming\npm
+9 verbose lifecycle bdudb@0.0.0~start: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\alex.hans\Google Drive\UNI\Uni Beuth drive\E-Business Projekt\BDUAppDev\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\;C:\Users\alex.hans\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files (x86)\Autodesk\Backburner\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Heroku\bin;C:\Program Files (x86)\git\cmd;C:\Program Files (x86)\Git\cmd;C:\Program Files\nodejs\;C:\Users\alex.hans\AppData\Roaming\npm
 10 verbose lifecycle bdudb@0.0.0~start: CWD: C:\Users\alex.hans\Google Drive\UNI\Uni Beuth drive\E-Business Projekt\BDUAppDev
 11 silly lifecycle bdudb@0.0.0~start: Args: [ '/d /s /c', 'node ./bin/www' ]
 12 silly lifecycle bdudb@0.0.0~start: Returned: code: 1  signal: null
@@ -29,8 +29,8 @@
 16 verbose cwd C:\Users\alex.hans\Google Drive\UNI\Uni Beuth drive\E-Business Projekt\BDUAppDev
 17 error Windows_NT 10.0.14393
 18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "start"
-19 error node v6.9.1
-20 error npm  v3.10.8
+19 error node v6.10.0
+20 error npm  v3.10.10
 21 error code ELIFECYCLE
 22 error bdudb@0.0.0 start: `node ./bin/www`
 22 error Exit status 1

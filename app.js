@@ -11,8 +11,8 @@ require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds
 var flash = require('req-flash'); //lets me parse individual messages to requests
 var session = require('express-session'); //browser sessions for authentication
 var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
-var conn = require('./knex/knexfile.js'); //read out the DB Conn Data
-var knex = require('knex')(conn['development']); //require knex query binder
+var conn = require('./knexfile.js'); //read out the DB Conn Data
+var knex = require('knex')(conn['staging']); //require knex query binder
 var Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
@@ -28,7 +28,7 @@ app.set('view engine', 'ejs');
 //---------Middleware--------------
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public/images', 'BDU.png')));
 app.use(logger('dev'));
 
 //initialize sessions middleware, set secret to 'keyboard cat' to be used by cookies later I guess ?
@@ -67,7 +67,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -65,7 +65,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['t_u_id','role','attended','teamname']);
+			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname']);
 		}
 	});
 
@@ -78,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['t_u_id','role','attended','teamname']);
+			return this.belongsToMany(User).withPivot(['role','attended','teamname']);
 		}
 	});
 
@@ -536,12 +536,12 @@ module.exports = function(Bookshelf){
 			var merge = [];
 			Tournaments.forge().fetch({withRelated: ['users']})
 			.then(function(tournaments) {
-				_.forEach(tournaments.toJSON(), function(value, key){
+				_.forEach(tournaments.toJSON(), function(value){
 					Tournaments_Users_Col.query(function(qb) {
 						qb.where('tournament_id', '=', value.id);
 					}).fetch()
 					.then(function (data) {
-						_.forEach(value.users, function(user, key){
+						_.forEach(value.users, function(user){
 							_.assign(user, _.find(data.toJSON(), { 'user_id' : user.id }));
 						});
 						merge.push(value);

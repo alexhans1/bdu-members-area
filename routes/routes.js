@@ -33,7 +33,7 @@ module.exports = function(app, passport, Bookshelf) {
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
-	app.get('/logout', function(req, res) {
+	app.get('/logout', function(req) {
 		req.logout();
 		// res.redirect('/');
 	});
@@ -162,8 +162,23 @@ module.exports = function(app, passport, Bookshelf) {
     // =========================================================================
 
 	//MODELS
+
+    // User model
+    var User = Bookshelf.Model.extend({
+        tableName: 'users',
+
+        bugs: function() {
+            return this.hasMany(Bug);
+        }
+    });
+
     var Bug = Bookshelf.Model.extend({
-        tableName: 'bugs'
+        tableName: 'bugs',
+        hasTimestamps: true,
+
+        user: function() {
+            return this.belongsTo(User);
+        }
     });
 
     var Bugs = Bookshelf.Collection.extend({
@@ -173,7 +188,7 @@ module.exports = function(app, passport, Bookshelf) {
 	app.get('/bugs', function (req, res) {
         //Check if session user is authorized
         if(req.user.position == 1){
-			Bugs.forge().fetch()
+			Bugs.forge().fetch({withRelated: ['user']})
 			.then(function (bugs) {
 				bugs = bugs.toJSON();
 				console.log('Getting all bugs successful');
@@ -192,7 +207,8 @@ module.exports = function(app, passport, Bookshelf) {
     app.post('/bugs', function (req, res) {
 		Bug.forge({
 			description: req.body.description,
-			type: req.body.type
+			type: req.body.type,
+			user_id: req.user.id
 		})
 		.save()
 		.then(function (bug) {
