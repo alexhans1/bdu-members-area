@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8b5670f5-1ca6-45f9-b637-ac563fd78a88" name="Default" comment="added knex migrations; improved bug report feature">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/migrations/20170309120255_schema.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/knex/knexfile.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/knex/schema.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/test.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/npm-debug.log" afterPath="$PROJECT_DIR$/npm-debug.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bugReport.html" afterPath="$PROJECT_DIR$/public/bugReport.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/restAPI.js" afterPath="$PROJECT_DIR$/routes/restAPI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/routes.js" afterPath="$PROJECT_DIR$/routes/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.ejs" afterPath="$PROJECT_DIR$/views/index.ejs" />
-    </list>
+    <list default="true" id="8b5670f5-1ca6-45f9-b637-ac563fd78a88" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -437,12 +425,20 @@
       <workItem from="1488997350209" duration="1570000" />
       <workItem from="1489002208415" duration="2823000" />
       <workItem from="1489015355730" duration="1257000" />
-      <workItem from="1489054893637" duration="16395000" />
+      <workItem from="1489054893637" duration="16417000" />
     </task>
+    <task id="LOCAL-00001" summary="added knex migrations; improved bug report feature">
+      <created>1489092130683</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1489092130683</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142276000" />
+    <option name="totallyTimeSpent" value="142298000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
