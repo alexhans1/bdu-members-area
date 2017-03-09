@@ -12,7 +12,7 @@ var flash = require('req-flash'); //lets me parse individual messages to request
 var session = require('express-session'); //browser sessions for authentication
 var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
 var conn = require('./knexfile.js'); //read out the DB Conn Data
-var knex = require('knex')(conn['staging']); //require knex query binder
+var knex = require('knex')(conn['development']); //require knex query binder
 var Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN

@@ -6,11 +6,14 @@ module.exports = {
 		client: 'mysql',
 		connection: {
 			host: 'db.hosting-agency.de',
-			user: process.env.db_user,
+			user: 'dbuser30796',
 			password: process.env.db_password,
 			database: 'db6107x1',
 			charset: 'utf8'
-		}
+		},
+        migrations: {
+            tableName: 'knex_migrations'
+        }
 	},
 
 	staging: {
