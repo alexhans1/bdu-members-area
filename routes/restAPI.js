@@ -65,7 +65,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname']);
+			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname','comment','price_owed','price_paid']);
 		}
 	});
 
@@ -78,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['role','attended','teamname']);
+			return this.belongsToMany(User).withPivot(['role','attended','teamname','comment','price_owed','price_paid']);
 		}
 	});
 
@@ -87,7 +87,8 @@ module.exports = function(Bookshelf){
 	});
 
 	var Tournaments_Users = Bookshelf.Model.extend({
-		tableName: 'tournaments_users'
+		tableName: 'tournaments_users',
+        hasTimestamps: true
 	});
 
 	var Tournaments_Users_Col = Bookshelf.Collection.extend({
@@ -415,11 +416,14 @@ module.exports = function(Bookshelf){
 	// ------------------------------RELATION API--------------------------------
 	// --------------------------------------------------------------------------
 
+	var tournamentTmp;
 	router.route('/reg/:t_id')
 		.post(function (req, res) {
 			// check if Tournament exists in DB
 			Tournament.forge({id: req.params.t_id}).fetch()
 			.then(function (tournament) {
+                tournamentTmp = tournament.toJSON();
+				console.log(tournamentTmp);
 				if (!tournament) {
 					//if the tournament wasn't found the can't reg for it
 					console.error('Tournament is not in the DB.');
@@ -441,7 +445,9 @@ module.exports = function(Bookshelf){
 								Tournaments_Users.forge({
 									tournament_id: req.params.t_id,
 									user_id: req.user.id,
-									role: req.body.role
+									role: req.body.role,
+									price_owed: tournamentTmp.judgeprice,
+                                    comment: req.body.comment
 								})
 								.save()
 								.then(function(entry) {
@@ -453,7 +459,9 @@ module.exports = function(Bookshelf){
 								Tournaments_Users.forge({
 									tournament_id: req.params.t_id,
 									user_id: req.user.id,
-									role: req.body.role
+									role: req.body.role,
+                                    price_owed: tournamentTmp.judgeprice,
+                                    comment: req.body.comment
 								})
 								.save()
 								.then(function(entry) {
@@ -468,7 +476,9 @@ module.exports = function(Bookshelf){
 									Tournaments_Users.forge({
 										tournament_id: req.params.t_id,
 										user_id: req.user.id,
-										role: req.body.role
+										role: req.body.role,
+                                        price_owed: tournamentTmp.speakerprice,
+                                        comment: req.body.comment
 									})
 									.save()
 									.then(function(entry) {
@@ -481,7 +491,9 @@ module.exports = function(Bookshelf){
 										tournament_id: req.params.t_id,
 										user_id: req.user.id,
 										role: req.body.role,
-										teamname: req.body.team
+										teamname: req.body.team,
+                                        price_owed: tournamentTmp.speakerprice,
+                                        comment: req.body.comment
 									})
 									.save()
 									.then(function(entry) {

@@ -31,7 +31,7 @@
 						<tr ng-repeat="t in tournaments" ng-click="setTournament(t.id, true)">
 							<td>{{t.name}}</td>
 							<td class="hidden-xs">{{t.ort}}</td>
-							<td>{{t.startdate | date:'dd.MM.yyyy'}} -<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
+							<td>{{t.startdate | date:'dd.MM.yyyy'}}<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
 							<td class="hidden-xs">Teams: {{t.teamspots}}, Judges: {{t.judgespots}}</td>
 							<td>{{t.language}}</td>
 						</tr>

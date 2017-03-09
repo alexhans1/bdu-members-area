@@ -103,18 +103,45 @@
 								<th>Name</th>
 								<th>Place</th>
 								<th>Time</th>
-								<th>Price</th>
 								<th>Role</th>
+								<th>Team Name</th>
+								<th>Price</th>
+								<th>Paid</th>
+								<th>Debt</th>
+								<th>Attended</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="x in user.tournaments">
-								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.name}}</td>
-								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.ort}}</td>
-								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
-								<td ng-click="openDetails(x)" style="cursor: pointer">{{x.speakerprice}}</td>
+							<tr ng-repeat="x in user.tournaments" ng-click="openDetails(x)" style="cursor: pointer">
+								<td>{{x.name}}</td>
+								<td>{{x.ort}}</td>
+								<td>{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
 								<td>{{x.pivot_role}}</td>
-								<td>{{x.teamname}}</td>
+								<td>{{x.pivot_teamname}}</td>
+								<td>{{x.pivot_price_owed}}€</td>
+								<td>{{x.pivot_price_paid}}€</td>
+								<td ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
+								<td ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
+								<td ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
+								<td ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
+								<td ng-hide="x.pivot_attended == 1"><button class="btn btn-danger">
+									<span class="glyphicon glyphicon-trash"> </span>
+									Delete
+								</button></td>
+							</tr>
+							<tr style="border-top: solid 2px black;">
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td ng-show="debt < 0" style="color: #ff3533">{{debt}}€</td>
+								<td ng-hide="debt < 0">{{debt}}</td>
+								<td></td>
+								<td></td>
 							</tr>
 						</tbody>
 					</table>

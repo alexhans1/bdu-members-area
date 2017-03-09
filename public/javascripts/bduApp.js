@@ -121,6 +121,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 
         //get the logged in user
 		var user = UserService.get({ id: $rootScope.user.id }, function() {
+			$scope.debt = _.sumBy(user.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) });
 			$scope.user = user;
 		});
 
@@ -212,13 +213,14 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		}];
 
 		$scope.selected = $scope.roles[0];
+        $scope.team = '';
+        $scope.comment = '';
 
 		$scope.isSpeaker = false;
 		$scope.setRole = function () {
 			$scope.isSpeaker = ($scope.selected.id == 2);
 		};
 
-		$scope.team = '';
 
 		$scope.FormData={accountNum: ''};
 		$scope.ShowNgDialog = function () {
@@ -233,7 +235,11 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.reg = function() {
 
 			var url = '/app/reg/' + $scope.tournament.id;
-			var parameters = JSON.stringify({role: $scope.selected.value, team: $scope.team});
+			var parameters = JSON.stringify({
+				role: $scope.selected.value,
+				team: $scope.team,
+				comment: $scope.comment
+			});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
 				if (response.status == 200) {
