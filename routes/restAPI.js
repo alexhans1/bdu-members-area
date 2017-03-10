@@ -460,7 +460,7 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.user.id,
 									role: req.body.role,
-                                    price_owed: tournamentTmp.judgeprice,
+                                    price_owed: 0,
                                     comment: req.body.comment
 								})
 								.save()

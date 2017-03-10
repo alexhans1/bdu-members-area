@@ -6,6 +6,17 @@ var app = angular.module('bduApp', [
 	'ngImgCrop'
 	])
 .run(function($http, $rootScope, UserService, TournamentService) {
+
+
+    var users = UserService.query(function() {
+        var totalDebt = 0;
+        _.forEach(users, function(value) {
+            totalDebt += _.sumBy(value.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) })
+        });
+        $rootScope.totalDebt = totalDebt;
+    });
+
+    $rootScope.personnelDebt = 0;
 	
 	$rootScope.authenticated = false;
 	$rootScope.istVorstand = false;
@@ -93,7 +104,7 @@ app.config(function($routeProvider){
 //RESOURCE SERVICE FACTORIES
 
 app.factory('UserService', function ($resource) {
-    return $resource('/app/user/:id', { id: 'id' }, {
+    return $resource('/app/user/:id', {}, {
         update: {
             method: 'PUT' // this method issues a PUT request
         }
@@ -122,6 +133,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
         //get the logged in user
 		var user = UserService.get({ id: $rootScope.user.id }, function() {
 			$scope.debt = _.sumBy(user.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) });
+			$rootScope.personnelDebt = $scope.debt;
 			$scope.user = user;
 		});
 
@@ -337,7 +349,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 	}
 });
 
-app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentService) {
+app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentService, UserService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -375,6 +387,7 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentSer
                 });
 			}
 		};
+
 	}
 });
 
@@ -418,7 +431,6 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 			.then(function successCallback(response) {
 				if (!response.error) {
 					getAllTournaments();
-					console.log(_.find($scope.tournamentsusers, { id: $scope.tournament.id }));
                     $scope.tournament = _.find($scope.tournamentsusers, { id: $scope.tournament.id });
 
 					// $http.get('/app/getAllTournamentsUsers')

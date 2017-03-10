@@ -91,6 +91,12 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
+			<span ng-show="authenticated" class="hidden-xs hidden-sm hidden-md">
+				<span ng-hide="totalDebt<0" class="navbar-right navbar-text" style="margin-left: 0">{{totalDebt}}€</span>
+				<span ng-show="totalDebt<0" class="navbar-right navbar-text" style="color: #db2a28; margin-left: 0">{{totalDebt}}€</span>
+				<span ng-hide="personnelDebt<0" class="navbar-right navbar-text" style="margin-right: 0">{{personnelDebt}}€/</span>
+				<span ng-show="personnelDebt<0" class="navbar-right navbar-text" style="color: #db2a28; margin-right: 0">{{personnelDebt}}€/</span>
+			</span>
 			<a href="/#/profile" class="hidden-xs hidden-sm">
 				<img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
 			</a>
