@@ -14,6 +14,15 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: 700;
 }
 
+@media (max-width: 500px) {
+	#tournament-info, .user-info {
+		font-size: smaller;
+	}
+	#tournaments {
+		word-break:break-all;
+	}
+}
+
 header {
 	text-align: center;
 	background-image: url('http://www.debating.de/BDUDBdev/Berlin_Panorama_mit_Fernsehturm.jpg');
@@ -37,13 +46,13 @@ header .intro-text .name {
 	font-weight: 700;
 	color: #FFF;
 	font-size: 2em;
-    background: rgba(12,12,12,0.3);
+    background: rgba(12,12,12,0.38);
 }
 header .intro-text .skills {
 	font-size: 1.25em;
 	font-weight: 300;
     color: white;
-	background-color: rgba(12,12,12,0.3);
+	background-color: rgba(12,12,12,0.38);
     padding-right: 7px;
     padding-left: 7px;
 	background-size: 1.40em;

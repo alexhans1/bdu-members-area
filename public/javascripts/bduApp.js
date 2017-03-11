@@ -281,7 +281,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
                         });
                         showSnackbar(true, res.message);
                     } else {
-						showSnackbar(false, 'Error while deleting that tournament.')
+						showSnackbar(false, res.message);
 					}
                 });
 			}
@@ -439,7 +439,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
                      //    $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
 					// });
 				} else {
-					confirm(response.data.message);
+					showSnackbar(false, response.message);
 				}
 			}, function errorCallback(err) {
 				confirm(err.data);
@@ -462,14 +462,14 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 					}
 				})
 				.then(function successCallback(response) {
+					response = response.data;
 					if (!response.error) {
-						$http.get('/app/getAllTournamentsUsers')
-						.then(function successCallback(collection) {
-							$scope.tournamentsusers = collection.data;
-                            $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
-						});
+						showSnackbar(true, response.message);
+                        getAllTournaments();
+                        console.log($scope.tournamentsusers);
+                        $scope.tournament = _.find($scope.tournamentsusers, { id: $scope.tournament.id });
 					} else {
-						confirm(response.data.message);
+						showSnackbar(false, response.message);
 					}
 				}, function errorCallback(err) {
 					confirm(err.data);

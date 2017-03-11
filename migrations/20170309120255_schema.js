@@ -14,7 +14,7 @@ exports.up = function(knex, Promise) {
             table.string('image');
             table.integer('position');
             table.string('resetPasswordToken');
-            table.integer('resetPasswordExpires');
+            table.bigInteger('resetPasswordExpires');
         }),
 
         knex.schema.createTableIfNotExists('tournaments', function(table){

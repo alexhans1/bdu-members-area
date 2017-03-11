@@ -11,20 +11,20 @@
 </header>
 
 <!-- NORMAL VIEW -->
-<section class="user-info" ng-hide="showUpdate">
+<section id="tournaments" class="user-info" ng-hide="showUpdate">
 	<div class="row">
 		<div class="col-sm-10 col-sm-offset-1">
 			<!-- Table -->
 			<div class="col-md-7">
 
-				<table class="table table-hover">
+				<table class="table table-hover table-responsive">
 					<thead>
 						<tr>
-							<th class="col-md-2">Name</th>
-							<th class="col-md-2 hidden-xs">Place</th>
-							<th class="col-md-2">Date</th>
-							<th class="col-md-2 hidden-xs">Spots</th>
-							<th class="col-md-2"><button class="btn btn-raised btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
+							<th>Name</th>
+							<th class="hidden-xs">Place</th>
+							<th>Date</th>
+							<th class="hidden-xs">Spots</th>
+							<th><button class="btn btn-raised btn-warning" ng-click="toggle()">{{toggleVal}}</button></th>
 						</tr>
 					</thead>
 					<tbody class="left-align">

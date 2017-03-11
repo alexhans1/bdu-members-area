@@ -283,7 +283,7 @@ module.exports = function(Bookshelf){
 			})
 			.catch(function (err) {
 				console.error('Error while getting all tournaments. Error message:\n' + err);
-                res.status(500).json({error: true, data: {message: err.message}});
+                res.status(500).json({error: true, message: err.message});
 			});
 		})
 
@@ -380,8 +380,8 @@ module.exports = function(Bookshelf){
 					res.status(200).json({error: false, message: 'Updating tournament successful.'});
 				})
 				.catch(function (err) {
-					console.error('Error while updating tournament.');
-					res.status(500).json({error: true, message: err.message});
+					console.error('Error while updating tournament. Error: ' + err.message);
+					res.status(500).json({error: true, message: 'Error while updating tournament.'});
 				})
 			} else {
 				console.log('User is not authorized to update tournament');
@@ -403,8 +403,8 @@ module.exports = function(Bookshelf){
 					res.status(200).json({ error: false, message: 'Deleting tournament successful.' });
 				})
 				.catch(function (err) {
-					console.error('Error while deleting tournament.');
-					res.status(500).json({ error: true, message: err.message });
+					console.error('Error while deleting tournament. Error: ' + err.message);
+					res.json({ error: true, message: 'Error while deleting tournament.' });
 				})
 			} else {
 				console.log('User is not authorized to delete tournament');
@@ -536,8 +536,8 @@ module.exports = function(Bookshelf){
 				res.status(200).json({error: false, message: 'Deleting registration successful.'});
 			})
 			.catch(function (err) {
-				console.error('Error while deleting registration.');
-				res.status(500).json({error: true, data: {message: err.message}});
+				console.error('Error while deleting registration. Error: ' + err.message);
+				res.json({error: true, message: 'Error while deleting registration.' });
 			})
 		});
 
@@ -581,8 +581,8 @@ module.exports = function(Bookshelf){
 				res.status(200).json({error: false, data: {message: 'works'}});
 			})
 			.catch(function (err) {
-				console.error('Error while updating tournament.');
-				res.status(500).json({error: true, data: {message: err.message}});
+				console.error('Error while setAttended. Error: ' + err.message);
+				res.json({ error: true, message: 'Error while setAttended.' });
 			})
 		});
 
