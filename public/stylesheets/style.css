@@ -57,7 +57,7 @@ header .intro-text .skills {
     padding-left: 7px;
 	background-size: 1.40em;
 }
-@media (min-width: 768px) {
+@media (min-width: 769px) {
 	header {
 		text-align: center;
 		background-image: url('http://www.debating.de/BDUDBdev/Berlin_Panorama_mit_Fernsehturm.jpg');

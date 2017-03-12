@@ -80,7 +80,7 @@
 					<div class="hidden-xs">
 						<td ng-hide="users.pivot_attended == 1" class="text-center">
 							<span class="glyphicon glyphicon-remove"></span><br>
-							<button ng-show="users.id == user.id || istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(tournament.id, users.id)">Went</button>
+							<button ng-show="users.id == user.id || istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(tournament.id, users.id, users.pivot_role)">Went</button>
 						</td>
 						<td ng-show="users.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 					</div>

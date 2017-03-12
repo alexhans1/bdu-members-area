@@ -422,24 +422,21 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 		};
 
 		//SET ATTENDED TO 1
-		$scope.went = function(t_id, u_id){
+		$scope.went = function(t_id, u_id, role){
 			var parameters = JSON.stringify({
 				t_id: t_id,
-				u_id: u_id
+				u_id: u_id,
+				role: role
 			});
 			$http.put('/app/setAttended', parameters)
 			.then(function successCallback(response) {
+				console.log(response);
 				if (!response.error) {
 					getAllTournaments();
                     $scope.tournament = _.find($scope.tournamentsusers, { id: $scope.tournament.id });
-
-					// $http.get('/app/getAllTournamentsUsers')
-					// .then(function successCallback(collection) {
-					// 	$scope.tournamentsusers = collection.data;
-                     //    $scope.tournamentsusers = _.orderBy(collection.data, ['startdate'], 'asc');
-					// });
+                    showSnackbar(true, response.data.data.message);
 				} else {
-					showSnackbar(false, response.message);
+					showSnackbar(false, response.data.message);
 				}
 			}, function errorCallback(err) {
 				confirm(err.data);

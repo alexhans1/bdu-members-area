@@ -446,7 +446,6 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.user.id,
 									role: req.body.role,
-									price_owed: tournamentTmp.judgeprice,
                                     comment: req.body.comment
 								})
 								.save()
@@ -460,7 +459,6 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.user.id,
 									role: req.body.role,
-                                    price_owed: 0,
                                     comment: req.body.comment
 								})
 								.save()
@@ -477,7 +475,6 @@ module.exports = function(Bookshelf){
 										tournament_id: req.params.t_id,
 										user_id: req.user.id,
 										role: req.body.role,
-                                        price_owed: tournamentTmp.speakerprice,
                                         comment: req.body.comment
 									})
 									.save()
@@ -492,7 +489,6 @@ module.exports = function(Bookshelf){
 										user_id: req.user.id,
 										role: req.body.role,
 										teamname: req.body.team,
-                                        price_owed: tournamentTmp.speakerprice,
                                         comment: req.body.comment
 									})
 									.save()
@@ -573,17 +569,29 @@ module.exports = function(Bookshelf){
 
 	router.route('/setAttended')
 		.put(function (req, res) {
-			
-			var rawSql = 'UPDATE tournaments_users SET attended =1 WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
+            var price;
+            Tournament.forge({id: req.body.t_id})
+			.fetch()
+			.then(function (tournament) {
+				tournament = tournament.toJSON();
+				if(req.body.role == 'speaker') price=tournament.speakerprice;
+				else price = tournament.judgeprice;
 
-			Bookshelf.knex.raw(rawSql)
-			.then(function() {
-				res.status(200).json({error: false, data: {message: 'works'}});
+                var rawSql = 'UPDATE tournaments_users SET attended = 1, price_owed = ' + price + ' WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
+
+                Bookshelf.knex.raw(rawSql)
+				.then(function() {
+					res.status(200).json({error: false, data: {message: 'Successfully set attendance to true.'}});
+				})
+				.catch(function (err) {
+					console.error('Error while setAttended. Error: ' + err.message);
+					res.json({ error: true, message: 'Error while setAttended.' });
+				})
 			})
 			.catch(function (err) {
 				console.error('Error while setAttended. Error: ' + err.message);
 				res.json({ error: true, message: 'Error while setAttended.' });
-			})
+			});
 		});
 
 	return router;
