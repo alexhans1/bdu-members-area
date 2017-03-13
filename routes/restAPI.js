@@ -65,7 +65,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname','comment','price_owed','price_paid']);
+			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
 		}
 	});
 
@@ -78,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['role','attended','teamname','comment','price_owed','price_paid']);
+			return this.belongsToMany(User).withPivot(['role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
 		}
 	});
 

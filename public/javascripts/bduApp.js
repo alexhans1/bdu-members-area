@@ -7,14 +7,23 @@ var app = angular.module('bduApp', [
 	])
 .run(function($http, $rootScope, UserService, TournamentService) {
 
+	$rootScope.updateAll = function () {
 
-    var users = UserService.query(function() {
-        var totalDebt = 0;
-        _.forEach(users, function(value) {
-            totalDebt += _.sumBy(value.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) })
+        var users = UserService.query(function() {
+            $rootScope.allUsers = users;
+
+            // CALCULATE TOTAL DEBT OF MEMBERS TO CLUB
+            $rootScope.totalDebt = _.sumBy(users, function (u) {
+                return _.sumBy(u.tournaments, function (t) {
+                    return t.pivot_price_paid - t.pivot_price_owed;
+                });
+            });
         });
-        $rootScope.totalDebt = totalDebt;
-    });
+        $rootScope.allTournaments = TournamentService.query();
+    };
+
+    $rootScope.updateAll();
+
 
     $rootScope.personnelDebt = 0;
 	
@@ -183,19 +192,12 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$location.path('/');
 	} else {
 
-		//get all Tournaments
-		var getAllTournaments = function () {
-            var tournaments = TournamentService.query(function() {
-				$scope.alltournaments = _.orderBy(tournaments, ['startdate'], 'asc');
-				$scope.tournaments = $scope.alltournaments;
-			});
-		};
-
-		getAllTournaments();
+		//TODO on refresh the tournament view is empty because $rootScope.allTournaments is not yet calculated but already used to write to $scope.tournaments
+        $scope.tournaments = _.orderBy($rootScope.allTournaments, ['startdate'], 'asc');
 
 		$scope.setTournament = function(id, scroll) {
 
-			$scope.tournament = _.find($scope.alltournaments, {id: id});
+			$scope.tournament = _.find($rootScope.allTournaments, {id: id});
 			$scope.showDetails = true;
 
 			//check if user is registered for this tournament
@@ -206,7 +208,6 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
                 anchorSmoothScroll.scrollTo('details');
             }
 		};
-
 
 		// NG-DIALOG FOR REGISTRATION
 
@@ -255,8 +256,9 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
 				if (response.status == 200) {
+                    $rootScope.updateAll();
                     showSnackbar(true, 'Successfully registered.');
-					$scope.isReged = true;
+					$scope.isReged = true; //TODO this does not currently work because ng-dialog hinders view update
 				} else {
                     showSnackbar(false, response.data);
 				}
@@ -273,12 +275,11 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			if (deleteTournament) {
 				TournamentService.delete({id: $scope.tournament.id}, function (res) {
 					if (!res.error) {
-                        _.remove($scope.alltournaments, {
-                            id: $scope.tournament.id
-                        });
+                        $rootScope.updateAll();
                         _.remove($scope.tournaments, {
                             id: $scope.tournament.id
                         });
+                        $scope.tournament = '';
                         showSnackbar(true, res.message);
                     } else {
 						showSnackbar(false, res.message);
@@ -293,6 +294,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.submitUpdate = function () {
 			$http.put('/app/tournament/' + $scope.tournament.id, $scope.tournament)
 			.then(function successCallback(res) {
+                $rootScope.updateAll();
 				showSnackbar(true, res.data.message);
 				$scope.showUpdate = false;
 			}, function errorCallback(err) {
@@ -304,16 +306,16 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.toggleVal = 'all';
 		$scope.toggle = function () {
 			if ($scope.toggleVal == 'en') {
-				$scope.tournaments = _.filter($scope.alltournaments, {language: 'other'});
+				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'other'});
 				$scope.toggleVal = 'other';
 			} else if ($scope.toggleVal == 'de') {
-				$scope.tournaments = _.filter($scope.alltournaments, {language: 'en'});
+				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'en'});
 				$scope.toggleVal = 'en';
 			} else if ($scope.toggleVal == 'other') {
-				$scope.tournaments = $scope.alltournaments;
+				$scope.tournaments = $rootScope.allTournaments;
 				$scope.toggleVal = 'all';
 			} else {
-				$scope.tournaments = _.filter($scope.alltournaments, {language: 'de'});
+				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'de'});
 				$scope.toggleVal = 'de';
 			}
 		};
@@ -430,7 +432,6 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 			});
 			$http.put('/app/setAttended', parameters)
 			.then(function successCallback(response) {
-				console.log(response);
 				if (!response.error) {
 					getAllTournaments();
                     $scope.tournament = _.find($scope.tournamentsusers, { id: $scope.tournament.id });

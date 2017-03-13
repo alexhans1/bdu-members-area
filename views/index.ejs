@@ -44,8 +44,6 @@
 	<link href="/timepicker/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="/timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
-	<!--<script type="text/javascript" src="/moment/moment.js"></script>-->
-
 	<!-- fontawesome -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 
@@ -53,6 +51,7 @@
 	<script src="/javascripts/bduApp.js"></script>
 
 	<link rel="stylesheet" href="/stylesheets/style.css">
+	<link rel="stylesheet" href="/stylesheets/inline_help_style.css">
 
 </head>
 <body>
@@ -91,12 +90,18 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
-			<span ng-show="authenticated" class="hidden-xs hidden-sm hidden-md">
-				<span ng-hide="totalDebt<0" class="navbar-right navbar-text" style="margin-left: 0">{{totalDebt}}€</span>
-				<span ng-show="totalDebt<0" class="navbar-right navbar-text" style="color: #db2a28; margin-left: 0">{{totalDebt}}€</span>
-				<span ng-hide="personnelDebt<0" class="navbar-right navbar-text" style="margin-right: 0">{{personnelDebt}}€/</span>
-				<span ng-show="personnelDebt<0" class="navbar-right navbar-text" style="color: #db2a28; margin-right: 0">{{personnelDebt}}€/</span>
-			</span>
+			<div ng-show="authenticated" class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">
+				<span class="help-tip">
+					<label ng-hide="personnelDebt<0">{{personnelDebt}}€/</label>
+					<label ng-show="personnelDebt<0" style="color: #db2a28">{{personnelDebt}}€/</label>
+					<p>This is how much you currently owe the BDU.</p>
+				</span>
+				<span class="help-tip">
+					<label ng-hide="totalDebt<0">{{totalDebt}}€</label>
+					<label ng-show="totalDebt<0" style="color: #db2a28">{{totalDebt}}€</label>
+					<p>This is how much all members combined currently owe the BDU.</p>
+				</span>
+			</div>
 			<a href="/#/profile" class="hidden-xs hidden-sm">
 				<img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
 			</a>

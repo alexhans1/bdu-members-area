@@ -59,6 +59,8 @@
 					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
 					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_role')">Role</button></th>
 					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
+					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
+					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
 					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
 				</tr>
 				</thead>
@@ -75,6 +77,8 @@
 					</td>
 					<td>{{users.pivot_role}}</td>
 					<td>{{users.pivot_teamname}}</td>
+					<td class="hidden-xs">{{users.pivot_comment}}</td>
+					<td class="hidden-xs hidden-sm">{{users.pivot_created_at | date:'medium'}}</td>
 
 					<!--ATTENDED INFO AND BUTTON-->
 					<div class="hidden-xs">

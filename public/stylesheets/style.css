@@ -317,6 +317,13 @@ hr.star-user:after {
 	border-radius: 50%;
 }
 
+.totalDebt {
+	margin-left: 0;
+}
+.personnelDebt {
+	margin-right: 0;
+}
+
 /*+++++++++++++++++++++++++++*/
 /*responsive button sizes*/
 /*+++++++++++++++++++++++++++*/
