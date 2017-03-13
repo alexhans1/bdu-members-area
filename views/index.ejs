@@ -89,8 +89,9 @@
 			</li>
 		</ul>
 
-		<ul class="nav navbar-nav navbar-right" ng-hide="!authenticated">
-			<div ng-show="authenticated" class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">
+		<ul class="nav navbar-nav navbar-right" ng-show="authenticated">
+			<!--SCHULDENUHR-->
+			<div class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">
 				<span class="help-tip">
 					<label ng-hide="personnelDebt<0">{{personnelDebt}}€/</label>
 					<label ng-show="personnelDebt<0" style="color: #db2a28">{{personnelDebt}}€/</label>
@@ -102,10 +103,12 @@
 					<p>This is how much all members combined currently owe the BDU.</p>
 				</span>
 			</div>
+
 			<a href="/#/profile" class="hidden-xs hidden-sm">
 				<img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
 			</a>
 			<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>
+
 			<li>
 				<a href="/#" class="hidden-xs hidden-sm" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
 				<a href="/#" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
