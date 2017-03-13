@@ -1,0 +1,75 @@
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-text">
+                    <span class="name"><span class="fa fa-group"></span> Finanz Übersicht</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section style="margin-left: 4%; margin-right: 4%">
+
+    <div class="row">
+        <!--USER TABLE-->
+        <div class="col-md-12">
+
+            <table class="table table-hover table-overview table-responsive">
+                <thead>
+                <tr>
+                    <!--<th></th>-->
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm">User ID</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm">Name</button></th>
+                    <th>Debt</th>
+                </tr>
+                </thead>
+                <tbody class="left-align">
+                <tr ng-repeat="user in allUsers" ng-click="goToTournaments(user)">
+                    <td class="hidden-xs">{{user.id}}</a></td>
+                    <td>{{user.vorname}} {{user.name}}</a></td>
+                    <td>{{user.tournaments.length}}</td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TOURNAMENT TABLE -->
+    <div class="row">
+        <div id="tournaments" class="col-md-12">
+
+            <h3>{{user.vorname}}</h3>
+            <table ng-show="showTournaments" class="table table-hover table-overview table-responsive">
+                <thead>
+                <tr>
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('id')">Tournament ID</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_role')">Date</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_teamname')">Role</button></th>
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Price Paid</button></th>
+                    <th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Price Owed</button></th>
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Debt</button></th>
+                </tr>
+                </thead>
+                <tbody class="left-align">
+                <tr ng-repeat="tournament in user.tournaments">
+                    <td class="text-center hidden-xs">{{tournament.id}}</td>
+                    <td>
+                        {{tournament.name}}
+                    </td>
+                    <td>{{tournament.startdate | date: 'medium'}}</td>
+                    <td>{{tournament.pivot_role}}</td>
+                    <td class="hidden-xs">{{tournament.pivot_price_paid}}</td>
+                    <td class="hidden-xs hidden-sm">{{tournament.pivot_price_owed}}</td>
+                    <td>{{tournament.pivot_price_paid - tournament.pivot_price_owed}}</td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>

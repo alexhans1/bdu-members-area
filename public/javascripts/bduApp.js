@@ -89,6 +89,11 @@ app.config(function($routeProvider){
 		templateUrl: 'anmeldungen.html',
 		controller: 'OverviewCtrl'
 	})
+	//the reg overview display
+	.when('/finances', {
+		templateUrl: 'finances.html',
+		controller: 'FinanceCtrl'
+	})
 	//the tournaments display
 	.when('/editTournament', {
 		templateUrl: 'editTournament.html',
@@ -511,6 +516,42 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 	}
 });
 
+app.controller('FinanceCtrl', function($scope, $http, $rootScope, $window, $location, anchorSmoothScroll, TournamentService, UserService) {
+
+	if(!$rootScope.authenticated) {
+		$location.path('/');
+	} else {
+
+		//UEBERSICHT Finanzen
+
+		// function to sort tournaments by key
+		var tournamentDir = 'asc';
+		$scope.sortTournaments = function(key){
+			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
+            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
+		};
+
+        // function to sort users by key
+		var userDir = 'asc';
+		$scope.sortUsers = function(key){
+            $scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
+			userDir = (userDir == 'asc') ? 'desc' : 'asc';
+		};
+
+
+		//FOR MOBILE VIEW
+		$scope.showTournaments = false;
+
+		$scope.goToTournaments = function (user) {
+			$scope.user = user;
+			$scope.showTournaments = true;
+
+			//scroll if mobile
+			anchorSmoothScroll.scrollTo('users');
+		};
+	}
+});
+
 app.controller('ResetCtrl', function($scope, $http, $location) {
 
 	$scope.email = '';
@@ -537,10 +578,6 @@ app.controller('bugCtrl', function($scope, $http, BugReportService){
         $scope.bugs = bugs.data;
     });
 
-    // var bugs = BugReportService.query(function() {
-    //     $scope.bugs = bugs;
-    // });
-
     $scope.reportBug = function () {
         if ($scope.newBug.description == '' || $scope.newBug.type == '') {
             showSnackbar(false, 'Please choose a type and describe the problem.');
@@ -553,6 +590,8 @@ app.controller('bugCtrl', function($scope, $http, BugReportService){
                         $scope.bugs = bugs.data;
                     });
                     showSnackbar(true, res.message);
+                    $scope.newBug.description = '';
+                    $scope.newBug.type = '';
                 } else {
                     showSnackbar(false, 'Error while reporting your Bug. Ironic, right?');
                 }
