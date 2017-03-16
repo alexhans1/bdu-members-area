@@ -153,6 +153,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 			$scope.debt = _.sumBy(user.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) });
 			$rootScope.personnelDebt = $scope.debt;
 			$scope.user = user;
+			$scope.user.tournaments = _.orderBy($scope.user.tournaments, ['startdate'], 'desc');
 		});
 
 		$scope.update = false;
@@ -589,13 +590,22 @@ app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
 		type: ''
 	};
 
+	var allBugs;
 	var getAllBugs = function () {
         $http.get('/bugs').success(function(bugs){
-            $scope.bugs = bugs.data;
+        	allBugs = bugs.data;
+            $scope.bugs = _.orderBy(bugs.data, ['created_at'], 'desc');
         });
     };
 	getAllBugs();
 
+	var filter = true;
+	$scope.filterBugs = function () {
+		console.log(filter);
+		if(filter) $scope.bugs = _.filter($scope.bugs,{'status' : 0});
+		else $scope.bugs = _.orderBy(allBugs, ['created_at'], 'desc');
+        filter = !filter;
+    };
 
     $scope.reportBug = function () {
         if ($scope.newBug.description == '' || $scope.newBug.type == '') {
