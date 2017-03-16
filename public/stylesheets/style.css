@@ -211,6 +211,9 @@ hr.star-user:after {
 	border-style: solid;
 	border-radius: 1%;
 }
+.details th {
+	min-width: 135px;
+}
 .details td {
 	text-align: right;
 }
