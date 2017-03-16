@@ -20,17 +20,22 @@
                 <thead>
                 <tr>
                     <!--<th></th>-->
-                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm">User ID</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm">Name</button></th>
+                    <th class="hidden-xs">
+                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('id')">User ID</button>
+                    </th>
+                    <th>
+                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('vorname')">Name</button>
+                    </th>
+                    <th>Tournaments</th>
                     <th>Debt</th>
                 </tr>
                 </thead>
                 <tbody class="left-align">
-                <tr ng-repeat="user in allUsers" ng-click="goToTournaments(user)">
+                <tr ng-repeat="user in users" ng-click="goToTournaments(user)">
                     <td class="hidden-xs">{{user.id}}</a></td>
                     <td>{{user.vorname}} {{user.name}}</a></td>
                     <td>{{user.tournaments.length}}</td>
-
+                    <td>{{personnelDebt}}€</td>
                 </tr>
                 </tbody>
             </table>
@@ -38,20 +43,20 @@
     </div>
 
     <!-- TOURNAMENT TABLE -->
-    <div class="row">
+    <div class="row" ng-show="showTournaments">
         <div id="tournaments" class="col-md-12">
 
             <h3>{{user.vorname}}</h3>
-            <table ng-show="showTournaments" class="table table-hover table-overview table-responsive">
+            <table class="table table-hover table-overview table-responsive">
                 <thead>
                 <tr>
-                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('id')">Tournament ID</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_role')">Date</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_teamname')">Role</button></th>
-                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Price Paid</button></th>
-                    <th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Price Owed</button></th>
-                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Debt</button></th>
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('startdate')">Date</button></th>
+                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_role')">Role</button></th>
+                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
+                    <th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
+                    <th class="hidden-xs">Debt</th>
                 </tr>
                 </thead>
                 <tbody class="left-align">
@@ -60,11 +65,11 @@
                     <td>
                         {{tournament.name}}
                     </td>
-                    <td>{{tournament.startdate | date: 'medium'}}</td>
+                    <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
                     <td>{{tournament.pivot_role}}</td>
-                    <td class="hidden-xs">{{tournament.pivot_price_paid}}</td>
-                    <td class="hidden-xs hidden-sm">{{tournament.pivot_price_owed}}</td>
-                    <td>{{tournament.pivot_price_paid - tournament.pivot_price_owed}}</td>
+                    <td class="hidden-xs">{{tournament.pivot_price_paid}}€</td>
+                    <td class="hidden-xs hidden-sm">{{tournament.pivot_price_owed}}€</td>
+                    <td>{{tournament.pivot_price_paid - tournament.pivot_price_owed}}€</td>
 
                 </tr>
                 </tbody>

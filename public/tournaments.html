@@ -28,7 +28,7 @@
 						</tr>
 					</thead>
 					<tbody class="left-align">
-						<tr ng-repeat="t in tournaments" ng-click="setTournament(t.id, true)">
+						<tr ng-repeat="t in tournaments" ng-click="setTournament(t.id)">
 							<td>{{t.name}}</td>
 							<td class="hidden-xs">{{t.ort}}</td>
 							<td>{{t.startdate | date:'dd.MM.yyyy'}}<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>

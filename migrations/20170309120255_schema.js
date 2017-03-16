@@ -44,7 +44,7 @@ exports.up = function(knex, Promise) {
             table.string('role');
             table.string('teamname');
             table.integer('attended');
-            table.decimal('price_owed',6,2);
+            table.decimal('price_owed',6,2).defaultTo(0);
             table.decimal('price_paid',6,2).defaultTo(0);
             table.text('comment');
             table.timestamps();

@@ -393,7 +393,11 @@ form .progress {
 	margin: 10px;
 }
 
-/*IMAGE MODAL*/
+
+/*+++++++++++++++++++++++++++*/
+/*++++++IMAGE MODAL++++++++++*/
+/*+++++++++++++++++++++++++++*/
+
 #myImg {
 	border-radius: 5px;
 	cursor: pointer;
@@ -480,7 +484,11 @@ form .progress {
 	}
 }
 
-/* SNACKBAR */
+
+/*+++++++++++++++++++++++++++*/
+/*++++++SNACKBAR+++++++++++++*/
+/*+++++++++++++++++++++++++++*/
+
 #snackbarSuccess {
 	visibility: hidden;
 	min-width: 250px;
@@ -496,7 +504,7 @@ form .progress {
 	padding-bottom: 10px;
 	position: fixed;
 	z-index: 1;
-	left: 50%;
+	left: 45%;
 	bottom: 30px;
 	font-size: 25px;
 }

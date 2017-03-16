@@ -381,11 +381,11 @@ module.exports = function(Bookshelf){
 				})
 				.catch(function (err) {
 					console.error('Error while updating tournament. Error: ' + err.message);
-					res.status(500).json({error: true, message: 'Error while updating tournament.'});
+					res.json({error: true, message: 'Error while updating tournament.'});
 				})
 			} else {
 				console.log('User is not authorized to update tournament');
-				res.status(401).json({error: true, message: 'Unauthorized'});
+				res.json({error: true, message: 'Unauthorized'});
 			}
 		})
 
@@ -408,7 +408,7 @@ module.exports = function(Bookshelf){
 				})
 			} else {
 				console.log('User is not authorized to delete tournament');
-				res.status(401).json({ error: true, message: 'Unauthorized' });
+				res.json({ error: true, message: 'Unauthorized' });
 			}
 		});
 

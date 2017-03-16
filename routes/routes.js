@@ -219,5 +219,53 @@ module.exports = function(app, passport, Bookshelf) {
 			console.log('Error while reporting new bug. Error: \n' + err);
 			res.json({ error: true, message: 'Error while reporting new bug. Error: \n' + err.message });
 		});
-    })
+    });
+
+	app.put('/bugs/:id', function (req, res) {
+        //Check if session user is authorized
+        if(req.user.position == 1){
+            Bug.forge({id: req.params.id})
+                .fetch({require: true})
+                .then(function (bug) {
+                    bug.save({
+                        description: req.body.description,
+                        type: req.body.type,
+                        status: req.body.status
+                    })
+                })
+                .then(function () {
+                    console.log('Updating bug successful.');
+                    res.status(200).json({error: false, message: 'Updating bug successful.'});
+                })
+                .catch(function (err) {
+                    console.error('Error while updating bug. Error: ' + err.message);
+                    res.json({error: true, message: 'Error while updating bug.'});
+                })
+        } else {
+            console.log('User is not authorized to update bug');
+            res.json({error: true, message: 'Unauthorized'});
+        }
+    });
+
+	app.delete('/bugs/:id', function (req, res) {
+        //Check if session user is authorized
+        if(req.user.position == 1){
+            Bug.forge({id: req.params.id})
+                .fetch({require: true})
+                .then(function (bug) {
+                    bug.destroy()
+                })
+                .then(function () {
+                    console.log('Deleting bug successful');
+                    res.status(200).json({ error: false, message: 'Deleting bug successful.' });
+                })
+                .catch(function (err) {
+                    console.error('Error while deleting bug. Error: ' + err.message);
+                    res.json({ error: true, message: 'Error while deleting bug.' });
+                })
+        } else {
+            console.log('User is not authorized to delete bug');
+            res.json({ error: true, message: 'Unauthorized' });
+        }
+    });
 };

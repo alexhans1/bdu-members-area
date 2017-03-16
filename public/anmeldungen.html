@@ -34,7 +34,6 @@
 					<td class="hidden-xs">{{tournaments.startdate | date:'dd.MM.yyyy'}}</a></td>
 					<td>{{tournaments.language}}</a></td>
 					<td>{{tournaments.users.length}}</td>
-
 				</tr>
 				</tbody>
 			</table>
@@ -57,6 +56,9 @@
 					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
 					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
 					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
+					<th></th>
+					<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
+					<th ng-show="istVorstand">Essen (sieht nur Vorstand)</th>
 				</tr>
 				</thead>
 				<tbody class="left-align">
@@ -85,12 +87,14 @@
 					</div>
 
 					<!--DELETE BUTTON-->
-					<td class="col-md-2" ng-show="users.id == user.id || istVorstand">
+					<td class="col-md-1" ng-show="users.id == user.id || istVorstand">
 						<button ng-click="delete(tournament.id, users.id)" class="btn btn-raised btn-danger btn-sm">
 							<span class="glyphicon glyphicon-trash"> </span>
 							Delete
 						</button>
 					</td>
+					<td ng-show="istVorstand">{{users.email}}</td>
+					<td ng-show="istVorstand">{{users.food}}</td>
 				</tr>
 				</tbody>
 			</table>

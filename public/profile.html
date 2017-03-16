@@ -125,10 +125,12 @@
 								<td ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
 								<td ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
 								<td ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
-								<td ng-hide="x.pivot_attended == 1"><button class="btn btn-danger">
-									<span class="glyphicon glyphicon-trash"> </span>
-									Delete
-								</button></td>
+								<td ng-hide="x.pivot_attended == 1">
+									<button class="btn btn-danger">
+										<span class="glyphicon glyphicon-trash"> </span>
+										Delete
+									</button>
+								</td>
 							</tr>
 							<tr style="border-top: solid 2px black;">
 								<td></td>
@@ -139,7 +141,7 @@
 								<td></td>
 								<td></td>
 								<td ng-show="debt < 0" style="color: #ff3533">{{debt}}€</td>
-								<td ng-hide="debt < 0">{{debt}}</td>
+								<td ng-hide="debt < 0">{{debt}}€</td>
 								<td></td>
 								<td></td>
 							</tr>

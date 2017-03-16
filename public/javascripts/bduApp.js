@@ -134,7 +134,11 @@ app.factory('TournamentService', function ($resource) {
 });
 
 app.factory('BugReportService', function ($resource) {
-    return $resource('/bugs');
+    return $resource('/bugs/:id', {}, {
+        update: {
+            method: 'PUT' // this method issues a PUT request
+        }
+    });
 });
 
 app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService) {
@@ -197,21 +201,25 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$location.path('/');
 	} else {
 
-		//TODO on refresh the tournament view is empty because $rootScope.allTournaments is not yet calculated but already used to write to $scope.tournaments
-        $scope.tournaments = _.orderBy($rootScope.allTournaments, ['startdate'], 'asc');
+        //get all Tournaments and their Users
+        var getAllTournaments = function () {
+            var tournaments = TournamentService.query(function() {
+                $scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
+                $scope.allTournaments = tournaments;
+            });
+        };
+        getAllTournaments();
 
-		$scope.setTournament = function(id, scroll) {
+		$scope.setTournament = function(id) {
+			getAllTournaments();
 
-			$scope.tournament = _.find($rootScope.allTournaments, {id: id});
+			$scope.tournament = _.find($scope.allTournaments, {id: id});
 			$scope.showDetails = true;
 
 			//check if user is registered for this tournament
 			$scope.isReged = (_.find($scope.tournament.users, {'id': $rootScope.user.id}));
 
-            //scroll if mobile
-            if(scroll) {
-                anchorSmoothScroll.scrollTo('details');
-            }
+			anchorSmoothScroll.scrollTo('details');
 		};
 
 		// NG-DIALOG FOR REGISTRATION
@@ -260,14 +268,13 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
+                $scope.closeThisDialog();
 				if (response.status == 200) {
-                    $rootScope.updateAll();
                     showSnackbar(true, 'Successfully registered.');
 					$scope.isReged = true; //TODO this does not currently work because ng-dialog hinders view update
 				} else {
                     showSnackbar(false, response.data);
 				}
-				$scope.closeThisDialog();
 			}, function errorCallback(response) {
                 showSnackbar(false, response.data);
 				$scope.closeThisDialog();
@@ -280,11 +287,8 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			if (deleteTournament) {
 				TournamentService.delete({id: $scope.tournament.id}, function (res) {
 					if (!res.error) {
-                        $rootScope.updateAll();
-                        _.remove($scope.tournaments, {
-                            id: $scope.tournament.id
-                        });
-                        $scope.tournament = '';
+                        getAllTournaments();
+                        $scope.showDetails = false;
                         showSnackbar(true, res.message);
                     } else {
 						showSnackbar(false, res.message);
@@ -297,14 +301,18 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.showUpdate = false;
 
 		$scope.submitUpdate = function () {
-			$http.put('/app/tournament/' + $scope.tournament.id, $scope.tournament)
-			.then(function successCallback(res) {
-                $rootScope.updateAll();
-				showSnackbar(true, res.data.message);
-				$scope.showUpdate = false;
-			}, function errorCallback(err) {
-				showSnackbar(false, res.data.message);
-			});
+			var tmpID = $scope.tournament.id;
+            TournamentService.update({ id: $scope.tournament.id }, $scope.tournament, function (result) {
+                if (!result.error) {
+                    getAllTournaments();
+                    showSnackbar(true, result.message);
+                    $scope.showUpdate = false;
+                }
+                else {
+                    showSnackbar(false, result.message);
+                }
+            });
+            $scope.showDetails = false;
 		};
 
 		//TOGGLE THROUGH LANGUAGES
@@ -356,49 +364,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 	}
 });
 
-app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentService, UserService) {
-
-	if(!$rootScope.authenticated) {
-		$location.path('/');
-	} else {
-
-		$scope.newTournament = {
-			name: '',
-			ort: '',
-			startdate: new Date(),
-			enddate:  new Date(),
-			deadline:  new Date(),
-			format: '',
-			league: '',
-			accommodation: '',
-			speakerprice: '',
-			judgeprice: '',
-			rankingvalue: '',
-			link: '',
-			teamspots: '',
-			judgespots: '',
-			comments: '',
-			language: ''
-		};
-
-		$scope.submit = function () {
-			if ($scope.newTournament.name == '' || $scope.newTournament.language == '') {
-				showSnackbar(false, 'Name und Sprache müssen gesetzt werden.');
-			} else {
-				TournamentService.save($scope.newTournament, function (res) {
-					if (!res.error) {
-                        showSnackbar(true, res.message);
-					} else {
-                        showSnackbar(false, 'Error while adding new Tournament.');
-					}
-                });
-			}
-		};
-
-	}
-});
-
-app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService, UserService) {
+app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -516,7 +482,49 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 	}
 });
 
-app.controller('FinanceCtrl', function($scope, $http, $rootScope, $window, $location, anchorSmoothScroll, TournamentService, UserService) {
+app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentService, UserService) {
+
+    if(!$rootScope.authenticated) {
+        $location.path('/');
+    } else {
+
+        $scope.newTournament = {
+            name: '',
+            ort: '',
+            startdate: new Date(),
+            enddate:  new Date(),
+            deadline:  new Date(),
+            format: '',
+            league: '',
+            accommodation: '',
+            speakerprice: '',
+            judgeprice: '',
+            rankingvalue: '',
+            link: '',
+            teamspots: '',
+            judgespots: '',
+            comments: '',
+            language: ''
+        };
+
+        $scope.submit = function () {
+            if ($scope.newTournament.name == '' || $scope.newTournament.language == '') {
+                showSnackbar(false, 'Name und Sprache müssen gesetzt werden.');
+            } else {
+                TournamentService.save($scope.newTournament, function (res) {
+                    if (!res.error) {
+                        showSnackbar(true, res.message);
+                    } else {
+                        showSnackbar(false, 'Error while adding new Tournament.');
+                    }
+                });
+            }
+        };
+
+    }
+});
+
+app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anchorSmoothScroll, UserService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -524,18 +532,26 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $window, $loca
 
 		//UEBERSICHT Finanzen
 
-		// function to sort tournaments by key
-		var tournamentDir = 'asc';
-		$scope.sortTournaments = function(key){
-			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
-            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
-		};
+        //get all Users and their Tournaments
+        var getAllUsers = function () {
+            var users = UserService.query(function() {
+                $scope.users = _.orderBy(users, ['vorname'], 'asc');
+            });
+        };
+        getAllUsers();
 
-        // function to sort users by key
+		// function to sort users by key
 		var userDir = 'asc';
 		$scope.sortUsers = function(key){
-            $scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
-			userDir = (userDir == 'asc') ? 'desc' : 'asc';
+			$scope.users = _.orderBy($scope.users, [key], userDir);
+            userDir = (userDir == 'asc') ? 'desc' : 'asc';
+		};
+
+        // function to sort tournaments by key
+		var tournamentDir = 'asc';
+		$scope.sortTournaments = function(key){
+            $scope.user.tournaments = _.orderBy($scope.user.tournaments, [key], tournamentDir);
+            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
 		};
 
 
@@ -546,8 +562,7 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $window, $loca
 			$scope.user = user;
 			$scope.showTournaments = true;
 
-			//scroll if mobile
-			anchorSmoothScroll.scrollTo('users');
+			anchorSmoothScroll.scrollTo('tournaments');
 		};
 	}
 });
@@ -568,15 +583,19 @@ app.controller('ResetCtrl', function($scope, $http, $location) {
 	};
 });
 
-app.controller('bugCtrl', function($scope, $http, BugReportService){
+app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
 	$scope.newBug = {
 		description: '',
 		type: ''
 	};
 
-	$http.get('/bugs').success(function(bugs){
-        $scope.bugs = bugs.data;
-    });
+	var getAllBugs = function () {
+        $http.get('/bugs').success(function(bugs){
+            $scope.bugs = bugs.data;
+        });
+    };
+	getAllBugs();
+
 
     $scope.reportBug = function () {
         if ($scope.newBug.description == '' || $scope.newBug.type == '') {
@@ -586,9 +605,7 @@ app.controller('bugCtrl', function($scope, $http, BugReportService){
 		} else {
             BugReportService.save($scope.newBug, function (res) {
                 if (!res.error) {
-                    $http.get('/bugs').success(function(bugs){
-                        $scope.bugs = bugs.data;
-                    });
+                    getAllBugs();
                     showSnackbar(true, res.message);
                     $scope.newBug.description = '';
                     $scope.newBug.type = '';
@@ -598,6 +615,36 @@ app.controller('bugCtrl', function($scope, $http, BugReportService){
             });
         }
     };
+
+    //UPDATE AND DELETE FUNCTIONS
+	$scope.deleteBug = function (id) {
+        var deleteBug = $window.confirm('Are you absolutely sure you want to delete this bug?');
+        if (deleteBug) {
+            BugReportService.delete({id: id}, function (res) {
+                if (!res.error) {
+                    getAllBugs();
+                    showSnackbar(true, res.message);
+                } else {
+                    showSnackbar(false, res.message);
+                }
+            });
+        }
+    };
+
+	$scope.changeStatus = function (id) {
+        var parameters = JSON.stringify({
+            status: ((_.find($scope.bugs, {id: id})).status == 0) ? 1 : 0
+        });
+        BugReportService.update({ id: id }, parameters, function (result) {
+            if (!result.error) {
+            	getAllBugs();
+                showSnackbar(true, result.message);
+            }
+            else {
+                showSnackbar(false, result.message);
+            }
+        });
+    }
 });
 
 app.controller('authCtrl', function($scope, $http, $rootScope, $location){
