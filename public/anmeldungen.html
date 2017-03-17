@@ -28,7 +28,7 @@
 				</tr>
 				</thead>
 				<tbody class="left-align">
-				<tr ng-repeat="tournaments in tournamentsusers" ng-click="goToUsers(tournaments)">
+				<tr ng-repeat="tournaments in tournamentsusers" ng-click="goToUsers(tournaments)" style="cursor: pointer;">
 					<td class="hidden-xs">{{tournaments.id}}</a></td>
 					<td>{{tournaments.name}}</a></td>
 					<td class="hidden-xs">{{tournaments.startdate | date:'dd.MM.yyyy'}}</a></td>

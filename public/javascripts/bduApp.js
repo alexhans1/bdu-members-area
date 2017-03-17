@@ -5,24 +5,7 @@ var app = angular.module('bduApp', [
 	'ngFileUpload', 
 	'ngImgCrop'
 	])
-.run(function($http, $rootScope, UserService, TournamentService) {
-
-	$rootScope.updateAll = function () {
-
-        var users = UserService.query(function() {
-            $rootScope.allUsers = users;
-
-            // CALCULATE TOTAL DEBT OF MEMBERS TO CLUB
-            $rootScope.totalDebt = _.sumBy(users, function (u) {
-                return _.sumBy(u.tournaments, function (t) {
-                    return t.pivot_price_paid - t.pivot_price_owed;
-                });
-            });
-        });
-        $rootScope.allTournaments = TournamentService.query();
-    };
-
-    $rootScope.updateAll();
+.run(function($http, $rootScope) {
 
 
     $rootScope.personnelDebt = 0;
@@ -320,16 +303,16 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		$scope.toggleVal = 'all';
 		$scope.toggle = function () {
 			if ($scope.toggleVal == 'en') {
-				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'other'});
+				$scope.tournaments = _.filter($scope.allTournaments, {language: 'other'});
 				$scope.toggleVal = 'other';
 			} else if ($scope.toggleVal == 'de') {
-				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'en'});
+				$scope.tournaments = _.filter($scope.allTournaments, {language: 'en'});
 				$scope.toggleVal = 'en';
 			} else if ($scope.toggleVal == 'other') {
-				$scope.tournaments = $rootScope.allTournaments;
+				$scope.tournaments = $scope.allTournaments;
 				$scope.toggleVal = 'all';
 			} else {
-				$scope.tournaments = _.filter($rootScope.allTournaments, {language: 'de'});
+				$scope.tournaments = _.filter($scope.allTournaments, {language: 'de'});
 				$scope.toggleVal = 'de';
 			}
 		};
@@ -555,8 +538,6 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
             tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
 		};
 
-
-		//FOR MOBILE VIEW
 		$scope.showTournaments = false;
 
 		$scope.goToTournaments = function (user) {
