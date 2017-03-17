@@ -124,7 +124,7 @@ app.factory('BugReportService', function ($resource) {
     });
 });
 
-app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDialog, UserService) {
+app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, UserService) {
 
 	if(!$rootScope.authenticated) {
 		$location.path('/');
@@ -175,6 +175,35 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, ngDia
 
 		$scope.close = function () {
             $scope.closeThisDialog();
+        };
+
+        //DELETE REGISTRATION
+        $scope.unreg = function(){
+            var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+            if (deleteReg) {
+                $http({
+                    url: 'app/deleteReg',
+                    method: 'DELETE',
+                    data: {
+                        t_id: $scope.tournament.id,
+                        u_id: $rootScope.user.id
+                    },
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8"
+                    }
+                })
+				.then(function successCallback(res) {
+					if (!res.error) {
+                        $scope.user.tournaments = _.remove($scope.user.tournaments, {id: $scope.tournament.id});
+                        $scope.closeThisDialog();
+						showSnackbar(true, res.data.message);
+					} else {
+						showSnackbar(false, 'Error while removing your registration.');
+					}
+				}, function errorCallback(err) {
+                    showSnackbar(false, err.data);
+				});
+            }
         };
 	}
 });
@@ -341,7 +370,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 						showSnackbar(false, 'Error while removing your registration.');
 					}
 				}, function errorCallback(err) {
-					$scope.ErrorMessage = err.data;
+                    showSnackbar(false, err.data);
 				});
 			}
 		};
