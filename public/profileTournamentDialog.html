@@ -53,31 +53,8 @@
                 <th>comments:</th>
                 <td>{{tournament.comments}}</td>
             </tr>
-            <tr>
-                <th>role:</th>
-                <td>{{tournament.pivot_role}}</td>
-            </tr>
-            <tr ng-show="tournament.pivot_role == 'speaker'">
-                <th>teamname:</th>
-                <td>{{tournament.pivot_teamname}}</td>
-            </tr>
-            <tr ng-show="tournament.pivot_comment.length > 0">
-                <th>reg comment:</th>
-                <td>{{tournament.pivot_comment}}</td>
-            </tr>
         </table>
     </div>
-</div>
-
-<div ng-hide="x.pivot_attended == 1">
-    <!--<button class="btn btn-info btn-sm" style="margin: 10px">-->
-        <!--<span class="glyphicon glyphicon-pencil"> </span>-->
-        <!--Change Reg-->
-    <!--</button>-->
-    <button class="btn btn-danger btn-sm" style="margin: 10px" ng-click="unreg()">
-        <span class="glyphicon glyphicon-trash"></span>
-        Delete Reg
-    </button>
 </div>
 
 <div class="ngdialog-buttons">

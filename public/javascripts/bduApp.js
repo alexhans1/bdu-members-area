@@ -178,14 +178,14 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
         };
 
         //DELETE REGISTRATION
-        $scope.unreg = function(){
+        $scope.unreg = function(t_id){
             var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
             if (deleteReg) {
                 $http({
                     url: 'app/deleteReg',
                     method: 'DELETE',
                     data: {
-                        t_id: $scope.tournament.id,
+                        t_id: t_id,
                         u_id: $rootScope.user.id
                     },
                     headers: {
@@ -194,8 +194,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
                 })
 				.then(function successCallback(res) {
 					if (!res.error) {
-                        $scope.user.tournaments = _.remove($scope.user.tournaments, {id: $scope.tournament.id});
-                        $scope.closeThisDialog();
+                        _.remove($scope.user.tournaments, {id: t_id});
 						showSnackbar(true, res.data.message);
 					} else {
 						showSnackbar(false, 'Error while removing your registration.');
@@ -205,6 +204,63 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 				});
             }
         };
+
+        //UPDATE REGISTRATION USING INLINE EDIT
+
+		$scope.selected = {};
+        // gets the template to ng-include for a table row / item
+        $scope.getTemplate = function (tournament) {
+            if (tournament.id === $scope.selected.id) return 'edit';
+			return 'display';
+        };
+
+        $scope.editContact = function (tournament) {
+            $scope.selected = angular.copy(tournament);
+            $scope.selected.pivot_role = _.find($scope.roles, {'value':$scope.selected.pivot_role});
+        };
+
+        $scope.saveReg = function (idx, reg_id) {
+
+			var url = '/app/updateReg';
+			var team = ($scope.selected.pivot_role.value == 'speaker') ? $scope.selected.pivot_teamname : '';
+			var parameters = JSON.stringify({
+				reg_id: reg_id,
+				role: $scope.selected.pivot_role.value,
+				teamname: team,
+				comment: $scope.selected.pivot_comment
+			});
+			$http.put(url, parameters)
+			.then(function successCallback(res) {
+				res = res.data;
+				if (!res.error) {
+					showSnackbar(true, res.message);
+				} else {
+					showSnackbar(false, res.message);
+				}
+			});
+
+            $scope.user.tournaments[idx] = angular.copy($scope.selected);
+            $scope.user.tournaments[idx].pivot_role = $scope.user.tournaments[idx].pivot_role.value;
+            $scope.reset();
+        };
+
+        $scope.reset = function () {
+            $scope.selected = {};
+        };
+
+        $scope.roles = [{
+            id: 1,
+            value: 'judge',
+            label: 'judge'
+        }, {
+            id: 2,
+            value: 'speaker',
+            label: 'speaker'
+        }, {
+            id: 3,
+            value: 'independent',
+            label: 'independent'
+        }];
 	}
 });
 
@@ -611,7 +667,6 @@ app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
 
 	var filter = true;
 	$scope.filterBugs = function () {
-		console.log(filter);
 		if(filter) $scope.bugs = _.filter($scope.bugs,{'status' : 0});
 		else $scope.bugs = _.orderBy(allBugs, ['created_at'], 'desc');
         filter = !filter;

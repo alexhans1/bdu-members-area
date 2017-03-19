@@ -65,7 +65,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
+			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
 		}
 	});
 
@@ -78,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
+			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
 		}
 	});
 
@@ -416,14 +416,12 @@ module.exports = function(Bookshelf){
 	// ------------------------------RELATION API--------------------------------
 	// --------------------------------------------------------------------------
 
-	var tournamentTmp;
+	// reg
 	router.route('/reg/:t_id')
 		.post(function (req, res) {
 			// check if Tournament exists in DB
 			Tournament.forge({id: req.params.t_id}).fetch()
 			.then(function (tournament) {
-                tournamentTmp = tournament.toJSON();
-				console.log(tournamentTmp);
 				if (!tournament) {
 					//if the tournament wasn't found the can't reg for it
 					console.error('Tournament is not in the DB.');
@@ -508,18 +506,6 @@ module.exports = function(Bookshelf){
 			})
 		});
 
-	// router to get all tournaments the logged in user is registered for
-	router.route('/getUserTournaments')
-		.get(function (req, res) {
-			User.forge({id: req.user.id}).fetch({withRelated: ['tournaments']})
-			.then(function(user) {
-                res.send(user);
-			})
-			.catch(function (err) {
-				res.send(err);
-			})
-		});
-
 	//for delete registration
 	router.route('/deleteReg')
 		.delete(function (req, res) {
@@ -537,35 +523,36 @@ module.exports = function(Bookshelf){
 			})
 		});
 
-	//for overview of tournament registrations
-	router.route('/getAllTournamentsUsers')
-		.get(function (req, res) {
-			
-			var merge = [];
-			Tournaments.forge().fetch({withRelated: ['users']})
-			.then(function(tournaments) {
-				_.forEach(tournaments.toJSON(), function(value){
-					Tournaments_Users_Col.query(function(qb) {
-						qb.where('tournament_id', '=', value.id);
-					}).fetch()
-					.then(function (data) {
-						_.forEach(value.users, function(user){
-							_.assign(user, _.find(data.toJSON(), { 'user_id' : user.id }));
-						});
-						merge.push(value);
-						if(merge.length == tournaments.length) res.send(merge);
-					})
-					.catch(function (err) {
-						res.send(err);
-						done(new Error("Error:" + err));
+	//update registration
+	router.route('/updateReg')
+        .put(function (req, res) {
+			Tournaments_Users.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
+					if(registration.toJSON().user_id != req.user.id && req.user.id != 1) {
+                        console.log('You are not authorized to update that registration.');
+                        res.json({error: true, message: 'You are not authorized to update that registration.'});
+                        return false;
+					}
+
+					registration.save({
+						role: req.body.role,
+						teamname: req.body.teamname,
+						comment: req.body.comment
 					});
-				});
-			})
-			.catch(function (err) {
-				res.send(err);
-				done(new Error("Error:" + err));
-			});
-		});
+					return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+                        console.log('Updating registration successful.');
+                        res.status(200).json({error: false, message: 'Updating registration successful.'});
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while updating registration. Error: ' + err.message);
+					res.json({error: true, message: 'Error while updating registration.'});
+				})
+        });
 
 	router.route('/setAttended')
 		.put(function (req, res) {
