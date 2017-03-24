@@ -399,16 +399,13 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 		};
 
 		//DELETE REGISTRATION
-		$scope.unreg = function(t_id, u_id){
+		$scope.unreg = function(users){
+			var regID = _.find(users, { 'id': $rootScope.user.id }).pivot_id;
 			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
 				$http({
-					url: 'app/deleteReg',
+                    url: 'app/deleteReg/' + regID,
 					method: 'DELETE',
-					data: {
-						t_id: t_id,
-						u_id: u_id
-					},
 					headers: {
 						"Content-Type": "application/json;charset=utf-8"
 					}

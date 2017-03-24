@@ -11,10 +11,10 @@
 </header>
 
 <!-- NORMAL VIEW -->
-<section id="tournaments" class="user-info" ng-hide="showUpdate">
+<section id="tournaments" ng-hide="showUpdate">
 	<div class="container">
 	<div class="row">
-		<div class="col-md-12">
+		<!--<div class="col-md-12">-->
 			<!-- Table -->
 			<div class="col-md-7">
 
@@ -47,13 +47,13 @@
 			</div>
 
 			<!-- Details -->
-			<div id="details" class="col-md-5 wellpadding">
+			<div id="details" class="col-md-5">
 				<table ng-show="showDetails" class="table table-hover details table-responsive">
 					<tr>
 						<th><h4><span class="fa fa-book"></span> Details</h4><br></th>
 						<td>
-							<button ng-show="isReged" class="btn btn-raised btn-danger btn-lg" ng-click="unreg(tournament.id, user.id)">Abmelden</button>
-							<button ng-hide="isReged" class="btn btn-raised btn-success btn-lg" ng-click="ShowNgDialog()">Anmelden</button>
+							<button ng-show="isReged" class="btn btn-raised btn-danger btn-lg" ng-click="unreg(tournament.users)">Unregister</button>
+							<button ng-hide="isReged" class="btn btn-raised btn-success btn-lg" ng-click="ShowNgDialog()">Register</button>
 						</td>
 					</tr>
 					<tr>
@@ -121,7 +121,7 @@
 				</table>
 			</div>
 
-		</div>
+		<!--</div>-->
 	</div>
 	</div>
 </section>

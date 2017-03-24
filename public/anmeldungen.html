@@ -56,7 +56,7 @@
 					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
 					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
 					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
-					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
+					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
 					<th></th>
 					<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
 					<th ng-show="istVorstand">Essen (sieht nur Vorstand)</th>
@@ -79,13 +79,11 @@
 					<td class="hidden-xs hidden-sm">{{users.pivot_created_at | date:'medium'}}</td>
 
 					<!--ATTENDED INFO AND BUTTON-->
-					<div class="hidden-xs">
-						<td ng-hide="users.pivot_attended == 1" class="text-center">
-							<span class="glyphicon glyphicon-remove"></span><br>
-							<button ng-show="istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
-						</td>
-						<td ng-show="users.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
-					</div>
+					<td ng-hide="users.pivot_attended == 1" class="text-center">
+						<span class="glyphicon glyphicon-remove"></span><br>
+						<button ng-show="istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
+					</td>
+					<td ng-show="users.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 
 					<!--DELETE BUTTON-->
 					<td class="col-md-1" ng-show="users.id == user.id || istVorstand">
