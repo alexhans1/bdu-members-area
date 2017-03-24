@@ -11,6 +11,7 @@
 </header>
 
 <section style="margin-left: 4%; margin-right: 4%">
+    <div class="container">
 
     <div class="row">
         <!--USER TABLE-->
@@ -43,8 +44,8 @@
     </div>
 
     <!-- TOURNAMENT TABLE -->
-    <div class="row" ng-show="showTournaments">
-        <div id="tournaments" class="col-md-12">
+    <div id="tournaments" class="row">
+        <div ng-show="showTournaments" class="col-md-12">
 
             <h3>{{user.vorname}}</h3>
             <table class="table table-hover table-overview table-responsive">
@@ -77,4 +78,5 @@
         </div>
     </div>
 
+    </div>
 </section>

@@ -10,7 +10,8 @@
 	</div>
 </header>
 
-<section style="margin-left: 4%; margin-right: 4%">
+<section>
+	<div class="container">
 
 	<div class="row">
 		<!--TOURNAMENT TABLE-->
@@ -81,14 +82,14 @@
 					<div class="hidden-xs">
 						<td ng-hide="users.pivot_attended == 1" class="text-center">
 							<span class="glyphicon glyphicon-remove"></span><br>
-							<button ng-show="istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(tournament.id, users.id, users.pivot_role)">Went</button>
+							<button ng-show="istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
 						</td>
 						<td ng-show="users.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 					</div>
 
 					<!--DELETE BUTTON-->
 					<td class="col-md-1" ng-show="users.id == user.id || istVorstand">
-						<button ng-click="delete(tournament.id, users.id)" class="btn btn-raised btn-danger btn-sm">
+						<button ng-click="delete(users.pivot_id)" class="btn btn-raised btn-danger btn-sm">
 							<span class="glyphicon glyphicon-trash"> </span>
 							Delete
 						</button>
@@ -99,6 +100,8 @@
 				</tbody>
 			</table>
 		</div>
+	</div>
+
 	</div>
 
 </section>

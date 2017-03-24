@@ -43,7 +43,7 @@ exports.up = function(knex, Promise) {
             table.integer('tournament_id').unsigned().references('id').inTable('tournaments');
             table.string('role');
             table.string('teamname');
-            table.integer('attended');
+            table.integer('attended').defaultTo(0);
             table.decimal('price_owed',6,2).defaultTo(0);
             table.decimal('price_paid',6,2).defaultTo(0);
             table.text('comment');

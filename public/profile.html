@@ -124,6 +124,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
+								<td></td>
 								<td ng-show="debt < 0" style="color: #ff3533">{{debt}}€</td>
 								<td ng-hide="debt < 0" style="color: #2ab269">{{debt}}€</td>
 								<td></td>
@@ -138,6 +139,7 @@
 	</div>
 </section>
 
+<!--TEMPLATE FOR NORMAL VIEW-->
 <script type="text/ng-template" id="display">
 	<td ng-click="openDetails(x)" style="text-align: left">{{x.name}}</td>
 	<td ng-click="openDetails(x)">{{x.ort}}</td>
@@ -155,9 +157,11 @@
 		<button ng-click="editContact(x)" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></button>
 	</td>
 	<td ng-hide="x.pivot_attended == 1" class="text-center">
-		<button ng-click="unreg(x.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+		<button ng-click="unreg(x.pivot_id, x.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
 	</td>
 </script>
+
+<!--TEMPLATE FOR INLINE EDIT VIEW-->
 <script type="text/ng-template" id="edit">
 	<td ng-click="openDetails(x)" style="text-align: left">{{x.name}}</td>
 	<td ng-click="openDetails(x)">{{x.ort}}</td>

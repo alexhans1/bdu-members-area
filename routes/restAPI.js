@@ -507,20 +507,30 @@ module.exports = function(Bookshelf){
 		});
 
 	//for delete registration
-	router.route('/deleteReg')
+	router.route('/deleteReg/:id')
 		.delete(function (req, res) {
+            Tournaments_Users.forge({id: req.params.id})
+				.fetch({require: true})
+				.then(function (registration) {
+                    if(registration.toJSON().user_id != req.user.id && req.user.id != 1) {
+                        console.log('You are not authorized to delete that registration.');
+                        res.json({error: true, message: 'You are not authorized to delete that registration.'});
+                        return false;
+                    }
 
-			var rawSql = 'DELETE FROM tournaments_users WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
-
-			Bookshelf.knex.raw(rawSql)
-			.then(function () {
-				console.log('Deleting registration successful.');
-				res.status(200).json({error: false, message: 'Deleting registration successful.'});
-			})
-			.catch(function (err) {
-				console.error('Error while deleting registration. Error: ' + err.message);
-				res.json({error: true, message: 'Error while deleting registration.' });
-			})
+                    registration.destroy();
+                    return true;
+				})
+				.then(function (authorized) {
+					if (authorized){
+                        console.log('Deleting registration successful');
+                        res.json({ error: false, message: 'Deleting registration successful.' });
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while deleting registration. Error: ' + err.message);
+					res.json({ error: true, message: 'Error while deleting registration.' });
+				});
 		});
 
 	//update registration
@@ -554,32 +564,37 @@ module.exports = function(Bookshelf){
 				})
         });
 
+	//update registration
 	router.route('/setAttended')
-		.put(function (req, res) {
-            var price;
-            Tournament.forge({id: req.body.t_id})
-			.fetch()
-			.then(function (tournament) {
-				tournament = tournament.toJSON();
-				if(req.body.role == 'speaker') price=tournament.speakerprice;
-				else price = tournament.judgeprice;
+        .put(function (req, res) {
+			Tournaments_Users.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
 
-                var rawSql = 'UPDATE tournaments_users SET attended = 1, price_owed = ' + price + ' WHERE tournament_id = '+ req.body.t_id + ' AND user_id = ' + req.body.u_id;
+					//CHECK AUTHORIZATION
+					if(req.user.position != 1) {
+                        console.log('You are not authorized to update that registration.');
+                        res.json({error: true, message: 'You are not authorized to update that registration.'});
+                        return false;
+					}
 
-                Bookshelf.knex.raw(rawSql)
-				.then(function() {
-					res.status(200).json({error: false, data: {message: 'Successfully set attendance to true.'}});
+					registration.save({
+                        attended: req.body.attended,
+                        price_owed: req.body.price
+					});
+					return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+                        console.log('Successfully set attendance.');
+                        res.status(200).json({error: false, message: 'Successfully set attendance.'});
+					}
 				})
 				.catch(function (err) {
-					console.error('Error while setAttended. Error: ' + err.message);
-					res.json({ error: true, message: 'Error while setAttended.' });
+					console.error('Error while setting attendance. Error: ' + err.message);
+					res.json({error: true, message: 'Error while setting attendance.'});
 				})
-			})
-			.catch(function (err) {
-				console.error('Error while setAttended. Error: ' + err.message);
-				res.json({ error: true, message: 'Error while setAttended.' });
-			});
-		});
+        });
 
 	return router;
 };
