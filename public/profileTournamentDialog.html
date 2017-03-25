@@ -34,14 +34,18 @@
                 <td>{{tournament.language}}</td>
             </tr>
             <tr>
+                <th>ranking factor:</th>
+                <td>{{tournament.rankingvalue}}</td>
+            </tr>
+            <tr ng-show="tournament.accommodation.length > 0">
                 <th>accommodation:</th>
                 <td>{{tournament.accommodation}}</td>
             </tr>
-            <tr>
+            <tr ng-show="tournament.format.length > 0">
                 <th>format:</th>
                 <td>{{tournament.format}}</td>
             </tr>
-            <tr>
+            <tr ng-show="tournament.league.length > 0">
                 <th>league:</th>
                 <td>{{tournament.league}}</td>
             </tr>

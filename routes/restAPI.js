@@ -65,7 +65,7 @@ module.exports = function(Bookshelf){
 		tableName: 'users',
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
+			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
 		}
 	});
 
@@ -78,7 +78,7 @@ module.exports = function(Bookshelf){
 		tableName: 'tournaments',
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','created_at','updated_at']);
+			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
 		}
 	});
 
@@ -561,6 +561,36 @@ module.exports = function(Bookshelf){
 				.catch(function (err) {
 					console.error('Error while updating registration. Error: ' + err.message);
 					res.json({error: true, message: 'Error while updating registration.'});
+				})
+        });
+
+	//set success
+	router.route('/setSuccess')
+        .put(function (req, res) {
+			Tournaments_Users.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
+					if(registration.toJSON().user_id != req.user.id && req.user.id != 1) {
+                        console.log('You are not authorized to change that entry.');
+                        res.json({error: true, message: 'You are not authorized to change that entry.'});
+                        return false;
+					}
+
+					registration.save({
+						points: req.body.points,
+						success: req.body.success
+					});
+					return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+                        console.log('Setting record successful.');
+                        res.json({error: false, message: 'Setting record successful.'});
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while setting record. Error: ' + err.message);
+					res.json({error: true, message: 'Error while setting record.'});
 				})
         });
 

@@ -22,7 +22,7 @@ module.exports = {
 			host: 'localhost',
 			user: 'root',
 			password: '',
-			database: 'bdudbtest',
+			database: 'bdudbdev',
 			charset: 'utf8'
 		},
 		migrations: {
@@ -31,19 +31,17 @@ module.exports = {
 	},
 
 	production: {
-		client: 'postgresql',
-		connection: {
-			database: 'my_db',
-			user:     'username',
-			password: 'password'
-		},
-		pool: {
-			min: 2,
-			max: 10
-		},
-		migrations: {
-			tableName: 'knex_migrations'
-		}
+        client: 'mysql',
+        connection: {
+            host: 'db.hosting-agency.de',
+            user: 'dbuser31247',
+            password: process.env.db_password,
+            database: 'db6107x2',
+            charset: 'utf8'
+        },
+        migrations: {
+            tableName: 'knex_migrations'
+        }
 	}
 
 };

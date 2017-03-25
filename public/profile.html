@@ -110,13 +110,13 @@
 								<th>Paid</th>
 								<th>Debt</th>
 								<th>Attended</th>
-								<th></th>
-								<th></th>
+								<th>Success</th>
+								<th>Points</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="x in user.tournaments" ng-include="getTemplate(x)"></tr>
-							<tr style="border-top: solid 2px black;">
+							<tr style="border-top: solid 2px black; font-weight: bold">
 								<td></td>
 								<td></td>
 								<td></td>
@@ -129,7 +129,7 @@
 								<td ng-hide="debt < 0" style="color: #2ab269">{{debt}}€</td>
 								<td></td>
 								<td></td>
-								<td></td>
+								<td>{{totalPoints}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -158,6 +158,13 @@
 	</td>
 	<td ng-hide="x.pivot_attended == 1" class="text-center">
 		<button ng-click="unreg(x.pivot_id, x.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+	</td>
+	<td ng-show="x.pivot_attended == 1" class="text-center">
+		<select ng-change="setSuccess(success, x.rankingvalue, x.pivot_id)" class="form-control" style="height:auto" ng-options="success as success.label for success in successes track by success.id" ng-model="success">
+		</select>
+	</td>
+	<td ng-show="x.pivot_attended == 1" class="text-center">
+		{{x.pivot_points}}
 	</td>
 </script>
 

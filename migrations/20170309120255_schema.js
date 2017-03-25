@@ -38,15 +38,19 @@ exports.up = function(knex, Promise) {
         }),
 
         knex.schema.createTableIfNotExists('tournaments_users', function(table){
-            table.increments('t_u_id').primary();
+            table.increments('id').primary();
             table.integer('user_id').unsigned().references('id').inTable('users');
             table.integer('tournament_id').unsigned().references('id').inTable('tournaments');
             table.string('role');
             table.string('teamname');
-            table.integer('attended').defaultTo(0);
-            table.decimal('price_owed',6,2).defaultTo(0);
-            table.decimal('price_paid',6,2).defaultTo(0);
             table.text('comment');
+            table.integer('attended').defaultTo(0);
+            table.decimal('price_owed',6,2).defaultTo(0.00);
+            table.decimal('price_paid',6,2).defaultTo(0.00);
+            table.string('success');
+            table.decimal('points',6,2).defaultTo(0.00);
+            table.integer('partner1').unsigned().references('id').inTable('users');
+            table.integer('partner2').unsigned().references('id').inTable('users');
             table.timestamps();
         }),
 
