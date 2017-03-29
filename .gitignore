@@ -1,6 +1,6 @@
 
 .gitignore
 node_modules
-.idea/
+.idea/*
 .env
 import
