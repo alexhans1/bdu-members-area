@@ -7,7 +7,6 @@ var app = angular.module('bduApp', [
 	])
 .run(function($http, $rootScope) {
 
-
     $rootScope.personnelDebt = 0;
 	
 	$rootScope.authenticated = false;
@@ -131,7 +130,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 	} else {
         //if user is logged in then the user can see the profile page
 
-        //get the logged in user
+	//get the logged in user
 		var user = UserService.get({ id: $rootScope.user.id }, function() {
 			$scope.debt = _.sumBy(user.tournaments, function(ts) { return (ts.pivot_price_paid - ts.pivot_price_owed) });
             $scope.totalPoints = _.sumBy(user.tournaments, function(ts) { return (ts.pivot_points) });
@@ -141,9 +140,8 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		});
 
 		$scope.update = false;
-		$scope.SuccessMessage = '';
-		$scope.ErrorMessage = '';
 
+	//UPDATE USER INFO
 		$scope.updateUser = function () {
 			var parameters = JSON.stringify({
 				email: $scope.user.email,
@@ -164,7 +162,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
             });
 		};
 
-		//SHOW TOURNAMENT DETAILS DIALOG
+	//SHOW TOURNAMENT DETAILS DIALOG
 		$scope.openDetails = function (tournament) {
 			$scope.tournament = tournament;
             ngDialog.open({
@@ -202,7 +200,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
             }
         };
 
-        //UPDATE REGISTRATION USING INLINE EDIT
+	//UPDATE REGISTRATION USING INLINE EDIT
 
 		$scope.selected = {};
         // gets the template to ng-include for a table row / item
@@ -689,6 +687,17 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
         //get all Users and their Tournaments
         var getAllUsers = function () {
             var users = UserService.query(function() {
+            	console.log(users);
+            	_.each(users, function (user) {
+					var totalPoints = 0;
+					var totalDebt = 0;
+					_.each(user.tournaments, function (tournament) {
+						totalPoints += tournament.pivot_points;
+						totalDebt += (tournament.pivot_price_owed - tournament.pivot_price_paid);
+                    });
+					user.totalPoints = totalPoints;
+					user.totalDebt = totalDebt;
+                });
                 $scope.users = _.orderBy(users, ['vorname'], 'asc');
             });
         };
@@ -716,6 +725,8 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
 
 			anchorSmoothScroll.scrollTo('tournaments');
 		};
+
+		
 	}
 });
 
@@ -745,7 +756,7 @@ app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
 	var getAllBugs = function () {
         $http.get('/bugs').success(function(bugs){
         	allBugs = bugs.data;
-            $scope.bugs = _.orderBy(bugs.data, ['created_at'], 'desc');
+            $scope.bugs = _.filter(_.orderBy(bugs.data, ['created_at'], 'desc'),{'status' : 0});
         });
     };
 	getAllBugs();

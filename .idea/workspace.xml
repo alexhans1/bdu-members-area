@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8b5670f5-1ca6-45f9-b637-ac563fd78a88" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -58,7 +57,7 @@
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="57">
-              <caret line="3" column="6" lean-forward="false" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+              <caret line="3" column="7" lean-forward="false" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -529,7 +528,7 @@
       <workItem from="1489585125758" duration="34583000" />
       <workItem from="1490342173179" duration="16716000" />
       <workItem from="1490465712608" duration="9581000" />
-      <workItem from="1490811740389" duration="412000" />
+      <workItem from="1490811740389" duration="867000" />
     </task>
     <task id="LOCAL-00001" summary="added knex migrations; improved bug report feature">
       <created>1489092130683</created>
@@ -542,7 +541,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="249426000" />
+    <option name="totallyTimeSpent" value="249881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -919,7 +918,7 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
-          <caret line="3" column="6" lean-forward="false" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+          <caret line="3" column="7" lean-forward="false" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
           <folding />
         </state>
       </provider>
