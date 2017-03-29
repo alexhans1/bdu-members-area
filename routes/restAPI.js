@@ -548,7 +548,9 @@ module.exports = function(Bookshelf){
 					registration.save({
 						role: req.body.role,
 						teamname: req.body.teamname,
-						comment: req.body.comment
+						comment: req.body.comment,
+						price_paid: req.body.price_paid,
+						price_owed: req.body.price_owed
 					});
 					return true;
 				})

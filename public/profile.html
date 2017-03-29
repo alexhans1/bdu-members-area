@@ -125,8 +125,8 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td ng-show="debt < 0" style="color: #ff3533">{{debt}}€</td>
-								<td ng-hide="debt < 0" style="color: #2ab269">{{debt}}€</td>
+								<td ng-show="debt < 0" style="color: #ff3533">{{debt | currency:"€"}}</td>
+								<td ng-hide="debt < 0" style="color: #2ab269">{{debt | currency:"€"}}</td>
 								<td></td>
 								<td></td>
 								<td>{{totalPoints}}</td>
@@ -147,10 +147,10 @@
 	<td ng-click="openDetails(x)">{{x.pivot_role}}</td>
 	<td ng-click="openDetails(x)">{{x.pivot_teamname}}</td>
 	<td ng-click="openDetails(x)">{{x.pivot_comment}}</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_owed}}€</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_paid}}€</td>
-	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
-	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
+	<td ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
+	<td ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
+	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
+	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
 	<td ng-click="openDetails(x)" ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
 	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 	<td ng-hide="x.pivot_attended == 1" class="text-center">
@@ -184,10 +184,10 @@
 		<input disabled class="form-control" type="text" />
 	</td>
 	<td><textarea rows="3" placeholder="You can leave a comment here." ng-model="selected.pivot_comment" class="form-control"></textarea></td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_owed}}€</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_paid}}€</td>
-	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
-	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed}}€</td>
+	<td ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
+	<td ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
+	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
+	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
 	<td ng-click="openDetails(x)" ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
 	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 	<td>

@@ -585,3 +585,21 @@ footer {
 .footer {
     height: 40px;
 }
+
+/*CONDITIONAL MONETARY STYLING*/
+
+/* right-align monetary amounts */
+td[data-monetary-amount] {
+	text-align: right;
+}
+
+/* make the cells output their value */
+td[data-monetary-amount]:after {
+	content: attr(data-monetary-amount);
+	color: #2ab269;
+}
+
+/* make debit amounts show up in red */
+td[data-monetary-amount^="-"]:after {
+	color: #ff3533;
+}
