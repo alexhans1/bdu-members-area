@@ -148,11 +148,6 @@ hr.star-user:after {
 	font-weight: 300;
 }
 
-.table-overview {
-	font-size: 1.15em;
-	font-weight: 200;
-}
-
 .footer {
 	height: 70px;
 }
@@ -211,6 +206,7 @@ hr.star-user:after {
 	border-style: solid;
 	border-radius: 1%;
 }
+
 .details th {
 	min-width: 135px;
 }
@@ -219,6 +215,10 @@ hr.star-user:after {
 }
 .left-align td, th {
 	text-align: left;
+}
+
+.preventWrap {
+	white-space: nowrap;
 }
 
 .btnpadding {
@@ -584,4 +584,23 @@ footer {
 
 .footer {
     height: 40px;
+}
+
+/*CONDITIONAL MONETARY STYLING*/
+
+/* right-align monetary amounts */
+.currencySign[data-monetary-amount] {
+	text-align: right;
+	white-space: nowrap;
+}
+
+/* make the cells output their value */
+.currencySign[data-monetary-amount]:after {
+	content: attr(data-monetary-amount);
+	color: #2ab269;
+}
+
+/* make debit amounts show up in red */
+.currencySign[data-monetary-amount^="-"]:after {
+	color: #db2a28;
 }
