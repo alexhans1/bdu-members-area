@@ -125,8 +125,7 @@
 								<td></td>
 								<td></td>
 								<td></td>
-								<td ng-show="debt < 0" style="color: #ff3533">{{debt | currency:"€"}}</td>
-								<td ng-hide="debt < 0" style="color: #2ab269">{{debt | currency:"€"}}</td>
+								<td class="currencySign" data-monetary-amount="{{debt | currency:'€'}}"></td>
 								<td></td>
 								<td></td>
 								<td>{{totalPoints}}</td>
@@ -147,10 +146,9 @@
 	<td ng-click="openDetails(x)">{{x.pivot_role}}</td>
 	<td ng-click="openDetails(x)">{{x.pivot_teamname}}</td>
 	<td ng-click="openDetails(x)">{{x.pivot_comment}}</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
-	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
-	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
+	<td class="preventWrap" ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
+	<td class="preventWrap" ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
+	<td class="currencySign" data-monetary-amount="{{x.pivot_price_paid - x.pivot_price_owed | currency:'€'}}"></td>
 	<td ng-click="openDetails(x)" ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
 	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 	<td ng-hide="x.pivot_attended == 1" class="text-center">
@@ -170,9 +168,9 @@
 
 <!--TEMPLATE FOR INLINE EDIT VIEW-->
 <script type="text/ng-template" id="edit">
-	<td ng-click="openDetails(x)" style="text-align: left">{{x.name}}</td>
-	<td ng-click="openDetails(x)">{{x.ort}}</td>
-	<td ng-click="openDetails(x)">{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
+	<td style="text-align: left">{{x.name}}</td>
+	<td>{{x.ort}}</td>
+	<td>{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
 	<td>
 		<select class="form-control" style="height:auto" ng-options="role as role.label for role in roles track by role.id" ng-model="selected.pivot_role">
 		</select>
@@ -184,12 +182,11 @@
 		<input disabled class="form-control" type="text" />
 	</td>
 	<td><textarea rows="3" placeholder="You can leave a comment here." ng-model="selected.pivot_comment" class="form-control"></textarea></td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
-	<td ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
-	<td ng-click="openDetails(x)" ng-show="(x.pivot_price_paid - x.pivot_price_owed) < 0" style="color: #ff3533">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
-	<td ng-click="openDetails(x)" ng-hide="(x.pivot_price_paid - x.pivot_price_owed) < 0">{{x.pivot_price_paid - x.pivot_price_owed | currency:"€"}}</td>
-	<td ng-click="openDetails(x)" ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
-	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
+	<td class="preventWrap">{{x.pivot_price_owed | currency:"€"}}</td>
+	<td class="preventWrap">{{x.pivot_price_paid | currency:"€"}}</td>
+	<td class="currencySign" data-monetary-amount="{{x.pivot_price_paid - x.pivot_price_owed | currency:'€'}}"></td>
+	<td ng-hide="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
+	<td ng-show="x.pivot_attended == 1" class="text-center"><span class="glyphicon glyphicon-ok"></span></td>
 	<td>
 		<button class="btn btn-sm btn-success" ng-click="saveReg($index, x.pivot_id)" style="margin: 3px">Save</button>
 		<button class="btn btn-sm btn-danger" ng-click="reset()" style="margin: 3px">Cancel</button>

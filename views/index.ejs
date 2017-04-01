@@ -102,8 +102,7 @@
 			<!--SCHULDEN-->
 			<div class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">
 				<span class="help-tip">
-					<label ng-hide="personnelDebt<0" style="color: #2ab269">{{personnelDebt | currency:"€"}}</label>
-					<label ng-show="personnelDebt<0" style="color: #db2a28">{{personnelDebt | currency:"€"}}</label>
+					<label class="currencySign" data-monetary-amount="{{personnelDebt | currency:'€'}}"></label>
 					<p>This is how much you currently owe the BDU.</p>
 				</span>
 			</div>
