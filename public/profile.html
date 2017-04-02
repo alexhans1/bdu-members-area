@@ -172,16 +172,16 @@
 	<td>{{x.ort}}</td>
 	<td>{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
 	<td>
-		<select class="form-control" style="height:auto" ng-options="role as role.label for role in roles track by role.id" ng-model="selected.pivot_role">
+		<select class="form-control" style="height:auto; min-width: 140px" ng-options="role as role.label for role in roles track by role.id" ng-model="selected.pivot_role">
 		</select>
 	</td>
 	<td ng-show="selected.pivot_role.value == 'speaker'">
-		<input class="form-control" type="text" ng-model="selected.pivot_teamname" />
+		<input style="min-width: 180px" class="form-control" type="text" ng-model="selected.pivot_teamname" />
 	</td>
 	<td ng-hide="selected.pivot_role.value == 'speaker'">
-		<input disabled class="form-control" type="text" />
+		<input style="min-width: 80px" disabled class="form-control" type="text" />
 	</td>
-	<td><textarea rows="3" placeholder="You can leave a comment here." ng-model="selected.pivot_comment" class="form-control"></textarea></td>
+	<td><textarea style="min-width: 180px" rows="3" placeholder="You can leave a comment here." ng-model="selected.pivot_comment" class="form-control"></textarea></td>
 	<td class="preventWrap">{{x.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap">{{x.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign" data-monetary-amount="{{x.pivot_price_paid - x.pivot_price_owed | currency:'€'}}"></td>
