@@ -364,7 +364,12 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
         //get all Tournaments and their Users
         var getAllTournaments = function () {
-            var tournaments = TournamentService.query(function() {
+            tournaments = TournamentService.query(function() {
+            	_.forEach(tournaments, function (t) {
+					if(t.startdate) t.startdate = new Date(t.startdate);
+					if(t.enddate) t.enddate = new Date(t.enddate);
+					if(t.deadline) t.deadline = new Date(t.deadline);
+                });
                 $scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
                 $scope.allTournaments = tournaments;
             });
@@ -405,7 +410,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 
 		$scope.isSpeaker = false;
 		$scope.setRole = function () {
-			$scope.isSpeaker = ($scope.selected.id == 2);
+			$scope.isSpeaker = ($scope.selected.id === 2);
 		};
 
 
@@ -430,7 +435,7 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
                 $scope.closeThisDialog();
-				if (response.status == 200) {
+				if (response.status === 200) {
                     showSnackbar(true, 'Successfully registered.');
 					$scope.isReged = true; //TODO this does not currently work because ng-dialog hinders view update
 				} else {
@@ -458,34 +463,16 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 			}
 		};
 
-		//UPDATE TOURNAMENT FUNCTION
-		$scope.showUpdate = false;
-
-		$scope.submitUpdate = function () {
-			var tmpID = $scope.tournament.id;
-            TournamentService.update({ id: $scope.tournament.id }, $scope.tournament, function (result) {
-                if (!result.error) {
-                    getAllTournaments();
-                    showSnackbar(true, result.message);
-                    $scope.showUpdate = false;
-                }
-                else {
-                    showSnackbar(false, result.message);
-                }
-            });
-            $scope.showDetails = false;
-		};
-
 		//TOGGLE THROUGH LANGUAGES
 		$scope.toggleVal = 'all';
 		$scope.toggle = function () {
-			if ($scope.toggleVal == 'en') {
+			if ($scope.toggleVal === 'en') {
 				$scope.tournaments = _.filter($scope.allTournaments, {language: 'other'});
 				$scope.toggleVal = 'other';
-			} else if ($scope.toggleVal == 'de') {
+			} else if ($scope.toggleVal === 'de') {
 				$scope.tournaments = _.filter($scope.allTournaments, {language: 'en'});
 				$scope.toggleVal = 'en';
-			} else if ($scope.toggleVal == 'other') {
+			} else if ($scope.toggleVal === 'other') {
 				$scope.tournaments = $scope.allTournaments;
 				$scope.toggleVal = 'all';
 			} else {
@@ -519,6 +506,27 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 				});
 			}
 		};
+
+        //EDIT TOURNAMENT FUNCTION
+        $scope.showUpdate = false;
+
+        $scope.submitUpdate = function () {
+
+        	if ($scope.tournament.startdate) $scope.tournament.startdate = new Date(toLocal($scope.tournament.startdate));
+        	if ($scope.tournament.enddate) $scope.tournament.enddate = new Date(toLocal($scope.tournament.enddate));
+        	if ($scope.tournament.deadline) $scope.tournament.deadline = new Date(toLocal($scope.tournament.deadline));
+
+            TournamentService.update({ id: $scope.tournament.id }, $scope.tournament, function (result) {
+                if (!result.error) {
+                    getAllTournaments();
+                    showSnackbar(true, result.message);
+                }
+                else {
+                    showSnackbar(false, result.message);
+                }
+            });
+            $scope.showUpdate = false;
+        };
 	}
 });
 
@@ -554,7 +562,7 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 
 		//SET ATTENDED TO 1
 		$scope.went = function(role, reg_id){
-			var price = (role == 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
+			var price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
 			var parameters = JSON.stringify({
                 reg_id: reg_id,
                 attended: 1,
@@ -643,9 +651,9 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentSer
         $scope.newTournament = {
             name: '',
             ort: '',
-            startdate: new Date(),
-            enddate:  new Date(),
-            deadline:  new Date(),
+            startdate: '',
+            enddate: '',
+            deadline: '',
             format: '',
             league: '',
             accommodation: '',
@@ -660,7 +668,13 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentSer
         };
 
         $scope.submit = function () {
-            if ($scope.newTournament.name == '' || $scope.newTournament.language == '') {
+
+        	//convert dates
+            if ($scope.newTournament.startdate) $scope.newTournament.startdate = new Date(toLocal($scope.newTournament.startdate));
+            if ($scope.newTournament.enddate) $scope.newTournament.enddate = new Date(toLocal($scope.newTournament.enddate));
+            if ($scope.newTournament.deadline) $scope.newTournament.deadline = new Date(toLocal($scope.newTournament.deadline));
+
+            if ($scope.newTournament.name === '' || $scope.newTournament.language === '') {
                 showSnackbar(false, 'Name und Sprache müssen gesetzt werden.');
             } else {
                 TournamentService.save($scope.newTournament, function (res) {
@@ -671,6 +685,25 @@ app.controller('VorstandCrtl', function($scope, $http, $rootScope, TournamentSer
                     }
                 });
             }
+
+            $scope.newTournament = {
+                name: '',
+                ort: '',
+                startdate: '',
+                enddate: '',
+                deadline: '',
+                format: '',
+                league: '',
+                accommodation: '',
+                speakerprice: '',
+                judgeprice: '',
+                rankingvalue: '',
+                link: '',
+                teamspots: '',
+                judgespots: '',
+                comments: '',
+                language: ''
+            };
         };
 
     }
@@ -706,14 +739,14 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
 		var userDir = 'asc';
 		$scope.sortUsers = function(key){
 			$scope.users = _.orderBy($scope.users, [key], userDir);
-            userDir = (userDir == 'asc') ? 'desc' : 'asc';
+            userDir = (userDir === 'asc') ? 'desc' : 'asc';
 		};
 
         // function to sort tournaments by key
 		var tournamentDir = 'asc';
 		$scope.sortTournaments = function(key){
             $scope.user.tournaments = _.orderBy($scope.user.tournaments, [key], tournamentDir);
-            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
+            tournamentDir = (tournamentDir === 'asc') ? 'desc' : 'asc';
 		};
 
 		$scope.showTournaments = false;
@@ -775,7 +808,7 @@ app.controller('ResetCtrl', function($scope, $http) {
 
 	$scope.submit = function(){
 		$http.post('/forgot', {email: $scope.email})
-		.then(function successCallback(response) {
+		.then(function successCallback() {
 			$scope.message = 'An E-Mail has been sent to you with further instructions. Since we are financing this project by advertising penis enlargement instruments you should ALSO CHECK YOUR SPAM FOLDER.';
 		}, function errorCallback(err) {
 			$scope.message = err;
@@ -806,7 +839,7 @@ app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
     };
 
     $scope.reportBug = function () {
-        if ($scope.newBug.description == '' || $scope.newBug.type == '') {
+        if ($scope.newBug.description === '' || $scope.newBug.type === '') {
             showSnackbar(false, 'Please choose a type and describe the problem.');
         } else if ($scope.newBug.description.length > 1500) {
             showSnackbar(false, 'Keep your description below 1500 letters');
@@ -841,7 +874,7 @@ app.controller('bugCtrl', function($scope, $http, $window, BugReportService){
 
 	$scope.changeStatus = function (id) {
         var parameters = JSON.stringify({
-            status: ((_.find($scope.bugs, {id: id})).status == 0) ? 1 : 0
+            status: ((_.find($scope.bugs, {id: id})).status === 0) ? 1 : 0
         });
         BugReportService.update({ id: id }, parameters, function (result) {
             if (!result.error) {
@@ -872,10 +905,10 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 
 	$scope.login = function(){
 		$http.post('/login', $scope.loginuser).success(function(data){
-			if(data.state == 'success'){
+			if(data.state === 'success'){
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
-				$rootScope.istVorstand = (data.user.position == 1);
+				$rootScope.istVorstand = (data.user.position === 1);
 				$location.path('/profile');
 			}
 			else{
@@ -887,10 +920,10 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 	$scope.register = function(){
 		if ($scope.match) {
 			$http.post('/signup', $scope.reguser).success(function(data){
-				if(data.state == 'success'){
+				if(data.state === 'success'){
 					$rootScope.authenticated = true;
 					$rootScope.user = data.user;
-					$rootScope.istVorstand = (data.user.position == 1);
+					$rootScope.istVorstand = (data.user.position === 1);
 					$location.path('/profile');
 				}
 				else{
@@ -909,7 +942,7 @@ app.controller('authCtrl', function($scope, $http, $rootScope, $location){
 	$scope.pwd2 = '';
 
 	$scope.checkMatch = function() {
-		if(($scope.reguser.password == $scope.pwd2) && $scope.confirmFill) $scope.match = true;
+		if(($scope.reguser.password === $scope.pwd2) && $scope.confirmFill) $scope.match = true;
 		else $scope.match = false;
 	};
 });
@@ -1017,3 +1050,11 @@ var showSnackbar = function (success, message) {
         }, 4000);
 	}
 };
+
+//CONVERT DATE OBJECT TO LOCAL TIMEZONE
+
+function toLocal (date) {
+    var local = new Date(date);
+    local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    return local.toJSON();
+}
