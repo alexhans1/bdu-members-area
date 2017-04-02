@@ -38,7 +38,7 @@
 	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
 
 	<!-- timepicker -->
-	<!--<script type="text/javascript" src="/timepicker/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>-->
+	<script type="text/javascript" src="/timepicker/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="/timepicker/bootstrap/js/bootstrap.min.js"></script>
 	<!--<script type="text/javascript" src="/timepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>-->
 	<link href="/timepicker/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -88,18 +88,12 @@
 					Vorstand
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-					<a class="dropdown-item" href="/#/vorstand">Create Tournament</a>
-					<a class="dropdown-item" href="/#/finances">Finances</a>
+					<a class="dropdown-item hidden-xs hidden-sm" href="/#/vorstand">Create Tournament</a>
+					<a class="dropdown-item visible-xs visible-sm" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>
+					<a class="dropdown-item hidden-xs hidden-sm" href="/#/finances">Finances</a>
+					<a class="dropdown-item visible-xs visible-sm" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Finances</a>
 				</div>
 			</li>
-			<!--<li ng-show="istVorstand">-->
-				<!--<a href="/#/vorstand" class="hidden-xs hidden-sm">Vorstand</a>-->
-				<!--<a href="/#/vorstand" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Vorstand</a>-->
-			<!--</li>-->
-			<!--<li ng-show="istVorstand">-->
-				<!--<a href="/#/finances" class="hidden-xs hidden-sm">Finanzen</a>-->
-				<!--<a href="/#/finances" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Finanzen</a>-->
-			<!--</li>-->
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right" ng-show="authenticated">

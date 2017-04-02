@@ -320,6 +320,21 @@ hr.star-user:after {
 	border-radius: 50%;
 }
 
+.dropdown-item {
+	font-size: larger;
+	padding: 10px;
+}
+@media (max-width: 992px) {
+	.dropdown-item {
+		font-size: inherit;
+		color: #999;
+	}
+	.dropdown-item:hover {
+		color: white;
+	}
+
+}
+
 .verticalFlip {
 	-moz-transform: scale(-1, 1);
 	-webkit-transform: scale(-1, 1);
