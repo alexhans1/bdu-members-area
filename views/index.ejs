@@ -17,9 +17,9 @@
 	<script src="https://cdn.rawgit.com/HubSpot/tether/v1.3.4/dist/js/tether.min.js"></script>
 
 	<!-- angular -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-resource.min.js"></script>
 
 	<!-- ngDialog -->
 	<script src="/ng-dialog/js/ngDialog.js"></script>
@@ -102,8 +102,7 @@
 			<!--SCHULDEN-->
 			<div class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">
 				<span class="help-tip">
-					<label ng-hide="personnelDebt<0" style="color: #2ab269">{{personnelDebt}}€</label>
-					<label ng-show="personnelDebt<0" style="color: #db2a28">{{personnelDebt}}€</label>
+					<label class="currencySign" data-monetary-amount="{{personnelDebt | currency:'€'}}"></label>
 					<p>This is how much you currently owe the BDU.</p>
 				</span>
 			</div>

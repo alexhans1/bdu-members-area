@@ -687,7 +687,6 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
         //get all Users and their Tournaments
         var getAllUsers = function () {
             var users = UserService.query(function() {
-            	console.log(users);
             	_.each(users, function (user) {
 					var totalPoints = 0;
 					var totalDebt = 0;
@@ -726,11 +725,49 @@ app.controller('FinanceCtrl', function($scope, $http, $rootScope, $location, anc
 			anchorSmoothScroll.scrollTo('tournaments');
 		};
 
+	//UPDATE REGISTRATION USING INLINE EDIT
+
+        $scope.selected = {};
+        // gets the template to ng-include for a table row / item
+        $scope.getTemplate = function (tournament) {
+            if (tournament.id === $scope.selected.id) return 'edit';
+            return 'display';
+        };
+
+        $scope.editContact = function (tournament) {
+            $scope.selected = angular.copy(tournament);
+        };
+
+        $scope.saveReg = function (idx, reg_id) {
+
+            var url = '/app/updateReg';
+            var parameters = JSON.stringify({
+                reg_id: reg_id,
+                price_paid: $scope.selected.pivot_price_paid,
+                price_owed: $scope.selected.pivot_price_owed
+            });
+            $http.put(url, parameters)
+                .then(function successCallback(res) {
+                    res = res.data;
+                    if (!res.error) {
+                        showSnackbar(true, res.message);
+                    } else {
+                        showSnackbar(false, res.message);
+                    }
+                });
+
+            $scope.user.tournaments[idx] = angular.copy($scope.selected);
+            $scope.reset();
+        };
+
+        $scope.reset = function () {
+            $scope.selected = {};
+        };
 		
 	}
 });
 
-app.controller('ResetCtrl', function($scope, $http, $location) {
+app.controller('ResetCtrl', function($scope, $http) {
 
 	$scope.email = '';
 
