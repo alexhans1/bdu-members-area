@@ -1,6 +1,7 @@
 
 .gitignore
 node_modules
-.idea
+.idea/*
+.idea/workspace.xml
 .env
 import
