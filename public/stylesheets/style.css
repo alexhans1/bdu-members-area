@@ -320,6 +320,16 @@ hr.star-user:after {
 	border-radius: 50%;
 }
 
+.nav-logo {
+	margin-top: 9px;
+	height: 40px;
+	width: 90px;
+}
+
+.navbar-left {
+	margin-right: 10px;
+}
+
 .dropdown-item {
 	font-size: larger;
 	padding: 10px;
