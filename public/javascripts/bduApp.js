@@ -370,6 +370,9 @@ app.controller('TournamentCtrl', function($scope, $http, $rootScope, $location, 
 					if(t.enddate) t.enddate = new Date(t.enddate);
 					if(t.deadline) t.deadline = new Date(t.deadline);
                 });
+            	tournaments = _.filter(tournaments, function (t) {
+					return (t.startdate > Date.now());
+                });
                 $scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
                 $scope.allTournaments = tournaments;
             });

@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var _ = require('lodash');
 
 module.exports = function(passport){
 
@@ -13,7 +12,7 @@ module.exports = function(passport){
 	//placeholder for insert user date route
 	router.get('/insertUserData', function(req, res) {
 		res.send({state: 'success', user: req.user ? req.user : null, message: "signup successful"});
-	})
+	});
 
 	//sends failure login state back to angular
 	router.get('/failure', function(req, res){
@@ -43,4 +42,4 @@ module.exports = function(passport){
 
 	return router;
 
-}
+};
