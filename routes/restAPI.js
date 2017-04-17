@@ -572,7 +572,7 @@ module.exports = function(Bookshelf){
 			Tournaments_Users.forge({id: req.body.reg_id})
 				.fetch({require: true})
 				.then(function (registration) {
-					if(registration.toJSON().user_id != req.user.id && req.user.id != 1) {
+					if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
                         console.log('You are not authorized to change that entry.');
                         res.json({error: true, message: 'You are not authorized to change that entry.'});
                         return false;
@@ -596,6 +596,43 @@ module.exports = function(Bookshelf){
 				})
         });
 
+	//set success
+	router.route('/setPartner')
+        .put(function (req, res) {
+			Tournaments_Users.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
+					if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
+                        console.log('You are not authorized to change that registration.');
+                        res.json({error: true, message: 'You are not authorized to change that registration.'});
+                        return false;
+					}
+
+					if(req.body.partnerNumber === 1) {
+                        registration.save({
+                            partner1: req.body.partnerID
+                        });
+                    } else if (req.body.partnerNumber === 2) {
+                        registration.save({
+                            partner2: req.body.partnerID
+                        });
+                    } else {
+					    throw error;
+                    }
+                    return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+                        console.log('Setting partner successful.');
+                        res.json({error: false, message: 'Setting partner successful.'});
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while setting partner. Error: ' + err.message);
+					res.json({error: true, message: 'Error while setting partner.'});
+				})
+        });
+
 	//update registration
 	router.route('/setAttended')
         .put(function (req, res) {
@@ -604,7 +641,7 @@ module.exports = function(Bookshelf){
 				.then(function (registration) {
 
 					//CHECK AUTHORIZATION
-					if(req.user.position != 1) {
+					if(req.user.position !== 1) {
                         console.log('You are not authorized to update that registration.');
                         res.json({error: true, message: 'You are not authorized to update that registration.'});
                         return false;

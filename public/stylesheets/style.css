@@ -14,6 +14,11 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: 700;
 }
 
+select {
+    height:auto !important;
+    min-width: 140px !important;
+}
+
 @media (max-width: 500px) {
 	#tournament-info, .user-info {
 		font-size: smaller;
@@ -638,4 +643,11 @@ footer {
 /* make debit amounts show up in red */
 .currencySign[data-monetary-amount^="-"]:after {
 	color: #db2a28;
+}
+
+
+/*PROFILE SUCCESS STYLING*/
+
+.successInput {
+    font-size: smaller;
 }

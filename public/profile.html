@@ -57,7 +57,7 @@
 							<th>gender:</th>
 							<td ng-hide="update">{{user.gender}}</td>
 							<td ng-show="update">
-								<select class="form-control" style="height:auto;" ng-model="user.gender">
+								<select class="form-control" ng-model="user.gender">
 									<option value=""></option>
 									<option value="f">female</option>
 									<option value="m">male</option>
@@ -157,9 +157,22 @@
 	<td ng-hide="x.pivot_attended == 1" class="text-center">
 		<button ng-click="unreg(x.pivot_id, x.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
 	</td>
-	<td ng-show="x.pivot_attended == 1" class="text-center">
-		<select ng-change="setSuccess(success, x.rankingvalue, x.pivot_id)" class="form-control" style="height:auto" ng-options="success as success.label for success in successes track by success.id" ng-model="success">
-		</select>
+	<td ng-show="x.pivot_attended == 1" class="text-center successInput">
+        <div class="form-group">
+            <label for="success">Success</label>
+            <select id="success" ng-change="setSuccess(success, x.rankingvalue, x.pivot_id)" class="form-control" ng-options="success as success.label for success in successes track by success.id" ng-model="success"></select>
+            <small>{{x.pivot_success}}</small>
+        </div>
+        <div class="form-group" ng-hide="x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
+            <label for="partner1">Partner 1</label>
+            <select id="partner1" ng-change="setPartner(partner1.id, x.pivot_id, 1)" class="form-control" ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner1"></select>
+            <small>{{x.pivot_partner1}}</small>
+        </div>
+        <div class="form-group" ng-hide="x.format.toLowerCase() == 'bps' || x.format.toLowerCase() == 'bp' || x.pivot_partner1 == null || x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
+            <label for="partner2">Partner 2</label>
+            <select id="partner2" ng-change="setPartner(partner2.id, x.pivot_id, 2)" class="form-control"  ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner2"></select>
+            <small>{{x.pivot_partner2}}</small>
+        </div>
 	</td>
 	<td ng-show="x.pivot_attended == 1" class="text-center">
 		{{x.pivot_points}}
@@ -172,7 +185,7 @@
 	<td>{{x.ort}}</td>
 	<td>{{x.startdate | date:'dd.MM.yyyy'}}<br>{{x.enddate | date:'dd.MM.yyyy'}}</td>
 	<td>
-		<select class="form-control" style="height:auto; min-width: 140px" ng-options="role as role.label for role in roles track by role.id" ng-model="selected.pivot_role">
+		<select class="form-control" ng-options="role as role.label for role in roles track by role.id" ng-model="selected.pivot_role">
 		</select>
 	</td>
 	<td ng-show="selected.pivot_role.value == 'speaker'">
