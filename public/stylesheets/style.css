@@ -153,6 +153,14 @@ hr.star-user:after {
 	font-weight: 300;
 }
 
+.count {
+    color: #f3fcf3;
+    background-color: #ec291d;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+}
+
 .footer {
 	height: 70px;
 }

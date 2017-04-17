@@ -15,6 +15,7 @@ exports.up = function(knex, Promise) {
             table.integer('position');
             table.string('resetPasswordToken');
             table.bigInteger('resetPasswordExpires');
+            table.timestamps();
         }),
 
         knex.schema.createTableIfNotExists('tournaments', function(table){
@@ -35,6 +36,7 @@ exports.up = function(knex, Promise) {
             table.string('link');
             table.string('comments');
             table.string('language').notNullable();
+            table.timestamps();
         }),
 
         knex.schema.createTableIfNotExists('tournaments_users', function(table){

@@ -76,6 +76,7 @@ module.exports = function(Bookshelf){
 	// Post model
 	var Tournament = Bookshelf.Model.extend({
 		tableName: 'tournaments',
+        hasTimestamps: true,
 
 		users: function () {
 			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
