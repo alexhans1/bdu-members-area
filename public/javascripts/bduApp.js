@@ -5,7 +5,7 @@ var app = angular.module('bduApp', [
 	'ngFileUpload', 
 	'ngImgCrop'
 	])
-.run(function($http, $rootScope) {
+.run(function($http, $rootScope, TournamentService) {
 
     $rootScope.personnelDebt = 0;
 	
@@ -15,9 +15,9 @@ var app = angular.module('bduApp', [
 
 	$http.get('/sendUser')
 	.then(function (user) {
-		if (user.status != 204) {
+		if (user.status !== 204) {
 			$rootScope.authenticated = true;
-			$rootScope.istVorstand = (user.data.position == 1);
+			$rootScope.istVorstand = (user.data.position === 1);
 			$rootScope.user = user.data;
 		}
 	}, function errorCallback(err) {
@@ -31,6 +31,18 @@ var app = angular.module('bduApp', [
 		$rootScope.authenticated = false;
 		$rootScope.istVorstand = false;
 	};
+
+    //get all Tournaments and set number of new Tournaments
+    var tournaments = TournamentService.query(function () {
+        var newTournaments = _.filter(tournaments, function (t) {
+            d = new Date(t.created_at);
+            d2 = new Date(Date.now()-432000000);
+            return d > d2;
+        });
+        console.log(newTournaments.length);
+        $rootScope.newTournamentCount = newTournaments.length;
+    });
+
 });
 
 //durch die config wird definiert welche URIs welche controller verwenden
@@ -596,14 +608,14 @@ app.controller('OverviewCtrl', function($scope, $http, $rootScope, $window, $loc
 		var tournamentDir = 'asc';
 		$scope.sortTournaments = function(key){
 			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
-            tournamentDir = (tournamentDir == 'asc') ? 'desc' : 'asc';
+            tournamentDir = (tournamentDir === 'asc') ? 'desc' : 'asc';
 		};
 
         // function to sort users by key
 		var userDir = 'asc';
 		$scope.sortUsers = function(key){
             $scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
-			userDir = (userDir == 'asc') ? 'desc' : 'asc';
+			userDir = (userDir === 'asc') ? 'desc' : 'asc';
 		};
 
 		//SET ATTENDED TO 1
