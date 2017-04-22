@@ -91,7 +91,8 @@ module.exports = function(passport, Bookshelf){
 					password: createHash(req.body.password),
 					vorname: req.body.vorname,
 					name: req.body.name,
-					gender: req.body.gender
+					gender: req.body.gender,
+					food: req.body.food
 				})
 				.save()
 				.then(function (user) {
@@ -131,7 +132,7 @@ module.exports = function(passport, Bookshelf){
 				console.error('No user found with ID: ' + userID + '.');
 				return done(null, false, req.flash('reset', 'No user found with ID: ' + userID + '.'));
 			}
-			else if(Date.now() > user.get('resetPasswordExpires') || user.get('resetPasswordExpires') == null) {
+			else if(Date.now() > user.get('resetPasswordExpires') || user.get('resetPasswordExpires') === null) {
 				console.error('Password reset token has expired or is invalid.');
 				return done(null, false, req.flash('reset', 'Password reset token has expired or is invalid.'));
 			} else {
@@ -170,4 +171,4 @@ module.exports = function(passport, Bookshelf){
 	var createHash = function(password){
 		return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 	};
-}
+};

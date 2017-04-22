@@ -43,6 +43,7 @@ function isAuthenticated (req, res, next) {
 	// request and response objects
 
 	if (req.isAuthenticated()){
+	    console.log('not logged in');
 		return next();
 	}
 
@@ -54,7 +55,7 @@ module.exports = function(Bookshelf){
 
 	//Register the authentication middleware
 	//for all URIs use the isAuthenticated function
-	// router.use('/', isAuthenticated);
+	router.use('/', isAuthenticated);
 
 	// --------------------------------------------------------------------------
 	// ------------------------------MODELS--------------------------------------
@@ -104,7 +105,7 @@ module.exports = function(Bookshelf){
 		// fetch all users
 		.get(function (req, res) {
 			//Check if session user is authorized
-			if(req.user.position == 1){
+			if(req.user.position === 1){
 				Users.forge()
 				.fetch({withRelated: ['tournaments']})
 				.then(function (collection) {
