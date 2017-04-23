@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
+
 				<div>
 					<div class="image-cropper">
 						<a href="#/imageUpload"><img class="img-hor" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'"/></a>
@@ -31,7 +31,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-6 col-sm-offset-3">
-				<div class="user-info-table">
+				<div class="user-info-table" ng-hide="change">
 
 					<table class="table table-responsive">
 						<tr>
@@ -72,12 +72,48 @@
 						</tr>
 					</table>
 
-					<div ng-hide="update"><button ng-click="update = !update; SuccessMessage=''; ErrorMessage=''" class="btn btn-raised btn-primary" role="button">Update Info</button></div>
+					<div ng-hide="update">
+						<button ng-click="update = !update;" class="btn btn-raised btn-primary" role="button">Update Info</button>
+					</div>
 					<div ng-show="update">
 						<button ng-click="update = false" class="btn btn-raised btn-danger" role="button">Cancel</button>
 						<button ng-click="updateUser()" class="btn btn-raised btn-primary" role="button">Submit</button>
+						<button ng-click="change = !change;" class="btn btn-raised btn-warning btn-sm pull-right" role="button">Change<br>password</button>
 					</div>
 
+				</div>
+				<div ng-show="change">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Your old password</label>
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-unlock"></i></span>
+								<input type="password" ng-model="oldPassword" placeholder="Enter old password" class="form-control">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<form ng-submit="changePwd()">
+							<div class="form-group">
+								<label>Your new password</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+									<input type="password" ng-model="newPassword" ng-change="checkMatch()" placeholder="Enter new password" class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Confirm new password</label>
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+									<input type="password" ng-model="confirmPassword" ng-change="checkMatch()" placeholder="Confirm new password" class="form-control" required>
+								</div>
+								<p ng-show="!match" class="alert alert-danger">Passwords don't match</p>
+							</div>
+
+							<button ng-click="change = !change; update = false" class="btn btn-raised btn-danger">Cancel</button>
+							<button type="submit" class="btn btn-raised btn-primary">Submit</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -99,37 +135,37 @@
 
 					<table class="table table-hover table-responsive">
 						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Place</th>
-								<th>Time</th>
-								<th>Role</th>
-								<th>Team Name</th>
-								<th>Comment</th>
-								<th>Price</th>
-								<th>Paid</th>
-								<th>Debt</th>
-								<th>Attended</th>
-								<th>Success</th>
-								<th>Points</th>
-							</tr>
+						<tr>
+							<th>Name</th>
+							<th>Place</th>
+							<th>Time</th>
+							<th>Role</th>
+							<th>Team Name</th>
+							<th>Comment</th>
+							<th>Price</th>
+							<th>Paid</th>
+							<th>Debt</th>
+							<th>Attended</th>
+							<th>Success</th>
+							<th>Points</th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="x in user.tournaments" ng-include="getTemplate(x)"></tr>
-							<tr style="border-top: solid 2px black; font-weight: bold">
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td class="currencySign" data-monetary-amount="{{debt | currency:'€'}}"></td>
-								<td></td>
-								<td></td>
-								<td>{{totalPoints}}</td>
-							</tr>
+						<tr ng-repeat="x in user.tournaments" ng-include="getTemplate(x)"></tr>
+						<tr style="border-top: solid 2px black; font-weight: bold">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="currencySign" data-monetary-amount="{{debt | currency:'€'}}"></td>
+							<td></td>
+							<td></td>
+							<td>{{totalPoints}}</td>
+						</tr>
 						</tbody>
 					</table>
 				</div>
@@ -158,21 +194,21 @@
 		<button ng-click="unreg(x.pivot_id, x.id)" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
 	</td>
 	<td ng-show="x.pivot_attended == 1" class="text-center successInput">
-        <div class="form-group">
-            <label for="success">Success</label>
-            <select id="success" ng-change="setSuccess(success, x.rankingvalue, x.pivot_id)" class="form-control" ng-options="success as success.label for success in successes track by success.id" ng-model="success"></select>
-            <small>{{x.pivot_success}}</small>
-        </div>
-        <div class="form-group" ng-hide="x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
-            <label for="partner1">Partner 1</label>
-            <select id="partner1" ng-change="setPartner(partner1.id, x.pivot_id, 1)" class="form-control" ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner1"></select>
-            <small>{{x.pivot_partner1}}</small>
-        </div>
-        <div class="form-group" ng-hide="x.format.toLowerCase() == 'bps' || x.format.toLowerCase() == 'bp' || x.pivot_partner1 == null || x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
-            <label for="partner2">Partner 2</label>
-            <select id="partner2" ng-change="setPartner(partner2.id, x.pivot_id, 2)" class="form-control"  ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner2"></select>
-            <small>{{x.pivot_partner2}}</small>
-        </div>
+		<div class="form-group">
+			<label for="success">Success</label>
+			<select id="success" ng-change="setSuccess(success, x.rankingvalue, x.pivot_id)" class="form-control" ng-options="success as success.label for success in successes track by success.id" ng-model="success"></select>
+			<small>{{x.pivot_success}}</small>
+		</div>
+		<div class="form-group" ng-hide="x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
+			<label for="partner1">Partner 1</label>
+			<select id="partner1" ng-change="setPartner(partner1.id, x.pivot_id, 1)" class="form-control" ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner1"></select>
+			<small>{{x.pivot_partner1}}</small>
+		</div>
+		<div class="form-group" ng-hide="x.format.toLowerCase() == 'bps' || x.format.toLowerCase() == 'bp' || x.pivot_partner1 == null || x.pivot_success == null || x.pivot_success == 'judge' || x.pivot_success == 'judge2'">
+			<label for="partner2">Partner 2</label>
+			<select id="partner2" ng-change="setPartner(partner2.id, x.pivot_id, 2)" class="form-control"  ng-options="partner as (partner.vorname + ' ' + partner.name) for partner in partners track by partner.id" ng-model="partner2"></select>
+			<small>{{x.pivot_partner2}}</small>
+		</div>
 	</td>
 	<td ng-show="x.pivot_attended == 1" class="text-center">
 		{{x.pivot_points}}

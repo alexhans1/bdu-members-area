@@ -33,8 +33,9 @@ module.exports = function(app, passport, Bookshelf) {
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
-	app.get('/logout', function(req) {
+	app.get('/logout', function(req, res) {
 		req.logout();
+		res.send('success');
 		// res.redirect('/');
 	});
 
@@ -92,7 +93,7 @@ module.exports = function(app, passport, Bookshelf) {
 					done(null, token, user);
 				});
 			},
-			function(token, user, done) {
+			function(token) {
 
 				var from_email = new helper.Email('bdudb_password_reset@debating.de');
 				var to_email = new helper.Email(req.body.email);
@@ -117,7 +118,7 @@ module.exports = function(app, passport, Bookshelf) {
 					if (error) console.error(error);
 				});
 				console.log('An e-mail has been sent to ' + req.body.email);
-				res.status(200).send('An e-mail has been sent to ' + req.body.email + ' with further instructions. Please also check your ');
+				res.status(200).send();
 			}
 		], function (err, result) {
             if(err) console.error(err);
@@ -156,6 +157,26 @@ module.exports = function(app, passport, Bookshelf) {
 		res.render('reset.ejs', {message: req.flash('reset'), user: null});
 	});
 
+    // =============================================================================
+    // ========================== CHANGE PASSWORD FUNCTION =========================
+    // =============================================================================
+
+	app.post('/changePassword', passport.authenticate('change', {
+        successRedirect : '/changeSuccess', // redirect to the secure profile section
+        failureRedirect : '/changeFailure', // redirect back to the signup page if there is an error
+        successFlash : true, // allow flash messages
+        failureFlash : true // allow flash messages
+	}));
+
+    //sends failure password change state back to angular
+    app.get('/changeSuccess', function(req, res){
+        res.send({state: 'success', error: false, message: req.flash('changeMsg') || null});
+    });
+
+    //sends failure password change state back to angular
+    app.get('/changeFailure', function(req, res){
+        res.send({state: 'failure', error: true, message: req.flash('changeMsg') || null});
+    });
 
     // =========================================================================
     // ========================== BUG REPORT SYSTEM ============================
@@ -187,7 +208,7 @@ module.exports = function(app, passport, Bookshelf) {
 
 	app.get('/bugs', function (req, res) {
         //Check if session user is authorized
-        if(req.user.position == 1){
+        if(req.user.position === 1){
 			Bugs.forge().fetch({withRelated: ['user']})
 			.then(function (bugs) {
 				bugs = bugs.toJSON();
@@ -223,7 +244,7 @@ module.exports = function(app, passport, Bookshelf) {
 
 	app.put('/bugs/:id', function (req, res) {
         //Check if session user is authorized
-        if(req.user.position == 1){
+        if(req.user.position === 1){
             Bug.forge({id: req.params.id})
                 .fetch({require: true})
                 .then(function (bug) {
@@ -249,7 +270,7 @@ module.exports = function(app, passport, Bookshelf) {
 
 	app.delete('/bugs/:id', function (req, res) {
         //Check if session user is authorized
-        if(req.user.position == 1){
+        if(req.user.position === 1){
             Bug.forge({id: req.params.id})
                 .fetch({require: true})
                 .then(function (bug) {

@@ -38,7 +38,7 @@ module.exports = function(passport, Bookshelf){
 	},
 		function(req, userEmail, password, done) { // callback with email and password from our form
 
-			new User({email: userEmail})
+            new User({email: userEmail})
 			.fetch()
 			.then(function (user) {
 				if(!user){
@@ -60,7 +60,7 @@ module.exports = function(passport, Bookshelf){
 				return done(null, false, req.flash('authMsg', 'Error during login'));
 			});
 		}
-		));
+    ));
 
 	// LOCAL SIGNUP ============================================================
 	// =========================================================================
@@ -157,6 +157,55 @@ module.exports = function(passport, Bookshelf){
 			return done(null, false, req.flash('reset', 'Error during password reset.'));
 		});
 	}));
+
+    // =========================================================================
+	// LOCAL PASSWORD CHANGE ===================================================
+	// =========================================================================
+	// we are using named strategies since we have one for login and one for signup
+
+	passport.use('change', new LocalStrategy({
+		// by default, local strategy uses username and password, we will override with email
+		usernameField : 'userID',
+		passwordField : 'newPwd',
+		passReqToCallback : true // allows us to pass back the entire request to the callback
+	},
+	function(req, userID, newPwd, done) {
+
+        console.log('Change password method called for user: ' + userID);
+		// find a user whose email is the same as the forms email
+		new User({id: userID})
+		.fetch()
+		.then(function (user) {
+			if(!user){
+				console.error('No user found with ID: ' + userID + '.');
+				return done(null, false, req.flash('changeMsg', 'No user found with ID: ' + userID + '.'));
+			}
+			else if(!isValidPassword(req.body.oldPwd, user.get('password'))) {
+				console.error('Your given password does not match your old password.');
+				return done(null, false, req.flash('changeMsg', 'Your given password does not match your old password.'));
+			} else {
+				// if user is found and gives correct password
+				user.save({
+					password: createHash(newPwd)
+				})
+				.then(function (user) {
+					console.log('New password saved.');
+					return done(null, user, req.flash('changeMsg', 'New password saved.'));
+				})
+				.catch(function (err) {
+					console.error('Error during password change. Error message: ' + err);
+					return done(null, false, req.flash('changeMsg', 'Error during password change.'));
+				});
+			}
+		})
+		.catch(function (err) {
+			console.error('Error during fetching user during password change. Error message: ' + err);
+			return done(null, false, req.flash('changeMsg', 'Error during password change.'));
+		});
+	}));
+
+
+	//Helper Functions
 
 	var isValidPassword = function(pwd, pwdHash){
 		try {
