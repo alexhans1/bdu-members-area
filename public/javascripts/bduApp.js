@@ -521,6 +521,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 			var url = '/app/reg/' + $scope.tournament.id;
 			var parameters = JSON.stringify({
+				id: $rootScope.user.id,
 				role: $scope.selected.value,
 				team: $scope.team,
 				comment: $scope.comment

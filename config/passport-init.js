@@ -9,7 +9,8 @@ var helper = require('sendgrid').mail;
 module.exports = function(passport, Bookshelf){
 	// User model
 	var User = Bookshelf.Model.extend({
-		tableName: 'users'
+		tableName: 'users',
+		hasTimestamps: true
 	});
 
 	// passport session setup ==================================================
@@ -53,10 +54,13 @@ module.exports = function(passport, Bookshelf){
 				// all is well, return successful user
 				console.log('Login successful');
 				console.info(user.toJSON());
+				user.save({
+					last_login: new Date()
+				});
 				return done(null, user, req.flash('authMsg', 'Login successful. email: ' + userEmail));
 			})
 			.catch(function (err) {
-				console.error('Error during login. Error message:' + err)
+				console.error('Error during login. Error message:' + err);
 				return done(null, false, req.flash('authMsg', 'Error during login'));
 			});
 		}
