@@ -105,29 +105,23 @@ module.exports = function(Bookshelf){
 	router.route('/user')
 	// fetch all users
 	.get(function (req, res) {
-		//Check if session user is authorized
-		if(req.user.position === 1){
-			Users.forge()
-			.fetch({withRelated: ['tournaments']})
-			.then(function (collection) {
-				collection = collection.toJSON();
-				_.forEach(collection, function (user) {
-					user.tournaments.forEach(function(part, index) {
-						user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
-					});
+		Users.forge()
+		.fetch({withRelated: ['tournaments']})
+		.then(function (collection) {
+			collection = collection.toJSON();
+			_.forEach(collection, function (user) {
+				user.tournaments.forEach(function(part, index) {
+					user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
 				});
-				console.log('Getting all users successful');
-				res.send(collection);
-				// res.json({error: false, data: collection.toJSON()});
-			})
-			.catch(function (err) {
-				console.error('Error while getting all users. Error message:\n' + err);
-				res.status(500).json({error: true, data: {message: err.message}});
 			});
-		} else {
-			console.log('User is not authorized to get all user information');
-			res.status(401).json({error: true, message: 'Unauthorized'});
-		}
+			console.log('Getting all users successful');
+			res.send(collection);
+			// res.json({error: false, data: collection.toJSON()});
+		})
+		.catch(function (err) {
+			console.error('Error while getting all users. Error message:\n' + err);
+			res.status(500).json({error: true, data: {message: err.message}});
+		})
 	});
 
 	// no create user function here as we do that in the passport-init.js.js
