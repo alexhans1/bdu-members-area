@@ -180,7 +180,7 @@ module.exports = function(Bookshelf){
 	//show update user info form
 	.get(function (req, res) {
 		//check if session user is the requested user
-		if(req.params.id === req.user.id || req.user.position === 1){
+		if(req.user.id == req.params.id || req.user.position === 1) {
 			User.forge({id: req.params.id})
 			.fetch({withRelated: ['tournaments']})
 			.then(function (user) {

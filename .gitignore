@@ -5,4 +5,5 @@ node_modules
 .idea/workspace.xml
 .env
 import
+import.sql
 npm-debug.log
