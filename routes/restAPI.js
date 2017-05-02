@@ -210,7 +210,7 @@ module.exports = function(Bookshelf){
 	// update user details
 	.put(function (req, res) {
 		//check if session user is the requested user
-		if(req.params.id === req.user.id || req.user.position === 1){
+		if(req.params.id == req.user.id || req.user.position === 1){
 			User.forge({id: req.params.id})
 			.fetch({require: true})
 			.then(function (user) {
@@ -239,7 +239,7 @@ module.exports = function(Bookshelf){
 	// delete a user
 	.delete(function (req, res) {
 		//check if session user is the requested user
-		if(req.params.id === req.user.id || req.user.position === 1){
+		if(req.params.id == req.user.id || req.user.position === 1){
 			User.forge({id: req.params.id})
 			.fetch({require: true})
 			.then(function (user) {
@@ -510,7 +510,7 @@ module.exports = function(Bookshelf){
 		Tournaments_Users.forge({id: req.params.id})
 		.fetch({require: true})
 		.then(function (registration) {
-			if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
+			if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
 				console.log('You are not authorized to delete that registration.');
 				res.json({error: true, message: 'You are not authorized to delete that registration.'});
 				return false;
