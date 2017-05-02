@@ -33,14 +33,16 @@ var app = angular.module('bduApp', [
 	};
 
 	//get all Tournaments and set number of new Tournaments
-	var tournaments = TournamentService.query(function () {
-		var newTournaments = _.filter(tournaments, function (t) {
-			d = new Date(t.created_at);
-			d2 = new Date(Date.now() - 432000000);
-			return d > d2;
+	setNewTournaments = function () {
+		var tournaments = TournamentService.query(function () {
+			$rootScope.newTournamentCount = _.sumBy(tournaments, function (t) {
+				d = new Date(t.created_at);
+				d2 = new Date(Date.now() - 432000000);
+				return d > d2;
+			});
 		});
-		$rootScope.newTournamentCount = newTournaments.length;
-	});
+	};
+	setNewTournaments();
 
 });
 
@@ -1004,6 +1006,7 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
 				$rootScope.istVorstand = (data.user.position === 1);
+				setNewTournaments();
 				$location.path('/profile');
 			}
 			else {
@@ -1019,6 +1022,7 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 					$rootScope.authenticated = true;
 					$rootScope.user = data.user;
 					$rootScope.istVorstand = (data.user.position === 1);
+					setNewTournaments();
 					$location.path('/profile');
 				}
 				else {
@@ -1053,7 +1057,7 @@ app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootSco
 				url: '/app/user/image',
 				data: {
 					pic: Upload.dataUrltoBlob(dataUrl, name)
-				},
+				}
 			}).then(function (response) {
 				$timeout(function () {
 					$scope.result = response.data;
@@ -1122,7 +1126,7 @@ app.service('anchorSmoothScroll', function () {
 			var elm = document.getElementById(eID);
 			var y = elm.offsetTop;
 			var node = elm;
-			while (node.offsetParent && node.offsetParent !== document.body) {
+			while (node.offsetParent && node.offsetParent != document.body) {
 				node = node.offsetParent;
 				y += node.offsetTop;
 			}
