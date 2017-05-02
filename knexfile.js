@@ -11,9 +11,9 @@ module.exports = {
 			database: 'db6107x1',
 			charset: 'utf8'
 		},
-        migrations: {
-            tableName: 'knex_migrations'
-        }
+		migrations: {
+			tableName: 'knex_migrations'
+		}
 	},
 
 	clearDB: {
@@ -45,17 +45,17 @@ module.exports = {
 	},
 
 	hosting_agency: {
-        client: 'mysql',
-        connection: {
-            host: 'db.hosting-agency.de',
-            user: 'dbuser31247',
-            password: process.env.db_password,
-            database: 'db6107x2',
-            charset: 'utf8'
-        },
-        migrations: {
-            tableName: 'knex_migrations'
-        }
+		client: 'mysql',
+		connection: {
+			host: 'db.hosting-agency.de',
+			user: 'dbuser31247',
+			password: process.env.db_password,
+			database: 'db6107x2',
+			charset: 'utf8'
+		},
+		migrations: {
+			tableName: 'knex_migrations'
+		}
 	},
 
 	production: {
