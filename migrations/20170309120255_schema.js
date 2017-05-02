@@ -15,6 +15,7 @@ exports.up = function(knex, Promise) {
 			table.integer('position');
 			table.string('resetPasswordToken');
 			table.bigInteger('resetPasswordExpires');
+			table.datetime('last_login');
 			table.timestamps();
 		}),
 
