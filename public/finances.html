@@ -34,6 +34,9 @@
                     <th>
                         <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('totalPoints')">Points</button>
                     </th>
+                    <th>
+                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="left-align">
@@ -43,10 +46,13 @@
                     <td>{{user.tournaments.length}}</td>
                     <td>{{user.totalDebt | currency:"€"}}</td>
                     <td>{{user.totalPoints}}</td>
+                    <td>{{user.last_login | date: 'medium'}}</td>
                 </tr>
                 <tr style="font-weight: bold;">
                     <td class="hidden-xs">#</td>
                     <td>{{users.length}}</td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>
