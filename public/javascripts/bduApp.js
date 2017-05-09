@@ -7,6 +7,8 @@ var app = angular.module('bduApp', [
 ])
 .run(function ($http, $rootScope, TournamentService) {
 
+	$rootScope.currentDatetime = new Date(Date.now()-432000000);
+
 	$rootScope.personnelDebt = 0;
 
 	$rootScope.authenticated = false;
@@ -463,7 +465,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 					if (t.deadline) t.deadline = new Date(t.deadline);
 				});
 				tournaments = _.filter(tournaments, function (t) {
-					return (t.startdate > Date.now());
+					return (t.enddate > Date.now());
 				});
 				$scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
 				$scope.allTournaments = tournaments;
