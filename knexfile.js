@@ -36,7 +36,7 @@ module.exports = {
 			host: 'localhost',
 			user: 'root',
 			password: '',
-			database: 'bdudbdev',
+			database: 'heroku_9b6f95eb7a9adf8',
 			charset: 'utf8'
 		},
 		migrations: {

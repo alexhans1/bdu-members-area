@@ -22,6 +22,10 @@ select {
     min-width: 140px !important;
 }
 
+table td {
+    word-break: normal;
+}
+
 @media (max-width: 500px) {
 	#tournament-info, .user-info {
 		font-size: smaller;
