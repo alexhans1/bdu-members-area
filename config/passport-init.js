@@ -3,8 +3,6 @@ var bCrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
 var async = require('async');
 var nodemailer = require('nodemailer');
-var sg = require('sendgrid')(process.env.SENDGRID_KEY);
-var helper = require('sendgrid').mail;
 
 module.exports = function(passport, Bookshelf){
 	// User model
@@ -96,7 +94,8 @@ module.exports = function(passport, Bookshelf){
 					vorname: req.body.vorname,
 					name: req.body.name,
 					gender: req.body.gender,
-					food: req.body.food
+					food: req.body.food,
+					last_login: new Date()
 				})
 				.save()
 				.then(function (user) {

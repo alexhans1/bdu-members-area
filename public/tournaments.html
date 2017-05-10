@@ -29,7 +29,7 @@
                     </tr>
                     </thead>
                     <tbody class="left-align">
-                    <tr ng-repeat="t in tournaments" ng-click="setTournament(t.id)" style="cursor: pointer;">
+                    <tr ng-repeat="t in tournaments" ng-click="setTournament(t.id)" class="pointer">
                         <td>{{t.name}} <span class="alert-danger" ng-show="(currentDatetime | date: 'medium') < (t.created_at | date: 'medium')">NEW</span> </td>
                         <td class="hidden-xs">{{t.ort}}</td>
                         <td>{{t.startdate | date:'dd.MM.yyyy'}}<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>

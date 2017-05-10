@@ -132,6 +132,10 @@ hr.star-user:after {
 	color: black;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 #tournament-info {
 	text-align: center;
 	background: #FFF;

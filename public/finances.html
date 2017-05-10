@@ -40,7 +40,7 @@
                 </tr>
                 </thead>
                 <tbody class="left-align">
-                <tr ng-repeat="user in users" ng-click="goToTournaments(user)">
+                <tr ng-repeat="user in users" ng-click="goToTournaments(user)" class="pointer">
                     <td class="hidden-xs">{{user.id}}</a></td>
                     <td>{{user.vorname}} {{user.name}}</a></td>
                     <td>{{user.tournaments.length}}</td>
@@ -104,6 +104,7 @@
     <td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
     <td class="text-center">
         <button ng-click="editContact(tournament)" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></button>
+		<button ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)" class="btn btn-success" ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">Paid</button>
     </td>
 </script>
 

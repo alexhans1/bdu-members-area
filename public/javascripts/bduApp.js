@@ -895,6 +895,24 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 			$scope.selected = {};
 		};
 
+		$scope.setPaid = function (reg_id, amount) {
+			var url = '/app/updateReg';
+			var parameters = JSON.stringify({
+				reg_id: reg_id,
+				price_paid: amount
+			});
+			$http.put(url, parameters)
+			.then(function successCallback(res) {
+				res = res.data;
+				if (!res.error) {
+					$scope.user.tournaments[_.findIndex($scope.user.tournaments, { 'pivot_id': reg_id })].pivot_price_paid = amount;
+					showSnackbar(true, res.message);
+				} else {
+					showSnackbar(false, res.message);
+				}
+			});
+		}
+
 	}
 });
 
