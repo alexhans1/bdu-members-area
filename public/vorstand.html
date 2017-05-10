@@ -30,7 +30,6 @@
 
 				</div>
 			</div>
-			<embed src="/files/privacy.pdf" width="100%" height="1000px" />
 		</div>
 	</div>
 </section>
@@ -72,24 +71,19 @@
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label>Startdatum</label>
-							<input type="date" name="startdate" class="form-control" ng-model="newTournament.startdate" />
+							<input type="date" name="startdate" class="form-control" ng-model="newTournament.startdate" required />
 						</div>
 					</div>
 					<div class="col-sm-4">						
 						<div class="form-group">
 							<label>Enddatum</label>
-							<input type="date" name="enddate" class="form-control" ng-model="newTournament.enddate" />
+							<input type="date" name="enddate" class="form-control" ng-model="newTournament.enddate" required />
 						</div>
 					</div>
 					<div class="col-sm-4">	
 						<div class="form-group">
 							<label>Deadline zur Anmeldung</label>
 							<input type="date" name="deadline" class="form-control" ng-model="newTournament.deadline" />
-							<!-- <div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input4" data-link-format="yyyy-mm-dd">
-								<input class="form-control" size="16" type="text" value="" readonly >
-								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-							</div>
-							<input type="hidden" id="dtp_input4" value="" ng-model="newTournament.deadline" /> -->
 						</div>
 					</div>
 				</div>
