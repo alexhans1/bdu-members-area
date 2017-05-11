@@ -43,13 +43,18 @@ header {
 	background-size: cover;
 }
 header .container {
-	padding-top: 100px;
+	padding-top: 20px;
 	padding-bottom: 50px;
 }
 header img {
 	display: block;
 	margin: 0 auto 20px;
 }
+
+header .intro-text {
+    margin-top: 35px;
+}
+
 header .intro-text .name {
 	display: block;
 	font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -69,15 +74,7 @@ header .intro-text .skills {
 	background-size: 1.40em;
 }
 @media (min-width: 769px) {
-	header {
-		text-align: center;
-		background-image: url('/images/33543411320_cbda5e86a9_k.png');
-		background-repeat: no-repeat;
-    }
-	header .container {
-		padding-top: 80px;
-		padding-bottom: 50px;
-	}
+
 	header .intro-text .name {
         display:inline;
         padding-right: 15px;
@@ -299,6 +296,10 @@ hr.star-user:after {
 /*+++BOOTSTRAP NAVBAR+++++++*/
 /*++++++++++++++++++++++++++*/
 
+.navbar-nav li a, span {
+    line-height: 30px;
+}
+
 @media (max-width: 991px) {
 	.navbar-header {
 		float: none;
@@ -336,14 +337,14 @@ hr.star-user:after {
 	}
 }
 
-.navbar-toggler {
-	height: 35px;
-	width: 42px;
-	margin-top: 3px;
-}
+/*.navbar-toggler {*/
+	/*height: 35px;*/
+	/*width: 42px;*/
+	/*margin-top: 3px;*/
+/*}*/
 
 .nav-image {
-	margin-top: 9px;
+	/*margin-top: 9px;*/
 	height: 40px;
 	width: 40px;
 	border:0.1px solid gainsboro;
@@ -351,7 +352,7 @@ hr.star-user:after {
 }
 
 .nav-logo {
-	margin-top: 9px;
+	/*margin-top: 9px;*/
 	height: 40px;
 	width: 90px;
 }
