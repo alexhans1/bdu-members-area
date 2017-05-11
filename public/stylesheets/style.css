@@ -37,11 +37,10 @@ table td {
 
 header {
 	text-align: center;
-	background-image: url('http://www.debating.de/BDUDBdev/Berlin_Panorama_mit_Fernsehturm.jpg');
+	background-image: url('/images/33543411320_cbda5e86a9_k.png');
 	background-repeat: no-repeat;
-	background-size: 100% 600px;
-	background-position: center top;
-	background-attachment: fixed;
+    background-position: 36% 68%;
+	background-size: cover;
 }
 header .container {
 	padding-top: 100px;
@@ -72,9 +71,9 @@ header .intro-text .skills {
 @media (min-width: 769px) {
 	header {
 		text-align: center;
-		background-image: url('http://www.debating.de/BDUDBdev/Berlin_Panorama_mit_Fernsehturm.jpg');
+		background-image: url('/images/33543411320_cbda5e86a9_k.png');
 		background-repeat: no-repeat;
-	}
+    }
 	header .container {
 		padding-top: 80px;
 		padding-bottom: 50px;
@@ -140,6 +139,17 @@ hr.star-user:after {
     cursor: pointer;
 }
 
+.photo-credit {
+    font-size: x-small;
+}
+@media screen and (max-width: 500px) {
+    .photo-credit {
+        line-height:15px;
+        font-size: xx-small;
+    }
+}
+.photo-credit
+
 #tournament-info {
 	text-align: center;
 	background: #FFF;
@@ -170,10 +180,6 @@ hr.star-user:after {
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 3px;
-}
-
-.footer {
-	height: 70px;
 }
 
 .nav-img {
@@ -632,17 +638,20 @@ html, body {
 }
 
 footer {
-    position: 0;
     border-top: solid 1px;
     border-color: #1b1b1b;
     background: #f7f7f7;
     line-height: 40px;
     padding: 0 20px;
     margin-top: 30px;
+    height: 40px;
+    font-size: small;
 }
 
-.footer {
-    height: 40px;
+@media screen and (max-width: 700px) {
+    footer {
+        height: 80px;
+    }
 }
 
 /*CONDITIONAL MONETARY STYLING*/
