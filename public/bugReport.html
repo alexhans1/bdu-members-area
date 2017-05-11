@@ -65,8 +65,8 @@
                     <td class="hidden-xs">{{b.created_at | date:'medium'}}</td>
                     <td>{{b.user.vorname}} {{b.user.name}}</td>
                     <td>
-                        <span ng-click="changeStatus(b.id)" ng-hide="b.status == 0" class="glyphicon glyphicon-ok"></span>
-                        <span ng-click="changeStatus(b.id)" ng-show="b.status == 0" class="glyphicon glyphicon-remove"></span>
+                        <span ng-click="changeStatus(b.id)" ng-hide="b.status == 0" class="glyphicon glyphicon-ok pointer"></span>
+                        <span ng-click="changeStatus(b.id)" ng-show="b.status == 0" class="glyphicon glyphicon-remove pointer"></span>
                     </td>
                     <td>
                         <button class="btn btn-danger btn-sm" ng-click="deleteBug(b.id)">
