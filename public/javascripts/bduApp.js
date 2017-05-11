@@ -7,7 +7,7 @@ var app = angular.module('bduApp', [
 ])
 .run(function ($http, $rootScope, TournamentService) {
 
-	$rootScope.currentDatetime = new Date(Date.now()-432000000);
+	$rootScope.fiveDaysAgo = new Date(Date.now()-432000000);
 
 	$rootScope.personnelDebt = 0;
 
@@ -553,6 +553,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 					if (!res.error) {
 						getAllTournaments();
 						$scope.showDetails = false;
+						setNewTournaments();
 						showSnackbar(true, res.message);
 					} else {
 						showSnackbar(false, res.message);
