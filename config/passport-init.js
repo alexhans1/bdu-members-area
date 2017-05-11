@@ -85,6 +85,10 @@ module.exports = function(passport, Bookshelf){
 				console.info('User already exists:' + user.toJSON());
 				return done(null, false, req.flash('authMsg', 'A User with that email already exists.'));
 			}
+			else if (req.body.signup_password !== process.env.signup_password) {
+				console.info('Signup password is not correct.', req.body, process.env.signup_password);
+				return done(null, false, req.flash('authMsg', 'Signup password is not correct. Please ask the BDU board members for help.'));
+			}
 			else {
 				// if there is no user with that email
 				// create the user
