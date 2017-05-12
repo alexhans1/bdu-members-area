@@ -38,18 +38,12 @@
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-	<!--<script src="/bootstrap/js/bootstrap.min.js"></script>-->
-	<!--<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">-->
 
 	<!-- timepicker -->
 	<script type="text/javascript" src="/timepicker/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
-	<!--<script type="text/javascript" src="/timepicker/bootstrap/js/bootstrap.min.js"></script>-->
-	<!--<script type="text/javascript" src="/timepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>-->
-	<!--<link href="/timepicker/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">-->
-	<!--<link href="/timepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">-->
 
 	<!-- fontawesome -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<!--OWN FILES-->
 	<script src="/javascripts/bduApp.js"></script>
@@ -66,7 +60,7 @@
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand hidden-sm-down" href="#/profile">
+    <a class="navbar-brand" href="#/profile">
         <img class="nav-logo" ng-src="http://debating.de/BDUDBdev/bdu_white_logo.png" onerror="this.src='images/bdu_quad.png'" alt=""/>
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -105,7 +99,7 @@
                     <img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item hidden-sm-down">
                 <span class="navbar-text" style="margin-right: 15px">Signed in as {{user.vorname}}</span>
             </li>
             <li class="nav-item">
@@ -123,83 +117,13 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right" ng-show="!authenticated">
-            <li><a href="/#/" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            <li><a href="/#/" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            <li><a href="/#/signup" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
-            <li><a href="/#/signup" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>
+            <li><a href="/#/" class="hidden-sm-down nav-link"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+            <li><a href="/#/" class="hidden-md-up nav-link" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+            <li><a href="/#/signup" class="hidden-sm-down nav-link"><i class="fa fa-user-circle" aria-hidden="true"></i> Signup</a></li>
+            <li><a href="/#/signup" class="hidden-md-up nav-link" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-user-circle" aria-hidden="true"></i> Signup</a></li>
         </ul>
     </div>
 </nav>
-
-<!--<nav class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md bg-inverse">-->
-	<!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBDUDB" aria-controls="navbarBDUDB" aria-expanded="false" aria-label="Toggle navigation">-->
-		<!--<span class="navbar-toggler-icon"></span>-->
-	<!--</button>-->
-	<!--<div class="collapse navbar-collapse" id="navbarBDUDB">-->
-
-		<!--<div class="navbar-header hidden-xs hidden-sm">-->
-			<!--<a href="#/profile" class="navbar-left">-->
-				<!--<img class="nav-logo" ng-src="http://debating.de/BDUDBdev/bdu_white_logo.png" onerror="this.src='images/bdu_quad.png'" alt=""/>-->
-			<!--</a>-->
-		<!--</div>-->
-		<!--<ul class="nav navbar-nav" ng-hide="!authenticated">-->
-			<!--<li class="nav-item">-->
-				<!--<a href="/#/profile" class="hidden-xs hidden-sm">Profile</a>-->
-				<!--<a href="/#/profile" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>-->
-			<!--</li>-->
-			<!--<li class="nav-item">-->
-				<!--<a href="/#/tournaments" class="hidden-xs hidden-sm">-->
-                    <!--Tournaments-->
-                    <!--<span ng-show="newTournamentCount > 0" class="count">{{newTournamentCount}}</span>-->
-                <!--</a>-->
-				<!--<a href="/#/tournaments" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Tournament</a>-->
-			<!--</li>-->
-			<!--<li class="nav-item">-->
-				<!--<a href="/#/anmeldungen" class="hidden-xs hidden-sm">Reg Overview</a>-->
-				<!--<a href="/#/anmeldungen" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>-->
-			<!--</li>-->
-			<!--<li ng-show="istVorstand" class="nav-item dropdown">-->
-				<!--<a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-					<!--Vorstand-->
-				<!--</a>-->
-				<!--<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
-					<!--<a class="dropdown-item hidden-xs hidden-sm" href="/#/vorstand">Create Tournament</a>-->
-					<!--<a class="dropdown-item visible-xs visible-sm" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>-->
-					<!--<a class="dropdown-item hidden-xs hidden-sm" href="/#/finances">Finances</a>-->
-					<!--<a class="dropdown-item visible-xs visible-sm" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Finances</a>-->
-				<!--</div>-->
-			<!--</li>-->
-		<!--</ul>-->
-
-		<!--<ul class="nav navbar-nav navbar-right" ng-show="authenticated">-->
-			<!--<a href="/#/profile" class="hidden-xs hidden-sm hidden-md">-->
-				<!--<img class="nav-image" ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" onerror="this.src='images/bdu_quad.png'" alt=""/>-->
-			<!--</a>-->
-			<!--<p class="navbar-right navbar-text">Signed in as {{user.vorname}}</p>-->
-
-			<!--&lt;!&ndash;SCHULDEN&ndash;&gt;-->
-			<!--<div class="hidden-xs hidden-sm hidden-md" style="margin-right: 15px">-->
-				<!--<span class="help-tip">-->
-					<!--<label class="currencySign" data-monetary-amount="{{personnelDebt | currency:'€'}}"></label>-->
-					<!--<p>This is how much you currently owe the BDU.</p>-->
-				<!--</span>-->
-			<!--</div>-->
-
-			<!--<li>-->
-				<!--<a href="/#/" class="hidden-xs hidden-sm" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>-->
-				<!--<a href="/#/" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse" ng-click="signout()"><span class="glyphicon glyphicon-log-out"></span> Logout</a>-->
-			<!--</li>-->
-		<!--</ul>-->
-
-		<!--<ul class="nav navbar-nav navbar-right" ng-show="!authenticated">-->
-			<!--<li><a href="/#/" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
-			<!--<li><a href="/#/" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>-->
-			<!--<li><a href="/#/signup" class="hidden-xs hidden-sm"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>-->
-			<!--<li><a href="/#/signup" class="visible-xs visible-sm" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon glyphicon-user"></span> Signup</a></li>-->
-		<!--</ul>-->
-
-	<!--</div>-->
-<!--</nav>-->
 
 <div ng-view class="content"></div>
 
