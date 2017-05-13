@@ -39,9 +39,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
-	<!-- timepicker -->
-	<script type="text/javascript" src="/timepicker/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
-
 	<!-- fontawesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -65,18 +62,18 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item" ng-show="authenticated">
                 <a href="/#/profile" class="nav-link hidden-sm-down">Profile</a>
                 <a href="/#/profile" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" ng-show="authenticated">
                 <a href="/#/tournaments" class="nav-link hidden-sm-down">
                     Tournaments
                     <span ng-show="newTournamentCount > 0" class="count">{{newTournamentCount}}</span>
                 </a>
-                <a href="/#/tournaments" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Tournament</a>
+                <a href="/#/tournaments" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Tournaments</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" ng-show="authenticated">
                 <a href="/#/anmeldungen" class="nav-link hidden-sm-down">Reg Overview</a>
                 <a href="/#/anmeldungen" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
             </li>
