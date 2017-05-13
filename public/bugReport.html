@@ -12,7 +12,7 @@
 
 <section>
     <div class="container">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-md-6">
 
             <!-- LOGIN FORM -->
             <form ng-submit="reportBug()">
@@ -37,7 +37,7 @@
                     <p ng-show="newBug.description.length > 1500" class="pull-right" style="color: #ff3533;">{{newBug.description.length}}</p>
                 </div>
 
-                <button type="submit" class="btn btn-raised btn-warning btn-lg">Report</button>
+                <button type="submit" class="btn btn-outline-warning btn-lg">Report</button>
             </form>
 
         </div>
@@ -48,12 +48,12 @@
             <table class="table table-hover table-responsive">
                 <thead>
                 <tr>
-                    <th class="col-md-1 hidden-xs">ID</th>
-                    <th class="col-md-2">Type</th>
+                    <th class="hidden-xs">ID</th>
+                    <th>Type</th>
                     <th>Description</th>
-                    <th class="col-md-2 hidden-xs">Created at</th>
+                    <th class="hidden-xs">Created at</th>
                     <th>Created by</th>
-                    <th class="col-md-1"><button class="btn btn-sm btn-info" ng-click="filterBugs()">Status</button></th>
+                    <th><button class="btn btn-sm btn-outline-info" ng-click="filterBugs()">Status</button></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -69,9 +69,8 @@
                         <span ng-click="changeStatus(b.id)" ng-show="b.status == 0" class="fa fa-times"></span>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-sm" ng-click="deleteBug(b.id)">
+                        <button class="btn btn-outline-danger" ng-click="deleteBug(b.id)">
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
-                            Delete
                         </button>
                     </td>
                 </tr>

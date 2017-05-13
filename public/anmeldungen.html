@@ -21,10 +21,10 @@
 				<thead>
 				<tr>
 					<!--<th></th>-->
-					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
-					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('startdate')">Startdate</button></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('language')">Language</button></th>
+					<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
+					<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('startdate')">Startdate</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('language')">Language</button></th>
 					<th>Users</th>
 				</tr>
 				</thead>
@@ -49,14 +49,14 @@
 			<table ng-show="showUsers" class="table table-hover table-responsive">
 				<thead>
 				<tr>
-					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('id')">User ID</button></th>
+					<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button></th>
 					<th></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_role')">Role</button></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
-					<th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
-					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
-					<th><button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_role')">Role</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
+					<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
+					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
 					<th></th>
 					<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
 					<th ng-show="istVorstand">Essen (sieht nur Vorstand)</th>
@@ -82,15 +82,14 @@
 					<td ng-hide="users.pivot_attended == 1" class="text-center">
 						<i class="fa fa-times" aria-hidden="true"></i>
 						<br>
-						<button ng-show="istVorstand" class="btn btn-raised btn-sm btn-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
+						<button ng-show="istVorstand" class="btn btn-sm btn-outline-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
 					</td>
 					<td ng-show="users.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
 
 					<!--DELETE BUTTON-->
 					<td class="col-md-1" ng-show="users.id == user.id || istVorstand">
-						<button ng-click="delete(users.pivot_id)" class="btn btn-raised btn-danger btn-sm">
+						<button ng-click="delete(users.pivot_id)" class="btn btn-outline-danger">
 							<i class="fa fa-trash-o" aria-hidden="true"></i>
-							Delete
 						</button>
 					</td>
 					<td ng-show="istVorstand">{{users.email}}</td>

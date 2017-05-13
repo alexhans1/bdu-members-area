@@ -14,7 +14,7 @@ h1,h2,h3,h4,h5,h6 {
 	font-weight: 700;
 }
 button {
-    border-radius: 2px !important;
+    border-radius: 0 !important;
 }
 
 select {
@@ -132,11 +132,21 @@ hr.star-user:after {
 	color: black;
 }
 
+.btn-outline-primary {
+    color: #29729c;
+    border-color: #29729c;
+}
+.btn-outline-primary:hover {
+    background-color: #29729c;
+    border-color: #29729c;
+}
+
 .pointer {
     cursor: pointer;
 }
 
 #tournament-info {
+    font-size: small;
 	text-align: center;
 	background: #FFF;
 }
