@@ -22,20 +22,20 @@
                 <tr>
                     <!--<th></th>-->
                     <th class="hidden-xs">
-                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('id')">User ID</button>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button>
                     </th>
                     <th>
-                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('vorname')">Name</button>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('vorname')">Name</button>
                     </th>
                     <th>Tournaments</th>
                     <th>
-                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('totalDebt')">Debt</button>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalDebt')">Debt</button>
                     </th>
                     <th>
-                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('totalPoints')">Points</button>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalPoints')">Points</button>
                     </th>
                     <th>
-                        <button class="btn btn-raised btn-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
                     </th>
                 </tr>
                 </thead>
@@ -70,13 +70,14 @@
             <table class="table table-hover table-responsive">
                 <thead>
                 <tr>
-                    <th class="hidden-xs"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('startdate')">Date</button></th>
-                    <th><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_role')">Role</button></th>
-                    <th class="col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
-                    <th class="col-md-1"><button class="btn btn-raised btn-info btn-sm" ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
+                    <th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
+                    <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
+                    <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('startdate')">Date</button></th>
+                    <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_role')">Role</button></th>
+                    <th class="col-md-1"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
+                    <th class="col-md-1"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
                     <th>Debt</th>
+					<th></th>
                 </tr>
                 </thead>
                 <tbody class="left-align">
@@ -103,8 +104,10 @@
     <td>{{tournament.pivot_price_owed | currency:'€'}}</td>
     <td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
     <td class="text-center">
-        <button ng-click="editContact(tournament)" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></button>
-		<button ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)" class="btn btn-success" ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">Paid</button>
+        <button ng-click="editContact(tournament)" class="btn btn-outline-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+		<button ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)" class="btn btn-outline-success" ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">
+			<i class="fa fa-eur" aria-hidden="true"></i>
+		</button>
     </td>
 </script>
 
@@ -124,7 +127,7 @@
     </td>
     <td class="currencySign" data-monetary-amount="{{selected.pivot_price_paid - selected.pivot_price_owed | currency:'€'}}"></td>
     <td>
-        <button class="btn btn-sm btn-success" ng-click="saveReg($index, tournament.pivot_id)" style="margin: 3px">Save</button>
-        <button class="btn btn-sm btn-danger" ng-click="reset()" style="margin: 3px">Cancel</button>
+        <button class="btn btn-sm btn-outline-success" ng-click="saveReg($index, tournament.pivot_id)" style="margin: 3px">Save</button>
+        <button class="btn btn-sm btn-outline-danger" ng-click="reset()" style="margin: 3px">Cancel</button>
     </td>
 </script>
