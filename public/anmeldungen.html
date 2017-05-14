@@ -55,7 +55,7 @@
 					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_role')">Role</button></th>
 					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
 					<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
-					<th class="hidden-xs hidden-sm col-md-1"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
+					<th class="hidden-xs hidden-sm"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
 					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
 					<th></th>
 					<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
@@ -87,7 +87,7 @@
 					<td ng-show="users.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
 
 					<!--DELETE BUTTON-->
-					<td class="col-md-1" ng-show="users.id == user.id || istVorstand">
+					<td ng-show="(users.id == user.id && !users.pivot_attended) || istVorstand ">
 						<button ng-click="delete(users.pivot_id)" class="btn btn-outline-danger">
 							<i class="fa fa-trash-o" aria-hidden="true"></i>
 						</button>

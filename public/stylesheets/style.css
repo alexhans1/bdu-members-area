@@ -1,3 +1,8 @@
+:root{
+    --btn-outline-primary-color:#2C628C;
+    --btn-outline-warning-color:#54BD96;
+}
+
 body {
 	/*padding: 50px;*/
 	font: 14px "Montserrat", Helvetica, Arial, sans-serif;
@@ -133,12 +138,21 @@ hr.star-user:after {
 }
 
 .btn-outline-primary {
-    color: #29729c;
-    border-color: #29729c;
+    color: var(--btn-outline-primary-color);
+    border-color: var(--btn-outline-primary-color);
 }
 .btn-outline-primary:hover {
-    background-color: #29729c;
-    border-color: #29729c;
+    background-color: var(--btn-outline-primary-color);
+    border-color: var(--btn-outline-primary-color);
+}
+
+.btn-outline-warning {
+    color: var(--btn-outline-warning-color);
+    border-color: var(--btn-outline-warning-color);
+}
+.btn-outline-warning:hover {
+    background-color: var(--btn-outline-warning-color);
+    border-color: var(--btn-outline-warning-color);
 }
 
 .pointer {
