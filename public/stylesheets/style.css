@@ -1,8 +1,3 @@
-:root{
-    --btn-outline-primary-color:#2C628C;
-    --btn-outline-warning-color:#54BD96;
-}
-
 body {
 	/*padding: 50px;*/
 	font: 14px "Montserrat", Helvetica, Arial, sans-serif;
@@ -137,22 +132,20 @@ hr.star-user:after {
 	color: black;
 }
 
-.btn-outline-primary {
-    color: var(--btn-outline-primary-color);
-    border-color: var(--btn-outline-primary-color);
-}
-.btn-outline-primary:hover {
-    background-color: var(--btn-outline-primary-color);
-    border-color: var(--btn-outline-primary-color);
+input {
+    border-radius: 0 !important;
 }
 
-.btn-outline-warning {
-    color: var(--btn-outline-warning-color);
-    border-color: var(--btn-outline-warning-color);
+select {
+    border-radius: 0 !important;
 }
-.btn-outline-warning:hover {
-    background-color: var(--btn-outline-warning-color);
-    border-color: var(--btn-outline-warning-color);
+
+textarea {
+    border-radius: 0 !important;
+}
+
+.input-group-addon {
+    border-radius: 0 !important;
 }
 
 .pointer {
