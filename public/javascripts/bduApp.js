@@ -1017,7 +1017,8 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 		name: '',
 		vorname: '',
 		gender: '',
-		food: ''
+		food: '',
+		signup_password: ''
 	};
 	$scope.error_message = '';
 
@@ -1053,7 +1054,6 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 		} else {
 			$scope.error_message = 'Passwords do not match.';
 		}
-
 	};
 
 	//CHECK FOR PW MATCH

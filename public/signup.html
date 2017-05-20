@@ -73,6 +73,16 @@
                             <input type="text" ng-model="reguser.food" placeholder="Veggie? Vegan? Allergies? Don't like tomatoes?" class="form-control" name="Food" id="Food" required>
                         </div>
                     </div>
+					<br>
+                    <div class="form-group">
+                        <label>Signup Password</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                            <input type="password" ng-model="reguser.signup_password" placeholder="Get password from the BDU board members" class="form-control" required>
+                        </div>
+                    </div>
+
+					<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
 
 					<button type="submit" class="btn btn-outline-warning btn-lg" style="margin-top: 15px">Signup</button>
 
