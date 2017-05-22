@@ -450,7 +450,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 	}
 });
 
-app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll, TournamentService) {
+app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll, TournamentService, UserService) {
 
 	if (!$rootScope.authenticated) {
 		$location.path('/');
@@ -502,6 +502,12 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		}];
 
 		$scope.selected = $scope.roles[0];
+
+		$scope.personToRegister = $rootScope.user;
+		var users = UserService.query(function () {
+			$scope.usersToRegister = _.orderBy(users, ['vorname'], 'asc');
+		});
+
 		$scope.team = '';
 		$scope.comment = '';
 
@@ -525,7 +531,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 			var url = '/app/reg/' + $scope.tournament.id;
 			var parameters = JSON.stringify({
-				id: $rootScope.user.id,
+				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
 				comment: $scope.comment

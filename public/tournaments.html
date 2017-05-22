@@ -52,10 +52,10 @@
                     <tr>
                         <th><h4><span class="fa fa-book"></span> Details</h4><br></th>
                         <td>
-                            <button ng-show="isReged" class="btn btn-danger btn-lg"
+                            <button ng-show="isReged && !istVorstand" class="btn btn-danger btn-lg"
                                     ng-click="unreg(tournament.users)">Unregister
                             </button>
-                            <button ng-hide="isReged" class="btn btn-success btn-lg"
+                            <button ng-hide="isReged && !istVorstand" class="btn btn-success btn-lg"
                                     ng-click="ShowNgDialog()">Register
                             </button>
                         </td>

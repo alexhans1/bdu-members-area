@@ -7,6 +7,14 @@
 </nav>
 
 <div class="ngdialog-message">
+	<div class="row" ng-show="istVorstand">
+		<div class="col-md-12">
+			<div class="form-group">
+				<label>I wanna register</label>
+				<select class="form-control" ng-options="user as (user.vorname + ' ' + user.name) for user in usersToRegister track by user.id" ng-model="personToRegister"></select>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group">
