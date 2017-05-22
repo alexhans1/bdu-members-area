@@ -30,8 +30,8 @@ var upload = multer({
 var ftp = {
 	host: 'ftp.hosting-agency.de',
 	// secure: true, // enables FTPS/FTP with TLS
-	user: process.env.BDU_ftp_user,
-	password: process.env.db_password
+	user: 'u0023243923',
+	password: process.env.BDU_ftp_server
 };
 
 

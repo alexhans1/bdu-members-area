@@ -1,3 +1,4 @@
+var sslRedirect = require('heroku-ssl-redirect');
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -20,6 +21,12 @@ var Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 var index = require('./routes/index');
 var restApi = require('./routes/restAPI')(Bookshelf);
 var authenticate = require('./routes/authenticate')(passport);
+
+// https redirect
+app.use(sslRedirect([
+	'local',
+	'production'
+]));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
