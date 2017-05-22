@@ -15,24 +15,19 @@ async = require('async');
 var Client = require('ftp');
 var FTPStorage = require('multer-ftp');
 
-var upload = multer({
-	storage: new FTPStorage({
-		basepath: '/public_html/BDUDBdev/userpics/',
-		ftp: {
-			host: 'ftp.hosting-agency.de',
-			secure: (process.env.NODE_ENV === 'production'), // enables FTPS/FTP with TLS
-			user: 'u0023243923',
-			password: process.env.BDU_ftp_server
-		}
-	})
-});
-
 var ftp = {
 	host: 'ftp.hosting-agency.de',
-	secure: (process.env.NODE_ENV === 'production'), // enables FTPS/FTP with TLS
+	// secure: (process.env.NODE_ENV === 'production'), // enables FTPS/FTP with TLS
 	user: 'u0023243923',
 	password: process.env.BDU_ftp_server
 };
+
+var upload = multer({
+	storage: new FTPStorage({
+		basepath: '/public_html/BDUDBdev/userpics/',
+		ftp: ftp
+	})
+});
 
 
 

@@ -23,10 +23,7 @@ var restApi = require('./routes/restAPI')(Bookshelf);
 var authenticate = require('./routes/authenticate')(passport);
 
 // https redirect
-app.use(sslRedirect([
-	'local',
-	'production'
-]));
+app.use(sslRedirect());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
