@@ -30,7 +30,12 @@
                     </thead>
                     <tbody class="left-align">
                     <tr ng-repeat="t in tournaments" ng-click="setTournament(t.id)" class="pointer">
-                        <td>{{t.name}} <span class="alert-danger" ng-show="(fiveDaysAgo | date: 'yyyy-MM-dd HH:mm:ss Z') < (t.created_at | date: 'yyyy-MM-dd HH:mm:ss Z')">NEW</span> </td>
+                        <td>{{t.name}}
+							<span class="alert-danger"
+						 		ng-show="(fiveDaysAgo | date: 'yyyy-MM-dd HH:mm:ss Z') < (t.created_at | date: 'yyyy-MM-dd HH:mm:ss Z')
+						 		&& (t.startdate > now)">NEW
+							</span>
+						</td>
                         <td class="hidden-xs">{{t.ort}}</td>
                         <td>{{t.startdate | date:'dd.MM.yyyy'}}<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
                         <td class="hidden-xs">
@@ -44,6 +49,11 @@
                     </tr>
                     </tbody>
                 </table>
+
+				<div class="text-center">
+					<button class="btn btn-outline-primary btn-sm" ng-show="showOnlyNew" ng-click="showAllTournaments()">Show old tournaments</button>
+					<button class="btn btn-outline-primary btn-sm" ng-hide="showOnlyNew" ng-click="showAllTournaments()">Hide old tournaments</button>
+				</div>
             </div>
 
             <!-- Details -->

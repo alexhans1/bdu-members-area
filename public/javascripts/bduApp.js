@@ -37,6 +37,9 @@ var app = angular.module('bduApp', [
 	//get all Tournaments and set number of new Tournaments
 	setNewTournaments = function () {
 		var tournaments = TournamentService.query(function () {
+			tournaments = _.filter(tournaments, function (t) {
+				return t.startdate < new Date()
+			});
 			$rootScope.newTournamentCount = _.sumBy(tournaments, function (t) {
 				d = new Date(t.created_at);
 				d2 = new Date(Date.now() - 432000000);
@@ -456,6 +459,10 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$location.path('/');
 	} else {
 
+		$scope.now = new Date();
+
+		$scope.showOnlyNew = true;
+
 		//get all Tournaments and their Users
 		var getAllTournaments = function () {
 			var tournaments = TournamentService.query(function () {
@@ -464,14 +471,21 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 					if (t.enddate) t.enddate = new Date(t.enddate);
 					if (t.deadline) t.deadline = new Date(t.deadline);
 				});
-				tournaments = _.filter(tournaments, function (t) {
-					return (t.enddate > Date.now());
-				});
+				if ($scope.showOnlyNew) {
+					tournaments = _.filter(tournaments, function (t) {
+						return (t.enddate > Date.now());
+					});
+				}
 				$scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
-				$scope.allTournaments = tournaments;
+				$scope.allTournaments = _.orderBy(tournaments, ['startdate'], 'desc');
 			});
 		};
 		getAllTournaments();
+
+		$scope.showAllTournaments = function () {
+			$scope.showOnlyNew = !$scope.showOnlyNew;
+			getAllTournaments();
+		};
 
 		$scope.setTournament = function (id) {
 			getAllTournaments();
