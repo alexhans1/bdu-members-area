@@ -849,7 +849,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 					user.totalPoints = totalPoints;
 					user.totalDebt = totalDebt;
 				});
-				$scope.users = _.orderBy(users, ['vorname'], 'asc');
+				$scope.users = _.orderBy(users, ['last_login'], 'asc');
 			});
 		};
 		getAllUsers();
