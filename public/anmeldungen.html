@@ -79,10 +79,15 @@
 					<td class="hidden-xs hidden-sm">{{users.pivot_created_at | date:'medium'}}</td>
 
 					<!--ATTENDED INFO AND BUTTON-->
-					<td ng-hide="users.pivot_attended == 1" class="text-center">
+					<td ng-show="users.pivot_attended == 0" class="text-center">
 						<i class="fa fa-times" aria-hidden="true"></i>
 						<br>
-						<button ng-show="istVorstand" class="btn btn-sm btn-outline-primary" ng-click="went(users.pivot_role, users.pivot_id)">Went</button>
+						<button ng-show="istVorstand" class="btn btn-sm btn-outline-primary" ng-click="went(users.pivot_role, users.pivot_id, 2)">Can Go</button>
+					</td>
+					<td ng-show="users.pivot_attended == 2" class="text-center">
+						<i class="fa fa-times" aria-hidden="true"></i>
+						<br>
+						<button ng-show="istVorstand" class="btn btn-sm btn-outline-primary" ng-click="went(users.pivot_role, users.pivot_id, 1)">Went</button>
 					</td>
 					<td ng-show="users.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
 

@@ -648,8 +648,8 @@ module.exports = function(Bookshelf){
 		})
 		.then(function (authorized) {
 			if(authorized) {
-				console.log('Successfully set attendance.');
-				res.status(200).json({error: false, message: 'Successfully set attendance.'});
+				console.log('Successfully set attendance status.');
+				res.status(200).json({error: false, message: 'Successfully set attendance status.'});
 			}
 		})
 		.catch(function (err) {

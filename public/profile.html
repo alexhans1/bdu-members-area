@@ -184,8 +184,9 @@
 	<td class="preventWrap" ng-click="openDetails(x)">{{x.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap" ng-click="openDetails(x)">{{x.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign" data-monetary-amount="{{x.pivot_price_paid - x.pivot_price_owed | currency:'€'}}"></td>
-	<td ng-click="openDetails(x)" ng-hide="x.pivot_attended == 1" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
+	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 0" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
 	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
+	<td ng-click="openDetails(x)" ng-show="x.pivot_attended == 2" class="text-center">You can go!</td>
 	<td class="text-center successInput">
 		<div class="form-group">
 			<label for="success">Success</label>

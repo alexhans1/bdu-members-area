@@ -680,11 +680,11 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 		};
 
 		//SET ATTENDED TO 1
-		$scope.went = function (role, reg_id) {
+		$scope.went = function (role, reg_id, typeAsInt) {
 			var price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
 			var parameters = JSON.stringify({
 				reg_id: reg_id,
-				attended: 1,
+				attended: typeAsInt,
 				price: price
 			});
 			$http.put('/app/setAttended', parameters)
