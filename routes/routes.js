@@ -1,7 +1,6 @@
 //stuff for reset password function
 var crypto = require('crypto');
 var async = require('async');
-var nodemailer = require('nodemailer');
 var sg = require('sendgrid')(process.env.SENDGRID_KEY);
 var helper = require('sendgrid').mail;
 
