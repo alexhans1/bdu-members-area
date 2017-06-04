@@ -16,6 +16,7 @@ exports.up = function(knex, Promise) {
 			table.string('resetPasswordToken');
 			table.bigInteger('resetPasswordExpires');
 			table.datetime('last_login');
+			table.datetime('last_mail').defaultTo('0000-00-00 00:00:00');
 			table.timestamps();
 		}),
 
