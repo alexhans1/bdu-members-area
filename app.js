@@ -1,26 +1,26 @@
-var sslRedirect = require('heroku-ssl-redirect');
-var express = require('express');
-var app = express();
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var dotenv = require('dotenv'); //enables environment variables for development
+let sslRedirect = require('heroku-ssl-redirect');
+let express = require('express');
+let app = express();
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let dotenv = require('dotenv'); //enables environment variables for development
 dotenv.load();
 require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds a timestamp to each console log
-var flash = require('req-flash'); //lets me parse individual messages to requests
-var session = require('express-session'); //browser sessions for authentication
-var passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
-var conn = require('./knexfile.js'); //read out the DB Conn Data
-var knex = require('knex')(conn[process.env.NODE_ENV || 'development']); //require knex query binder
-var Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
+let flash = require('req-flash'); //lets me parse individual messages to requests
+let session = require('express-session'); //browser sessions for authentication
+let passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
+let conn = require('./knexfile.js'); //read out the DB Conn Data
+let knex = require('knex')(conn[process.env.NODE_ENV || 'development']); //require knex query binder
+let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables
-var index = require('./routes/index');
-var restApi = require('./routes/restAPI')(Bookshelf);
-var authenticate = require('./routes/authenticate')(passport);
+let index = require('./routes/index');
+let restApi = require('./routes/restAPI')(Bookshelf);
+let authenticate = require('./routes/authenticate')(passport);
 
 // https redirect
 app.use(sslRedirect());
@@ -54,7 +54,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Initialize Passport using passport-init.js
-var initPassport = require('./config/passport-init');
+let initPassport = require('./config/passport-init');
 initPassport(passport, Bookshelf);
 
 //setup routes URIs
@@ -65,7 +65,7 @@ require('./routes/routes.js')(app, passport, Bookshelf);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	var err = new Error('Not Found');
+	let err = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });
