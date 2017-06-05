@@ -17,6 +17,7 @@ exports.up = function(knex, Promise) {
 			table.bigInteger('resetPasswordExpires');
 			table.datetime('last_login');
 			table.datetime('last_mail').defaultTo('0000-00-00 00:00:00');
+			table.integer('new_tournament_count').defaultTo(0);
 			table.timestamps();
 		}),
 

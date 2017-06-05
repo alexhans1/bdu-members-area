@@ -34,21 +34,6 @@ let app = angular.module('bduApp', [
 		$rootScope.istVorstand = false;
 	};
 
-	//get all Tournaments and set number of new Tournaments
-	setNewTournaments = function () {
-		let tournaments = TournamentService.query(function () {
-			tournaments = _.filter(tournaments, function (t) {
-				return t.startdate < new Date()
-			});
-			$rootScope.newTournamentCount = _.sumBy(tournaments, function (t) {
-				d = new Date(t.created_at);
-				d2 = new Date(Date.now() - 432000000);
-				return d > d2;
-			});
-		});
-	};
-	setNewTournaments();
-
 });
 
 //durch die config wird definiert welche URIs welche controller verwenden
@@ -499,6 +484,14 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 			anchorSmoothScroll.scrollTo('details');
 		};
 
+		//SET USERS NEW TOURNAMENT COUNT TO 0
+		UserService.update({id: $rootScope.user.id}, {new_tournament_count: 0}, function (result) {
+			if (!result.error) {
+				console.log(result);
+				$rootScope.user.new_tournament_count = 0;
+			}
+		});
+
 		// NG-DIALOG FOR REGISTRATION
 
 		$scope.roles = [{
@@ -573,7 +566,6 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 					if (!res.error) {
 						getAllTournaments();
 						$scope.showDetails = false;
-						setNewTournaments();
 						showSnackbar(true, res.message);
 					} else {
 						showSnackbar(false, res.message);
@@ -798,6 +790,7 @@ app.controller('VorstandCrtl', function ($scope, $http, $rootScope, TournamentSe
 			} else {
 				TournamentService.save($scope.newTournament, function (res) {
 					if (!res.error) {
+						$rootScope.user.new_tournament_count++;
 						showSnackbar(true, res.message);
 					} else {
 						showSnackbar(false, 'Error while adding new Tournament.');
@@ -1048,7 +1041,6 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 				$rootScope.authenticated = true;
 				$rootScope.user = data.user;
 				$rootScope.istVorstand = (data.user.position === 1);
-				setNewTournaments();
 				$location.path('/profile');
 			}
 			else {
@@ -1064,7 +1056,6 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 					$rootScope.authenticated = true;
 					$rootScope.user = data.user;
 					$rootScope.istVorstand = (data.user.position === 1);
-					setNewTournaments();
 					$location.path('/profile');
 				}
 				else {

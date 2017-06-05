@@ -175,7 +175,8 @@ module.exports = function(Bookshelf){
 						name: req.body.name,
 						vorname: req.body.vorname,
 						gender: req.body.gender,
-						food: req.body.food
+						food: req.body.food,
+						new_tournament_count: req.body.new_tournament_count
 					})
 				})
 				.then(function () {
@@ -245,33 +246,49 @@ module.exports = function(Bookshelf){
 	.post(function (req, res) {
 		//Check if session user is authorized
 		if(req.user.position === 1){
-			Tournament.forge({
-				name: req.body.name,
-				ort: req.body.ort,
-				startdate: req.body.startdate,
-				enddate: req.body.enddate,
-				deadline: req.body.deadline,
-				format: req.body.format,
-				league: req.body.league,
-				accommodation: req.body.accommodation,
-				speakerprice: req.body.speakerprice,
-				judgeprice: req.body.judgeprice,
-				rankingvalue: req.body.rankingvalue,
-				link: req.body.link,
-				teamspots: req.body.teamspots,
-				judgespots: req.body.judgespots,
-				comments: req.body.comments,
-				language: req.body.language
-			})
-			.save()
-			.then(function (tournament) {
-				console.log('Create Tournament successful.');
-				res.status(200).json({error: false, tournament: tournament, message: 'Create Tournament successful.'});
-			})
-			.catch(function (err) {
+			try {
+				Tournament.forge({
+					name: req.body.name,
+					ort: req.body.ort,
+					startdate: req.body.startdate,
+					enddate: req.body.enddate,
+					deadline: req.body.deadline,
+					format: req.body.format,
+					league: req.body.league,
+					accommodation: req.body.accommodation,
+					speakerprice: req.body.speakerprice,
+					judgeprice: req.body.judgeprice,
+					rankingvalue: req.body.rankingvalue,
+					link: req.body.link,
+					teamspots: req.body.teamspots,
+					judgespots: req.body.judgespots,
+					comments: req.body.comments,
+					language: req.body.language
+				})
+				.save()
+				.then(function (tournament) {
+					console.log('Create Tournament successful.');
+					res.status(200).json({error: false, tournament: tournament, message: 'Create Tournament successful.'});
+				})
+				.then(function () {
+					try {
+						Users.forge().fetch()
+						.then(function (users) {
+							users.forEach(function (user) {
+								user.save({
+									new_tournament_count: user.toJSON().new_tournament_count + 1
+								})
+							})
+						})
+					} catch (err) {
+						console.error('Unable to increment new_tournament_counts.');
+						console.error(err.message);
+					}
+				})
+			} catch (err) {
 				console.log('Error while adding new Tournament. Error: \n' + err);
-				res.status(500).json({ error: true, message: err.message });
-			});
+				res.status(500).json({ error: true, message: 'Error while adding new Tournament.' });
+			}
 		} else {
 			console.log('User is not authorized to create a new tournament');
 			res.status(401).json({error: true, message: 'Unauthorized'});
