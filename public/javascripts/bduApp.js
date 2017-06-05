@@ -700,7 +700,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 					showSnackbar(false, response.message);
 				}
 			}, function errorCallback(err) {
-				confirm(err.data);
+				showSnackbar(false, err.data)
 			});
 		};
 
@@ -1088,8 +1088,8 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 
 // FILE UPLOADER
 
-app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootScope', '$location',
-	function ($scope, Upload, $timeout, $http, $rootScope, $location) {
+app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootScope', '$location', '$q',
+	function ($scope, Upload, $timeout, $http, $rootScope, $location, $q) {
 
 		$scope.submit = false;
 
@@ -1100,18 +1100,9 @@ app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootSco
 					pic: Upload.dataUrltoBlob(dataUrl, name)
 				}
 			}).then(function (response) {
-				$timeout(function () {
-					$scope.result = response.data;
-				});
-			}, function (response) {
-				if (response.status > 0) $scope.errorMsg = response.status
-					+ ': ' + response.data;
-			}, function (evt) {
-				$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
+				showSnackbar(!response.data.error, response.data.message);
+				$location.path('/profile');
 			});
-
-			$rootScope.signout();
-			$location.path('/#');
 		}
 	}]);
 

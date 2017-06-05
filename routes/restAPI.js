@@ -71,74 +71,62 @@ module.exports = function(Bookshelf){
 	router.route('/user')
 	// fetch all users
 	.get(function (req, res) {
-		Users.forge()
-		.fetch({withRelated: ['tournaments']})
-		.then(function (collection) {
-			collection = collection.toJSON();
-			_.forEach(collection, function (user) {
-				user.tournaments.forEach(function(part, index) {
-					user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
+		try {
+			Users.forge()
+			.fetch({withRelated: ['tournaments']})
+			.then(function (collection) {
+				collection = collection.toJSON();
+				_.forEach(collection, function (user) {
+					user.tournaments.forEach(function(part, index) {
+						user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
+					});
 				});
-			});
-			console.log('Getting all users successful');
-			res.send(collection);
-			// res.json({error: false, data: collection.toJSON()});
-		})
-		.catch(function (err) {
+				console.log('Getting all users successful');
+				res.send(collection);
+				// res.json({error: false, data: collection.toJSON()});
+			})
+		} catch (err) {
 			console.error('Error while getting all users. Error message:\n' + err);
-			res.status(500).json({error: true, data: {message: err.message}});
-		})
+			res.status(500).json({error: true, message: err.message});
+		}
 	});
 
-	// no create user function here as we do that in the passport-init.js.js
-
-	//hilfsroute um nur eingeloggten user zu senden
-	router.route('/user/send')
-	//show update user info form
-	.get(function (req, res) {
-		User.forge({id: req.user.id}).fetch()
-		.then(function (user) {
-			res.send(user.toJSON());
-		})
-		.catch(function (err) {
-			console.error('Error while sending current user. Error message:\n' + err);
-			res.status(500).send('Error while sending current user. Error message:\n' + err);
-		})
-	});
+	// no create user function here as we do that in the passport-init.js
 
 	router.route('/user/image')
 	//upload new image for current user
 	.post(upload.single('pic'), function (req, res) {
-		console.log('Uploaded new user pic.');
-		//then get the current user
-		User.forge({id: req.user.id}).fetch()
-		.then(function (user) {
-			//save the image path from the db
-			let deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
+		try {
+			console.log('Uploaded new user pic.');
+			//then get the current user
+			User.forge({id: req.user.id}).fetch()
+			.then(function (user) {
+				//save the image path from the db
+				let deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
 
-			//update the file name in the db
-			user.save({
-				image: req.file.path.split("/")[req.file.path.split("/").length-1] //we only want to store the file name not the entire path
-			});
-
-			//lastly use node-ftp to delete the current profile pic using the deletePath
-			let c = new Client();
-			c.on('ready', function() {
-				c.delete(deletePath, function(err) {
-					if (err) console.error(err);
-					else console.log('Successfully deleted old user pic: ' + deletePath);
-					c.end();
+				//update the file name in the db
+				user.save({
+					image: req.file.path.split("/")[req.file.path.split("/").length-1] //we only want to store the file name not the entire path
 				});
-			});
-			c.connect(ftp);
 
-			res.send('Uploading new profile image successful.');
-		})
-		.catch(function (err) {
-			console.error('Error while uploading profile pic. Error message:\n' + err);
-			res.render('error.ejs', {message: 'Error while uploading profile pic.', error: err});
-			// res.status(500).json({error: true, data: {message: err.message}});
-		});
+				//lastly use node-ftp to delete the current profile pic using the deletePath
+				let c = new Client();
+				c.on('ready', function() {
+					c.delete(deletePath, function(err) {
+						if (err) console.error(err);
+						else console.log('Successfully deleted old user pic: ' + deletePath);
+						c.end();
+					});
+				});
+				c.connect(ftp);
+			})
+			.then(function () {
+				res.send({error: false, message: 'Uploading new profile image successful.'});
+			})
+		} catch (err) {
+			console.error('Error while uploading profile pic. Error message:\n' + err.message);
+			res.status(500).json({error: true, message: 'Error while uploading profile pic.'});
+		}
 	});
 
 	router.route('/user/:id')
@@ -600,33 +588,36 @@ module.exports = function(Bookshelf){
 	//update registration
 	router.route('/setAttended')
 	.put(function (req, res) {
-		Registration.forge({id: req.body.reg_id})
-		.fetch({require: true})
-		.then(function (registration) {
+		try {
+			Registration.forge({id: req.body.reg_id})
+			.fetch({require: true})
+			.then(function (registration) {
 
-			//CHECK AUTHORIZATION
-			if(req.user.position !== 1) {
-				console.log('You are not authorized to update that registration.');
-				res.json({error: true, message: 'You are not authorized to update that registration.'});
-				return false;
-			}
+				//CHECK AUTHORIZATION
+				if(req.user.position !== 1) {
+					console.log('You are not authorized to update that registration.');
+					res.json({error: true, message: 'You are not authorized to update that registration.'});
+					return false;
+				}
 
-			registration.save({
-				attended: req.body.attended,
-				price_owed: req.body.price
-			});
-			return true;
-		})
-		.then(function (authorized) {
-			if(authorized) {
-				console.log('Successfully set attendance status.');
-				res.status(200).json({error: false, message: 'Successfully set attendance status.'});
-			}
-		})
-		.catch(function (err) {
+				registration.save({
+					attended: req.body.attended,
+					price_owed: req.body.price
+				});
+				return true;
+			})
+			.then(function (authorized) {
+				if(authorized) {
+					console.log('Successfully set attendance status.');
+					res.status(200).json({error: false, message: 'Successfully set attendance status.'});
+				}
+			})
+		}
+		catch (err) {
 			console.error('Error while setting attendance. Error: ' + err.message);
 			res.json({error: true, message: 'Error while setting attendance.'});
-		})
+		}
+
 	});
 
 	return router;
