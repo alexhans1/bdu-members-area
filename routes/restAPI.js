@@ -1,28 +1,28 @@
-var express = require('express');
-var router = express.Router();
-var _ = require('lodash');
-var fs = require('fs');
-var multer = require('multer');
+let express = require('express');
+let router = express.Router();
+let _ = require('lodash');
+let fs = require('fs');
+let multer = require('multer');
 
 //rename-keys is used to change bookshelf's pivot table returns from _pivot_[attribute] to pivot_[attribute]
 // we need to change this because angular does not allow underscores as a first character of a key string
-var rename = require('rename-keys');
-var removeUnderscores = function(key) {
+let rename = require('rename-keys');
+let removeUnderscores = function(key) {
 	return _.replace(key,'_','');
 };
 
 async = require('async');
-var Client = require('ftp');
-var FTPStorage = require('multer-ftp');
+let Client = require('ftp');
+let FTPStorage = require('multer-ftp');
 
-var ftp = {
+let ftp = {
 	host: 'ftp.hosting-agency.de',
 	// secure: (process.env.NODE_ENV === 'production'), // enables FTPS/FTP with TLS
 	user: 'u0023243923',
 	password: process.env.BDU_ftp_server
 };
 
-var upload = multer({
+let upload = multer({
 	storage: new FTPStorage({
 		basepath: '/public_html/BDUDBdev/userpics/',
 		ftp: ftp
@@ -57,7 +57,7 @@ module.exports = function(Bookshelf){
 	// --------------------------------------------------------------------------
 
 	// User model
-	var User = Bookshelf.Model.extend({
+	let User = Bookshelf.Model.extend({
 		tableName: 'users',
 		hasTimestamps: true,
 
@@ -66,12 +66,12 @@ module.exports = function(Bookshelf){
 		}
 	});
 
-	var Users = Bookshelf.Collection.extend({
+	let Users = Bookshelf.Collection.extend({
 		model: User
 	});
 
 	// Post model
-	var Tournament = Bookshelf.Model.extend({
+	let Tournament = Bookshelf.Model.extend({
 		tableName: 'tournaments',
 		hasTimestamps: true,
 
@@ -80,16 +80,16 @@ module.exports = function(Bookshelf){
 		}
 	});
 
-	var Tournaments = Bookshelf.Collection.extend({
+	let Tournaments = Bookshelf.Collection.extend({
 		model: Tournament
 	});
 
-	var Tournaments_Users = Bookshelf.Model.extend({
+	let Tournaments_Users = Bookshelf.Model.extend({
 		tableName: 'tournaments_users',
 		hasTimestamps: true
 	});
 
-	var Tournaments_Users_Col = Bookshelf.Collection.extend({
+	let Tournaments_Users_Col = Bookshelf.Collection.extend({
 		model: Tournaments_Users
 	});
 
@@ -143,7 +143,7 @@ module.exports = function(Bookshelf){
 		User.forge({id: req.user.id}).fetch()
 		.then(function (user) {
 			//save the image path from the db
-			var deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
+			let deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
 
 			//update the file name in the db
 			user.save({
@@ -151,7 +151,7 @@ module.exports = function(Bookshelf){
 			});
 
 			//lastly use node-ftp to delete the current profile pic using the deletePath
-			var c = new Client();
+			let c = new Client();
 			c.on('ready', function() {
 				c.delete(deletePath, function(err) {
 					if (err) console.error(err);
