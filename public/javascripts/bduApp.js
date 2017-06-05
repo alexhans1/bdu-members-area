@@ -1,4 +1,4 @@
-var app = angular.module('bduApp', [
+let app = angular.module('bduApp', [
 	'ngRoute',
 	'ngResource',
 	'ngDialog',
@@ -36,7 +36,7 @@ var app = angular.module('bduApp', [
 
 	//get all Tournaments and set number of new Tournaments
 	setNewTournaments = function () {
-		var tournaments = TournamentService.query(function () {
+		let tournaments = TournamentService.query(function () {
 			tournaments = _.filter(tournaments, function (t) {
 				return t.startdate < new Date()
 			});
@@ -149,7 +149,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		//if user is logged in then the user can see the profile page
 
 		//get the logged in user
-		var user = UserService.get({id: $rootScope.user.id}, function () {
+		let user = UserService.get({id: $rootScope.user.id}, function () {
 			$scope.debt = _.sumBy(user.tournaments, function (ts) {
 				return (ts.pivot_price_paid - ts.pivot_price_owed)
 			});
@@ -165,7 +165,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		//UPDATE USER INFO
 		$scope.updateUser = function () {
-			var parameters = JSON.stringify({
+			let parameters = JSON.stringify({
 				email: $scope.user.email,
 				name: $scope.user.name,
 				vorname: $scope.user.vorname,
@@ -192,7 +192,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		$scope.changePwd = function () {
 			if($scope.newPassword !== $scope.confirmPassword) $scope.match = false;
 			else {
-				var parameters = JSON.stringify({
+				let parameters = JSON.stringify({
 					newPwd: $scope.newPassword,
 					oldPwd: $scope.oldPassword,
 					userID: $scope.user.id
@@ -232,7 +232,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		//DELETE REGISTRATION
 		$scope.unreg = function (regID, t_id) {
-			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
 				$http({
 					url: 'app/deleteReg/' + regID,
@@ -270,9 +270,9 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		$scope.saveReg = function (idx, reg_id) {
 
-			var url = '/app/updateReg';
-			var team = ($scope.selected.pivot_role.value === 'speaker') ? $scope.selected.pivot_teamname : '';
-			var parameters = JSON.stringify({
+			let url = '/app/updateReg';
+			let team = ($scope.selected.pivot_role.value === 'speaker') ? $scope.selected.pivot_teamname : '';
+			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				role: $scope.selected.pivot_role.value,
 				teamname: team,
@@ -377,7 +377,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		$scope.success = '';
 		$scope.setSuccess = function (success, factor, regID) {
-			var points = 0;
+			let points = 0;
 			if (success.id === 1) points = 5;
 			else if (success.id === 2) points = factor * 2 + 1;
 			else if (success.id === 3) points = factor * 3 + 2;
@@ -393,8 +393,8 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			else if (success.id === 13) points = ((factor - 2) * 3 + 2) / 2;
 			else if (success.id === 14) points = ((factor - 2) * 4 + 3) / 2;
 
-			var url = '/app/setSuccess';
-			var parameters = JSON.stringify({
+			let url = '/app/setSuccess';
+			let parameters = JSON.stringify({
 				reg_id: regID,
 				points: points,
 				success: success.value
@@ -403,7 +403,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			.then(function successCallback(res) {
 				res = res.data;
 				if (!res.error) {
-					var index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
+					let index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
 					$scope.totalPoints += points - $scope.user.tournaments[index].pivot_points;
 					_.set($scope.user.tournaments[index], 'pivot_points', points);
 					_.set($scope.user.tournaments[index], 'pivot_success', success.value);
@@ -415,8 +415,8 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		};
 
 		//SET PARTNER
-		var users = UserService.query(function () {
-			var emptyPartner = {
+		let users = UserService.query(function () {
+			let emptyPartner = {
 				vorname: 'none',
 				name: '',
 				id: null
@@ -426,8 +426,8 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		});
 
 		$scope.setPartner = function (partnerID, regID, partnerNumber) {
-			var url = '/app/setPartner';
-			var parameters = JSON.stringify({
+			let url = '/app/setPartner';
+			let parameters = JSON.stringify({
 				reg_id: regID,
 				partnerNumber: partnerNumber,
 				partnerID: partnerID
@@ -436,7 +436,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			.then(function successCallback(res) {
 				res = res.data;
 				if (!res.error) {
-					var index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
+					let index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
 					// $scope.totalPoints += points - $scope.user.tournaments[index].pivot_points;
 					if (partnerNumber === 1) {
 						_.set($scope.user.tournaments[index], 'pivot_partner1', partnerID);
@@ -464,8 +464,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.showOnlyNew = true;
 
 		//get all Tournaments and their Users
-		var getAllTournaments = function () {
-			var tournaments = TournamentService.query(function () {
+		let getAllTournaments = function () {
+			let tournaments = TournamentService.query(function () {
 				_.forEach(tournaments, function (t) {
 					if (t.startdate) t.startdate = new Date(t.startdate);
 					if (t.enddate) t.enddate = new Date(t.enddate);
@@ -518,7 +518,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.selected = $scope.roles[0];
 
 		$scope.personToRegister = $rootScope.user;
-		var users = UserService.query(function () {
+		let users = UserService.query(function () {
 			$scope.usersToRegister = _.orderBy(users, ['vorname'], 'asc');
 		});
 
@@ -543,8 +543,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
 		$scope.reg = function () {
 
-			var url = '/app/reg/' + $scope.tournament.id;
-			var parameters = JSON.stringify({
+			let url = '/app/reg/' + $scope.tournament.id;
+			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
@@ -567,7 +567,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		//DELETE TOURNAMENT FUNCTION
 		$scope.delete = function () {
-			var deleteTournament = $window.confirm('Are you absolutely sure you want to delete this tournament?');
+			let deleteTournament = $window.confirm('Are you absolutely sure you want to delete this tournament?');
 			if (deleteTournament) {
 				TournamentService.delete({id: $scope.tournament.id}, function (res) {
 					if (!res.error) {
@@ -602,8 +602,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		//DELETE REGISTRATION
 		$scope.unreg = function (users) {
-			var regID = _.find(users, {'id': $rootScope.user.id}).pivot_id;
-			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+			let regID = _.find(users, {'id': $rootScope.user.id}).pivot_id;
+			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
 				$http({
 					url: 'app/deleteReg/' + regID,
@@ -658,22 +658,22 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 		//UEBERSICHT ANMELDUNGEN
 
 		//get all Tournaments and their Users
-		var getAllTournaments = function () {
-			var tournaments = TournamentService.query(function () {
+		let getAllTournaments = function () {
+			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
 			});
 		};
 		getAllTournaments();
 
 		// function to sort tournaments by key
-		var tournamentDir = 'asc';
+		let tournamentDir = 'asc';
 		$scope.sortTournaments = function (key) {
 			$scope.tournamentsusers = _.orderBy($scope.tournamentsusers, [key], tournamentDir);
 			tournamentDir = (tournamentDir === 'asc') ? 'desc' : 'asc';
 		};
 
 		// function to sort users by key
-		var userDir = 'asc';
+		let userDir = 'asc';
 		$scope.sortUsers = function (key) {
 			$scope.tournament.users = _.orderBy($scope.tournament.users, [key], userDir);
 			userDir = (userDir === 'asc') ? 'desc' : 'asc';
@@ -681,8 +681,8 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 
 		//SET ATTENDED TO 1
 		$scope.went = function (role, reg_id, typeAsInt) {
-			var price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
-			var parameters = JSON.stringify({
+			let price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
+			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				attended: typeAsInt,
 				price: price
@@ -691,7 +691,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			.then(function successCallback(response) {
 				response = response.data;
 				if (!response.error) {
-					var tournaments = TournamentService.query(function () {
+					let tournaments = TournamentService.query(function () {
 						$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
 						$scope.tournament = _.find($scope.tournamentsusers, {id: $scope.tournament.id});
 					});
@@ -706,7 +706,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 
 		//DELETE REGISTRATION
 		$scope.delete = function (regID) {
-			var deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
+			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
 			if (deleteReg) {
 				$http({
 					url: 'app/deleteReg/' + regID,
@@ -718,7 +718,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 				.then(function successCallback(response) {
 					response = response.data;
 					if (!response.error) {
-						var tournaments = TournamentService.query(function () {
+						let tournaments = TournamentService.query(function () {
 							$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
 							$scope.tournament = _.find($scope.tournamentsusers, {id: $scope.tournament.id});
 						});
@@ -837,11 +837,11 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 		//UEBERSICHT Finanzen
 
 		//get all Users and their Tournaments
-		var getAllUsers = function () {
-			var users = UserService.query(function () {
+		let getAllUsers = function () {
+			let users = UserService.query(function () {
 				_.each(users, function (user) {
-					var totalPoints = 0;
-					var totalDebt = 0;
+					let totalPoints = 0;
+					let totalDebt = 0;
 					_.each(user.tournaments, function (tournament) {
 						totalPoints += tournament.pivot_points;
 						totalDebt += (tournament.pivot_price_owed - tournament.pivot_price_paid);
@@ -855,14 +855,14 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 		getAllUsers();
 
 		// function to sort users by key
-		var userDir = 'asc';
+		let userDir = 'asc';
 		$scope.sortUsers = function (key) {
 			$scope.users = _.orderBy($scope.users, [key], userDir);
 			userDir = (userDir === 'asc') ? 'desc' : 'asc';
 		};
 
 		// function to sort tournaments by key
-		var tournamentDir = 'asc';
+		let tournamentDir = 'asc';
 		$scope.sortTournaments = function (key) {
 			$scope.user.tournaments = _.orderBy($scope.user.tournaments, [key], tournamentDir);
 			tournamentDir = (tournamentDir === 'asc') ? 'desc' : 'asc';
@@ -892,8 +892,8 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 
 		$scope.saveReg = function (idx, reg_id) {
 
-			var url = '/app/updateReg';
-			var parameters = JSON.stringify({
+			let url = '/app/updateReg';
+			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				price_paid: $scope.selected.pivot_price_paid,
 				price_owed: $scope.selected.pivot_price_owed
@@ -917,8 +917,8 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 		};
 
 		$scope.setPaid = function (reg_id, amount) {
-			var url = '/app/updateReg';
-			var parameters = JSON.stringify({
+			let url = '/app/updateReg';
+			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				price_paid: amount
 			});
@@ -959,8 +959,8 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
 		type: ''
 	};
 
-	var allBugs;
-	var getAllBugs = function () {
+	let allBugs;
+	let getAllBugs = function () {
 		$http.get('/bugs').success(function (bugs) {
 			allBugs = bugs.data;
 			$scope.bugs = _.filter(_.orderBy(bugs.data, ['created_at'], 'desc'), {'status': 0});
@@ -968,7 +968,7 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
 	};
 	getAllBugs();
 
-	var filter = true;
+	let filter = true;
 	$scope.filterBugs = function () {
 		if (filter) $scope.bugs = _.filter($scope.bugs, {'status': 0});
 		else $scope.bugs = _.orderBy(allBugs, ['created_at'], 'desc');
@@ -996,7 +996,7 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
 
 	//UPDATE AND DELETE FUNCTIONS
 	$scope.deleteBug = function (id) {
-		var deleteBug = $window.confirm('Are you absolutely sure you want to delete this bug?');
+		let deleteBug = $window.confirm('Are you absolutely sure you want to delete this bug?');
 		if (deleteBug) {
 			BugReportService.delete({id: id}, function (res) {
 				if (!res.error) {
@@ -1010,7 +1010,7 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
 	};
 
 	$scope.changeStatus = function (id) {
-		var parameters = JSON.stringify({
+		let parameters = JSON.stringify({
 			status: ((_.find($scope.bugs, {id: id})).status === 0) ? 1 : 0
 		});
 		BugReportService.update({id: id}, parameters, function (result) {
@@ -1124,20 +1124,20 @@ app.service('anchorSmoothScroll', function () {
 		// This scrolling function
 		// is from http://www.itnewb.com/tutorial/Creating-the-Smooth-Scroll-Effect-with-JavaScript
 
-		var startY = currentYPosition();
-		var stopY = elmYPosition(eID);
-		var distance = stopY > startY ? stopY - startY : startY - stopY;
+		let startY = currentYPosition();
+		let stopY = elmYPosition(eID);
+		let distance = stopY > startY ? stopY - startY : startY - stopY;
 		if (distance < 100) {
 			scrollTo(0, stopY);
 			return;
 		}
-		var speed = Math.round(distance / 100);
+		let speed = Math.round(distance / 100);
 		if (speed >= 20) speed = 20;
-		var step = Math.round(distance / 25);
-		var leapY = stopY > startY ? startY + step : startY - step;
-		var timer = 0;
+		let step = Math.round(distance / 25);
+		let leapY = stopY > startY ? startY + step : startY - step;
+		let timer = 0;
 		if (stopY > startY) {
-			for (var i = startY; i < stopY; i += step) {
+			for (let i = startY; i < stopY; i += step) {
 				setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
 				leapY += step;
 				if (leapY > stopY) leapY = stopY;
@@ -1145,7 +1145,7 @@ app.service('anchorSmoothScroll', function () {
 			}
 			return;
 		}
-		for (var i = startY; i > stopY; i -= step) {
+		for (let i = startY; i > stopY; i -= step) {
 			setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
 			leapY -= step;
 			if (leapY < stopY) leapY = stopY;
@@ -1164,9 +1164,9 @@ app.service('anchorSmoothScroll', function () {
 		}
 
 		function elmYPosition(eID) {
-			var elm = document.getElementById(eID);
-			var y = elm.offsetTop;
-			var node = elm;
+			let elm = document.getElementById(eID);
+			let y = elm.offsetTop;
+			let node = elm;
 			while (node.offsetParent && node.offsetParent != document.body) {
 				node = node.offsetParent;
 				y += node.offsetTop;
@@ -1179,16 +1179,16 @@ app.service('anchorSmoothScroll', function () {
 });
 
 //SNACKBAR FUNCTION
-var showSnackbar = function (success, message) {
+let showSnackbar = function (success, message) {
 	if (success) {
-		var x = document.getElementById("snackbarSuccess");
+		let x = document.getElementById("snackbarSuccess");
 		x.className = "show";
 		x.innerHTML = message;
 		setTimeout(function () {
 			x.className = x.className.replace("show", "");
 		}, 4000);
 	} else {
-		var x = document.getElementById("snackbarError");
+		let x = document.getElementById("snackbarError");
 		x.className = "show";
 		x.innerHTML = message;
 		setTimeout(function () {
@@ -1200,7 +1200,7 @@ var showSnackbar = function (success, message) {
 //CONVERT DATE OBJECT TO LOCAL TIMEZONE
 
 function toLocal(date) {
-	var local = new Date(date);
+	let local = new Date(date);
 	local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 	return local.toJSON();
 }
