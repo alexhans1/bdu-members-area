@@ -56,42 +56,13 @@ module.exports = function(Bookshelf){
 	// ------------------------------MODELS--------------------------------------
 	// --------------------------------------------------------------------------
 
-	// User model
-	let User = Bookshelf.Model.extend({
-		tableName: 'users',
-		hasTimestamps: true,
-
-		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
-		}
-	});
-
-	let Users = Bookshelf.Collection.extend({
-		model: User
-	});
-
-	// Post model
-	let Tournament = Bookshelf.Model.extend({
-		tableName: 'tournaments',
-		hasTimestamps: true,
-
-		users: function () {
-			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
-		}
-	});
-
-	let Tournaments = Bookshelf.Collection.extend({
-		model: Tournament
-	});
-
-	let Tournaments_Users = Bookshelf.Model.extend({
-		tableName: 'tournaments_users',
-		hasTimestamps: true
-	});
-
-	let Tournaments_Users_Col = Bookshelf.Collection.extend({
-		model: Tournaments_Users
-	});
+	let Models = require('../models/bookshelfModels.js')(Bookshelf);
+	let User = Models.User;
+	let Users = Models.Users;
+	let Tournament = Models.Tournament;
+	let Tournaments = Models.Tournaments;
+	let Registration = Models.Registration;
+	let Registrations = Models.Registrations;
 
 	// --------------------------------------------------------------------------
 	// ------------------------------USER REST API-------------------------------
@@ -422,7 +393,7 @@ module.exports = function(Bookshelf){
 			} else {
 				//if tournament was found we,
 				//check if user isn't already registered
-				Tournaments_Users.forge({tournament_id: req.params.t_id, user_id: req.body.id}).fetch()
+				Registration.forge({tournament_id: req.params.t_id, user_id: req.body.id}).fetch()
 				.then(function (arg) {
 					if(arg){
 						//if a user was found we return that user is already registered
@@ -433,7 +404,7 @@ module.exports = function(Bookshelf){
 						//check role of request
 						if(req.body.role === 'judge') {
 							//if reg request is for judge reg user
-							Tournaments_Users.forge({
+							Registration.forge({
 								tournament_id: req.params.t_id,
 								user_id: req.body.id,
 								role: req.body.role,
@@ -446,7 +417,7 @@ module.exports = function(Bookshelf){
 							})
 						} else if(req.body.role === 'independent') {
 							//if reg request is for independent reg user
-							Tournaments_Users.forge({
+							Registration.forge({
 								tournament_id: req.params.t_id,
 								user_id: req.body.id,
 								role: req.body.role,
@@ -462,7 +433,7 @@ module.exports = function(Bookshelf){
 							//check if teamname is given
 							if(req.body.team === '') {
 								//if no partner is named, reg user alone
-								Tournaments_Users.forge({
+								Registration.forge({
 									tournament_id: req.params.t_id,
 									user_id: req.body.id,
 									role: req.body.role,
@@ -475,7 +446,7 @@ module.exports = function(Bookshelf){
 								})
 							} else {
 								//if a teamname is given we reg user
-								Tournaments_Users.forge({
+								Registration.forge({
 									tournament_id: req.params.t_id,
 									user_id: req.body.id,
 									role: req.body.role,
@@ -502,7 +473,7 @@ module.exports = function(Bookshelf){
 	//for delete registration
 	router.route('/deleteReg/:id')
 	.delete(function (req, res) {
-		Tournaments_Users.forge({id: req.params.id})
+		Registration.forge({id: req.params.id})
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
@@ -529,7 +500,7 @@ module.exports = function(Bookshelf){
 	//update registration
 	router.route('/updateReg')
 	.put(function (req, res) {
-		Tournaments_Users.forge({id: req.body.reg_id})
+		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
@@ -562,7 +533,7 @@ module.exports = function(Bookshelf){
 	//set success
 	router.route('/setSuccess')
 	.put(function (req, res) {
-		Tournaments_Users.forge({id: req.body.reg_id})
+		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
@@ -592,7 +563,7 @@ module.exports = function(Bookshelf){
 	//set success
 	router.route('/setPartner')
 	.put(function (req, res) {
-		Tournaments_Users.forge({id: req.body.reg_id})
+		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
@@ -629,7 +600,7 @@ module.exports = function(Bookshelf){
 	//update registration
 	router.route('/setAttended')
 	.put(function (req, res) {
-		Tournaments_Users.forge({id: req.body.reg_id})
+		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
 
