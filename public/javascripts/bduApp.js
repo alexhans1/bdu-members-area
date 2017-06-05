@@ -727,7 +727,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 						showSnackbar(false, response.message);
 					}
 				}, function errorCallback(err) {
-					confirm(err.data);
+					showSnackbar(false, response.message);
 				});
 			}
 		};

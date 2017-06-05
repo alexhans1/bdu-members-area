@@ -135,55 +135,57 @@ module.exports = function(Bookshelf){
 	.get(function (req, res) {
 		//check if session user is the requested user
 		if(req.user.id == req.params.id || req.user.position === 1) {
-			User.forge({id: req.params.id})
-			.fetch({withRelated: ['tournaments']})
-			.then(function (user) {
-				if (!user) {
-					console.error('The user with the ID "' + req.params.id + '" is not in the database.');
-					res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id + '" is not in the database.'});
-				}
-				else {
-					user = user.toJSON();
-					user.tournaments.forEach(function(part, index) {
-						user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
-					});
-					console.log('Getting specific user successful');
-					res.status(200).send(user);
-				}
-			})
-			.catch(function (err) {
+			try {
+				User.forge({id: req.params.id})
+				.fetch({withRelated: ['tournaments']})
+				.then(function (user) {
+					if (!user) {
+						console.error('The user with the ID "' + req.params.id + '" is not in the database.');
+						res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id + '" is not in the database.'});
+					}
+					else {
+						user = user.toJSON();
+						user.tournaments.forEach(function(part, index) {
+							user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
+						});
+						console.log('Getting specific user successful');
+						res.status(200).send(user);
+					}
+				})
+			} catch (err) {
 				console.error('Error while getting specfic user. Error message:\n' + err);
-				res.render('error.ejs', {message: 'Error while getting specfic user.', error: err});
-			});
+				res.status(500).json({error: true, message: 'Error while getting specfic user.'});
+			}
 		} else {
 			console.log('User is not authorized to get user information of user with the ID: ' + req.params.id);
-			res.render('error.ejs', {message: 'Unauthorized', error: ''});
+			res.status(401).json({error: true, message: 'Unauthorized'});
 		}
 	})
 
 	// update user details
 	.put(function (req, res) {
 		//check if session user is the requested user
-		if(req.params.id == req.user.id || req.user.position === 1){
-			User.forge({id: req.params.id})
-			.fetch({require: true})
-			.then(function (user) {
-				user.save({
-					email: req.body.email,
-					name: req.body.name,
-					vorname: req.body.vorname,
-					gender: req.body.gender,
-					food: req.body.food
+		if(req.params.id == req.user.id || req.user.position === 1) {
+			try {
+				User.forge({id: req.params.id})
+				.fetch({require: true})
+				.then(function (user) {
+					user.save({
+						email: req.body.email,
+						name: req.body.name,
+						vorname: req.body.vorname,
+						gender: req.body.gender,
+						food: req.body.food
+					})
 				})
-			})
-			.then(function () {
-				console.log('Updating user successful');
-				res.status(200).json({error: false, message: 'Update successful.'});
-			})
-			.catch(function (err) {
+				.then(function () {
+					console.log('Updating user successful');
+					res.status(200).json({error: false, message: 'Update successful.'});
+				})
+			} catch (err) {
 				console.error('Error while updating user. Error message:\n ' + err);
 				res.status(500).json({error: true, message: 'Error while updating.'});
-			})
+			}
 		} else {
 			console.log('User is not authorized to update user information of user with the ID: ' + req.params.id);
 			res.status(401).json({error: true, message: 'Unauthorized'});
@@ -194,19 +196,20 @@ module.exports = function(Bookshelf){
 	.delete(function (req, res) {
 		//check if session user is the requested user
 		if(req.params.id == req.user.id || req.user.position === 1){
-			User.forge({id: req.params.id})
-			.fetch({require: true})
-			.then(function (user) {
-				user.destroy()
-			})
-			.then(function () {
-				console.log('Deleting user successful');
-				res.json({error: false, data: {message: 'User successfully deleted'}});
-			})
-			.catch(function (err) {
-				console.error('Error while deleting user.');
-				res.status(500).json({error: true, data: {message: err.message}});
-			});
+			try {
+				User.forge({id: req.params.id})
+				.fetch({require: true})
+				.then(function (user) {
+					user.destroy()
+				})
+				.then(function () {
+					console.log('Deleting user successful');
+					res.json({error: false, data: {message: 'User successfully deleted'}});
+				})
+			} catch (err) {
+				console.error('Error while deleting user. Error: ' + err.message);
+				res.status(500).json({error: true, message: 'Error while deleting user.'});
+			}
 		} else {
 			console.log('User is not authorized to delete user with the ID: ' + req.params.id);
 			res.status(401).json({error: true, message: 'Unauthorized'});
@@ -461,28 +464,29 @@ module.exports = function(Bookshelf){
 	//for delete registration
 	router.route('/deleteReg/:id')
 	.delete(function (req, res) {
-		Registration.forge({id: req.params.id})
-		.fetch({require: true})
-		.then(function (registration) {
-			if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
-				console.log('You are not authorized to delete that registration.');
-				res.json({error: true, message: 'You are not authorized to delete that registration.'});
-				return false;
-			}
+		try {
+			Registration.forge({id: req.params.id})
+			.fetch({require: true})
+			.then(function (registration) {
+				if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
+					console.log('You are not authorized to delete that registration.');
+					res.json({error: true, message: 'You are not authorized to delete that registration.'});
+					return false;
+				}
 
-			registration.destroy();
-			return true;
-		})
-		.then(function (authorized) {
-			if (authorized){
-				console.log('Deleting registration successful');
-				res.json({ error: false, message: 'Deleting registration successful.' });
-			}
-		})
-		.catch(function (err) {
+				registration.destroy();
+				return true;
+			})
+			.then(function (authorized) {
+				if (authorized){
+					console.log('Deleting registration successful');
+					res.json({ error: false, message: 'Deleting registration successful.' });
+				}
+			})
+		} catch (err) {
 			console.error('Error while deleting registration. Error: ' + err.message);
 			res.json({ error: true, message: 'Error while deleting registration.' });
-		});
+		}
 	});
 
 	//update registration
