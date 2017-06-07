@@ -450,6 +450,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		//get all Tournaments and their Users
 		let getAllTournaments = function () {
+			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				_.forEach(tournaments, function (t) {
 					if (t.startdate) t.startdate = new Date(t.startdate);
@@ -463,6 +464,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 				}
 				$scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
 				$scope.allTournaments = _.orderBy(tournaments, ['startdate'], 'desc');
+				$rootScope.loader = false;
 			});
 		};
 		getAllTournaments();
@@ -651,8 +653,10 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 
 		//get all Tournaments and their Users
 		let getAllTournaments = function () {
+			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+				$rootScope.loader = false;
 			});
 		};
 		getAllTournaments();
@@ -831,6 +835,8 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 
 		//get all Users and their Tournaments
 		let getAllUsers = function () {
+			$rootScope.loader = true;
+
 			let users = UserService.query(function () {
 				_.each(users, function (user) {
 					let totalPoints = 0;
@@ -843,6 +849,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 					user.totalDebt = totalDebt;
 				});
 				$scope.users = _.orderBy(users, ['last_login'], 'desc');
+				$rootScope.loader = false;
 			});
 		};
 		getAllUsers();
