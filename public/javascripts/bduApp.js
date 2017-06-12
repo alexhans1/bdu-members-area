@@ -5,7 +5,7 @@ let app = angular.module('bduApp', [
 	'ngFileUpload',
 	'ngImgCrop'
 ])
-.run(function ($http, $rootScope, TournamentService) {
+.run(function ($http, $rootScope) {
 
 	$rootScope.fiveDaysAgo = new Date(Date.now()-432000000);
 
@@ -677,6 +677,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 
 		//SET ATTENDED TO 1
 		$scope.went = function (role, reg_id, typeAsInt) {
+			$rootScope.loader = true;
 			let price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
 			let parameters = JSON.stringify({
 				reg_id: reg_id,
@@ -695,8 +696,10 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 				} else {
 					showSnackbar(false, response.message);
 				}
+				$rootScope.loader = false;
 			}, function errorCallback(err) {
-				showSnackbar(false, err.data)
+				showSnackbar(false, err.data);
+				$rootScope.loader = false;
 			});
 		};
 
@@ -723,6 +726,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 						showSnackbar(false, response.message);
 					}
 				}, function errorCallback(err) {
+					console.log(err);
 					showSnackbar(false, response.message);
 				});
 			}
@@ -757,7 +761,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 	}
 });
 
-app.controller('VorstandCrtl', function ($scope, $http, $rootScope, TournamentService, UserService) {
+app.controller('VorstandCrtl', function ($scope, $http, $rootScope, TournamentService) {
 
 	if (!$rootScope.authenticated) {
 		$location.path('/');
@@ -1087,7 +1091,7 @@ app.controller('authCtrl', function ($scope, $http, $rootScope, $location) {
 // FILE UPLOADER
 
 app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootScope', '$location', '$q',
-	function ($scope, Upload, $timeout, $http, $rootScope, $location, $q) {
+	function ($scope, Upload, $timeout, $http, $rootScope, $location) {
 
 		$scope.submit = false;
 
@@ -1156,7 +1160,7 @@ app.service('anchorSmoothScroll', function () {
 			let elm = document.getElementById(eID);
 			let y = elm.offsetTop;
 			let node = elm;
-			while (node.offsetParent && node.offsetParent != document.body) {
+			while (node.offsetParent && node.offsetParent !== document.body) {
 				node = node.offsetParent;
 				y += node.offsetTop;
 			}
