@@ -22,7 +22,7 @@
 .loader {
     position: relative;
     margin: 0 auto;
-    width: 250px;
+    width: 150px;
 }
 .loader:before {
     content: '';
