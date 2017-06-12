@@ -8,6 +8,7 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let dotenv = require('dotenv'); //enables environment variables for development
 dotenv.load();
+console.log(process.env.NODE_ENV);
 require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds a timestamp to each console log
 let flash = require('req-flash'); //lets me parse individual messages to requests
 let session = require('express-session'); //browser sessions for authentication

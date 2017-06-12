@@ -51,6 +51,11 @@ Models.Tournaments.forge()
 	return emailArr
 })
 .then(function (emailArr) {
+	if (!emailArr.length) {
+		console.log('NO EMAILS TO SEND\n');
+		return
+	}
+
 	console.log('SENDING OUT MAILS\n');
 
 	// SEND OUT EMAILS
