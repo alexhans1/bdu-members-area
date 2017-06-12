@@ -450,7 +450,6 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		//get all Tournaments and their Users
 		let getAllTournaments = function () {
-			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				_.forEach(tournaments, function (t) {
 					if (t.startdate) t.startdate = new Date(t.startdate);
@@ -464,7 +463,6 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 				}
 				$scope.tournaments = _.orderBy(tournaments, ['startdate'], 'desc');
 				$scope.allTournaments = _.orderBy(tournaments, ['startdate'], 'desc');
-				$rootScope.loader = false;
 			});
 		};
 		getAllTournaments();
@@ -489,7 +487,6 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		//SET USERS NEW TOURNAMENT COUNT TO 0
 		UserService.update({id: $rootScope.user.id}, {new_tournament_count: 0}, function (result) {
 			if (!result.error) {
-				console.log(result);
 				$rootScope.user.new_tournament_count = 0;
 			}
 		});
