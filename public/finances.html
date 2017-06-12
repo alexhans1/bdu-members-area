@@ -41,8 +41,14 @@
                 </thead>
                 <tbody class="left-align">
                 <tr ng-repeat="user in users" ng-click="goToTournaments(user)" class="pointer">
-                    <td class="hidden-xs">{{user.id}}</a></td>
-                    <td>{{user.vorname}} {{user.name}}</a></td>
+                    <td class="hidden-xs">{{user.id}}</td>
+					<td>{{user.vorname}} {{user.name}}
+						<span ng-show="user.position == 1" class="help-tip hidden-md-down">
+							<i class="fa fa-star" aria-hidden="true"></i>
+							<p ng-hide="user.id == 21" style="width: 140px!important;">Board member</p>
+							<p ng-show="user.id == 21" style="width: 120px!important;">Krasser Typ</p>
+						</span>
+					</td>
                     <td>{{user.tournaments.length}}</td>
                     <td>{{user.totalDebt | currency:"€"}}</td>
                     <td>{{user.totalPoints}}</td>
@@ -74,6 +80,7 @@
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('startdate')">Date</button></th>
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_role')">Role</button></th>
+                    <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_points')">Points</button></th>
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
                     <th>Debt</th>
@@ -100,6 +107,7 @@
     </td>
     <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
     <td>{{tournament.pivot_role}}</td>
+    <td>{{tournament.pivot_points}}</td>
     <td>{{tournament.pivot_price_paid | currency:'€'}}</td>
     <td>{{tournament.pivot_price_owed | currency:'€'}}</td>
     <td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
@@ -119,6 +127,7 @@
     </td>
     <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
     <td>{{tournament.pivot_role}}</td>
+    <td>{{tournament.pivot_points}}</td>
     <td>
         <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_paid" />
     </td>
