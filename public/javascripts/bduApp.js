@@ -3,7 +3,9 @@ let app = angular.module('bduApp', [
 	'ngResource',
 	'ngDialog',
 	'ngFileUpload',
-	'ngImgCrop'
+	'ngImgCrop',
+	'REST_Service',
+	'successService'
 ])
 .run(function ($http, $rootScope) {
 
@@ -33,7 +35,6 @@ let app = angular.module('bduApp', [
 		$rootScope.authenticated = false;
 		$rootScope.istVorstand = false;
 	};
-
 });
 
 //durch die config wird definiert welche URIs welche controller verwenden
@@ -97,32 +98,6 @@ app.config(function ($routeProvider) {
 	})
 	.otherwise({
 		redirectTo: '/'
-	});
-});
-
-//RESOURCE SERVICE FACTORIES
-
-app.factory('UserService', function ($resource) {
-	return $resource('/app/user/:id', {}, {
-		update: {
-			method: 'PUT' // this method issues a PUT request
-		}
-	});
-});
-
-app.factory('TournamentService', function ($resource) {
-	return $resource('/app/tournament/:id', {}, {
-		update: {
-			method: 'PUT' // this method issues a PUT request
-		}
-	});
-});
-
-app.factory('BugReportService', function ($resource) {
-	return $resource('/bugs/:id', {}, {
-		update: {
-			method: 'PUT' // this method issues a PUT request
-		}
 	});
 });
 
@@ -296,145 +271,6 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			label: 'independent'
 		}];
 
-		//SET SUCCESS
-		$scope.successes = [
-			{
-				id: 0,
-				value: null,
-				label: 'none'
-			}, {
-				id: 1,
-				value: 'judge',
-				label: 'judge'
-			}, {
-				id: 2,
-				value: 'break',
-				label: 'break'
-			}, {
-				id: 3,
-				value: 'final',
-				label: 'final'
-			}, {
-				id: 4,
-				value: 'win',
-				label: 'win'
-			}, {
-				id: 5,
-				value: 'judge2',
-				label: 'judge for different institution'
-			}, {
-				id: 6,
-				value: 'break2',
-				label: 'break for different institution'
-			}, {
-				id: 7,
-				value: 'final2',
-				label: 'final for different institution'
-			}, {
-				id: 8,
-				value: 'win2',
-				label: 'win for different institution'
-			}, {
-				id: 9,
-				value: 'breakESL',
-				label: 'break ESL'
-			}, {
-				id: 10,
-				value: 'finalESL',
-				label: 'final ESL'
-			}, {
-				id: 11,
-				value: 'winESL',
-				label: 'win ESL'
-			}, {
-				id: 12,
-				value: 'break2ESL',
-				label: 'break ESL for different institution'
-			}, {
-				id: 13,
-				value: 'final2ESL',
-				label: 'final ESL for different institution'
-			}, {
-				id: 14,
-				value: 'win2ESL',
-				label: 'win ESL for different institution'
-			}];
-
-		$scope.success = '';
-		$scope.setSuccess = function (success, factor, regID) {
-			let points = 0;
-			if (success.id === 1) points = 5;
-			else if (success.id === 2) points = factor * 2 + 1;
-			else if (success.id === 3) points = factor * 3 + 2;
-			else if (success.id === 4) points = factor * 4 + 3;
-			else if (success.id === 5) points = 2.5;
-			else if (success.id === 6) points = (factor * 2 + 1) / 2;
-			else if (success.id === 7) points = (factor * 3 + 2) / 2;
-			else if (success.id === 8) points = (factor * 4 + 3) / 2;
-			else if (success.id === 9) points = ((factor - 2) * 2 + 1);
-			else if (success.id === 10) points = ((factor - 2) * 3 + 2);
-			else if (success.id === 11) points = ((factor - 2) * 4 + 3);
-			else if (success.id === 12) points = ((factor - 2) * 2 + 1) / 2;
-			else if (success.id === 13) points = ((factor - 2) * 3 + 2) / 2;
-			else if (success.id === 14) points = ((factor - 2) * 4 + 3) / 2;
-
-			let url = '/app/setSuccess';
-			let parameters = JSON.stringify({
-				reg_id: regID,
-				points: points,
-				success: success.value
-			});
-			$http.put(url, parameters)
-			.then(function successCallback(res) {
-				res = res.data;
-				if (!res.error) {
-					let index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
-					$scope.totalPoints += points - $scope.user.tournaments[index].pivot_points;
-					_.set($scope.user.tournaments[index], 'pivot_points', points);
-					_.set($scope.user.tournaments[index], 'pivot_success', success.value);
-					showSnackbar(true, res.message);
-				} else {
-					showSnackbar(false, res.message);
-				}
-			});
-		};
-
-		//SET PARTNER
-		let users = UserService.query(function () {
-			let emptyPartner = {
-				vorname: 'none',
-				name: '',
-				id: null
-			};
-			users.push(emptyPartner);
-			$scope.partners = _.orderBy(users, ['vorname'], 'asc');
-		});
-
-		$scope.setPartner = function (partnerID, regID, partnerNumber) {
-			let url = '/app/setPartner';
-			let parameters = JSON.stringify({
-				reg_id: regID,
-				partnerNumber: partnerNumber,
-				partnerID: partnerID
-			});
-			$http.put(url, parameters)
-			.then(function successCallback(res) {
-				res = res.data;
-				if (!res.error) {
-					let index = _.findIndex($scope.user.tournaments, {'pivot_id': regID});
-					// $scope.totalPoints += points - $scope.user.tournaments[index].pivot_points;
-					if (partnerNumber === 1) {
-						_.set($scope.user.tournaments[index], 'pivot_partner1', partnerID);
-					}
-					if (partnerNumber === 2) {
-						_.set($scope.user.tournaments[index], 'pivot_partner2', partnerID);
-					}
-					showSnackbar(true, res.message);
-				} else {
-					showSnackbar(false, res.message);
-				}
-			});
-		}
 	}
 });
 
@@ -873,6 +709,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 
 		$scope.goToTournaments = function (user) {
 			$scope.user = user;
+			$scope.sortTournaments('startdate');
 			$scope.showTournaments = true;
 
 			anchorSmoothScroll.scrollTo('tournaments');
@@ -887,7 +724,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 			return 'display';
 		};
 
-		$scope.editContact = function (tournament) {
+		$scope.editReg = function (tournament) {
 			$scope.selected = angular.copy(tournament);
 		};
 
@@ -933,7 +770,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 					showSnackbar(false, res.message);
 				}
 			});
-		}
+		};
 
 	}
 });
@@ -1169,7 +1006,7 @@ app.service('anchorSmoothScroll', function () {
 });
 
 //SNACKBAR FUNCTION
-let showSnackbar = function (success, message) {
+showSnackbar = function (success, message) {
 	if (success) {
 		let x = document.getElementById("snackbarSuccess");
 		x.className = "show";
