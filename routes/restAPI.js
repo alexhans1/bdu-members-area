@@ -545,7 +545,7 @@ module.exports = function(Bookshelf){
 		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
-			if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
+			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
 				console.log('You are not authorized to change that entry.');
 				res.json({error: true, message: 'You are not authorized to change that entry.'});
 				return false;
@@ -575,7 +575,7 @@ module.exports = function(Bookshelf){
 		Registration.forge({id: req.body.reg_id})
 		.fetch({require: true})
 		.then(function (registration) {
-			if(registration.toJSON().user_id !== req.user.id && req.user.id !== 1) {
+			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
 				console.log('You are not authorized to change that registration.');
 				res.json({error: true, message: 'You are not authorized to change that registration.'});
 				return false;
