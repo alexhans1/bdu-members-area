@@ -180,7 +180,7 @@ async function execute() {
 	buildEmailArr();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
 	sendDebtMails();
-	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
+	await new Promise((resolve, reject) => setTimeout(() => resolve(), 9000));
 	sendNotification();
 }
 execute();
