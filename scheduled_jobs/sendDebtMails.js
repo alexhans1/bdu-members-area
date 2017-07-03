@@ -133,46 +133,48 @@ async function sendNotification() {
 
 	console.log(sentArr);
 
-	// SENT EMAIL TO FINANZEN TO NOTIFY THEM
-	let helper = require('sendgrid').mail;
-	let fromEmail = new helper.Email('BDU_DebtMailService@debating.de');
-	// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
-	let toEmail = new helper.Email('finanzen@debating.de');
-	let subject = 'Folgende Schuldenemails wurden geschrieben!!!';
-	let content = new helper.Content('text/html', '' +
-		'Hi ' + process.env.finance_board_member + '<br><br>' +
-		'An folgende Personen wurden automatisch Schuldenerinnerungen versendet:<br>' +
-		'<ul>'
-	);
-	sentArr.forEach(function (user) {
-		content.value += '<li>' + user + '</li>'
-	});
-	content.value += '</ul>';
+	if (sentArr.length) {
+		// SENT EMAIL TO FINANZEN TO NOTIFY THEM
+		let helper = require('sendgrid').mail;
+		let fromEmail = new helper.Email('BDU_DebtMailService@debating.de');
+		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
+		let toEmail = new helper.Email('finanzen@debating.de');
+		let subject = 'Folgende Schuldenemails wurden geschrieben!!!';
+		let content = new helper.Content('text/html', '' +
+			'Hi ' + process.env.finance_board_member + '<br><br>' +
+			'An folgende Personen wurden automatisch Schuldenerinnerungen versendet:<br>' +
+			'<ul>'
+		);
+		sentArr.forEach(function (user) {
+			content.value += '<li>' + user + '</li>'
+		});
+		content.value += '</ul>';
 
-	let mail = new helper.Mail(fromEmail, subject, toEmail, content);
-	let sg = require('sendgrid')(process.env.SENDGRID_KEY);
-	let request = sg.emptyRequest({
-		method: 'POST',
-		path: '/v3/mail/send',
-		body: mail.toJSON()
-	});
+		let mail = new helper.Mail(fromEmail, subject, toEmail, content);
+		let sg = require('sendgrid')(process.env.SENDGRID_KEY);
+		let request = sg.emptyRequest({
+			method: 'POST',
+			path: '/v3/mail/send',
+			body: mail.toJSON()
+		});
 
-	sg.API(request, function (error, response) {
-		if (error) {
-			console.error('Error response received in notification mail.');
-			console.error(error);
-		} else {
-			console.log('Notification mail sent.');
-		}
-		console.log('Notification mail status code: ' + response.statusCode);
-	});
+		sg.API(request, function (error, response) {
+			if (error) {
+				console.error('Error response received in notification mail.');
+				console.error(error);
+			} else {
+				console.log('Notification mail sent.');
+			}
+			console.log('Notification mail status code: ' + response.statusCode);
+		});
 
-	await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
+		await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
 
-	console.log('\n ✔✔✔ Finished Sending Debt Emails ✔✔✔ \n');
-	console.log('Tried to send ' + emailArr.length + ' emails');
-	console.log('Success: ' + totalSentMails);
-	console.log('Errors: ' + totalErrors);
+		console.log('\n ✔✔✔ Finished Sending Debt Emails ✔✔✔ \n');
+		console.log('Tried to send ' + emailArr.length + ' emails');
+		console.log('Success: ' + totalSentMails);
+		console.log('Errors: ' + totalErrors);
+	}
 }
 
 console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
