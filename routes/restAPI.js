@@ -81,7 +81,7 @@ module.exports = function(Bookshelf){
 						user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
 					});
 				});
-				console.log('Getting all users successful');
+				console.info('Getting all users successful');
 				res.send(collection);
 				// res.json({error: false, data: collection.toJSON()});
 			})
@@ -97,7 +97,7 @@ module.exports = function(Bookshelf){
 	//upload new image for current user
 	.post(upload.single('pic'), function (req, res) {
 		try {
-			console.log('Uploaded new user pic.');
+			console.info('Uploaded new user pic.');
 			//then get the current user
 			User.forge({id: req.user.id}).fetch()
 			.then(function (user) {
@@ -114,7 +114,7 @@ module.exports = function(Bookshelf){
 				c.on('ready', function() {
 					c.delete(deletePath, function(err) {
 						if (err) console.error(err);
-						else console.log('Successfully deleted old user pic: ' + deletePath);
+						else console.info('Successfully deleted old user pic: ' + deletePath);
 						c.end();
 					});
 				});
@@ -148,7 +148,7 @@ module.exports = function(Bookshelf){
 						user.tournaments.forEach(function(part, index) {
 							user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
 						});
-						console.log('Getting specific user successful');
+						console.info('Getting specific user successful');
 						res.status(200).send(user);
 					}
 				})
@@ -157,7 +157,7 @@ module.exports = function(Bookshelf){
 				res.status(500).json({error: true, message: 'Error while getting specfic user.'});
 			}
 		} else {
-			console.log('User is not authorized to get user information of user with the ID: ' + req.params.id);
+			console.info('User is not authorized to get user information of user with the ID: ' + req.params.id);
 			res.status(401).json({error: true, message: 'Unauthorized'});
 		}
 	})
@@ -180,7 +180,7 @@ module.exports = function(Bookshelf){
 					})
 				})
 				.then(function () {
-					console.log('Updating user successful');
+					console.info('Updating user successful');
 					res.status(200).json({error: false, message: 'Update successful.'});
 				})
 			} catch (err) {
@@ -188,7 +188,7 @@ module.exports = function(Bookshelf){
 				res.status(500).json({error: true, message: 'Error while updating.'});
 			}
 		} else {
-			console.log('User is not authorized to update user information of user with the ID: ' + req.params.id);
+			console.info('User is not authorized to update user information of user with the ID: ' + req.params.id);
 			res.status(401).json({error: true, message: 'Unauthorized'});
 		}
 	})
@@ -204,7 +204,7 @@ module.exports = function(Bookshelf){
 					user.destroy()
 				})
 				.then(function () {
-					console.log('Deleting user successful');
+					console.info('Deleting user successful');
 					res.json({error: false, data: {message: 'User successfully deleted'}});
 				})
 			} catch (err) {
@@ -212,7 +212,7 @@ module.exports = function(Bookshelf){
 				res.status(500).json({error: true, message: 'Error while deleting user.'});
 			}
 		} else {
-			console.log('User is not authorized to delete user with the ID: ' + req.params.id);
+			console.info('User is not authorized to delete user with the ID: ' + req.params.id);
 			res.status(401).json({error: true, message: 'Unauthorized'});
 		}
 	});
@@ -233,7 +233,7 @@ module.exports = function(Bookshelf){
 					tournament.users[index] = rename(tournament.users[index], removeUnderscores);
 				});
 			});
-			console.log('Getting all tournaments successful.');
+			console.info('Getting all tournaments successful.');
 			return res.send(collection);
 		})
 		.catch(function (err) {
@@ -267,7 +267,7 @@ module.exports = function(Bookshelf){
 				})
 				.save()
 				.then(function (tournament) {
-					console.log('Create Tournament successful.');
+					console.info('Create Tournament successful.');
 					res.status(200).json({error: false, tournament: tournament, message: 'Create Tournament successful.'});
 				})
 				.then(function () {
@@ -286,11 +286,11 @@ module.exports = function(Bookshelf){
 					}
 				})
 			} catch (err) {
-				console.log('Error while adding new Tournament. Error: \n' + err);
+				console.error('Error while adding new Tournament. Error: \n' + err);
 				res.status(500).json({ error: true, message: 'Error while adding new Tournament.' });
 			}
 		} else {
-			console.log('User is not authorized to create a new tournament');
+			console.info('User is not authorized to create a new tournament');
 			res.status(401).json({error: true, message: 'Unauthorized'});
 		}
 	});
@@ -310,7 +310,7 @@ module.exports = function(Bookshelf){
 				tournament.users.forEach(function(part, index) {
 					tournament.users[index] = rename(tournament.users[index], removeUnderscores);
 				});
-				console.log('Getting specific tournament successful');
+				console.info('Getting specific tournament successful');
 				res.json({error: false, data: tournament});
 			}
 		})
@@ -347,7 +347,7 @@ module.exports = function(Bookshelf){
 				})
 			})
 			.then(function () {
-				console.log('Updating tournament successful.');
+				console.info('Updating tournament successful.');
 				res.status(200).json({error: false, message: 'Updating tournament successful.'});
 			})
 			.catch(function (err) {
@@ -355,7 +355,7 @@ module.exports = function(Bookshelf){
 				res.json({error: true, message: 'Error while updating tournament.'});
 			})
 		} else {
-			console.log('User is not authorized to update tournament');
+			console.info('User is not authorized to update tournament');
 			res.json({error: true, message: 'Unauthorized'});
 		}
 	})
@@ -370,7 +370,7 @@ module.exports = function(Bookshelf){
 				tournament.destroy()
 			})
 			.then(function () {
-				console.log('Deleting tournament successful');
+				console.info('Deleting tournament successful');
 				res.status(200).json({ error: false, message: 'Deleting tournament successful.' });
 			})
 			.catch(function (err) {
@@ -378,7 +378,7 @@ module.exports = function(Bookshelf){
 				res.json({ error: true, message: 'Error while deleting tournament.' });
 			})
 		} else {
-			console.log('User is not authorized to delete tournament');
+			console.info('User is not authorized to delete tournament');
 			res.json({ error: true, message: 'Unauthorized' });
 		}
 	});
@@ -390,7 +390,6 @@ module.exports = function(Bookshelf){
 	// reg
 	router.route('/reg/:t_id')
 	.post(function (req, res) {
-		console.log(req.body);
 		// check if Tournament exists in DB
 		Tournament.forge({id: req.params.t_id}).fetch()
 		.then(function (tournament) {
@@ -420,7 +419,7 @@ module.exports = function(Bookshelf){
 							})
 							.save()
 							.then(function(entry) {
-								console.log('Successfully registered for ' + req.params.t_id + ' as judge.');
+								console.info('Successfully registered for ' + req.params.t_id + ' as judge.');
 								res.status(200).send(entry);
 							})
 						} else if(req.body.role === 'independent') {
@@ -433,7 +432,7 @@ module.exports = function(Bookshelf){
 							})
 							.save()
 							.then(function(entry) {
-								console.log('Successfully registered for ' + req.params.t_id + ' as independent.');
+								console.info('Successfully registered for ' + req.params.t_id + ' as independent.');
 								res.status(200).send(entry);
 							})
 						} else if(req.body.role === 'speaker') {
@@ -449,7 +448,7 @@ module.exports = function(Bookshelf){
 								})
 								.save()
 								.then(function(entry) {
-									console.log('Successfully registered for ' + req.params.t_id + ' as speaker.');
+									console.info('Successfully registered for ' + req.params.t_id + ' as speaker.');
 									res.status(200).send(entry);
 								})
 							} else {
@@ -463,7 +462,7 @@ module.exports = function(Bookshelf){
 								})
 								.save()
 								.then(function(entry) {
-									console.log('Successfully registered for ' + req.params.t_id + ' as speaker in team ' + req.body.teamname);
+									console.info('Successfully registered for ' + req.params.t_id + ' as speaker in team ' + req.body.teamname);
 									res.status(200).send(entry);
 								})
 							}
@@ -486,7 +485,7 @@ module.exports = function(Bookshelf){
 			.fetch({require: true})
 			.then(function (registration) {
 				if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
-					console.log('You are not authorized to delete that registration.');
+					console.info('You are not authorized to delete that registration.');
 					res.json({error: true, message: 'You are not authorized to delete that registration.'});
 					return false;
 				}
@@ -496,7 +495,7 @@ module.exports = function(Bookshelf){
 			})
 			.then(function (authorized) {
 				if (authorized){
-					console.log('Deleting registration successful');
+					console.info('Deleting registration successful');
 					res.json({ error: false, message: 'Deleting registration successful.' });
 				}
 			})
@@ -513,7 +512,7 @@ module.exports = function(Bookshelf){
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
-				console.log('You are not authorized to update that registration.');
+				console.info('You are not authorized to update that registration.');
 				res.json({error: true, message: 'You are not authorized to update that registration.'});
 				return false;
 			}
@@ -529,7 +528,7 @@ module.exports = function(Bookshelf){
 		})
 		.then(function (authorized) {
 			if(authorized) {
-				console.log('Updating registration successful.');
+				console.info('Updating registration successful.');
 				res.status(200).json({error: false, message: 'Updating registration successful.'});
 			}
 		})
@@ -546,7 +545,7 @@ module.exports = function(Bookshelf){
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
-				console.log('You are not authorized to change that entry.');
+				console.info('You are not authorized to change that entry.');
 				res.json({error: true, message: 'You are not authorized to change that entry.'});
 				return false;
 			}
@@ -559,7 +558,7 @@ module.exports = function(Bookshelf){
 		})
 		.then(function (authorized) {
 			if(authorized) {
-				console.log('Setting record successful.');
+				console.info('Setting record successful.');
 				res.json({error: false, message: 'Setting record successful.'});
 			}
 		})
@@ -576,7 +575,7 @@ module.exports = function(Bookshelf){
 		.fetch({require: true})
 		.then(function (registration) {
 			if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
-				console.log('You are not authorized to change that registration.');
+				console.info('You are not authorized to change that registration.');
 				res.json({error: true, message: 'You are not authorized to change that registration.'});
 				return false;
 			}
@@ -596,7 +595,7 @@ module.exports = function(Bookshelf){
 		})
 		.then(function (authorized) {
 			if(authorized) {
-				console.log('Setting partner successful.');
+				console.info('Setting partner successful.');
 				res.json({error: false, message: 'Setting partner successful.'});
 			}
 		})
@@ -616,7 +615,7 @@ module.exports = function(Bookshelf){
 
 				//CHECK AUTHORIZATION
 				if(req.user.position !== 1) {
-					console.log('You are not authorized to update that registration.');
+					console.info('You are not authorized to update that registration.');
 					res.json({error: true, message: 'You are not authorized to update that registration.'});
 					return false;
 				}
@@ -625,11 +624,18 @@ module.exports = function(Bookshelf){
 					attended: req.body.attended,
 					price_owed: req.body.price
 				});
+				if (req.body.attended === 1 && registration.toJSON().role === 'judge')  {
+					console.info('Automatically saving five points as success due to judging.');
+					registration.save({
+						points: 5,
+						success: 'judge'
+					});
+				}
 				return true;
 			})
 			.then(function (authorized) {
 				if(authorized) {
-					console.log('Successfully set attendance status.');
+					console.info('Successfully set attendance status.');
 					res.status(200).json({error: false, message: 'Successfully set attendance status.'});
 				}
 			})
