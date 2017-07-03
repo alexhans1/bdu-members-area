@@ -59,7 +59,6 @@ async function buildEmailArr() {
 		// 	name: 'Test Turnier',
 		// 	debt: 40.00
 		// });
-		console.log(emailArr);
 	});
 }
 
@@ -77,6 +76,7 @@ async function sendDebtMails () {
 		let helper = require('sendgrid').mail;
 		let fromEmail = new helper.Email('finanzen@debating.de');
 		let toEmail = new helper.Email(obj.email);
+		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
 		let subject = 'BDU Tournament Debts';
 		let content = new helper.Content('text/html', '' +
 			'Hello ' + obj.name + '<br><br>' +
@@ -131,9 +131,9 @@ async function sendDebtMails () {
 
 async function sendNotification() {
 
-	console.log(sentArr);
-
 	if (sentArr.length) {
+		console.log(sentArr);
+
 		// SENT EMAIL TO FINANZEN TO NOTIFY THEM
 		let helper = require('sendgrid').mail;
 		let fromEmail = new helper.Email('BDU_DebtMailService@debating.de');
@@ -174,7 +174,7 @@ async function sendNotification() {
 		console.log('Tried to send ' + emailArr.length + ' emails');
 		console.log('Success: ' + totalSentMails);
 		console.log('Errors: ' + totalErrors);
-	}
+	} else console.log('\n ✔✔✔ Finished Sending Debt Emails ✔✔✔ \n');
 }
 
 console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
