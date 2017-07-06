@@ -1,4 +1,3 @@
-require ('newrelic');
 let sslRedirect = require('heroku-ssl-redirect');
 let express = require('express');
 let app = express();
