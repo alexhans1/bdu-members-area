@@ -29,14 +29,13 @@
 
 .landing .title {
     text-align: center;
-    padding: 60px 0px 120px 0px;
+    padding: 60px 0 100px 0;
 }
 
 .landing .login {
     color: black;
     background-color: rgba(356,356,356,0.9);
     padding: 25px 35px 5px 35px
-
 }
 
 @media (min-width: 576px) {
