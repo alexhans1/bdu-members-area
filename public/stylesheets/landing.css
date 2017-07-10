@@ -1,0 +1,61 @@
+.landing {
+    background: url(/images/33543411320_cbda5e86a9_k-1600x1066.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    min-height: 100vh;
+
+    color: white;
+}
+
+@media (max-width: 500px) {
+    .landing {
+        background-image: url('/images/33543411320_cbda5e86a9_k-720x480.png');
+    }
+}
+
+@media (min-width: 500px) and (max-width: 1024px) {
+    .landing {
+        background-image: url('/images/33543411320_cbda5e86a9_k-1024x682.png');
+    }
+}
+
+@media (min-width: 1025px) {
+    .landing {
+        background-image: url('/images/33543411320_cbda5e86a9_k-1600x1066.png');
+    }
+}
+
+.landing .title {
+    text-align: center;
+    padding: 60px 0px 120px 0px;
+}
+
+.landing .login {
+    color: black;
+    background-color: rgba(356,356,356,0.9);
+    padding: 25px 35px 5px 35px
+
+}
+
+@media (min-width: 576px) {
+    .landing .login button {
+        margin-left: 340px;
+    }
+}
+@media (min-width: 768px) {
+    .landing .login button {
+        margin-left: 175px;
+    }
+}
+@media (min-width: 992px) {
+    .landing .login button {
+        margin-left: 297px;
+    }
+}
+@media (min-width: 1200px) {
+    .landing .login button {
+        margin-left: 385px;
+    }
+}
