@@ -3,6 +3,7 @@ let router = express.Router();
 let _ = require('lodash');
 let fs = require('fs');
 let multer = require('multer');
+let moment = require('moment');
 
 //rename-keys is used to change bookshelf's pivot table returns from _pivot_[attribute] to pivot_[attribute]
 // we need to change this because angular does not allow underscores as a first character of a key string
@@ -271,18 +272,21 @@ module.exports = function(Bookshelf){
 					res.status(200).json({error: false, tournament: tournament, message: 'Create Tournament successful.'});
 				})
 				.then(function () {
-					try {
-						Users.forge().fetch()
-						.then(function (users) {
-							users.forEach(function (user) {
-								user.save({
-									new_tournament_count: user.toJSON().new_tournament_count + 1
+					if (moment(req.body.startdate).unix() > Date.now()/1000) {
+						console.log(moment(req.body.startdate).unix(), Date.now()/1000);
+						try {
+							Users.forge().fetch()
+							.then(function (users) {
+								users.forEach(function (user) {
+									user.save({
+										new_tournament_count: user.toJSON().new_tournament_count + 1
+									})
 								})
 							})
-						})
-					} catch (err) {
-						console.error('Unable to increment new_tournament_counts.');
-						console.error(err.message);
+						} catch (err) {
+							console.error('Unable to increment new_tournament_counts.');
+							console.error(err.message);
+						}
 					}
 				})
 			} catch (err) {

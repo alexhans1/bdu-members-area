@@ -20,9 +20,9 @@ let totalErrors = 0;
 async function buildEmailArr() {
 	let promise = Models.Tournaments.forge().fetch({withRelated: ['users']});
 	await promise.then((tournaments) => {
-		tournaments = _.reject(tournaments.toJSON(), function (tournament) {
-			return moment(tournament.enddate).add(2, 'weeks').diff(moment()) > 0 //reject if tournament younger than two weeks
-		});
+		// tournaments = _.reject(tournaments.toJSON(), function (tournament) {
+		// 	return moment(tournament.enddate).add(2, 'weeks').diff(moment()) > 0 //reject if tournament younger than two weeks
+		// });
 		_.each(tournaments, function (tournament) {
 			tournament.users = _.reject(tournament.users, function (user) {
 				return moment(user.last_mail).add(10, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days

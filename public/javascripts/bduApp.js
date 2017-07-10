@@ -9,8 +9,6 @@ let app = angular.module('bduApp', [
 ])
 .run(function ($http, $rootScope) {
 
-	$rootScope.fiveDaysAgo = new Date(Date.now()-432000000);
-
 	$rootScope.personnelDebt = 0;
 
 	$rootScope.authenticated = false;
@@ -279,6 +277,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 	if (!$rootScope.authenticated) {
 		$location.path('/');
 	} else {
+
+		$scope.fiveDaysAgo = new Date(Date.now()-432000000);
 
 		$scope.now = new Date();
 
@@ -629,9 +629,12 @@ app.controller('VorstandCrtl', function ($scope, $http, $rootScope, TournamentSe
 			if ($scope.newTournament.name === '' || $scope.newTournament.language === '') {
 				showSnackbar(false, 'Name und Sprache müssen gesetzt werden.');
 			} else {
-				TournamentService.save($scope.newTournament, function (res) {
+				let startdate = $scope.newTournament.startdate;
+				TournamentService.save($scope.newTournament, (res) => {
 					if (!res.error) {
-						$rootScope.user.new_tournament_count++;
+						if(moment(startdate).unix() > Date.now()/1000) {
+							$rootScope.user.new_tournament_count++;
+						}
 						showSnackbar(true, res.message);
 					} else {
 						showSnackbar(false, 'Error while adding new Tournament.');
@@ -675,6 +678,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 			$rootScope.loader = true;
 
 			let users = UserService.query(function () {
+				$scope.totalClubDebt = 0;
 				_.each(users, function (user) {
 					let totalPoints = 0;
 					let totalDebt = 0;
@@ -684,6 +688,7 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 					});
 					user.totalPoints = totalPoints;
 					user.totalDebt = totalDebt;
+					$scope.totalClubDebt += totalDebt;
 				});
 				$scope.users = _.orderBy(users, ['last_login'], 'desc');
 				$rootScope.loader = false;
