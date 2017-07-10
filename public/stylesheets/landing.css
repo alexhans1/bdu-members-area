@@ -29,32 +29,15 @@
 
 .landing .title {
     text-align: center;
-    padding: 60px 0 100px 0;
+    padding: 0 0 45px 0;
+}
+
+.landing .title img {
+    width: 30%;
 }
 
 .landing .login {
     color: black;
     background-color: rgba(356,356,356,0.9);
     padding: 25px 35px 5px 35px
-}
-
-@media (min-width: 576px) {
-    .landing .login button {
-        margin-left: 340px;
-    }
-}
-@media (min-width: 768px) {
-    .landing .login button {
-        margin-left: 175px;
-    }
-}
-@media (min-width: 992px) {
-    .landing .login button {
-        margin-left: 297px;
-    }
-}
-@media (min-width: 1200px) {
-    .landing .login button {
-        margin-left: 385px;
-    }
 }
