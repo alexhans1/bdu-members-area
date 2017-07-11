@@ -8,19 +8,19 @@
 
 }
 
-@media (max-width: 500px) {
+@media (max-width: 720px) {
     .landing {
         background-image: url('/images/33543411320_cbda5e86a9_k-720x480.png');
     }
 }
 
-@media (min-width: 500px) and (max-width: 1024px) {
+@media (min-width: 720px) and (max-width: 1500px) {
     .landing {
         background-image: url('/images/33543411320_cbda5e86a9_k-1024x682.png');
     }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1500px) {
     .landing {
         background-image: url('/images/33543411320_cbda5e86a9_k-1600x1066.png');
     }
