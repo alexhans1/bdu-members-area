@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="intro-text">
-                    <span class="name"><span class="fa fa-group"></span> Finanzübersicht</span>
+                    <span class="name"><span class="fa fa-group"></span> Mitgliederübersicht</span>
                 </div>
             </div>
         </div>
@@ -37,6 +37,9 @@
                     <th>
                         <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
                     </th>
+                    <th class="hidden-sm-down">
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_mail')">Last Debt Email</button>
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="left-align">
@@ -53,6 +56,8 @@
                     <td>{{user.totalDebt | currency:"€"}}</td>
                     <td>{{user.totalPoints}}</td>
                     <td>{{user.last_login | date: 'medium'}}</td>
+                    <td ng-hide="user.last_mail == '0000-00-00 00:00:00'" class="hidden-sm-down">{{user.last_mail | date: 'medium'}}</td>
+                    <td ng-show="user.last_mail == '0000-00-00 00:00:00'" class="hidden-sm-down">never</td>
                 </tr>
                 <tr style="font-weight: bold;">
                     <td class="hidden-xs">#</td>
