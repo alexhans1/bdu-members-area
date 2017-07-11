@@ -1,12 +1,11 @@
 .landing {
-    background: url(/images/33543411320_cbda5e86a9_k-1600x1066.png) no-repeat center center fixed;
+    background: no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     min-height: 100vh;
 
-    color: white;
 }
 
 @media (max-width: 500px) {
@@ -29,7 +28,7 @@
 
 .landing .title {
     text-align: center;
-    padding: 0 0 45px 0;
+    padding: 0 0 40px 0;
 }
 
 .landing .title img {
@@ -37,7 +36,6 @@
 }
 
 .landing .login {
-    color: black;
     background-color: rgba(356,356,356,0.9);
     padding: 25px 35px 5px 35px
 }
