@@ -19,47 +19,53 @@ let totalErrors = 0;
 
 async function buildEmailArr() {
 	let promise = Models.Tournaments.forge().fetch({withRelated: ['users']});
-	await promise.then((tournaments) => {
-		// tournaments = _.reject(tournaments.toJSON(), function (tournament) {
-		// 	return moment(tournament.enddate).add(2, 'weeks').diff(moment()) > 0 //reject if tournament younger than two weeks
-		// });
-		_.each(tournaments, function (tournament) {
-			tournament.users = _.reject(tournament.users, function (user) {
-				return moment(user.last_mail).add(10, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
-			});
-			_.each(tournament.users, function (user) {
-				if (user._pivot_price_owed > user._pivot_price_paid) {
-					if (!_.find(emailArr, {email: user.email})) {
-						emailArr.push({
-							name: user.vorname,
-							email: user.email,
-							tournaments: [],
-							total_debt: 0
-						});
-					}
-					_.find(emailArr, {name: user.vorname}).tournaments.push({
-						name: tournament.name,
-						debt: Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100
-					});
-					_.find(emailArr, {name: user.vorname}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
-				}
-			})
-		});
+	try {
 
-		// emailArr = _.filter(emailArr, function (entry) {
-		// 	return (entry.name === 'Alexander')
-		// });
-		// emailArr.push({
-		// 	name: 'Alexander',
-		// 	email: 'alexander.hans.mail@gmail.com',
-		// 	tournaments: [],
-		// 	total_debt: 40
-		// });
-		// emailArr[0].tournaments.push({
-		// 	name: 'Test Turnier',
-		// 	debt: 40.00
-		// });
-	});
+		await promise.then((tournaments) => {
+			tournaments = tournaments.toJSON();
+			// tournaments = _.reject(tournaments.toJSON(), function (tournament) {
+			// 	return moment(tournament.enddate).add(2, 'weeks').diff(moment()) > 0 //reject if tournament younger than two weeks
+			// });
+			_.each(tournaments, function (tournament) {
+				tournament.users = _.reject(tournament.users, function (user) {
+					return moment(user.last_mail).add(10, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
+				});
+				_.each(tournament.users, function (user) {
+					if (user._pivot_price_owed > user._pivot_price_paid) {
+						if (!_.find(emailArr, {email: user.email})) {
+							emailArr.push({
+								name: user.vorname,
+								email: user.email,
+								tournaments: [],
+								total_debt: 0
+							});
+						}
+						_.find(emailArr, {name: user.vorname}).tournaments.push({
+							name: tournament.name,
+							debt: Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100
+						});
+						_.find(emailArr, {name: user.vorname}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
+					}
+				})
+			});
+
+			// emailArr = _.filter(emailArr, function (entry) {
+			// 	return (entry.name === 'Alexander')
+			// });
+			// emailArr.push({
+			// 	name: 'Alexander',
+			// 	email: 'alexander.hans.mail@gmail.com',
+			// 	tournaments: [],
+			// 	total_debt: 40
+			// });
+			// emailArr[0].tournaments.push({
+			// 	name: 'Test Turnier',
+			// 	debt: 40.00
+			// });
+		});
+	} catch (ex) {
+		console.error(ex);
+	}
 }
 
 async function sendDebtMails () {
