@@ -112,26 +112,32 @@ async function sendDebtMails () {
 			body: mail.toJSON()
 		});
 
-		sg.API(request, function (error, response) {
-			if (error) {
-				console.error('Error response received');
-				console.error(error);
-				totalErrors++;
-			} else {
-				// SET LAST MAIL OF USER TO NOW
-				Models.User.forge({email: obj.email}).fetch()
-				.then(function (user) {
-					user.save({
-						last_mail: new Date()
+		try {
+			sg.API(request, function (error, response) {
+				if (error) {
+					console.error('Error response received');
+					console.error(error);
+					totalErrors++;
+				} else {
+					// SET LAST MAIL OF USER TO NOW
+					Models.User.forge({email: obj.email}).fetch()
+					.then(function (user) {
+						user.save({
+							last_mail: new Date()
+						});
+						user = user.toJSON();
+						console.info('\nSent out email to ' + user.vorname + ' ' + user.name + '.\n');
+						sentArr.push(user.vorname + ' ' + user.name + ' (' + user.email + ')');
+						totalSentMails++;
 					});
-					user = user.toJSON();
-					console.info('\nSent out email to ' + user.vorname + ' ' + user.name + '.\n');
-					sentArr.push(user.vorname + ' ' + user.name + ' (' + user.email + ')');
-					totalSentMails++;
-				});
-			}
-			console.log('Mail status code: ' + response.statusCode);
-		});
+				}
+				console.log('Mail status code: ' + response.statusCode);
+			});
+		} catch (ex) {
+			console.error(ex);
+			totalErrors++;
+		}
+
 	})
 }
 
