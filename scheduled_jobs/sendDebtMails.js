@@ -13,6 +13,7 @@ let Models = require('../models/bookshelfModels.js')(Bookshelf);
 // GENERATE EMAIL ARRAY
 let emailArr = [];
 let sentArr = [];
+let successIDs = [];
 
 let totalSentMails = 0;
 let totalErrors = 0;
@@ -34,17 +35,19 @@ async function buildEmailArr() {
 					if (user._pivot_price_owed > user._pivot_price_paid) {
 						if (!_.find(emailArr, {email: user.email})) {
 							emailArr.push({
-								name: user.vorname,
+								id: user.id,
+								vorname: user.vorname,
+								name: user.name,
 								email: user.email,
 								tournaments: [],
 								total_debt: 0
 							});
 						}
-						_.find(emailArr, {name: user.vorname}).tournaments.push({
+						_.find(emailArr, {id: user.id}).tournaments.push({
 							name: tournament.name,
 							debt: Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100
 						});
-						_.find(emailArr, {name: user.vorname}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
+						_.find(emailArr, {id: user.id}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
 					}
 				})
 			});
@@ -85,7 +88,7 @@ async function sendDebtMails () {
 		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
 		let subject = 'BDU Tournament Debts';
 		let content = new helper.Content('text/html', '' +
-			'Hello ' + obj.name + '<br><br>' +
+			'Hello ' + obj.vorname + '<br><br>' +
 			'You have debt to the BDU for the following tournaments:<br><br>' +
 			'<table>'
 		);
@@ -93,7 +96,8 @@ async function sendDebtMails () {
 			content.value = content.value + '<tr><th align="left">' + tournament.name +
 				'</th><td>' + tournament.debt + '€</td></tr>'
 		});
-		content.value = content.value + '</table>' +
+		content.value = content.value + '<tr><th align="left">Total</th><td><b>' + obj.total_debt + '€</b></td></tr>' +
+			'</table>' +
 			'<br>BDU Bank Info:<br>' +
 			'<table>' +
 			'<tr><th align="left">Recipient</th><td>Berlin Debating Union e.V.</td></tr>' +
@@ -119,17 +123,10 @@ async function sendDebtMails () {
 					console.error(error);
 					totalErrors++;
 				} else {
-					// SET LAST MAIL OF USER TO NOW
-					Models.User.forge({email: obj.email}).fetch()
-					.then(function (user) {
-						user.save({
-							last_mail: new Date()
-						});
-						user = user.toJSON();
-						console.info('\nSent out email to ' + user.vorname + ' ' + user.name + '.\n');
-						sentArr.push(user.vorname + ' ' + user.name + ' (' + user.email + ')');
-						totalSentMails++;
-					});
+					console.info('\nSent out email to ' + obj.vorname + ' ' + obj.name + '.\n');
+					sentArr.push(obj.vorname + ' ' + obj.name + ' (' + obj.email + ')');
+					successIDs.push(obj.id);
+					totalSentMails++;
 				}
 				console.log('Mail status code: ' + response.statusCode);
 			});
@@ -141,6 +138,25 @@ async function sendDebtMails () {
 	})
 }
 
+async function setLastMail() {
+
+	if (successIDs.length) {
+
+		try {
+			Models.User.where('id', 'IN', successIDs)
+			.save({last_mail: new Date()},{patch:true})
+			.then(function(x) {
+				console.log(x.toJSON());
+				console.log('Successfully saved new last mail date.');
+			});
+		} catch (ex) {
+			console.error(ex);
+		}
+
+	}
+
+}
+
 async function sendNotification() {
 
 	if (sentArr.length) {
@@ -149,8 +165,8 @@ async function sendNotification() {
 		// SENT EMAIL TO FINANZEN TO NOTIFY THEM
 		let helper = require('sendgrid').mail;
 		let fromEmail = new helper.Email('BDU_DebtMailService@debating.de');
-		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
 		let toEmail = new helper.Email('finanzen@debating.de');
+		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
 		let subject = 'Folgende Schuldenemails wurden geschrieben!!!';
 		let content = new helper.Content('text/html', '' +
 			'Hi ' + process.env.finance_board_member + '<br><br>' +
@@ -194,6 +210,8 @@ async function execute() {
 	buildEmailArr();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
 	sendDebtMails();
+	await new Promise((resolve, reject) => setTimeout(() => resolve(), 9000));
+	setLastMail();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 9000));
 	sendNotification();
 }
