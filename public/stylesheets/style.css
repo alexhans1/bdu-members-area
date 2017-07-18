@@ -269,12 +269,13 @@ textarea {
     border-radius: 1%;
 }
 
-.details th {
+#details th {
     min-width: 135px;
 }
-.details td {
+#details td {
     text-align: right;
 }
+
 .left-align td, th {
     text-align: left;
 }

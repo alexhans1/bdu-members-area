@@ -50,7 +50,7 @@
                     </tbody>
                 </table>
 
-				<div class="text-center">
+				<div class="text-center" style="margin-bottom: 30px">
 					<button class="btn btn-outline-primary btn-sm" ng-show="showOnlyNew" ng-click="showAllTournaments()">Show old tournaments</button>
 					<button class="btn btn-outline-primary btn-sm" ng-hide="showOnlyNew" ng-click="showAllTournaments()">Hide old tournaments</button>
 				</div>
@@ -121,7 +121,7 @@
                     </tr>
                     <tr>
                         <th>Link:</th>
-                        <td>{{tournament.link}}</td>
+                        <td style="word-break: break-all"><a href="{{tournament.link}}" target="_blank">{{tournament.link}}</a></td>
                     </tr>
                     <tr>
                         <th>Comments:</th>
