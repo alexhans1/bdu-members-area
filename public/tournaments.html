@@ -40,11 +40,11 @@
                         <td>{{t.startdate | date:'dd.MM.yyyy'}}<br>{{t.enddate | date:'dd.MM.yyyy'}}</td>
                         <td class="hidden-xs">
                             Teams:
-                            <span ng-show="t.teamspots == 0">tba</span>
-                            <span ng-hide="t.teamspots == 0">{{t.teamspots}}</span><br>
+                            <span ng-hide="t.teamspots || t.teamspots==0">tba</span>
+                            <span ng-show="t.teamspots || t.teamspots==0">{{t.teamspots}}</span><br>
                             Judges:
-                            <span ng-show="t.judgespots == 0">tba</span>
-                            <span ng-hide="t.judgespots == 0">{{t.judgespots}}</span>
+                            <span ng-hide="t.judgespots || t.judgespots==0">tba</span>
+                            <span ng-show="t.judgespots || t.judgespots==0">{{t.judgespots}}</span>
                         <td>{{t.language}}</td>
                     </tr>
                     </tbody>
