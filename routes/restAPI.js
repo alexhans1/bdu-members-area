@@ -624,10 +624,16 @@ module.exports = function(Bookshelf){
 					return false;
 				}
 
-				registration.save({
-					attended: req.body.attended,
-					price_owed: req.body.price
-				});
+				if (req.body.attended === 1) {
+					registration.save({
+						attended: 1,
+						price_owed: req.body.price
+					});
+				} else {
+					registration.save({
+						attended: req.body.attended,
+					});
+				}
 				if (req.body.attended === 1 && registration.toJSON().role === 'judge')  {
 					console.info('Automatically saving five points as success due to judging.');
 					registration.save({
