@@ -1,0 +1,41 @@
+<header>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="intro-text">
+					<span class="name"><i class="fa fa-line-chart" aria-hidden="true"></i> BDU Ranking</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<!-- SHOWN ONLY TO PEOPLE WITHOUT PROPPER RIGHTS -->
+<section id="user-info" ng-hide="istVorstand">
+	<div class="container">
+		<div class="row">
+			<!-- Table -->
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="user-info-table">
+
+					<h3>
+						Sorry you don't have the right to see this.
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section ng-show='istVorstand'>
+
+	<!-- NEW TOURNAMENT -->
+	<div class="container">
+		<div class="clearfix">
+
+			<div id="container" style="width:100%; height:600px;"></div>
+
+		</div>
+	</div>
+
+</section>

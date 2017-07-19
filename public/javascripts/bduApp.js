@@ -73,17 +73,17 @@ app.config(function ($routeProvider) {
 		templateUrl: 'anmeldungen.html',
 		controller: 'OverviewCtrl'
 	})
-	//the reg overview display
+	//the finances display
 	.when('/finances', {
 		templateUrl: 'finances.html',
 		controller: 'FinanceCtrl'
 	})
-	//the tournaments display
-	.when('/editTournament', {
-		templateUrl: 'editTournament.html',
-		controller: 'TournamentCtrl'
+	//the ranking display
+	.when('/ranking', {
+		templateUrl: 'views/ranking.html',
+		controller: 'RankingCtrl'
 	})
-	//the tournaments display
+	//the imageUpload display
 	.when('/imageUpload', {
 		templateUrl: 'imageUpload.html',
 		controller: 'UploadCtrl'

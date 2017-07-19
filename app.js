@@ -21,6 +21,7 @@ let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 //sets up routes variables
 let index = require('./routes/index');
 let restApi = require('./routes/restAPI')(Bookshelf);
+let rankingApi = require('./routes/rankingAPI')(Bookshelf);
 let authenticate = require('./routes/authenticate')(passport);
 
 // https redirect
@@ -62,6 +63,7 @@ initPassport(passport, Bookshelf);
 app.use('/', index);
 app.use('/auth', authenticate);
 app.use('/app', restApi);
+app.use('/ranking', rankingApi);
 require('./routes/routes.js')(app, passport, Bookshelf);
 
 // catch 404 and forward to error handler
