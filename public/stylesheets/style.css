@@ -1,6 +1,7 @@
 body {
     /*padding: 50px;*/
     font: 14px "Montserrat", Helvetica, Arial, sans-serif;
+    font-weight: 500;
     overflow-x: hidden;
 }
 
@@ -191,8 +192,8 @@ textarea {
 }
 
 .user-info .user-info-table {
-    font-size: 1.25em;
-    font-weight: 300;
+    /*font-size: 1.25em;*/
+    /*font-weight: 300;*/
 }
 
 .count {
