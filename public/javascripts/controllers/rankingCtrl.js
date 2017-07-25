@@ -8,6 +8,7 @@ app.controller('RankingCtrl', function ($scope, $rootScope, $http) {
 		$scope.ranking = 'World';
 	} else {
 		//if user is logged in then the user can see the profile page
+		$rootScope.loader = true;
 
 		$http.get('/ranking/all')
 		.then(function(response) {
@@ -28,10 +29,11 @@ app.controller('RankingCtrl', function ($scope, $rootScope, $http) {
 					yAxis: {
 						title: {
 							text: 'Points'
-						}
+						},
+						min: -25
 					},
 					tooltip: {
-						shared: true,
+						shared: false,
 						crosshairs: true
 					},
 					plotOptions: {
@@ -43,6 +45,7 @@ app.controller('RankingCtrl', function ($scope, $rootScope, $http) {
 					series: data
 				});
 			});
+			$rootScope.loader = false;
 		});
 	}
 });

@@ -51,7 +51,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
     <!--highcharts-->
-    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script type="text/javascript" src="http://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="/javascripts/highcharts/themes/dark_unica.js"></script>
 
@@ -94,6 +94,10 @@
                 <a href="/#/anmeldungen" class="nav-link hidden-sm-down">Reg Overview</a>
                 <a href="/#/anmeldungen" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
             </li>
+            <li class="nav-item" ng-show="authenticated">
+                <a class="nav-link hidden-sm-down" href="/#/ranking">Ranking</a>
+                <a class="nav-link hidden-md-up" href="/#/ranking" data-toggle="collapse" data-target=".navbar-collapse">Ranking</a>
+            </li>
             <li ng-show="istVorstand" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Vorstand
@@ -103,8 +107,6 @@
                     <a class="dropdown-item hidden-md-up" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>
                     <a class="dropdown-item hidden-sm-down" href="/#/finances">Club Members</a>
                     <a class="dropdown-item hidden-md-up" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Club Members</a>
-                    <a class="dropdown-item hidden-sm-down" href="/#/ranking">Ranking</a>
-                    <a class="dropdown-item hidden-md-up" href="/#/ranking" data-toggle="collapse" data-target=".navbar-collapse">Ranking</a>
                 </div>
             </li>
         </ul>
