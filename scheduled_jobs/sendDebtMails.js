@@ -141,13 +141,14 @@ async function sendDebtMails () {
 async function setLastMail() {
 
 	if (successIDs.length) {
+		console.log('Length of successIDs Array:', successIDs.length);
 
 		try {
 			Models.User.where('id', 'IN', successIDs)
 			.save({last_mail: new Date()},{patch:true})
 			.then(function(x) {
 				console.log(x.toJSON());
-				console.log('Successfully saved new last mail date.');
+				console.log('Successfully saved new last mail date.\n\n');
 			});
 		} catch (ex) {
 			console.error(ex);
