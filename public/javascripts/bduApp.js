@@ -91,7 +91,6 @@ app.config(function ($routeProvider) {
 	//the bug report display
 	.when('/bugReport', {
 		templateUrl: 'bugReport.html',
-		// templateUrl: 'test.html',
 		controller: 'bugCtrl'
 	})
 	.otherwise({
