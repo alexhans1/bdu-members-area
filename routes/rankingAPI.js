@@ -26,7 +26,7 @@ module.exports = function(Bookshelf){
 
 	//Register the authentication middleware
 	//for all URIs use the isAuthenticated function
-	// router.use('/', isAuthenticated);
+	router.use('/', isAuthenticated);
 
 	// --------------------------------------------------------------------------
 	// ------------------------------MODELS--------------------------------------
@@ -110,15 +110,15 @@ module.exports = function(Bookshelf){
 					//add tournament flags
 					result.push({
 						type: 'flags',
+						name: 'Tournaments List',
 						data: [],
-						showInLegend: false,
+						showInLegend: true,
 						shape: 'flag',  // Defines the shape of the flags.)
 						color: '#f36c25', // same as onSeries
 						fillColor: '#f36c25',
 						style: { // text style
 							color: 'white'
 						},
-						showCheckbox: true,
 						stackDistance: 24
 					});
 					try {
