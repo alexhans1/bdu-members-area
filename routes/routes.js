@@ -1,8 +1,8 @@
 //stuff for reset password function
-var crypto = require('crypto');
-var async = require('async');
-var sg = require('sendgrid')(process.env.SENDGRID_KEY);
-var helper = require('sendgrid').mail;
+let crypto = require('crypto');
+let async = require('async');
+let sg = require('sendgrid')(process.env.SENDGRID_KEY);
+let helper = require('sendgrid').mail;
 
 module.exports = function(app, passport, Bookshelf) {
 	//sends successful login state back to angular
@@ -71,7 +71,7 @@ module.exports = function(app, passport, Bookshelf) {
 		async.waterfall([
 			function(done) {
 				crypto.randomBytes(20, function(err, buf) {
-					var token = buf.toString('hex');
+					let token = buf.toString('hex');
 					done(err, token);
 				});
 			},
@@ -94,17 +94,17 @@ module.exports = function(app, passport, Bookshelf) {
 			},
 			function(token) {
 
-				var from_email = new helper.Email('bdudb_password_reset@debating.de');
-				var to_email = new helper.Email(req.body.email);
-				var subject = 'BDUDB Password Reset';
-				var text = 'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n' +
+				let from_email = new helper.Email('bdudb_password_reset@debating.de');
+				let to_email = new helper.Email(req.body.email);
+				let subject = 'BDUDB Password Reset';
+				let text = 'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n' +
 					'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
 					'http://' + req.headers.host + '/reset/' + token + '\n\n' +
 					'If you did not request this, please ignore this email and your password will remain unchanged.\n';
-				var content = new helper.Content('text/plain', text);
-				var mail = new helper.Mail(from_email, subject, to_email, content);
+				let content = new helper.Content('text/plain', text);
+				let mail = new helper.Mail(from_email, subject, to_email, content);
 				
-				var request = sg.emptyRequest({
+				let request = sg.emptyRequest({
 					method: 'POST',
 					path: '/v3/mail/send',
 					body: mail.toJSON()
@@ -192,7 +192,7 @@ module.exports = function(app, passport, Bookshelf) {
         }
     });
 
-    var Bug = Bookshelf.Model.extend({
+    let Bug = Bookshelf.Model.extend({
         tableName: 'bugs',
         hasTimestamps: true,
 
@@ -201,7 +201,7 @@ module.exports = function(app, passport, Bookshelf) {
         }
     });
 
-    var Bugs = Bookshelf.Collection.extend({
+    let Bugs = Bookshelf.Collection.extend({
         model: Bug
     });
 
@@ -225,10 +225,11 @@ module.exports = function(app, passport, Bookshelf) {
     });
     
     app.post('/bugs', function (req, res) {
+    	let user_id = (typeof req.user === 'undefined') ? null : req.user.id;
 		Bug.forge({
 			description: req.body.description,
 			type: req.body.type,
-			user_id: req.user.id
+			user_id
 		})
 		.save()
 		.then(function (bug) {

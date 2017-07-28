@@ -866,7 +866,7 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService, $n
 			$scope.bugs = _.filter(_.orderBy(bugs.data, ['created_at'], 'desc'), {'status': 0});
 		});
 	};
-	getAllBugs();
+	if ($scope.istVorstand) getAllBugs();
 
 	let filter = true;
 	$scope.filterBugs = function () {
@@ -883,7 +883,7 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService, $n
 		} else {
 			BugReportService.save($scope.newBug, function (res) {
 				if (!res.error) {
-					getAllBugs();
+					if ($scope.istVorstand) getAllBugs();
 					showSnackbar(true, res.message);
 					$scope.newBug.description = '';
 					$scope.newBug.type = '';
