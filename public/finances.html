@@ -10,7 +10,24 @@
     </div>
 </header>
 
-<section style="margin-left: 4%; margin-right: 4%">
+<!-- SHOWN ONLY TO PEOPLE WITHOUT PROPPER RIGHTS -->
+<section ng-hide="istVorstand">
+	<div class="container">
+		<div class="row">
+			<!-- Table -->
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="user-info-table">
+
+					<h3>
+						Sorry you don't have the right to see this.
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section ng-show="istVorstand" style="margin-left: 4%; margin-right: 4%">
     <div class="container">
 
     <div class="row">
