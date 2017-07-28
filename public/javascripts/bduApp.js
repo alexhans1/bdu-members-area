@@ -4,6 +4,7 @@ let app = angular.module('bduApp', [
 	'ngDialog',
 	'ngFileUpload',
 	'ngImgCrop',
+	'cp.ngConfirm',
 	'REST_Service',
 	'successService'
 ])
@@ -98,7 +99,7 @@ app.config(function ($routeProvider) {
 	});
 });
 
-app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, UserService) {
+app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, UserService, $ngConfirm) {
 
 	if (!$rootScope.authenticated) {
 		$location.path('/');
@@ -189,26 +190,40 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		//DELETE REGISTRATION
 		$scope.unreg = function (regID, t_id) {
-			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
-			if (deleteReg) {
-				$http({
-					url: 'app/deleteReg/' + regID,
-					method: 'DELETE',
-					headers: {
-						"Content-Type": "application/json;charset=utf-8"
+			$ngConfirm({
+				title: 'Confirm!',
+				content: 'Are you absolutely sure you want to delete this registration?',
+				scope: $scope,
+				theme: 'light',
+				buttons: {
+					deleteBug: {
+						text: 'Yes',
+						btnClass: 'btn-danger',
+						action: function(){
+							$http({
+								url: 'app/deleteReg/' + regID,
+								method: 'DELETE',
+								headers: {
+									"Content-Type": "application/json;charset=utf-8"
+								}
+							})
+							.then(function successCallback(res) {
+								if (!res.error) {
+									_.remove($scope.user.tournaments, {id: t_id});
+									showSnackbar(true, res.data.message);
+								} else {
+									showSnackbar(false, 'Error while removing your registration.');
+								}
+							}, function errorCallback(err) {
+								showSnackbar(false, err.data);
+							});
+						}
+					},
+					close: function(){
+						// closes the modal
 					}
-				})
-				.then(function successCallback(res) {
-					if (!res.error) {
-						_.remove($scope.user.tournaments, {id: t_id});
-						showSnackbar(true, res.data.message);
-					} else {
-						showSnackbar(false, 'Error while removing your registration.');
-					}
-				}, function errorCallback(err) {
-					showSnackbar(false, err.data);
-				});
-			}
+				}
+			});
 		};
 
 		//UPDATE REGISTRATION USING INLINE EDIT
@@ -271,7 +286,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 	}
 });
 
-app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll, TournamentService, UserService) {
+app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location, $window, ngDialog, anchorSmoothScroll, TournamentService, UserService, $ngConfirm) {
 
 	if (!$rootScope.authenticated) {
 		$location.path('/');
@@ -394,18 +409,32 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		//DELETE TOURNAMENT FUNCTION
 		$scope.delete = function () {
-			let deleteTournament = $window.confirm('Are you absolutely sure you want to delete this tournament?');
-			if (deleteTournament) {
-				TournamentService.delete({id: $scope.tournament.id}, function (res) {
-					if (!res.error) {
-						getAllTournaments();
-						$scope.showDetails = false;
-						showSnackbar(true, res.message);
-					} else {
-						showSnackbar(false, res.message);
+			$ngConfirm({
+				title: 'Confirm!',
+				content: 'Are you absolutely sure you want to delete this tournament?',
+				scope: $scope,
+				theme: 'light',
+				buttons: {
+					deleteBug: {
+						text: 'Yes',
+						btnClass: 'btn-danger',
+						action: function(){
+							TournamentService.delete({id: $scope.tournament.id}, function (res) {
+								if (!res.error) {
+									getAllTournaments();
+									$scope.showDetails = false;
+									showSnackbar(true, res.message);
+								} else {
+									showSnackbar(false, res.message);
+								}
+							});
+						}
+					},
+					close: function(){
+						// closes the modal
 					}
-				});
-			}
+				}
+			});
 		};
 
 		//TOGGLE THROUGH LANGUAGES
@@ -429,27 +458,41 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		//DELETE REGISTRATION
 		$scope.unreg = function (users) {
 			let regID = _.find(users, {'id': $rootScope.user.id}).pivot_id;
-			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
-			if (deleteReg) {
-				$http({
-					url: 'app/deleteReg/' + regID,
-					method: 'DELETE',
-					headers: {
-						"Content-Type": "application/json;charset=utf-8"
+			$ngConfirm({
+				title: 'Confirm!',
+				content: 'Are you absolutely sure you want to delete this registration?',
+				scope: $scope,
+				theme: 'light',
+				buttons: {
+					deleteBug: {
+						text: 'Yes',
+						btnClass: 'btn-danger',
+						action: function(){
+							$http({
+								url: 'app/deleteReg/' + regID,
+								method: 'DELETE',
+								headers: {
+									"Content-Type": "application/json;charset=utf-8"
+								}
+							})
+							.then(function successCallback(res) {
+								if (!res.error) {
+									getAllTournaments();
+									$scope.isReged = false;
+									showSnackbar(true, res.data.message);
+								} else {
+									showSnackbar(false, 'Error while removing your registration.');
+								}
+							}, function errorCallback(err) {
+								showSnackbar(false, err.data);
+							});
+						}
+					},
+					close: function(){
+						// closes the modal
 					}
-				})
-				.then(function successCallback(res) {
-					if (!res.error) {
-						getAllTournaments();
-						$scope.isReged = false;
-						showSnackbar(true, res.data.message);
-					} else {
-						showSnackbar(false, 'Error while removing your registration.');
-					}
-				}, function errorCallback(err) {
-					showSnackbar(false, err.data);
-				});
-			}
+				}
+			});
 		};
 
 		//EDIT TOURNAMENT FUNCTION
@@ -475,7 +518,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 	}
 });
 
-app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService) {
+app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $location, ngDialog, anchorSmoothScroll, TournamentService, $ngConfirm) {
 
 	if (!$rootScope.authenticated) {
 		$location.path('/');
@@ -537,31 +580,45 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 
 		//DELETE REGISTRATION
 		$scope.delete = function (regID) {
-			let deleteReg = $window.confirm('Are you absolutely sure you want to delete this registration?');
-			if (deleteReg) {
-				$http({
-					url: 'app/deleteReg/' + regID,
-					method: 'DELETE',
-					headers: {
-						"Content-Type": "application/json;charset=utf-8"
+			$ngConfirm({
+				title: 'Confirm!',
+				content: 'Are you absolutely sure you want to delete this registration?',
+				scope: $scope,
+				theme: 'light',
+				buttons: {
+					deleteBug: {
+						text: 'Yes',
+						btnClass: 'btn-danger',
+						action: function(){
+							$http({
+								url: 'app/deleteReg/' + regID,
+								method: 'DELETE',
+								headers: {
+									"Content-Type": "application/json;charset=utf-8"
+								}
+							})
+							.then(function successCallback(response) {
+								response = response.data;
+								if (!response.error) {
+									let tournaments = TournamentService.query(function () {
+										$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+										$scope.tournament = _.find($scope.tournamentsusers, {id: $scope.tournament.id});
+									});
+									showSnackbar(true, response.message);
+								} else {
+									showSnackbar(false, response.message);
+								}
+							}, function errorCallback(err) {
+								console.log(err);
+								showSnackbar(false, response.message);
+							});
+						}
+					},
+					close: function(){
+						// closes the modal
 					}
-				})
-				.then(function successCallback(response) {
-					response = response.data;
-					if (!response.error) {
-						let tournaments = TournamentService.query(function () {
-							$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
-							$scope.tournament = _.find($scope.tournamentsusers, {id: $scope.tournament.id});
-						});
-						showSnackbar(true, response.message);
-					} else {
-						showSnackbar(false, response.message);
-					}
-				}, function errorCallback(err) {
-					console.log(err);
-					showSnackbar(false, response.message);
-				});
-			}
+				}
+			});
 		};
 
 		//OPEN USERS TABLE
@@ -795,7 +852,8 @@ app.controller('ResetCtrl', function ($scope, $http) {
 	};
 });
 
-app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
+app.controller('bugCtrl', function ($scope, $http, $window, BugReportService, $ngConfirm) {
+
 	$scope.newBug = {
 		description: '',
 		type: ''
@@ -838,17 +896,31 @@ app.controller('bugCtrl', function ($scope, $http, $window, BugReportService) {
 
 	//UPDATE AND DELETE FUNCTIONS
 	$scope.deleteBug = function (id) {
-		let deleteBug = $window.confirm('Are you absolutely sure you want to delete this bug?');
-		if (deleteBug) {
-			BugReportService.delete({id: id}, function (res) {
-				if (!res.error) {
-					getAllBugs();
-					showSnackbar(true, res.message);
-				} else {
-					showSnackbar(false, res.message);
+		$ngConfirm({
+			title: 'Confirm!',
+			content: 'Are you absolutely sure you want to delete this bug?',
+			scope: $scope,
+			theme: 'light',
+			buttons: {
+				deleteBug: {
+					text: 'Yes',
+					btnClass: 'btn-danger',
+					action: function(){
+						BugReportService.delete({id: id}, function (res) {
+							if (!res.error) {
+								getAllBugs();
+								showSnackbar(true, res.message);
+							} else {
+								showSnackbar(false, res.message);
+							}
+						});
+					}
+				},
+				close: function(){
+					// closes the modal
 				}
-			});
-		}
+			}
+		});
 	};
 
 	$scope.changeStatus = function (id) {
