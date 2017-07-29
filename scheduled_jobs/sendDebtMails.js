@@ -206,7 +206,14 @@ async function sendNotification() {
 	} else console.log('\n ✔✔✔ Finished Sending Debt Emails ✔✔✔ \n');
 }
 
-console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
+let schedule = require('node-schedule');
+
+schedule.scheduleJob('* 19 * * *', function(){
+	console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
+	execute();
+});
+
+
 async function execute() {
 	buildEmailArr();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
@@ -216,4 +223,3 @@ async function execute() {
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 9000));
 	sendNotification();
 }
-execute();

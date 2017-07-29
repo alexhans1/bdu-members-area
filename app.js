@@ -67,6 +67,7 @@ app.use('/ranking', rankingApi);
 require('./routes/routes.js')(app, passport, Bookshelf);
 
 //setup scheduled jobs
+require('./scheduled_jobs/sendDebtMails');
 require('./scheduled_jobs/saveTotalClubDebt');
 
 // catch 404 and forward to error handler
