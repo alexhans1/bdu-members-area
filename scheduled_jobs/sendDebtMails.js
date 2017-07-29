@@ -208,7 +208,7 @@ async function sendNotification() {
 
 let schedule = require('node-schedule');
 
-schedule.scheduleJob('* 19 * * *', function(){
+schedule.scheduleJob('0 19 * * *', function(){
 	console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
 	execute();
 });

@@ -13,7 +13,7 @@ let Models = require('../models/bookshelfModels.js')(Bookshelf);
 
 let schedule = require('node-schedule');
 
-schedule.scheduleJob('* 3 * * *', function(){
+schedule.scheduleJob('0 3 * * *', function(){
 	Models.Registrations.forge().fetch()
 	.then(function (registrations) {
 		registrations = registrations.toJSON();
