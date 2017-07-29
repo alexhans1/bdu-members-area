@@ -2,7 +2,6 @@ var LocalStrategy   = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
 var async = require('async');
-var nodemailer = require('nodemailer');
 
 module.exports = function(passport, Bookshelf){
 	// User model

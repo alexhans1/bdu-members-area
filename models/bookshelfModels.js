@@ -52,6 +52,10 @@ module.exports = function (Bookshelf) {
 		model: Bug
 	});
 
+	const Club_Debt = Bookshelf.Model.extend({
+		tableName: 'club_debt',
+	});
+
 	return {
 		User,
 		Users,
@@ -60,6 +64,7 @@ module.exports = function (Bookshelf) {
 		Registration,
 		Registrations,
 		Bug,
-		Bugs
+		Bugs,
+		Club_Debt
 	}
 };

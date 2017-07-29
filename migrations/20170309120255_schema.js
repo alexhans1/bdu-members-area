@@ -66,6 +66,11 @@ exports.up = function(knex, Promise) {
 			table.string('type').notNullable();
 			table.integer('user_id').unsigned().references('id').inTable('users');
 			table.timestamps();
+		}),
+
+		knex.schema.createTableIfNotExists('club_debt', function(table){
+			table.decimal('debt',6,2).defaultTo(0.00);
+			table.datetime('timestamp');
 		})
 
 	])
