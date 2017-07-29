@@ -16,7 +16,51 @@
 	<div class="container">
 		<div class="clearfix">
 
-			<div id="container" style="width:100%; height:600px;"></div>
+			<div class="row" style="margin-bottom: 30px">
+				<div class="col-md-3 text-center">
+					<h3>Total Users</h3>
+					<div id="users" class="item html">
+						<h2>{{users.length}}</h2>
+						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+							<g>
+								<title>Circle 1</title>
+								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
+							</g>
+						</svg>
+					</div>
+				</div>
+
+				<div class="col-md-3 text-center">
+					<h3>Active Users</h3>
+					<div id="activeUsers" class="item html">
+						<h2>{{activeUsers}}</h2>
+						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+							<g>
+								<title>Circle 2</title>
+								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
+							</g>
+						</svg>
+					</div>
+				</div>
+
+				<div class="col-md-3 text-center">
+					<h3>Registered Users</h3>
+					<div id="registeredUsers" class="item html">
+						<h2>{{registeredUsers}}</h2>
+						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+							<g>
+								<title>Circle 3</title>
+								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
+							</g>
+						</svg>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div id="container" style="width:100%; height:600px;"></div>
+			</div>
 
 		</div>
 	</div>

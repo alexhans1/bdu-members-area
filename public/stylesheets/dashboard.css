@@ -1,0 +1,47 @@
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item h2 {
+    position: absolute;
+    text-transform: none;
+    font-size: x-large;
+}
+
+.donut {
+    transform: rotate(-90deg);
+}
+
+.circle_animation {
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+}
+
+#users .circle_animation {
+    -webkit-animation: users 1s ease-out forwards;
+    animation: users 1s ease-out forwards;
+}
+
+#activeUsers .circle_animation {
+    -webkit-animation: activeUsers 1s ease-out forwards;
+    animation: activeUsers 1s ease-out forwards;
+}
+
+#registeredUsers .circle_animation {
+    -webkit-animation: registeredUsers 1s ease-out forwards;
+    animation: registeredUsers 1s ease-out forwards;
+}
+
+@-webkit-keyframes users {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes users {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
