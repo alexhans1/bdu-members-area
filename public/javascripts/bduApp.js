@@ -84,6 +84,11 @@ app.config(function ($routeProvider) {
 		templateUrl: 'views/ranking.html',
 		controller: 'RankingCtrl'
 	})
+	//the dashboard display
+	.when('/dashboard', {
+		templateUrl: 'views/dashboard.html',
+		controller: 'DashboardCtrl'
+	})
 	//the imageUpload display
 	.when('/imageUpload', {
 		templateUrl: 'imageUpload.html',
