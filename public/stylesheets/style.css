@@ -163,6 +163,10 @@ textarea {
     border-radius: 0 !important;
 }
 
+.bottom30 {
+    margin-bottom: 30px;
+}
+
 .input-group-addon {
     border-radius: 0 !important;
 }
