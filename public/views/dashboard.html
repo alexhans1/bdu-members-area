@@ -13,56 +13,93 @@
 <section>
 
 	<!-- Total Club Debt Chart -->
-	<div class="container">
+	<div class="container dashboard">
 		<div class="clearfix">
 
 			<div class="row" style="margin-bottom: 30px">
-				<div class="col-md-3 text-center">
-					<h3>Total Users</h3>
-					<div id="users" class="item html">
-						<h2>{{users.length}}</h2>
-						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-							<g>
-								<title>Circle 1</title>
-								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
-							</g>
-						</svg>
+				<div class="col-md-4 text-center">
+					<div id="users" class="box-shadow padding-top-bottom">
+						<h3>Total Members</h3>
+						<div class="item html">
+							<h2>{{users.length}}</h2>
+							<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+								<g>
+									<title>Circle 1</title>
+									<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FFF" fill="none"></circle>
+								</g>
+							</svg>
+						</div>
 					</div>
 				</div>
 
-				<div class="col-md-3 text-center">
-					<h3>Active Users</h3>
-					<div id="activeUsers" class="item html">
-						<h2>{{activeUsers}}</h2>
-						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-							<g>
-								<title>Circle 2</title>
-								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
-							</g>
-						</svg>
+				<div class="col-md-4 text-center">
+					<div class="box-shadow padding-top-bottom" id="activeUsers">
+						<h3>Active Members</h3>
+						<div class="item html help-tip">
+							<h2>{{activeUsers}}</h2>
+							<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+								<g>
+									<title>Circle 2</title>
+									<circle cx="50%" cy="50%" r="70" stroke="#55a0c5" stroke-width="1" fill="none"></circle>
+									<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FFF" fill="none"></circle>
+								</g>
+							</svg>
+							<p>Members who logged in within the last two weeks.</p>
+						</div>
 					</div>
 				</div>
 
-				<div class="col-md-3 text-center">
-					<h3>Registered Users</h3>
-					<div id="registeredUsers" class="item html">
-						<h2>{{registeredUsers}}</h2>
-						<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-							<g>
-								<title>Circle 3</title>
-								<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FF3B30" fill="none"></circle>
-							</g>
-						</svg>
+				<div class="col-md-4 text-center">
+					<div id="registeredUsers" class="box-shadow padding-top-bottom">
+						<h3>Registered Members</h3>
+						<div class="item html help-tip">
+							<h2>{{registeredUsers}}</h2>
+							<svg class="donut" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+								<g>
+									<title>Circle 3</title>
+									<circle cx="50%" cy="50%" r="70" stroke="#b03a6b" stroke-width="1" fill="none"></circle>
+									<circle id="circle" class="circle_animation" r="70" cy="50%" cx="50%" stroke-width="6" stroke="#FFF" fill="none"></circle>
+								</g>
+							</svg>
+							<p>Members who are registered for an upcoming tournament.</p>
+						</div>
 					</div>
 				</div>
 
 			</div>
 
 			<div class="row">
-				<div id="container" style="width:100%; height:600px;"></div>
-			</div>
+				<div class="col-md-8" style="margin-bottom: 30px">
+					<div id="container" class="box-shadow" style="width:100%; height:400px;"></div>
+				</div>
+				<div class="col-md-4" style="position: relative; margin-bottom: 30px">
+					<div class="row" style="position: relative; height: 50%;">
+						<div class="col-md-12" style="position: relative;">
+							<div id="box1" class="box-shadow text-center">
+								<h3>Total Victories</h3>
+								<div class="item">
+									<div>
+										<h1>{{wins}}</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="position: relative; height: 50%;">
+						<div class="col-md-12" style="position: relative;">
+							<div id="box2" class="box-shadow text-center">
+								<h3>Time since BDU foundation</h3>
+								<div class="item">
+									<div>
+										<p>{{timeExisting}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
+			</div>
 		</div>
-	</div>
 
 </section>

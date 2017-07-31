@@ -1,10 +1,11 @@
-.item {
+.dashboard .item {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 80%;
 }
 
-.item h2 {
+.dashboard .item h2 {
     position: absolute;
     text-transform: none;
     font-size: x-large;
@@ -19,17 +20,86 @@
     stroke-dashoffset: 440;
 }
 
-#users .circle_animation {
+.box-shadow {
+    box-shadow: #605f4f 3px 3px 6px;
+}
+
+.padding-top-bottom {
+    padding-top: 15px;
+    padding-bottom: 8px;
+}
+
+.dashboard .help-tip p {
+    right: 45%;
+    top: 70%;
+    width: auto;
+    padding: 13px;
+    z-index: 99;
+}
+
+.dashboard h3 {
+    font-size: larger;
+}
+
+@media screen and (max-width: 575px) {
+    .col-8 {
+        margin-bottom: 20px;
+    }
+}
+
+.dashboard #users {
+    background-color: #ff5454;
+    border: 1px solid #ff2121;
+    color: #fff;
+}
+
+.dashboard #users .circle_animation {
     -webkit-animation: users 1s ease-out forwards;
     animation: users 1s ease-out forwards;
 }
 
-#activeUsers .circle_animation {
+.dashboard #activeUsers {
+    background-color: #67c2ef;
+    border: 1px solid #39afea;
+    color: #fff;
+}
+
+.dashboard #activeUsers .circle_animation {
     -webkit-animation: activeUsers 1s ease-out forwards;
     animation: activeUsers 1s ease-out forwards;
 }
 
-#registeredUsers .circle_animation {
+.dashboard #registeredUsers {
+    background-color: #d44582;
+    border: 1px solid #b03a6b;
+    color: #fff;
+}
+
+.dashboard #box1, #box2 {
+    position: relative;
+    height: calc(100% - 15px);
+    min-height: 180px;
+    color: #fff;
+    padding: 15px;
+}
+
+.dashboard #box1 {
+    background-color: #fabb3d;
+    border: 1px solid #f9aa0b;
+    margin-bottom: 15px;
+}
+
+.dashboard #box2 {
+    background-color: #62bd7d;
+    border: 1px solid #4d9060;
+    margin-top: 15px;
+}
+
+.dashboard #box2 p {
+    font-size: large;
+}
+
+.dashboard #registeredUsers .circle_animation {
     -webkit-animation: registeredUsers 1s ease-out forwards;
     animation: registeredUsers 1s ease-out forwards;
 }

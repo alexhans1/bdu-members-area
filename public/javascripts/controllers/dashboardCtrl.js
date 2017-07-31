@@ -1,7 +1,7 @@
 /**
  * Created by alex.hans on 29.07.2017.
  */
-app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService) {
+app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService, TournamentService, $interval) {
 	if (!$rootScope.authenticated) {
 		// $location.path('/');
 	} else {
@@ -19,7 +19,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 						type: 'line'
 					},
 					title: {
-						text: 'Club Debt over Time'
+						text: 'Total Club Debt: ' + data.data[data.data.length-1][1]
 					},
 					yAxis: {
 						title: {
@@ -64,6 +64,29 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 			$('<style>@keyframes registeredUsers{to {stroke-dashoffset:'+(440-$scope.registeredUsers/users.length*440)+';}}</style>').appendTo('head');
 
 		});
+
+		// Tournaments Overview
+		let tournaments = TournamentService.query(() => {
+			$scope.tournaments = tournaments;
+			$scope.wins = 0;
+			tournaments.forEach((tournament) => {
+				let winningUsers = _.filter(tournament.users, (user) => {
+					return user.pivot_success === 'win' || user.pivot_success === 'win2';
+				});
+				if (winningUsers.length) $scope.wins++;
+			});
+
+			//make sure you don't carriage return the css inline statement, or else it'll be error as ILLEGAL
+			$('<style>@keyframes activeUsers{to {stroke-dashoffset:'+(440-$scope.activeUsers/users.length*440)+';}}</style>').appendTo('head');
+			$('<style>@keyframes registeredUsers{to {stroke-dashoffset:'+(440-$scope.registeredUsers/users.length*440)+';}}</style>').appendTo('head');
+
+		});
+
+		// Time since existence
+		let foundationDate = moment('2001-05-13T18:00:00.000+02:00');
+		$interval(() => {
+			$scope.timeExisting = moment.preciseDiff(foundationDate, moment());
+		}, 1000);
 
 	}
 });
