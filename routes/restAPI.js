@@ -419,7 +419,8 @@ module.exports = function(Bookshelf){
 								tournament_id: req.params.t_id,
 								user_id: req.body.id,
 								role: req.body.role,
-								comment: req.body.comment
+								comment: req.body.comment,
+								funding: req.body.funding
 							})
 							.save()
 							.then(function(entry) {
@@ -448,7 +449,8 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.body.id,
 									role: req.body.role,
-									comment: req.body.comment
+									comment: req.body.comment,
+									funding: req.body.funding
 								})
 								.save()
 								.then(function(entry) {
@@ -462,7 +464,8 @@ module.exports = function(Bookshelf){
 									user_id: req.body.id,
 									role: req.body.role,
 									teamname: req.body.team,
-									comment: req.body.comment
+									comment: req.body.comment,
+									funding: req.body.funding
 								})
 								.save()
 								.then(function(entry) {

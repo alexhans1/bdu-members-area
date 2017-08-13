@@ -388,14 +388,15 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		};
 
 		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
+		$scope.funding = false;
 		$scope.reg = function () {
-
 			let url = '/app/reg/' + $scope.tournament.id;
 			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
-				comment: $scope.comment
+				comment: $scope.comment,
+				funding: $scope.funding
 			});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
