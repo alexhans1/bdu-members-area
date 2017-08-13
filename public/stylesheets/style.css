@@ -167,6 +167,14 @@ textarea {
     margin-bottom: 30px;
 }
 
+.tournaments-dialog-checkbox {
+    text-align: left !important;
+}
+.tournaments-dialog-checkbox p {
+    right: 150px !important;
+    width: 250px !important;
+}
+
 .input-group-addon {
     border-radius: 0 !important;
 }
