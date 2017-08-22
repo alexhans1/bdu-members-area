@@ -388,14 +388,15 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		};
 
 		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
+		$scope.funding = false;
 		$scope.reg = function () {
-
 			let url = '/app/reg/' + $scope.tournament.id;
 			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
-				comment: $scope.comment
+				comment: $scope.comment,
+				funding: $scope.funding
 			});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {
@@ -555,7 +556,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			userDir = (userDir === 'asc') ? 'desc' : 'asc';
 		};
 
-		//SET ATTENDED TO 1
+		//SET ATTENDED TO 1 OR 2
 		$scope.went = function (role, reg_id, typeAsInt) {
 			$rootScope.loader = true;
 			let price = (role === 'speaker') ? $scope.tournament.speakerprice : $scope.tournament.judgeprice;
@@ -565,6 +566,31 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 				price: price
 			});
 			$http.put('/app/setAttended', parameters)
+			.then(function successCallback(response) {
+				response = response.data;
+				if (!response.error) {
+					let tournaments = TournamentService.query(function () {
+						$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+						$scope.tournament = _.find($scope.tournamentsusers, {id: $scope.tournament.id});
+					});
+					showSnackbar(true, response.message);
+				} else {
+					showSnackbar(false, response.message);
+				}
+				$rootScope.loader = false;
+			}, function errorCallback(err) {
+				showSnackbar(false, err.data);
+				$rootScope.loader = false;
+			});
+		};
+
+		//UNDO ATTENDANCE STATUS
+		$scope.undoAttendance = function (reg_id) {
+			$rootScope.loader = true;
+			let parameters = JSON.stringify({
+				reg_id: reg_id,
+			});
+			$http.put('/app/undoAttended', parameters)
 			.then(function successCallback(response) {
 				response = response.data;
 				if (!response.error) {

@@ -44,5 +44,10 @@
 </div>
 
 <div class="ngdialog-buttons">
-	<button class="btn btn-outline-success pull-right" ng-click="reg()">Anmelden</button>
+	<div class="checkbox help-tip tournaments-dialog-checkbox">
+		<label><input ng-model="funding" type="checkbox" value=""> I want to receive funding for this tournament.</label>
+		<!--TODO Fill with funding criteria-->
+		<p>[FILL WITH FUNDING CRITERIA]</p>
+	</div>
+	<button class="btn btn-outline-success pull-right" ng-click="reg()">Register</button>
 </div>

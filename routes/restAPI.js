@@ -419,7 +419,8 @@ module.exports = function(Bookshelf){
 								tournament_id: req.params.t_id,
 								user_id: req.body.id,
 								role: req.body.role,
-								comment: req.body.comment
+								comment: req.body.comment,
+								funding: req.body.funding
 							})
 							.save()
 							.then(function(entry) {
@@ -448,7 +449,8 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.body.id,
 									role: req.body.role,
-									comment: req.body.comment
+									comment: req.body.comment,
+									funding: req.body.funding
 								})
 								.save()
 								.then(function(entry) {
@@ -462,7 +464,8 @@ module.exports = function(Bookshelf){
 									user_id: req.body.id,
 									role: req.body.role,
 									teamname: req.body.team,
-									comment: req.body.comment
+									comment: req.body.comment,
+									funding: req.body.funding
 								})
 								.save()
 								.then(function(entry) {
@@ -652,6 +655,56 @@ module.exports = function(Bookshelf){
 		}
 		catch (err) {
 			console.error('Error while setting attendance. Error: ' + err.message);
+			res.json({error: true, message: 'Error while setting attendance.'});
+		}
+
+	});
+
+	//update registration
+	router.route('/undoAttended')
+	.put(function (req, res) {
+		try {
+			Registration.forge({id: req.body.reg_id})
+			.fetch({require: true})
+			.then(function (registration) {
+
+                //CHECK AUTHORIZATION
+                if(req.user.position !== 1) {
+                    console.info('You are not authorized to update that registration.');
+                    res.json({error: true, message: 'You are not authorized to update that registration.'});
+                    return false;
+                }
+
+				role = registration.toJSON().role;
+				currentStatus = registration.toJSON().attended;
+
+				if (currentStatus === 2) {
+					//if status is 'can go', set it back to 0
+					registration.save({
+						attended: 0
+					});
+				}
+
+				else if (currentStatus === 1) {
+					registration.save({
+						attended: 2,
+						price_owed: 0,
+						points: 0,
+						success: null
+					})
+				}
+
+				return true;
+			})
+			.then(function (authorized) {
+				if(authorized) {
+					console.info('Successfully set attendance status.');
+					res.status(200).json({error: false, message: 'Successfully set attendance status.'});
+				}
+			})
+		}
+		catch (err) {
+			console.error('Error while setting attendance back. Error: ' + err.message);
 			res.json({error: true, message: 'Error while setting attendance.'});
 		}
 
