@@ -585,7 +585,7 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 		};
 
 		//UNDO ATTENDANCE STATUS
-		$scope.undoAttendace = function (reg_id) {
+		$scope.undoAttendance = function (reg_id) {
 			$rootScope.loader = true;
 			let parameters = JSON.stringify({
 				reg_id: reg_id,
