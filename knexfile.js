@@ -35,7 +35,7 @@ module.exports = {
 		connection: {
 			host: 'localhost',
 			user: 'root',
-			password: '',
+			password: process.env.localDBPassword,
 			database: 'heroku_9b6f95eb7a9adf8',
 			charset: 'utf8'
 		},
