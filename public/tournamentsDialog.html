@@ -9,7 +9,7 @@
 	<div class="row" ng-show="istVorstand">
 		<div class="col-md-12">
 			<div class="form-group">
-				<label>I wanna register</label>
+				<label><b>I wanna register</b></label>
 				<select class="form-control" ng-options="user as (user.vorname + ' ' + user.name) for user in usersToRegister track by user.id" ng-model="personToRegister"></select>
 			</div>
 		</div>
@@ -17,7 +17,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group">
-				<label>I wanna go as</label>
+				<label><b>I wanna go as</b></label>
 				<select name="role" class="form-control" ng-options="role as role.label for role in roles track by role.id" ng-model="selected" ng-change="setRole()"></select>
 			</div>
 		</div>
@@ -25,7 +25,13 @@
 	<div class="row" ng-show="isSpeaker">
 		<div class="col-md-12">
 			<div class="form-group">
-				<label>Teamname</label><br><p>Don't have a team partner yet? Just leave blank.</p>
+				<label><b>Teampartner</b></label><br><p>Don't have a team partner yet? Just leave blank.</p>
+				<select class="form-control" ng-options="user as (user.vorname + ' ' + user.name) for user in partnersToRegister track by user.id" ng-model="teamPartner"></select>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="form-group">
+				<label><b>Teamname</b></label><br><p>Don't have a team partner yet? Just leave blank.</p>
 				<input type="text" ng-model="team" class="form-control" name="team" list="teamnames">
 				<datalist id="teamnames">
 					<option ng-repeat="u in tournament.users" value="{{u.pivot_teamname}}"></option>
@@ -36,7 +42,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group">
-				<label>Comment</label>
+				<label><b>Comment</b></label>
 				<textarea rows="3" placeholder="Leave a comment if you feel like it." ng-model="comment" class="form-control"></textarea>
 			</div>
 		</div>
@@ -45,7 +51,7 @@
 
 <div class="ngdialog-buttons">
 	<div class="checkbox help-tip tournaments-dialog-checkbox">
-		<label><input ng-model="funding" type="checkbox" value=""> I want to receive funding for this tournament.</label>
+		<label><input ng-model="funding" type="checkbox" value=""> I want to receive <b>funding</b> for this tournament.</label>
 		<!--TODO Fill with funding criteria-->
 		<p>[FILL WITH FUNDING CRITERIA]</p>
 	</div>

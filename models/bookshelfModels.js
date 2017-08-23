@@ -7,7 +7,7 @@ module.exports = function (Bookshelf) {
 		hasTimestamps: true,
 
 		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
+			return this.belongsToMany(Tournament).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','funding','partner1','partner2','created_at','updated_at']);
 		}
 	});
 
@@ -21,7 +21,7 @@ module.exports = function (Bookshelf) {
 		hasTimestamps: true,
 
 		users: function () {
-			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','partner1','partner2','created_at','updated_at']);
+			return this.belongsToMany(User).withPivot(['id','role','attended','teamname','comment','price_owed','price_paid','success','points','funding','partner1','partner2','created_at','updated_at']);
 		}
 	});
 

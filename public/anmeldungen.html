@@ -58,6 +58,7 @@
 					<th class="hidden-xs hidden-sm"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
 					<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
 					<th></th>
+					<th ng-show="istVorstand">Funding (sieht nur Vorstand)</th>
 					<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
 					<th ng-show="istVorstand">Essen (sieht nur Vorstand)</th>
 				</tr>
@@ -102,6 +103,8 @@
 							<i class="fa fa-trash-o" aria-hidden="true"></i>
 						</button>
 					</td>
+					<td ng-show="istVorstand && users.pivot_funding"><i class="fa fa-check" aria-hidden="true"></i></td>
+					<td ng-hide="istVorstand && users.pivot_funding"><i class="fa fa-times" aria-hidden="true"></i></td>
 					<td ng-show="istVorstand">{{users.email}}</td>
 					<td ng-show="istVorstand">{{users.food}}</td>
 				</tr>

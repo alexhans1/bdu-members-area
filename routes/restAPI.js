@@ -34,7 +34,7 @@ let upload = multer({
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
-	// if user is authenticated in the session, call the next() to call the next request handler 
+	// if user is authenticated in the session, call the next() to call the next request handler
 	// Passport adds this method to request object. A middleware is allowed to add properties to
 	// request and response objects
 
@@ -107,7 +107,8 @@ module.exports = function(Bookshelf){
 
 				//update the file name in the db
 				user.save({
-					image: req.file.path.split("/")[req.file.path.split("/").length-1] //we only want to store the file name not the entire path
+					//we only want to store the file name not the entire path
+					image: req.file.path.split("/")[req.file.path.split("/").length-1]
 				});
 
 				//lastly use node-ftp to delete the current profile pic using the deletePath
@@ -142,7 +143,8 @@ module.exports = function(Bookshelf){
 				.then(function (user) {
 					if (!user) {
 						console.error('The user with the ID "' + req.params.id + '" is not in the database.');
-						res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id + '" is not in the database.'});
+						res.status(404).json({error: true, data: {}, message: 'The user with the ID "' + req.params.id
+						+ '" is not in the database.'});
 					}
 					else {
 						user = user.toJSON();
@@ -307,7 +309,8 @@ module.exports = function(Bookshelf){
 		.then(function (tournament) {
 			if (!tournament) {
 				console.error('The tournament with the ID "' + req.params.id + '" is not in the database.');
-				res.status(404).json({error: true, message: 'The tournament with the ID "' + req.params.id + '" is not in the database.'});
+				res.status(404).json({error: true, message: 'The tournament with the ID "' + req.params.id +
+				'" is not in the database.'});
 			}
 			else {
 				tournament = tournament.toJSON();
@@ -407,7 +410,7 @@ module.exports = function(Bookshelf){
 				Registration.forge({tournament_id: req.params.t_id, user_id: req.body.id}).fetch()
 				.then(function (arg) {
 					if(arg){
-						//if a user was found we return that user is already registered
+						//if a user was found, return that user is already registered
 						console.error('User is already registered.');
 						res.status(202).send('You are already registered for this tournament.');
 					} else {
@@ -441,37 +444,62 @@ module.exports = function(Bookshelf){
 								res.status(200).send(entry);
 							})
 						} else if(req.body.role === 'speaker') {
-							//if req request is for speaker,
-							//check if teamname is given
-							if(req.body.team === '') {
-								//if no partner is named, reg user alone
-								Registration.forge({
-									tournament_id: req.params.t_id,
-									user_id: req.body.id,
-									role: req.body.role,
-									comment: req.body.comment,
-									funding: req.body.funding
-								})
-								.save()
-								.then(function(entry) {
-									console.info('Successfully registered for ' + req.params.t_id + ' as speaker.');
-									res.status(200).send(entry);
+							// if speaker, check if Partner is named
+							if(req.body.partner) {
+								// if a partner is named,
+								// check if partner is already registered
+								Registration.forge({tournament_id: req.params.t_id, user_id: req.body.partner}).fetch()
+								.then(function (arg) {
+									if(arg){
+										//if a user was found, return that the partner is already registered
+										console.error('Partner is already registered.');
+										res.status(202).send('Your partner is already registered for this tournament.');
+									} else {
+										//if no user was found,
+										//register both
+										Registrations.forge([
+											{
+												tournament_id: req.params.t_id,
+												user_id: req.body.id,
+												role: req.body.role,
+												comment: req.body.comment,
+												funding: req.body.funding,
+												teamname: req.body.team || ''
+											},
+											{
+												tournament_id: req.params.t_id,
+												user_id: req.body.partner,
+												role: req.body.role,
+												teamname: req.body.team || ''
+											}
+										])
+										.invokeThen('save')
+										.then(function(entry) {
+											console.info('Successfully registered for ' + req.params.t_id + ' with ' +
+												req.body.partner + ' as speakers.');
+											res.status(200).send(entry);
+										})
+									}
 								})
 							} else {
-								//if a teamname is given we reg user
-								Registration.forge({
-									tournament_id: req.params.t_id,
-									user_id: req.body.id,
-									role: req.body.role,
-									teamname: req.body.team,
-									comment: req.body.comment,
-									funding: req.body.funding
-								})
-								.save()
-								.then(function(entry) {
-									console.info('Successfully registered for ' + req.params.t_id + ' as speaker in team ' + req.body.teamname);
-									res.status(200).send(entry);
-								})
+								//if no partner is given and req request is for speaker,
+								//check if teamname is given
+								if(req.body.team === '') {
+									//if no partner is named, reg user alone
+									Registration.forge({
+										tournament_id: req.params.t_id,
+										user_id: req.body.id,
+										role: req.body.role,
+										comment: req.body.comment,
+										funding: req.body.funding,
+										teamname: req.body.team || ''
+									})
+									.save()
+									.then(function(entry) {
+										console.info('Successfully registered for ' + req.params.t_id + ' as speaker.');
+										res.status(200).send(entry);
+									})
+								}
 							}
 						} else {
 							//if none of the reg roles apply return error
@@ -528,6 +556,7 @@ module.exports = function(Bookshelf){
 				role: req.body.role,
 				teamname: req.body.teamname,
 				comment: req.body.comment,
+				funding: req.body.funding,
 				price_paid: req.body.price_paid,
 				price_owed: req.body.price_owed
 			});
@@ -668,12 +697,12 @@ module.exports = function(Bookshelf){
 			.fetch({require: true})
 			.then(function (registration) {
 
-                //CHECK AUTHORIZATION
-                if(req.user.position !== 1) {
-                    console.info('You are not authorized to update that registration.');
-                    res.json({error: true, message: 'You are not authorized to update that registration.'});
-                    return false;
-                }
+				//CHECK AUTHORIZATION
+				if(req.user.position !== 1) {
+					console.info('You are not authorized to update that registration.');
+					res.json({error: true, message: 'You are not authorized to update that registration.'});
+					return false;
+				}
 
 				role = registration.toJSON().role;
 				currentStatus = registration.toJSON().attended;
