@@ -10,6 +10,8 @@ let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 // DEFINE MODELS
 let Models = require('../models/bookshelfModels.js')(Bookshelf);
 
+let test = false;
+
 // GENERATE EMAIL ARRAY
 let emailArr = [];
 let sentArr = [];
@@ -32,7 +34,7 @@ async function buildEmailArr() {
 					return moment(user.last_mail).add(10, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
 				});
 				_.each(tournament.users, function (user) {
-					if (user._pivot_price_owed > user._pivot_price_paid) {
+					if (user._pivot_price_owed !== user._pivot_price_paid) {
 						if (!_.find(emailArr, {email: user.email})) {
 							emailArr.push({
 								id: user.id,
@@ -52,19 +54,23 @@ async function buildEmailArr() {
 				})
 			});
 
-			// emailArr = _.filter(emailArr, function (entry) {
-			// 	return (entry.name === 'Alexander')
-			// });
-			// emailArr.push({
-			// 	name: 'Alexander',
-			// 	email: 'alexander.hans.mail@gmail.com',
-			// 	tournaments: [],
-			// 	total_debt: 40
-			// });
-			// emailArr[0].tournaments.push({
-			// 	name: 'Test Turnier',
-			// 	debt: 40.00
-			// });
+			emailArr = _.filter(emailArr, (obj) => {
+				return obj.total_debt > 0;
+			});
+
+			if (test) {
+				// emailArr = _.filter(emailArr, {id: 21});
+				emailArr.push({
+					name: 'Alexander',
+					email: 'alexander.hans.mail@gmail.com',
+					tournaments: [],
+					total_debt: 40
+				});
+				emailArr[emailArr.length-1].tournaments.push({
+					name: 'Test Turnier',
+					debt: 40.00
+				});
+			}
 		});
 	} catch (ex) {
 		console.error(ex);
@@ -84,11 +90,14 @@ async function sendDebtMails () {
 	_.each(emailArr, function (obj) {
 		let helper = require('sendgrid').mail;
 		let fromEmail = new helper.Email('finanzen@debating.de');
-		let toEmail = new helper.Email(obj.email);
-		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
+
+		let toEmail;
+		if (test) toEmail = new helper.Email('alexander.hans.mail@gmail.com');
+		else toEmail = new helper.Email(obj.email);
+
 		let subject = 'BDU Tournament Debts';
 		let content = new helper.Content('text/html', '' +
-			'Hello ' + obj.vorname + '<br><br>' +
+			'Hi ' + obj.vorname + ',<br><br>' +
 			'You have debt to the BDU for the following tournaments:<br><br>' +
 			'<table>'
 		);
@@ -166,8 +175,9 @@ async function sendNotification() {
 		// SENT EMAIL TO FINANZEN TO NOTIFY THEM
 		let helper = require('sendgrid').mail;
 		let fromEmail = new helper.Email('BDU_DebtMailService@debating.de');
-		let toEmail = new helper.Email('finanzen@debating.de');
-		// let toEmail = new helper.Email('alexander.hans.mail@gmail.com');
+		let toEmail;
+		if (test) toEmail = new helper.Email('alexander.hans.mail@gmail.com');
+		else toEmail = new helper.Email('finanzen@debating.de');
 		let subject = 'Folgende Schuldenemails wurden geschrieben!!!';
 		let content = new helper.Content('text/html', '' +
 			'Hi ' + process.env.finance_board_member + '<br><br>' +
@@ -213,10 +223,13 @@ schedule.scheduleJob('0 19 * * *', function(){
 	execute();
 });
 
+if (test) execute();
+
 
 async function execute() {
 	buildEmailArr();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
+	if (test) console.log(emailArr);
 	sendDebtMails();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 9000));
 	setLastMail();
