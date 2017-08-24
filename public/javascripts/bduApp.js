@@ -122,7 +122,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			$rootScope.personnelDebt = $scope.debt;
 			$scope.user = user;
 			$scope.user.tournaments = _.orderBy($scope.user.tournaments, ['startdate'], 'desc');
-		});
+        });
 
 		$scope.update = false;
 
@@ -242,6 +242,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		$scope.editContact = function (tournament) {
 			$scope.selected = angular.copy(tournament);
+			$scope.selected.pivot_funding = ($scope.selected.pivot_funding) ? true : false;
 			$scope.selected.pivot_role = _.find($scope.roles, {'value': $scope.selected.pivot_role});
 		};
 
@@ -253,6 +254,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 				reg_id: reg_id,
 				role: $scope.selected.pivot_role.value,
 				teamname: team,
+				funding: $scope.selected.pivot_funding,
 				comment: $scope.selected.pivot_comment
 			});
 			$http.put(url, parameters)
@@ -365,8 +367,10 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.selected = $scope.roles[0];
 
 		$scope.personToRegister = $rootScope.user;
+		$scope.teamPartner = null;
 		let users = UserService.query(function () {
 			$scope.usersToRegister = _.orderBy(users, ['vorname'], 'asc');
+			$scope.partnersToRegister = _.reject(_.orderBy(users, ['vorname'], 'asc'), {id: $rootScope.user.id});
 		});
 
 		$scope.team = '';
@@ -395,6 +399,7 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
+				partner: $scope.teamPartner.id,
 				comment: $scope.comment,
 				funding: $scope.funding
 			});
@@ -537,6 +542,10 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+				$scope.tournamentsusers.map((tournament) => {
+					tournament.isOld = moment(tournament.startdate).isBefore(moment());
+					return tournament;
+				});
 				$rootScope.loader = false;
 			});
 		};
