@@ -31,7 +31,7 @@
 					<tbody class="left-align">
 					<tr class="pointer" ng-repeat="tournaments in tournamentsusers" ng-click="goToUsers(tournaments)"
 						ng-class="{'bg-light-grey': tournaments.isOld}">
-						<td class="hidden-xs">{{tournaments.startdate}}</td>
+						<td class="hidden-xs">{{tournaments.id}}</td>
 						<td>{{tournaments.name}}</td>
 						<td class="hidden-xs">{{tournaments.startdate | date:'dd.MM.yyyy'}}</td>
 						<td>{{tournaments.language}}</td>
