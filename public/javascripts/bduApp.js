@@ -542,6 +542,10 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+				$scope.tournamentsusers.map((tournament) => {
+					tournament.isOld = moment(tournament.startdate).isBefore(moment());
+					return tournament;
+				});
 				$rootScope.loader = false;
 			});
 		};

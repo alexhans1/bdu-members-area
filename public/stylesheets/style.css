@@ -274,6 +274,10 @@ textarea {
     cursor: pointer;
 }
 
+.bg-light-grey {
+    background-color: #f8f8f8;
+}
+
 .wellpadding {
     padding-top: 35px;
     border:0;
