@@ -371,6 +371,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		let users = UserService.query(function () {
 			$scope.usersToRegister = _.orderBy(users, ['vorname'], 'asc');
 			$scope.partnersToRegister = _.reject(_.orderBy(users, ['vorname'], 'asc'), {id: $rootScope.user.id});
+			$scope.partnersToRegister.push({vorname: "I'm looking for a teammate!", id: -1});
+			$scope.teamPartner = _.find($scope.partnersToRegister, {id: -1});
 		});
 
 		$scope.team = '';

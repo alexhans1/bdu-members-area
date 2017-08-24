@@ -445,7 +445,7 @@ module.exports = function(Bookshelf){
 							})
 						} else if(req.body.role === 'speaker') {
 							// if speaker, check if Partner is named
-							if(req.body.partner) {
+							if(req.body.partner && req.body.partner > 0) {
 								// if a partner is named,
 								// check if partner is already registered
 								Registration.forge({tournament_id: req.params.t_id, user_id: req.body.partner}).fetch()

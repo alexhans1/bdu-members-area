@@ -25,13 +25,13 @@
 	<div class="row" ng-show="isSpeaker">
 		<div class="col-md-12">
 			<div class="form-group">
-				<label><b>Teampartner</b></label><br><p>Don't have a team partner yet? Just leave blank.</p>
+				<label><b>Teampartner</b></label><br><p>Don't have a team partner yet? No problem.</p>
 				<select class="form-control" ng-options="user as (user.vorname + ' ' + user.name) for user in partnersToRegister track by user.id" ng-model="teamPartner"></select>
 			</div>
 		</div>
-		<div class="col-md-12">
+		<div ng-show="teamPartner.id>0" class="col-md-12">
 			<div class="form-group">
-				<label><b>Teamname</b></label><br><p>Don't have a team partner yet? Just leave blank.</p>
+				<label><b>Teamname</b></label><br><p>Do you have a fancy name for your team?</p>
 				<input type="text" ng-model="team" class="form-control" name="team" list="teamnames">
 				<datalist id="teamnames">
 					<option ng-repeat="u in tournament.users" value="{{u.pivot_teamname}}"></option>
