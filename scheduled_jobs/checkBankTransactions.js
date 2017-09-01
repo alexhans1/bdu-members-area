@@ -2,6 +2,7 @@ let dotenv = require('dotenv'); //enables environment variables for development
 dotenv.config({path: '../.env'});
 let _ = require('lodash');
 let moment = require('moment');
+let schedule = require('node-schedule');
 
 let request = require('request-promise');
 
@@ -20,11 +21,6 @@ let usedURL = productionURL;
 
 const CLIENT_ID = process.env.finApiClientID;
 const CLIENT_SECRET = process.env.finApiClientSecret;
-
-const BANK_CREDENTIALS = {
-	username: '******',
-	password: '******'
-};
 
 let ACCESS_TOKEN;
 let USER_TOKEN;
@@ -60,8 +56,13 @@ async function authenticateClient () {
 
 	if (DEF_MODE) console.log(ACCESS_TOKEN);
 
-	// createUser(ACCESS_TOKEN, 'bdudbTest', 'bdudbTest', 'alexander.hans.mail@gmail.com', '+4917650460672');
-	authenticateUser(ACCESS_TOKEN, 'bdudbTest', 'bdudbTest');
+	// createUser(ACCESS_TOKEN,
+	// 	process.env.finApiUsername,
+	// 	process.env.finApiUserPassword,
+	// 	process.env.finApiUserEmail,
+	// 	process.env.finApiUserPhone
+	// );
+	authenticateUser(ACCESS_TOKEN, process.env.finApiUsername, process.env.finApiUserPassword);
 
 }
 
@@ -84,14 +85,19 @@ async function createUser(clientToken, userID, userPassword, userEmail, userPhon
 		json: true
 	};
 
-	await request(createUserOptions)
-	.then(function (parsedBody) {
-		console.log(parsedBody);
-	})
-	.catch(function (err) {
+	try {
+		await request(createUserOptions)
+		.then(function (parsedBody) {
+			console.log(parsedBody);
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while creating new user.");
+			console.log(err.message);
+		});
+	} catch (ex) {
 		console.error("$$$ Error while creating new user.");
-		console.log(err.message);
-	});
+		console.log(ex);
+	}
 
 }
 
@@ -543,5 +549,10 @@ async function processTransactions(transactions) {
 // 	}
 // ]);
 
-console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
-authenticateClient();
+
+schedule.scheduleJob('0 2 * * *', function(){
+	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
+	authenticateClient();
+});
+
+if (DEF_MODE) authenticateClient();
