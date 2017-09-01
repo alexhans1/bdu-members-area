@@ -530,10 +530,10 @@ async function processTransactions(transactions) {
 // 		counterpartName: 'Holzhey, Philippe Jurgen',
 // 	},
 // 	{
-// 		purpose: 'Geld für T (?312,322?)',
+// 		purpose: 'Geld für T (?292,29,32?)',
 // 		amount: 30,
 // 		bankBookingDate: '2017-08-24 00:00:00.000',
-// 		counterpartName: 'FREDERICK ALY',
+// 		counterpartName: 'MORITZ ALTNER',
 // 	},
 // 	{
 // 		purpose: 'Geld für T (?652,164,999?)',
