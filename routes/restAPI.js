@@ -558,7 +558,9 @@ module.exports = function(Bookshelf){
 				comment: req.body.comment,
 				funding: req.body.funding,
 				price_paid: req.body.price_paid,
-				price_owed: req.body.price_owed
+				price_owed: req.body.price_owed,
+				transaction_date: req.body.transaction_date,
+				transaction_from: req.body.transaction_from
 			});
 			return true;
 		})

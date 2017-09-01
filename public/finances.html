@@ -54,7 +54,7 @@
                     <th>
                         <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
                     </th>
-                    <th class="hidden-sm-down">
+                    <th>
                         <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_mail')">Last Debt Email</button>
                     </th>
                 </tr>
@@ -107,6 +107,9 @@
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
                     <th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
                     <th>Debt</th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_funding')">Funding</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_transaction_date')">Transaction Date</button></th>
+					<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('pivot_transaction_from')">Transaction From</button></th>
 					<th></th>
                 </tr>
                 </thead>
@@ -147,9 +150,27 @@
     <td>{{tournament.pivot_price_paid | currency:'€'}}</td>
     <td>{{tournament.pivot_price_owed | currency:'€'}}</td>
     <td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-    <td class="text-center">
-        <button ng-click="editReg(tournament)" class="btn btn-outline-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-		<button ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)" class="btn btn-outline-success" ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">
+	<td class="text-center" data-ng-show="tournament.pivot_funding"><i class="fa fa-check" aria-hidden="true"></i></td>
+	<td class="text-center" data-ng-hide="tournament.pivot_funding"><i class="fa fa-times" aria-hidden="true"></i></td>
+	<td class="text-center"
+		data-ng-show="tournament.pivot_transaction_date != null">
+		{{tournament.pivot_transaction_date | date: 'dd.MM.yyyy'}}
+	</td>
+	<td class="text-center" data-ng-hide="tournament.pivot_transaction_date != null">-</td>
+	<td	data-ng-show="tournament.pivot_transaction_from != null">
+		{{tournament.pivot_transaction_from}}
+	</td>
+	<td class="text-center"
+		data-ng-hide="tournament.pivot_transaction_from != null">
+		 -
+	</td>
+	<td class="text-center">
+        <button data-ng-click="editReg(tournament)" class="btn btn-outline-info">
+			<i class="fa fa-pencil" aria-hidden="true"></i>
+		</button>
+		<button data-ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)"
+				class="btn btn-outline-success"
+				ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">
 			<i class="fa fa-eur" aria-hidden="true"></i>
 		</button>
     </td>
@@ -172,7 +193,16 @@
         <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_owed" />
     </td>
     <td class="currencySign" data-monetary-amount="{{selected.pivot_price_paid - selected.pivot_price_owed | currency:'€'}}"></td>
-    <td>
+	<td>
+		<input class="form-control" type="checkbox" ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1" />
+	</td>
+	<td>
+		<input class="form-control" type="date" ng-model="selected.pivot_transaction_date">
+	</td>
+	<td>
+		<input class="form-control" ng-model="selected.pivot_transaction_from">
+	</td>
+	<td>
         <button class="btn btn-sm btn-outline-success" ng-click="saveReg($index, tournament.pivot_id)" style="margin: 3px">Save</button>
         <button class="btn btn-sm btn-outline-danger" ng-click="reset()" style="margin: 3px">Cancel</button>
     </td>
