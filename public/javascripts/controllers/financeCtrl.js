@@ -70,11 +70,13 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 
 			let url = '/app/updateReg';
 			let funding = ($scope.selected.pivot_funding) ? 1 : 0;
+			let transaction_date = ($scope.selected.pivot_transaction_date === null) ? null
+				: moment($scope.selected.pivot_transaction_date).format("YYYY-MM-DD HH:mm:ss");
 			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				price_paid: $scope.selected.pivot_price_paid,
 				price_owed: $scope.selected.pivot_price_owed,
-				transaction_date: moment($scope.selected.pivot_transaction_date).format("YYYY-MM-DD HH:mm:ss"),
+				transaction_date,
 				transaction_from: $scope.selected.pivot_transaction_from,
 				funding
 			});

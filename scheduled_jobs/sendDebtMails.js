@@ -1,5 +1,5 @@
 let dotenv = require('dotenv'); //enables environment variables for development
-dotenv.load();
+dotenv.config({path: '../.env'});
 let _ = require('lodash');
 let moment = require('moment');
 
@@ -35,6 +35,7 @@ async function buildEmailArr() {
 				});
 				_.each(tournament.users, function (user) {
 					if (user._pivot_price_owed !== user._pivot_price_paid) {
+						// if user is not already in emailArr add user
 						if (!_.find(emailArr, {email: user.email})) {
 							emailArr.push({
 								id: user.id,
@@ -42,14 +43,19 @@ async function buildEmailArr() {
 								name: user.name,
 								email: user.email,
 								tournaments: [],
-								total_debt: 0
+								total_debt: 0,
+								transaction_purpose: '(?'
 							});
 						}
+						// add tournament to user's tournaments array
 						_.find(emailArr, {id: user.id}).tournaments.push({
 							name: tournament.name,
 							debt: Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100
 						});
+						// add debt tu user's total debt
 						_.find(emailArr, {id: user.id}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
+						// add reg id to transaction_purpose
+						_.find(emailArr, {id: user.id}).transaction_purpose += user._pivot_id + ',';
 					}
 				})
 			});
@@ -58,19 +64,34 @@ async function buildEmailArr() {
 				return obj.total_debt > 0;
 			});
 
-			if (test) {
-				// emailArr = _.filter(emailArr, {id: 21});
-				emailArr.push({
-					name: 'Alexander',
-					email: 'alexander.hans.mail@gmail.com',
-					tournaments: [],
-					total_debt: 40
+			emailArr = emailArr.map((obj) => {
+				// remove last comma
+				obj.transaction_purpose = obj.transaction_purpose.substring(0, obj.transaction_purpose.length-1);
+				obj.transaction_purpose += '?) ';
+				obj.tournaments.forEach((tournament, index) => {
+					if (index < obj.tournaments.length - 1) {
+						obj.transaction_purpose += tournament.name.substring(0,20) + ', ';
+					} else {
+						obj.transaction_purpose += tournament.name.substring(0,20);
+					}
 				});
-				emailArr[emailArr.length-1].tournaments.push({
-					name: 'Test Turnier',
-					debt: 40.00
-				});
-			}
+				obj.transaction_purpose = obj.transaction_purpose.substring(0,140);
+				return obj;
+			});
+
+			// if (test) {
+			// 	// emailArr = _.filter(emailArr, {id: 21});
+			// 	emailArr.push({
+			// 		name: 'Alexander',
+			// 		email: 'alexander.hans.mail@gmail.com',
+			// 		tournaments: [],
+			// 		total_debt: 40
+			// 	});
+			// 	emailArr[emailArr.length-1].tournaments.push({
+			// 		name: 'Test Turnier',
+			// 		debt: 40.00
+			// 	});
+			// }
 		});
 	} catch (ex) {
 		console.error(ex);
@@ -112,8 +133,10 @@ async function sendDebtMails () {
 			'<tr><th align="left">Recipient</th><td>Berlin Debating Union e.V.</td></tr>' +
 			'<tr><th align="left">IBAN</th><td>DE36 1203 0000 1020 1051 26</td></tr>' +
 			'<tr><th align="left">Institute</th><td>DEUTSCHE KREDITBANK BERLIN</td></tr>' +
+			'<tr><th align="left">Transaction purpose (Verwendungszweck)</th><td>' + obj.transaction_purpose + '</td></tr>' +
 			'</table><br><br>' +
-			'You can always check your finances at <i href="https://members.debating.de">https://members.debating.de</i>.<br>' +
+			'<b>Important:</b> Please include the transaction purpose in your transfer!<br><br>' +
+			'You can always check your finances at <a href="https://members.debating.de">https://members.debating.de</a>.<br>' +
 			'If you have questions regarding your tournaments please talk to the BDU board members.<br>' +
 			'Best wishes<br>' + process.env.finance_board_member;
 		let mail = new helper.Mail(fromEmail, subject, toEmail, content);
@@ -219,7 +242,6 @@ async function sendNotification() {
 let schedule = require('node-schedule');
 
 schedule.scheduleJob('0 19 * * *', function(){
-	console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
 	execute();
 });
 
@@ -227,6 +249,7 @@ if (test) execute();
 
 
 async function execute() {
+	console.log('\n\n ✔✔✔ Sending out Debt Emails ✔✔✔ \n\n');
 	buildEmailArr();
 	await new Promise((resolve, reject) => setTimeout(() => resolve(), 3000));
 	if (test) console.log(emailArr);
