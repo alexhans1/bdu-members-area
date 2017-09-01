@@ -12,7 +12,7 @@ let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
 // DEFINE MODELS
 let Models = require('../models/bookshelfModels.js')(Bookshelf);
 
-let DEF_MODE = true;
+let DEF_MODE = false;
 
 
 let productionURL = 'https://sandbox.finapi.io';
@@ -103,13 +103,6 @@ async function authenticateUser(clientToken, userID, userPassword) {
 		'client_id=' + CLIENT_ID + '&' +
 		'client_secret=' + CLIENT_SECRET + '&' +
 		'username='	+ userID + '&password=' + userPassword,
-		// body: {
-		// 	"grant_type": 'password',
-		// 	"client_id": '2efedcc8-cff3-482d-b5f1-0807681ceea1',
-		// 	"client_secret": '44697ed8-e4f9-47a6-90ff-cf35440d722b',
-		// 	"username": userID,
-		// 	"password": userPassword
-		// },
 		headers: {
 			'content-type': 'application/json',
 			'Authorization': 'Bearer ' + clientToken
@@ -135,6 +128,8 @@ async function authenticateUser(clientToken, userID, userPassword) {
 
 async function importBankConnection(userToken, bankingUserId, bankingPIN, bankID) {
 
+	console.log('$$$ Importing new Bank Connection.');
+
 	let importBankConnectionOptions = {
 		method: 'POST',
 		url: usedURL + '/api/v1/bankConnections/import',
@@ -142,8 +137,8 @@ async function importBankConnection(userToken, bankingUserId, bankingPIN, bankID
 			"bankId": bankID,
 			"bankingUserId": bankingUserId,
 			"bankingPin": bankingPIN,
-			"storePin": false,
-			"name": "bdudb Test Bank Connection",
+			"storePin": true,
+			"name": "BDU DKB Bank Account",
 			"skipPositionsDownload": false,
 			"maxDaysForDownload": 0
 		},
@@ -154,14 +149,55 @@ async function importBankConnection(userToken, bankingUserId, bankingPIN, bankID
 		json: true
 	};
 
-	await request(importBankConnectionOptions)
-	.then(function (parsedBody) {
-		CONNECTION_ID = parsedBody.id;
-	})
-	.catch(function (err) {
-		console.error("$$$ Error while importing bank connections.");
-		console.log(err.message);
-	});
+	try {
+		await request(importBankConnectionOptions)
+		.then(function (parsedBody) {
+			CONNECTION_ID = parsedBody.id;
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while importing bank connections.");
+			console.log(err.message);
+		});
+	} catch (ex) {
+	    console.log(ex);
+	}
+
+	if (DEF_MODE) console.log(CONNECTION_ID);
+
+	getConnectionStatus(USER_TOKEN, CONNECTION_ID)
+}
+
+async function updateBankConnection(userToken, bankConnectionId) {
+
+	console.log('$$$ Updating Bank Connection.');
+
+	let updateBankConnectionOptions = {
+		method: 'POST',
+		url: usedURL + '/api/v1/bankConnections/update',
+		body: {
+			"bankConnectionId": bankConnectionId,
+			"importNewAccounts": false,
+			"skipPositionsDownload": false,
+		},
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': 'Bearer ' + userToken
+		},
+		json: true
+	};
+
+	try {
+		await request(updateBankConnectionOptions)
+		.then(function (parsedBody) {
+			CONNECTION_ID = parsedBody.id;
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while updating bank connections.");
+			console.log(err.message);
+		});
+	} catch (ex) {
+	    console.log(ex);
+	}
 
 	if (DEF_MODE) console.log(CONNECTION_ID);
 
@@ -179,18 +215,25 @@ async function getAllBankConnections(userToken) {
 		json: true
 	};
 
-	await request(getAllBankConnectionsOptions)
-	.then(function (parsedBody) {
-		CONNECTION_ID = parsedBody.connections[0].id;
-	})
-	.catch(function (err) {
-		console.error("$$$ Error while getting bank connections.");
-		console.log(err.message);
-	});
-
-	if (DEF_MODE) console.log(CONNECTION_ID);
-
-	getConnectionStatus(USER_TOKEN, CONNECTION_ID);
+	try {
+		await request(getAllBankConnectionsOptions)
+		.then(function (parsedBody) {
+			if (parsedBody.connections.length) {
+				CONNECTION_ID = parsedBody.connections[0].id;
+				if (DEF_MODE) console.log(CONNECTION_ID);
+				updateBankConnection(USER_TOKEN, CONNECTION_ID)
+			} else {
+				console.log('$$$ There is no bank connection. Please import one!');
+				importBankConnection(USER_TOKEN, process.env.bankingID, process.env.bankingPin, '24353');
+			}
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while getting bank connections.");
+			console.log(err.message);
+		});
+	} catch (ex) {
+	    console.log(ex);
+	}
 
 }
 
@@ -207,18 +250,29 @@ async function getConnectionStatus(userToken, connectionID) {
 		json: true
 	};
 
-	await request(getConnectionStatusOptions)
-	.then(function (parsedBody) {
-		connStatus = parsedBody.updateStatus;
-	})
-	.catch(function (err) {
-		console.error("$$$ Error while getting connection status.");
-		console.log(err.message);
-	});
+	try {
+		await request(getConnectionStatusOptions)
+		.then(function (parsedBody) {
+			connStatus = parsedBody.updateStatus;
+			if (DEF_MODE) console.log(parsedBody.updateStatus);
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while getting connection status.");
+			console.log(err.message);
+		});
+	} catch (ex) {
+	    console.log(ex);
+	}
 
 	if (connStatus === 'READY') getAllTransactions(USER_TOKEN, 1);
 	else {
-		setTimeout(getConnectionStatus(USER_TOKEN, CONNECTION_ID), 800);
+		try {
+			setTimeout(function(){
+				getConnectionStatus(USER_TOKEN, CONNECTION_ID);
+			}, 500);
+		} catch (ex) {
+		    console.log(ex);
+		}
 	}
 }
 
@@ -239,15 +293,21 @@ async function getAllTransactions(userToken, page) {
 		json: true
 	};
 
-	await request(getAllTransactionsOptions)
-	.then(function (parsedBody) {
-		TRANSACTIONS = parsedBody;
-	})
-	.catch(function (err) {
-		console.error("$$$ Error while getting all transactions.");
-		console.log(err.message);
-	});
+	try {
+		await request(getAllTransactionsOptions)
+		.then(function (parsedBody) {
+			TRANSACTIONS = parsedBody;
+		})
+		.catch(function (err) {
+			console.error("$$$ Error while getting all transactions.");
+			console.log(err.message);
+		});
+	} catch (ex) {
+	    console.log(ex);
+	}
 
+	if (DEF_MODE) console.log(TRANSACTIONS.transactions);
+	
 	// filter for only ingoing transactions that have '(?' in their purpose
 	let positiveTransactions = _.filter(TRANSACTIONS.transactions, (transaction) => {
 		return (transaction.amount >= 0 && transaction.purpose.search('\\(\\?') >= 0);
@@ -259,6 +319,7 @@ async function getAllTransactions(userToken, page) {
 		processTransactions(positiveTransactions);
 	} else {
 		console.log('$$$ There are no new incoming transactions with the correct "(?" signature.');
+		console.log('\n\n $$$ Finished Checking Bank Transactions $$$ \n\n');
 	}
 
 }
@@ -286,12 +347,26 @@ async function processTransactions(transactions) {
 			console.log('$$$ Process transaction(s) from ' + transaction.counterpartName);
 
 			// Calculate total debt of all given registrations
+			// and check if all the registrations exist
 			let totalTransactionDebt = 0;
 			for (let reg_id of reg_ids) {
-				await Models.Registration.forge({id: reg_id}).fetch()
-				.then((registration) => {
-					totalTransactionDebt += (registration.toJSON().price_owed-registration.toJSON().price_paid);
-				})
+				try {
+					await Models.Registration.forge({id: reg_id}).fetch()
+					.then((registration) => {
+						if (registration) {
+							totalTransactionDebt += (registration.toJSON().price_owed-registration.toJSON().price_paid);
+						} else {
+							// if the registration does not exist
+							console.error('$$$ The registration named by ' + transaction.counterpartName + ' with the ID '
+								+ reg_id + ' does not exist.');
+							_.remove(reg_ids, (id) => {
+								return (id === reg_id);
+							});
+						}
+					});
+				} catch (ex) {
+				    console.log(ex);
+				}
 			}
 
 			if (transaction.amount === totalTransactionDebt) {
@@ -349,30 +424,34 @@ async function processTransactions(transactions) {
 
 				// first distribute potential credit
 				for (let reg_id of reg_ids) {
-					await Models.Registration.forge({id: reg_id}).fetch()
-					.then((registration) => {
-						reg = registration.toJSON();
-						// if there is credit
-						if (reg.price_paid > reg.price_owed) {
-							// add the credit to the tmpAmount
-							tmpAmount += reg.price_paid - reg.price_owed;
+					try {
+						await Models.Registration.forge({id: reg_id}).fetch()
+						.then((registration) => {
+							reg = registration.toJSON();
+							// if there is credit
+							if (reg.price_paid > reg.price_owed) {
+								// add the credit to the tmpAmount
+								tmpAmount += reg.price_paid - reg.price_owed;
 
-							// balance the registration
-							registration.save({
-								price_paid: reg.price_owed,
-								transaction_date: transaction.bankBookingDate,
-								transaction_from: transaction.counterpartName
-							});
+								// balance the registration
+								registration.save({
+									price_paid: reg.price_owed,
+									transaction_date: transaction.bankBookingDate,
+									transaction_from: transaction.counterpartName
+								});
 
-							// remove the registration from the reg_ids
-							_.remove(reg_ids, (id) => {
-								return (id === reg_id);
-							});
+								// remove the registration from the reg_ids
+								_.remove(reg_ids, (id) => {
+									return (id === reg_id);
+								});
 
-							console.log('$$$ Balanced credit.');
+								console.log('$$$ Balanced credit.');
 
-						}
-					});
+							}
+						});
+					} catch (ex) {
+					    console.log(ex);
+					}
 				}
 
 				for (let reg_id of reg_ids) {
@@ -381,7 +460,7 @@ async function processTransactions(transactions) {
 						if (registration) {
 							let reg = registration.toJSON();
 							// if registration exists, check if transaction amount covers the debt
-							console.log(reg.price_owed-reg.price_paid, tmpAmount);
+							if (DEF_MODE) console.log(reg.price_owed-reg.price_paid, tmpAmount);
 							if ((reg.price_owed - reg.price_paid) <= tmpAmount) {
 								try {
 									registration.save({
@@ -411,7 +490,8 @@ async function processTransactions(transactions) {
 										transaction_from: transaction.counterpartName
 									})
 									.then(() => {
-										console.log('$$$ Successfully updated rest amount for registration with ID: ' + reg_id);
+										console.log('$$$ Successfully updated rest amount for registration with ID: '
+											+ reg_id);
 										tmpAmount -= (reg.price_owed - reg.price_paid);
 									})
 								} catch (ex) {
@@ -456,7 +536,7 @@ async function processTransactions(transactions) {
 // 		counterpartName: 'FREDERICK ALY',
 // 	},
 // 	{
-// 		purpose: 'Geld für T (?652,164?)',
+// 		purpose: 'Geld für T (?652,164,999?)',
 // 		amount: 13.25,
 // 		bankBookingDate: '2017-08-24 00:00:00.000',
 // 		counterpartName: 'TIM SCHMIDTLEIN'
