@@ -71,6 +71,7 @@ require('./routes/routes.js')(app, passport, Bookshelf);
 //setup scheduled jobs
 require('./scheduled_jobs/sendDebtMails');
 require('./scheduled_jobs/saveTotalClubDebt');
+require('./scheduled_jobs/checkBankTransactions');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
