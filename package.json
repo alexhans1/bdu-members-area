@@ -26,6 +26,7 @@
     "express-session": "^1.14.2",
     "ftp": "^0.3.10",
     "heroku-ssl-redirect": "0.0.4",
+    "inherits": "^2.0.3",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
