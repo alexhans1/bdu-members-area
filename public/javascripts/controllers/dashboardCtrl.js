@@ -83,7 +83,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 		});
 
 		// Time since existence
-		let foundationDate = moment('2001-05-13T18:00:00.000+02:00');
+		let foundationDate = moment('2001-12-17T23:00:00.000+02:00');
 		$interval(() => {
 			$scope.timeExisting = moment.preciseDiff(foundationDate, moment());
 		}, 1000);
