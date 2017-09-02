@@ -21,10 +21,26 @@
 					<thead>
 					<tr>
 						<!--<th></th>-->
-						<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('id')">Tournament ID</button></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('name')">Name</button></th>
-						<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('startdate')">Startdate</button></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortTournaments('language')">Language</button></th>
+						<th class="hidden-xs">
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortTournaments('id')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Tournament ID
+							</button>
+						</th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortTournaments('name')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Name
+							</button>
+						</th>
+						<th class="hidden-xs">
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortTournaments('startdate')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Startdate
+							</button>
+						</th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortTournaments('language')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Language
+							</button>
+						</th>
 						<th>Users</th>
 					</tr>
 					</thead>
@@ -50,14 +66,42 @@
 				<table ng-show="showUsers" class="table table-hover table-responsive">
 					<thead>
 					<tr>
-						<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button></th>
+						<th class="hidden-xs">
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('id')">
+								<i class="fa fa-sort" aria-hidden="true"></i> User ID
+							</button>
+						</th>
 						<th></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('name')">Name</button></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_role')">Role</button></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_teamname')">Teamname</button></th>
-						<th class="hidden-xs"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_comment')">Comment</button></th>
-						<th class="hidden-xs hidden-sm"><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_created_at')">Registered at</button></th>
-						<th><button class="btn btn-outline-info btn-sm" ng-click="sortUsers('pivot_attended')">Attended</button></th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('name')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Name
+							</button>
+						</th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('pivot_role')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Role
+							</button>
+						</th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('pivot_teamname')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Teamname
+							</button>
+						</th>
+						<th class="hidden-xs">
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('pivot_comment')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Comment
+							</button>
+						</th>
+						<th class="hidden-xs hidden-sm">
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('pivot_created_at')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Registered at
+							</button>
+						</th>
+						<th>
+							<button class="btn btn-outline-info btn-sm pointer" ng-click="sortUsers('pivot_attended')">
+								<i class="fa fa-sort" aria-hidden="true"></i> Attended
+							</button>
+						</th>
 						<th></th>
 						<th ng-show="istVorstand">Funding (sieht nur Vorstand)</th>
 						<th ng-show="istVorstand">Email (sieht nur Vorstand)</th>
