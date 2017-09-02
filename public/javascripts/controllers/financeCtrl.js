@@ -16,7 +16,9 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 					let totalPoints = 0;
 					let totalDebt = 0;
 					_.each(user.tournaments, function (tournament) {
-						totalPoints += tournament.pivot_points;
+						if (moment(tournament.startdate).add(1, 'year').isAfter(moment())) {
+							totalPoints += tournament.pivot_points;
+						}
 						totalDebt += (tournament.pivot_price_owed - tournament.pivot_price_paid);
 					});
 					user.totalPoints = totalPoints;
