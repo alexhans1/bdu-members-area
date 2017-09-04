@@ -31,7 +31,7 @@ async function buildEmailArr() {
 			// });
 			_.each(tournaments, function (tournament) {
 				tournament.users = _.reject(tournament.users, function (user) {
-					return moment(user.last_mail).add(10, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
+					return moment(user.last_mail).add(9, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
 				});
 				_.each(tournament.users, function (user) {
 					if (user._pivot_price_owed !== user._pivot_price_paid) {
