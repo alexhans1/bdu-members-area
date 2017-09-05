@@ -386,7 +386,9 @@ async function processTransactions(transactions) {
 								price_paid: registration.toJSON().price_owed,
 								transaction_date: transaction.bankBookingDate,
 								transaction_from: transaction.counterpartName
-							})
+							});
+							console.log('$$$ Saved registration with ID ' + reg_id
+								+ ' for user ' + transaction.counterpartName);
 						})
 					} catch (ex) {
 						console.log(ex);
@@ -404,7 +406,9 @@ async function processTransactions(transactions) {
 								price_paid: registration.toJSON().price_owed,
 								transaction_date: transaction.bankBookingDate,
 								transaction_from: transaction.counterpartName
-							})
+							});
+							console.log('$$$ Saved registration with ID ' + reg_id
+								+ ' for user ' + transaction.counterpartName);
 						})
 					} catch (ex) {
 						console.log(ex);
@@ -420,7 +424,9 @@ async function processTransactions(transactions) {
 							price_paid: registration.toJSON().price_paid + (transaction.amount - totalTransactionDebt),
 							transaction_date: transaction.bankBookingDate,
 							transaction_from: transaction.counterpartName
-						})
+						});
+						console.log('$$$ Added overpaid amount to registration with ID ' + reg_id
+							+ ' for user ' + transaction.counterpartName);
 					})
 				} catch (ex) {
 					console.log(ex);
@@ -451,7 +457,7 @@ async function processTransactions(transactions) {
 									return (id === reg_id);
 								});
 
-								console.log('$$$ Balanced credit.');
+								console.log('$$$ Balanced credit.', reg_id);
 
 							}
 						});
@@ -476,7 +482,7 @@ async function processTransactions(transactions) {
 									})
 									.then(() => {
 										console.log('$$$ Successfully processed transaction for registration with ID: '
-											+ reg_id);
+											+ reg_id + ' for ' + transaction.counterpartName);
 										tmpAmount -= (reg.price_owed - reg.price_paid);
 									})
 								} catch (ex) {
@@ -497,7 +503,7 @@ async function processTransactions(transactions) {
 									})
 									.then(() => {
 										console.log('$$$ Successfully updated rest amount for registration with ID: '
-											+ reg_id);
+											+ reg_id + ' for ' + transaction.counterpartName);
 										tmpAmount -= (reg.price_owed - reg.price_paid);
 									})
 								} catch (ex) {
@@ -508,7 +514,7 @@ async function processTransactions(transactions) {
 						} else {
 							// if the registration does not exist
 							console.error('$$$ The registration in the transaction purpose with the ID: '
-								+ reg_id + ' does not exist.');
+								+ reg_id + ' does not exist for ' + transaction.counterpartName);
 						}
 					});
 				}
