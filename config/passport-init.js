@@ -1,11 +1,9 @@
-var LocalStrategy   = require('passport-local').Strategy;
-var bCrypt = require('bcrypt-nodejs');
-var crypto = require('crypto');
-var async = require('async');
+let LocalStrategy   = require('passport-local').Strategy;
+let bCrypt = require('bcrypt-nodejs');
 
 module.exports = function(passport, Bookshelf){
 	// User model
-	var User = Bookshelf.Model.extend({
+	let User = Bookshelf.Model.extend({
 		tableName: 'users',
 		hasTimestamps: true
 	});
@@ -41,7 +39,8 @@ module.exports = function(passport, Bookshelf){
 			.then(function (user) {
 				if(!user){
 					console.error('No user found with that email: ' + userEmail + '.');
-					return done(null, false, req.flash('authMsg', 'No user found with that email: ' + userEmail + '.')); // req.flash is the way to set flashdata using connect-flash
+					// req.flash is the way to set flashdata using connect-flash
+					return done(null, false, req.flash('authMsg', 'No user found with that email: ' + userEmail + '.'));
 				}
 				if(!isValidPassword(password, user.get('password'))){
 					console.error('Oops! Wrong password.');
@@ -50,7 +49,7 @@ module.exports = function(passport, Bookshelf){
 
 				// all is well, return successful user
 				console.log('Login successful');
-				console.info(user.toJSON());
+				console.info(user.toJSON().vorname, user.toJSON().name);
 				user.save({
 					last_login: new Date()
 				});
@@ -85,8 +84,10 @@ module.exports = function(passport, Bookshelf){
 				return done(null, false, req.flash('authMsg', 'A User with that email already exists.'));
 			}
 			else if (req.body.signup_password !== process.env.signup_password) {
-				console.info('Signup password is not correct.', req.body, process.env.signup_password);
-				return done(null, false, req.flash('authMsg', 'Signup password is not correct. Please ask the BDU board members for help.'));
+				console.info('Signup password is not correct.', req.body.vorname, req.body.name,
+					req.body.signup_password, process.env.signup_password);
+				return done(null, false, req.flash('authMsg',
+					'Signup password is not correct. Please ask the BDU board members for help.'));
 			}
 			else {
 				// if there is no user with that email
@@ -106,13 +107,13 @@ module.exports = function(passport, Bookshelf){
 					return done(null, user, req.flash('authMsg', 'Signup successful.' + user.toJSON));
 				})
 				.catch(function (err) {
-					console.error('Error during saving new user. Error message:' + err)
+					console.error('Error during saving new user. Error message:' + err);
 					return done(null, false, req.flash('authMsg', 'Error during signup.'));
 				});
 			}
 		})
 		.catch(function (err) {
-			console.error('Error during fetching user during signup. Error message:' + err)
+			console.error('Error during fetching user during signup. Error message:' + err);
 			return done(null, false, req.flash('authMsg', 'Error during signup.'));
 		});
 	}));
@@ -153,13 +154,13 @@ module.exports = function(passport, Bookshelf){
 					return done(null, user, req.flash('reset', 'New password saved.'));
 				})
 				.catch(function (err) {
-					console.error('Error during password reset. Error message:' + err)
+					console.error('Error during password reset. Error message:' + err);
 					return done(null, false, req.flash('reset', 'Error during password reset.'));
 				});
 			}
 		})
 		.catch(function (err) {
-			console.error('Error during fetching user during password reset. Error message:' + err)
+			console.error('Error during fetching user during password reset. Error message:' + err);
 			return done(null, false, req.flash('reset', 'Error during password reset.'));
 		});
 	}));
@@ -213,7 +214,7 @@ module.exports = function(passport, Bookshelf){
 
 	//Helper Functions
 
-	var isValidPassword = function(pwd, pwdHash){
+	let isValidPassword = function(pwd, pwdHash){
 		try {
 			return bCrypt.compareSync(pwd, pwdHash);
 		}
@@ -223,7 +224,7 @@ module.exports = function(passport, Bookshelf){
 		}
 	};
 	// Generates hash using bCrypt
-	var createHash = function(password){
+	let createHash = function(password){
 		return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 	};
 };
