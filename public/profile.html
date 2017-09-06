@@ -178,25 +178,42 @@
 <!--TEMPLATE FOR NORMAL VIEW-->
 <script type="text/ng-template" id="display">
 	<td ng-click="openDetails(tournament)" style="text-align: left">{{tournament.name}}</td>
-	<td ng-click="openDetails(tournament)">{{tournament.startdate | date:'dd.MM.yyyy'}}<br>{{tournament.enddate | date:'dd.MM.yyyy'}}</td>
+	<td ng-click="openDetails(tournament)">
+		{{tournament.startdate | date:'dd.MM.yyyy'}}
+		<br>
+		{{tournament.enddate | date:'dd.MM.yyyy'}}
+	</td>
 	<td ng-click="openDetails(tournament)">{{tournament.pivot_role}}</td>
 	<td ng-click="openDetails(tournament)">{{tournament.pivot_teamname}}</td>
 	<td ng-click="openDetails(tournament)">{{tournament.pivot_comment}}</td>
-	<td ng-click="openDetails(tournament)" ng-show="tournament.pivot_funding == 0" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
-	<td ng-click="openDetails(tournament)" ng-show="tournament.pivot_funding == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_funding == 0" class="text-center">
+		<i class="fa fa-times" aria-hidden="true"></i>
+	</td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_funding == 1" class="text-center">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</td>
 	<td class="preventWrap" ng-click="openDetails(tournament)">{{tournament.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap" ng-click="openDetails(tournament)">{{tournament.pivot_price_paid | currency:"€"}}</td>
-	<td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-	<td ng-click="openDetails(tournament)" ng-show="tournament.pivot_attended == 0" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
-	<td ng-click="openDetails(tournament)" ng-show="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
-	<td ng-click="openDetails(tournament)" ng-show="tournament.pivot_attended == 2" class="text-center">You can go!</td>
+	<td class="currencySign"
+		data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 0" class="text-center">
+		<i class="fa fa-times" aria-hidden="true"></i>
+	</td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 1" class="text-center">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 2" class="text-center">You can go!</td>
 	<td ng-controller="successCtrl" ng-include="getSuccessTemplate(tournament.id)"></td>
 	<td class="text-center">
 		{{tournament.pivot_points}}
 	</td>
 	<td class="text-center">
-		<button ng-hide="tournament.pivot_attended == 1" ng-click="editContact(tournament)" class="btn btn-sm btn-outline-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-		<button ng-hide="tournament.pivot_attended == 1" ng-click="unreg(tournament.pivot_id, tournament.id)" class="btn btn-sm btn-outline-danger" style="margin-top: 4px"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+		<button data-ng-hide="tournament.pivot_attended == 1" ng-click="editContact(tournament)"
+				class="btn btn-sm btn-outline-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+		<button data-ng-hide="tournament.pivot_attended == 1" ng-click="unreg(tournament.pivot_id, tournament.id)"
+				class="btn btn-sm btn-outline-danger" style="margin-top: 4px">
+			<i class="fa fa-trash-o" aria-hidden="true"></i>
+		</button>
 	</td>
 </script>
 
@@ -214,13 +231,19 @@
 	<td ng-hide="selected.pivot_role.value == 'speaker'">
 		<input style="min-width: 80px" disabled class="form-control" type="text" />
 	</td>
-	<td><textarea style="min-width: 180px" rows="3" placeholder="You can leave a comment here." ng-model="selected.pivot_comment" class="form-control"></textarea></td>
-	<td><input type="checkbox" class="form-check" ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1"></td>
+	<td>
+		<textarea style="min-width: 180px" rows="3" placeholder="You can leave a comment here."
+				  ng-model="selected.pivot_comment" class="form-control"></textarea>
+	</td>
+	<td>
+		<input type="checkbox" class="form-check"
+			   ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1">
+	</td>
 	<td class="preventWrap">{{tournament.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap">{{tournament.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-	<td ng-hide="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
-	<td ng-show="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
+	<td data-ng-hide="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
+	<td data-ng-show="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
 	<td></td>
 	<td></td>
 	<td>
