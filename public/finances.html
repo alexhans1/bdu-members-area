@@ -37,7 +37,7 @@
             <table class="table table-hover table-responsive">
                 <thead>
                 <tr>
-                    <!--<th></th>-->
+                    <th class="hidden-sm-down"></th>
                     <th class="hidden-xs">
                         <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button>
                     </th>
@@ -61,7 +61,16 @@
                 </thead>
                 <tbody class="left-align">
                 <tr ng-repeat="user in users" ng-click="goToTournaments(user)" class="pointer">
-                    <td class="hidden-xs">{{user.id}}</td>
+                    <td class="hidden-sm-down">
+						<img data-ng-show="user.image"
+							 style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
+							 class="img-hor"
+							 ng-src="http://debating.de/BDUDBdev/userpics/{{user.image}}" alt="profile image"/>
+						<img data-ng-hide="user.image"
+							 style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
+							 class="img-hor" src="images/bdu_quad.png" alt="">
+					</td>
+					<td class="hidden-xs">{{user.id}}</td>
 					<td>{{user.vorname}} {{user.name}}
 						<span ng-show="user.position == 1" class="help-tip hidden-md-down">
 							<i class="fa fa-star" aria-hidden="true"></i>
@@ -77,6 +86,7 @@
                     <td ng-show="user.last_mail == '0000-00-00 00:00:00'" class="hidden-sm-down">never</td>
                 </tr>
                 <tr style="font-weight: bold;">
+					<td class="hidden-sm-down"></td>
                     <td class="hidden-xs">#</td>
                     <td>{{users.length}}</td>
                     <td></td>
