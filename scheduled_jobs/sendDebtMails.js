@@ -136,8 +136,10 @@ async function sendDebtMails () {
 			'<tr><th align="left">Transaction purpose (Verwendungszweck)</th><td>' + obj.transaction_purpose + '</td></tr>' +
 			'</table><br><br>' +
 			'<b>Important:</b> Please include the transaction purpose in your transfer!<br><br>' +
+			'It´s possible to pay your debt by installments (Ratenzahlung). Just email me at ' +
+			'<a href="mailto:finanzen@debating.de" target="_top">finanzen@debating.de</a>.<br>' +
 			'You can always check your finances at <a href="https://members.debating.de">https://members.debating.de</a>.<br>' +
-			'If you have questions regarding your tournaments please talk to the BDU board members.<br>' +
+			'If you have questions regarding your tournaments please talk to me or other BDU board members.<br>' +
 			'Best wishes<br>' + process.env.finance_board_member;
 		let mail = new helper.Mail(fromEmail, subject, toEmail, content);
 
