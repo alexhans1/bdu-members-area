@@ -267,13 +267,6 @@ textarea {
     cursor: pointer;
 }
 
-.image-cropper .img-vert {
-    position: absolute;
-    height: auto;
-    width: 100%;
-    cursor: pointer;
-}
-
 .bg-light-grey {
     background-color: #f8f8f8;
 }

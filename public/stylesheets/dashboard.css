@@ -99,6 +99,13 @@
     font-size: large;
 }
 
+.dashboard #gender {
+    background-color: #3A8A7D;
+    border: 1px solid #3c8578;
+    color: white;
+    min-height: 211.17px;
+}
+
 .dashboard #registeredUsers .circle_animation {
     -webkit-animation: registeredUsers 1s ease-out forwards;
     animation: registeredUsers 1s ease-out forwards;
