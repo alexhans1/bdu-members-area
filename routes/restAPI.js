@@ -249,19 +249,20 @@ module.exports = function(Bookshelf){
 	.post(function (req, res) {
 		//Check if session user is authorized
 		if(req.user.position === 1){
+			console.log(req.body.enddate);
 			try {
 				Tournament.forge({
 					name: req.body.name,
 					ort: req.body.ort,
-					startdate: req.body.startdate,
-					enddate: req.body.enddate,
+					startdate: moment(req.body.startdate).format('YYYY-MM-DD'),
+					enddate:  moment(req.body.enddate).format('YYYY-MM-DD'),
 					deadline: req.body.deadline,
 					format: req.body.format,
 					league: req.body.league,
 					accommodation: req.body.accommodation,
 					speakerprice: req.body.speakerprice,
 					judgeprice: req.body.judgeprice,
-					rankingvalue: req.body.rankingvalue,
+					rankingvalue: req.body.rankingvalue || null,
 					link: req.body.link,
 					teamspots: req.body.teamspots,
 					judgespots: req.body.judgespots,
@@ -337,15 +338,15 @@ module.exports = function(Bookshelf){
 				tournament.save({
 					name: req.body.name,
 					ort: req.body.ort,
-					startdate: req.body.startdate,
-					enddate: req.body.enddate,
+					startdate: moment(req.body.startdate).format('YYYY-MM-DD'),
+					enddate: moment(req.body.enddate).format('YYYY-MM-DD'),
 					deadline: req.body.deadline,
 					format: req.body.format,
 					league: req.body.league,
 					accommodation: req.body.accommodation,
 					speakerprice: req.body.speakerprice,
 					judgeprice: req.body.judgeprice,
-					rankingvalue: req.body.rankingvalue,
+					rankingvalue: req.body.rankingvalue || null,
 					link: req.body.link,
 					teamspots: req.body.teamspots,
 					judgespots: req.body.judgespots,
