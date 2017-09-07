@@ -115,13 +115,14 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 			// Gender Charts
 			let $window = $(window),
 				didScroll = false,
-				genderTop = $('#gender').offset().top - 500;
+				genderTop = $('#gender').offset().top - 600;
 
 			$window.on('scroll', function () {
 				didScroll = true;
 			});
 
 			setInterval(function () {
+				console.log(genderTop, $window.scrollTop());
 				if (didScroll) {
 					didScroll = false;
 					if ($window.scrollTop() >= genderTop) {
@@ -178,206 +179,214 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 					});
 				});
 
-				$(function () {
-					Highcharts.chart('genderContainer2', {
-						chart: {
-							backgroundColor:'rgba(255, 255, 255, 0.0)',
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false,
-							type: 'pie'
-						},
-						exporting: { enabled: false },
-						title: {
-							text: '♂ and ♀ active users',
-							style: {
-								color: '#f7f7fa',
-								fontSize: '10px'
-							}
-						},
-						tooltip: {
-							pointFormat: '<b>{point.name}: {point.y:.1f}</b> ({point.percentage:.1f} %)'
-						},
-						plotOptions: {
-							pie: {
-								dataLabels: {
-									enabled: false
-									// format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-								},
-								colors: ['#4b86bd', '#bd3034', '#DBD41E']
-							}
-						},
-						series: [{
-							data: [{
-								name: 'Male Active Users',
-								y: $scope.maleTournamentUsers
-							}, {
-								name: 'Female Active Users',
-								y: $scope.femaleTournamentUsers
-							}, {
-								name: 'Other Active Users',
-								y: $scope.postTournamentUsers
-							}]
-						}]
-					});
-				});
-
-				$(function () {
-					Highcharts.chart('genderContainer3', {
-						chart: {
-							backgroundColor:'rgba(255, 255, 255, 0.0)',
-							plotBackgroundColor: null,
-							plotBorderWidth: null,
-							plotShadow: false,
-							type: 'pie'
-						},
-						exporting: { enabled: false },
-						title: {
-							text: '♂ and ♀ registrations',
-							style: {
-								color: '#f7f7fa',
-								fontSize: '10px'
-							}
-						},
-						tooltip: {
-							pointFormat: '<b>{point.name}: {point.y:.1f}</b> ({point.percentage:.1f} %)'
-						},
-						plotOptions: {
-							pie: {
-								dataLabels: {
-									enabled: false
-									// format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-								},
-								colors: ['#4b86bd', '#bd3034', '#DBD41E']
-							}
-						},
-						series: [{
-							data: [{
-								name: 'Male Registrations',
-								y: $scope.maleRegistrations
-							}, {
-								name: 'Female Registrations',
-								y: $scope.femaleRegistrations
-							}, {
-								name: 'Other Registrations',
-								y: $scope.postRegistrations
-							}]
-						}]
-					});
-				});
-
-				$(function () {
-					Highcharts.chart('genderContainer4', {
-						chart: {
-							backgroundColor:'rgba(255, 255, 255, 0.0)',
-							type: 'column'
-						},
-						exporting: { enabled: false },
-						title: {
-							text: 'Avg points',
-							style: {
-								color: '#f7f7fa',
-								fontSize: '10px'
-							}
-						},
-						plotOptions: {
-							column: {
-								colorByPoint: true,
-								colors: ['#4b86bd', '#bd3034', '#DBD41E']
-							}
-						},
-						xAxis: {
-							type: 'category',
-							labels: {
-								rotation: -45,
+				setTimeout(() => {
+					$(function () {
+						Highcharts.chart('genderContainer2', {
+							chart: {
+								backgroundColor:'rgba(255, 255, 255, 0.0)',
+								plotBackgroundColor: null,
+								plotBorderWidth: null,
+								plotShadow: false,
+								type: 'pie'
+							},
+							exporting: { enabled: false },
+							title: {
+								text: '♂ and ♀ active users',
 								style: {
 									color: '#f7f7fa',
-									fontSize: '13px',
+									fontSize: '10px'
 								}
-							}
-						},
-						yAxis: {
+							},
+							tooltip: {
+								pointFormat: '<b>{point.name}: {point.y:.1f}</b> ({point.percentage:.1f} %)'
+							},
+							plotOptions: {
+								pie: {
+									dataLabels: {
+										enabled: false
+										// format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+									},
+									colors: ['#4b86bd', '#bd3034', '#DBD41E']
+								}
+							},
+							series: [{
+								data: [{
+									name: 'Male Active Users',
+									y: $scope.maleTournamentUsers
+								}, {
+									name: 'Female Active Users',
+									y: $scope.femaleTournamentUsers
+								}, {
+									name: 'Other Active Users',
+									y: $scope.postTournamentUsers
+								}]
+							}]
+						});
+					});
+				}, 600);
+
+				setTimeout(() => {
+					$(function () {
+						Highcharts.chart('genderContainer3', {
+							chart: {
+								backgroundColor:'rgba(255, 255, 255, 0.0)',
+								plotBackgroundColor: null,
+								plotBorderWidth: null,
+								plotShadow: false,
+								type: 'pie'
+							},
+							exporting: { enabled: false },
 							title: {
+								text: '♂ and ♀ registrations',
+								style: {
+									color: '#f7f7fa',
+									fontSize: '10px'
+								}
+							},
+							tooltip: {
+								pointFormat: '<b>{point.name}: {point.y:.1f}</b> ({point.percentage:.1f} %)'
+							},
+							plotOptions: {
+								pie: {
+									dataLabels: {
+										enabled: false
+										// format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+									},
+									colors: ['#4b86bd', '#bd3034', '#DBD41E']
+								}
+							},
+							series: [{
+								data: [{
+									name: 'Male Registrations',
+									y: $scope.maleRegistrations
+								}, {
+									name: 'Female Registrations',
+									y: $scope.femaleRegistrations
+								}, {
+									name: 'Other Registrations',
+									y: $scope.postRegistrations
+								}]
+							}]
+						});
+					});
+				}, 900);
+
+				setTimeout(() => {
+					$(function () {
+						Highcharts.chart('genderContainer4', {
+							chart: {
+								backgroundColor:'rgba(255, 255, 255, 0.0)',
+								type: 'column'
+							},
+							exporting: { enabled: false },
+							title: {
+								text: 'Avg points',
+								style: {
+									color: '#f7f7fa',
+									fontSize: '10px'
+								}
+							},
+							plotOptions: {
+								column: {
+									colorByPoint: true,
+									colors: ['#4b86bd', '#bd3034', '#DBD41E']
+								}
+							},
+							xAxis: {
+								type: 'category',
+								labels: {
+									rotation: -45,
+									style: {
+										color: '#f7f7fa',
+										fontSize: '13px',
+									}
+								}
+							},
+							yAxis: {
+								title: {
+									enabled: false
+								},
+								labels: {
+									style: {
+										color: '#f7f7fa',
+										fontSize: '13px',
+									}
+								}
+							},
+							legend: {
 								enabled: false
 							},
-							labels: {
-								style: {
-									color: '#f7f7fa',
-									fontSize: '13px',
-								}
-							}
-						},
-						legend: {
-							enabled: false
-						},
-						series: [{
-							name: 'Points',
-							data: [
-								['Men', $scope.maleTotalPoints/$scope.maleTournamentUsers],
-								['Women', $scope.femaleTotalPoints/$scope.femaleTournamentUsers],
-								['Other', $scope.postTotalPoints/$scope.postTournamentUsers]
-							]
-						}]
+							series: [{
+								name: 'Points',
+								data: [
+									['Men', $scope.maleTotalPoints/$scope.maleTournamentUsers],
+									['Women', $scope.femaleTotalPoints/$scope.femaleTournamentUsers],
+									['Other', $scope.postTotalPoints/$scope.postTournamentUsers]
+								]
+							}]
+						});
 					});
-				});
+				}, 1200);
 
-				$(function () {
-					Highcharts.chart('genderContainer5', {
-						chart: {
-							backgroundColor:'rgba(255, 255, 255, 0.0)',
-							type: 'column'
-						},
-						exporting: { enabled: false },
-						title: {
-							text: 'Avg points per registration',
-							style: {
-								color: '#f7f7fa',
-								fontSize: '10px'
-							}
-						},
-						plotOptions: {
-							column: {
-								colorByPoint: true,
-								colors: ['#4b86bd', '#bd3034', '#DBD41E']
-							}
-						},
-						xAxis: {
-							type: 'category',
-							labels: {
-								rotation: -45,
+				setTimeout(() => {
+					$(function () {
+						Highcharts.chart('genderContainer5', {
+							chart: {
+								backgroundColor:'rgba(255, 255, 255, 0.0)',
+								type: 'column'
+							},
+							exporting: { enabled: false },
+							title: {
+								text: 'Avg points per registration',
 								style: {
 									color: '#f7f7fa',
-									fontSize: '13px',
+									fontSize: '10px'
 								}
-							}
-						},
-						yAxis: {
-							title: {
+							},
+							plotOptions: {
+								column: {
+									colorByPoint: true,
+									colors: ['#4b86bd', '#bd3034', '#DBD41E']
+								}
+							},
+							xAxis: {
+								type: 'category',
+								labels: {
+									rotation: -45,
+									style: {
+										color: '#f7f7fa',
+										fontSize: '13px',
+									}
+								}
+							},
+							yAxis: {
+								title: {
+									enabled: false
+								},
+								labels: {
+									style: {
+										color: '#f7f7fa',
+										fontSize: '13px',
+									}
+								}
+							},
+							legend: {
 								enabled: false
 							},
-							labels: {
-								style: {
-									color: '#f7f7fa',
-									fontSize: '13px',
-								}
-							}
-						},
-						legend: {
-							enabled: false
-						},
-						series: [{
-							name: 'Points',
-							data: [
-								['Men', $scope.maleTotalPoints/$scope.maleRegistrations],
-								['Women', $scope.femaleTotalPoints/$scope.femaleRegistrations],
-								['Other', $scope.postTotalPoints/$scope.postRegistrations]
-							]
-						}]
+							series: [{
+								name: 'Points',
+								data: [
+									['Men', $scope.maleTotalPoints/$scope.maleRegistrations],
+									['Women', $scope.femaleTotalPoints/$scope.femaleRegistrations],
+									['Other', $scope.postTotalPoints/$scope.postRegistrations]
+								]
+							}]
+						});
 					});
-				});
+				}, 1500);
 			}
 
-		});
+	});
 
 		// Tournaments Overview
 		let tournaments = TournamentService.query(() => {
