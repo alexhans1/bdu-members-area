@@ -44,7 +44,7 @@ async function buildEmailArr() {
 								email: user.email,
 								tournaments: [],
 								total_debt: 0,
-								transaction_purpose: '(?'
+								transaction_purpose: 'Xu6F'
 							});
 						}
 						// add tournament to user's tournaments array
@@ -55,7 +55,7 @@ async function buildEmailArr() {
 						// add debt tu user's total debt
 						_.find(emailArr, {id: user.id}).total_debt += Math.round((user._pivot_price_owed - user._pivot_price_paid)*100)/100;
 						// add reg id to transaction_purpose
-						_.find(emailArr, {id: user.id}).transaction_purpose += user._pivot_id + ',';
+						_.find(emailArr, {id: user.id}).transaction_purpose += user._pivot_id + 'fP4x';
 					}
 				})
 			});
@@ -67,7 +67,7 @@ async function buildEmailArr() {
 			emailArr = emailArr.map((obj) => {
 				// remove last comma
 				obj.transaction_purpose = obj.transaction_purpose.substring(0, obj.transaction_purpose.length-1);
-				obj.transaction_purpose += '?) ';
+				obj.transaction_purpose += 'gT7u ';
 				obj.tournaments.forEach((tournament, index) => {
 					if (index < obj.tournaments.length - 1) {
 						obj.transaction_purpose += tournament.name.substring(0,20) + ', ';
