@@ -72,10 +72,9 @@
 					</td>
 					<td class="hidden-xs">{{user.id}}</td>
 					<td>{{user.vorname}} {{user.name}}
-						<span ng-show="user.position == 1" class="help-tip hidden-md-down">
+						<span ng-show="user.position == 1 && user.id != 21" class="help-tip hidden-md-down">
 							<i class="fa fa-star" aria-hidden="true"></i>
-							<p ng-hide="user.id == 21" style="width: 140px!important;">Board member</p>
-							<p ng-show="user.id == 21" style="width: 120px!important;">Krasser Typ</p>
+							<p style="width: 140px!important;">Board member</p>
 						</span>
 					</td>
                     <td>{{user.tournaments.length}}</td>
