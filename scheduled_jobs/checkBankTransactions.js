@@ -314,9 +314,9 @@ async function getAllTransactions(userToken, page) {
 
 	if (DEF_MODE) console.log(TRANSACTIONS.transactions);
 	
-	// filter for only ingoing transactions that have '(?' in their purpose
+	// filter for only ingoing transactions that have 'Xu6F' in their purpose
 	let positiveTransactions = _.filter(TRANSACTIONS.transactions, (transaction) => {
-		return (transaction.amount >= 0 && transaction.purpose.search('\\(\\?') >= 0);
+		return (transaction.amount >= 0 && transaction.purpose.search('Xu6F') >= 0);
 	});
 
 	if (DEF_MODE) console.log(positiveTransactions);
@@ -324,7 +324,7 @@ async function getAllTransactions(userToken, page) {
 	if (positiveTransactions.length) {
 		processTransactions(positiveTransactions);
 	} else {
-		console.log('$$$ There are no new incoming transactions with the correct "(?" signature.');
+		console.log('$$$ There are no new incoming transactions with the correct signature.');
 		console.log('\n\n $$$ Finished Checking Bank Transactions $$$ \n\n');
 	}
 
@@ -342,11 +342,11 @@ async function processTransactions(transactions) {
 		let reg_ids;
 
 		// check if the transaction purpose includes squared brackets
-		if (transaction.purpose.search('\\(\\?') >= 0 && transaction.purpose.search('\\?\\)') >= 0) {
+		if (transaction.purpose.search('Xu6F') >= 0 && transaction.purpose.search('gT7u') >= 0) {
 			// if so, extract registration IDs
-			let reg_id_string = transaction.purpose.substring(transaction.purpose.search('\\(\\?')
-				+ 2, transaction.purpose.search('\\?\\)'));
-			reg_ids = reg_id_string.split(',').map((id) => {
+			let reg_id_string = transaction.purpose.substring(transaction.purpose.search('Xu6F') + 4,
+				transaction.purpose.search('gT7u'));
+			reg_ids = reg_id_string.split('fP4x').map((id) => {
 				return parseInt(id)
 			});
 
@@ -528,37 +528,27 @@ async function processTransactions(transactions) {
 
 }
 
-// processTransactions([
-// 	{
-// 		purpose: 'bla sfte(?169?) TN Gebuehr Lund IV, Boddencup, Munich Open und Berlin IV',
-// 		amount: 60,
-// 		bankBookingDate: '2017-08-24 00:00:00.000',
-// 		counterpartName: 'FLORIAN KINDERMANN',
-// 	},
-// 	{
-// 		purpose: 'Geld für T (?176,302?)',
-// 		amount: 150,
-// 		bankBookingDate: '2017-08-24 00:00:00.000',
-// 		counterpartName: 'Holzhey, Philippe Jurgen',
-// 	},
-// 	{
-// 		purpose: 'Geld für T (?292,29,32?)',
-// 		amount: 30,
-// 		bankBookingDate: '2017-08-24 00:00:00.000',
-// 		counterpartName: 'MORITZ ALTNER',
-// 	},
-// 	{
-// 		purpose: 'Geld für T (?652,164,999?)',
-// 		amount: 13.25,
-// 		bankBookingDate: '2017-08-24 00:00:00.000',
-// 		counterpartName: 'TIM SCHMIDTLEIN'
-// 	}
-// ]);
-
 
 schedule.scheduleJob('0 2 * * *', function(){
 	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
 	authenticateClient();
 });
 
-if (DEF_MODE) authenticateClient();
+schedule.scheduleJob('0 12 * * *', function(){
+	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
+	authenticateClient();
+});
+
+if (DEF_MODE) {
+
+	// processTransactions([
+	// 	{
+	// 		purpose: 'Xu6F352fP4x1032fP4gT7u ZEIT DEBATTE Tübinge, Ironmanturnier 2016',
+	// 		amount: 6,
+	// 		bankBookingDate: '2017-09-08 00:00:00.000',
+	// 		counterpartName: 'Moritz Altner',
+	// 	}
+	// ]);
+
+	authenticateClient();
+}
