@@ -122,3 +122,7 @@
         stroke-dashoffset: 0;
     }
 }
+
+.highcharts-credits {
+    visibility: hidden;
+}
