@@ -127,7 +127,11 @@
                         <th>Comments:</th>
                         <td>{{tournament.comments}}</td>
                     </tr>
-                    <th></th>
+                    <th>
+                        <button class="btn btn-outline-primary" data-ng-click="addToCalendar(tournament)">
+                            <i class="fa fa-calendar" aria-hidden="true"></i> Add to calendar
+                        </button>
+                    </th>
                     <td ng-show="showDetails && istVorstand">
                         <button class="btn btn-outline-primary"
                                 ng-click="showUpdate = true; SuccessMessage = ''; ErrorMessage = ''">Edit
