@@ -113,27 +113,11 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 			$('<style>@keyframes registeredUsers{to {stroke-dashoffset:'+(440-$scope.registeredUsers/users.length*440)+';}}</style>').appendTo('head');
 
 			// Gender Charts
-			let $window = $(window),
-				didScroll = false,
-				genderTop = $('#gender').offset().top - 600;
-
-			$window.on('scroll', function () {
-				didScroll = true;
-			});
-
-			setInterval(function () {
-				console.log(genderTop, $window.scrollTop());
-				if (didScroll) {
-					didScroll = false;
-					if ($window.scrollTop() >= genderTop) {
-						createCharts();
-					}
-				}
-			}, 250);
+			setTimeout(function () {
+				createCharts();
+			}, 1500);
 
 			function createCharts() {
-				//remove listener that will create chart, this ensures the chart will be created only once
-				$window.off('scroll');
 
 				$(function () {
 					Highcharts.chart('genderContainer1', {
