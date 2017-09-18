@@ -50,10 +50,12 @@
 </div>
 
 <div class="ngdialog-buttons">
-	<div class="checkbox help-tip tournaments-dialog-checkbox">
+	<!--HIDE Funding button for now-->
+	<div class="checkbox help-tip tournaments-dialog-checkbox" style="visibility: hidden">
 		<label><input ng-model="funding" type="checkbox" value=""> I want to receive <b>funding</b> for this tournament.</label>
 		<!--TODO Fill with funding criteria-->
 		<p>The funding criteria will be updated and published on 1 September 2017</p>
 	</div>
+
 	<button class="btn btn-outline-success pull-right" ng-click="reg()">Register</button>
 </div>
