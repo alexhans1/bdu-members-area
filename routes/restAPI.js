@@ -1,7 +1,6 @@
 let express = require('express');
 let router = express.Router();
 let _ = require('lodash');
-let fs = require('fs');
 let multer = require('multer');
 let moment = require('moment');
 
@@ -662,7 +661,7 @@ module.exports = function(Bookshelf){
 				if (req.body.attended === 1) {
 					registration.save({
 						attended: 1,
-						price_owed: req.body.price
+						price_owed: (registration.toJSON().role === 'independent') ? 0 : req.body.price
 					});
 				} else {
 					registration.save({
