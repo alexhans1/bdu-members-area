@@ -23,13 +23,32 @@
 		</div>
 	</div>
 	<div class="row" ng-show="isSpeaker">
+		<!--optional 1. team partner-->
 		<div class="col-md-12">
 			<div class="form-group">
-				<label><b>Teampartner</b></label><br><p>Don't have a team partner yet? No problem.</p>
-				<select class="form-control" ng-options="user as (user.vorname + ' ' + user.name) for user in partnersToRegister track by user.id" ng-model="teamPartner"></select>
+				<label><b>Teammate</b></label><br><p>Don't have a team partner yet? No problem.</p>
+				<select class="form-control"
+						ng-options="user as (user.vorname + ' ' + user.name) for user in partnersToRegister track by user.id"
+						ng-model="firstTeamPartner">
+				</select>
 			</div>
 		</div>
-		<div ng-show="teamPartner.id>0" class="col-md-12">
+		<!--optional 2. team partner-->
+		<div class="col-md-12"
+			 ng-hide="
+			 tournament.format.toLowerCase() == 'bps' ||
+			 tournament.format.toLowerCase() == 'bp' ||
+			 firstTeamPartner.id < 0"
+		>
+			<div class="form-group">
+				<label><b>2. Teammate</b></label><br><p>For OPD competitions.</p>
+				<select class="form-control"
+						ng-options="user as (user.vorname + ' ' + user.name) for user in partnersToRegister track by user.id"
+						ng-model="secondTeamPartner">
+				</select>
+			</div>
+		</div>
+		<div ng-show="firstTeamPartner.id > 0" class="col-md-12">
 			<div class="form-group">
 				<label><b>Teamname</b></label><br><p>Do you have a fancy name for your team?</p>
 				<input type="text" ng-model="team" class="form-control" name="team" list="teamnames">

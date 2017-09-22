@@ -73,12 +73,15 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.selected = $scope.roles[0];
 
 		$scope.personToRegister = $rootScope.user;
-		$scope.teamPartner = null;
+		$scope.firstTeamPartner = null;
+		$scope.secondTeamPartner = null;
 		let users = UserService.query(function () {
 			$scope.usersToRegister = _.orderBy(users, ['vorname'], 'asc');
 			$scope.partnersToRegister = _.reject(_.orderBy(users, ['vorname'], 'asc'), {id: $rootScope.user.id});
 			$scope.partnersToRegister.push({vorname: "I'm looking for a teammate!", id: -1});
-			$scope.teamPartner = _.find($scope.partnersToRegister, {id: -1});
+			$scope.partnersToRegister.push({vorname: "One partner is enough for me.", id: -2});
+			$scope.firstTeamPartner = _.find($scope.partnersToRegister, {id: -1});
+			$scope.secondTeamPartner = _.find($scope.partnersToRegister, {id: -2});
 		});
 
 		$scope.team = '';
@@ -102,12 +105,18 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
 		$scope.funding = false;
 		$scope.reg = function () {
+			// check if firtTeamPartner and secondTeamPartner are the same
+			if ($scope.firstTeamPartner.id === $scope.secondTeamPartner.id) {
+			    return showSnackbar(false, 'First and second teammate must not be the same. Duh...')
+			}
+
 			let url = '/app/reg/' + $scope.tournament.id;
 			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
 				team: $scope.team,
-				partner: $scope.teamPartner.id,
+				partner1: $scope.firstTeamPartner.id,
+				partner2: $scope.secondTeamPartner.id,
 				comment: $scope.comment,
 				funding: $scope.funding
 			});

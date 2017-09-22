@@ -445,61 +445,115 @@ module.exports = function(Bookshelf){
 							})
 						} else if(req.body.role === 'speaker') {
 							// if speaker, check if Partner is named
-							if(req.body.partner && req.body.partner > 0) {
-								// if a partner is named,
-								// check if partner is already registered
-								Registration.forge({tournament_id: req.params.t_id, user_id: req.body.partner}).fetch()
-								.then(function (arg) {
-									if(arg){
-										//if a user was found, return that the partner is already registered
-										console.error('Partner is already registered.');
-										res.status(202).send('Your partner is already registered for this tournament.');
-									} else {
-										//if no user was found,
-										//register both
-										Registrations.forge([
-											{
-												tournament_id: req.params.t_id,
-												user_id: req.body.id,
-												role: req.body.role,
-												comment: req.body.comment,
-												funding: req.body.funding,
-												teamname: req.body.team || ''
-											},
-											{
-												tournament_id: req.params.t_id,
-												user_id: req.body.partner,
-												role: req.body.role,
-												teamname: req.body.team || ''
-											}
-										])
-										.invokeThen('save')
-										.then(function(entry) {
-											console.info('Successfully registered for ' + req.params.t_id + ' with ' +
-												req.body.partner + ' as speakers.');
-											res.status(200).send(entry);
-										})
-									}
-								})
-							} else {
-								//if no partner is given and req request is for speaker,
-								//check if teamname is given
-								if(req.body.team === '') {
-									//if no partner is named, reg user alone
+							if(req.body.partner1 && req.body.partner1 > 0) {
+								// check if second partner is named
+								if (req.body.partner2 && req.body.partner2 > 0) {
+									// if two partners are given, check if one is already registered
 									Registration.forge({
 										tournament_id: req.params.t_id,
-										user_id: req.body.id,
-										role: req.body.role,
-										comment: req.body.comment,
-										funding: req.body.funding,
-										teamname: req.body.team || ''
+										user_id: req.body.partner1,
+									}).fetch()
+									.then(function (arg) {
+										if (arg) {
+											//if a user was found, return that the partner is already registered
+											console.error('Partner one is already registered.');
+											res.status(202).send('Your first named partner is already registered for this tournament.');
+										} else {
+											Registration.forge({
+												tournament_id: req.params.t_id,
+												user_id: req.body.partner2,
+											}).fetch()
+											.then(function (arg) {
+												if (arg) {
+													//if a user was found, return that the partner is already registered
+													console.error('Partner one two is already registered.');
+													res.status(202).send('Your second named partner is already registered for this tournament.');
+												} else {
+													// register all three for the tournament
+													Registrations.forge([
+														{
+															tournament_id: req.params.t_id,
+															user_id: req.body.id,
+															role: req.body.role,
+															comment: req.body.comment,
+															funding: req.body.funding,
+															teamname: req.body.team || ''
+														},
+														{
+															tournament_id: req.params.t_id,
+															user_id: req.body.partner1,
+															role: req.body.role,
+															teamname: req.body.team || ''
+														},
+														{
+															tournament_id: req.params.t_id,
+															user_id: req.body.partner2,
+															role: req.body.role,
+															teamname: req.body.team || ''
+														},
+													])
+													.invokeThen('save')
+													.then(function(entry) {
+														console.info('Successfully registered for ' + req.params.t_id + ' with ' +
+															req.body.partner1 + ' and ' + req.body.partner2 + ' as speakers.');
+														res.status(200).send(entry);
+													})
+												}
+											})
+										}
 									})
-									.save()
-									.then(function(entry) {
-										console.info('Successfully registered for ' + req.params.t_id + ' as speaker.');
-										res.status(200).send(entry);
+								} else {
+									// if only first partner is named,
+									// check if partner is already registered
+									Registration.forge({tournament_id: req.params.t_id, user_id: req.body.partner1}).fetch()
+									.then(function (arg) {
+										if(arg){
+											//if a user was found, return that the partner is already registered
+											console.error('Partner is already registered.');
+											res.status(202).send('Your partner is already registered for this tournament.');
+										} else {
+											//if no user was found,
+											//register both
+											Registrations.forge([
+												{
+													tournament_id: req.params.t_id,
+													user_id: req.body.id,
+													role: req.body.role,
+													comment: req.body.comment,
+													funding: req.body.funding,
+													teamname: req.body.team || ''
+												},
+												{
+													tournament_id: req.params.t_id,
+													user_id: req.body.partner1,
+													role: req.body.role,
+													teamname: req.body.team || ''
+												}
+											])
+											.invokeThen('save')
+											.then(function(entry) {
+												console.info('Successfully registered for ' + req.params.t_id + ' with ' +
+													req.body.partner1 + ' as speakers.');
+												res.status(200).send(entry);
+											})
+										}
 									})
 								}
+							} else {
+								//if no partner is named, reg user alone
+								Registration.forge({
+									tournament_id: req.params.t_id,
+									user_id: req.body.id,
+									role: req.body.role,
+									comment: req.body.comment,
+									funding: req.body.funding,
+									teamname: req.body.team || '',
+								})
+								.save()
+								.then(function(entry) {
+									console.info('Successfully registered for ' + req.params.t_id + ' as speaker.');
+									res.status(200).send(entry);
+								})
 							}
 						} else {
 							//if none of the reg roles apply return error
