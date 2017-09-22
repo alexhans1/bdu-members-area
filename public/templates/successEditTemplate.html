@@ -18,7 +18,15 @@
 			ng-model="selectedSuccess.pivot_partner1">
 	</select>
 </div>
-<div class="form-group" ng-hide="tournament.format.toLowerCase() == 'bps' || tournament.format.toLowerCase() == 'bp' || tournament.pivot_partner1 == null || tournament.pivot_success == null || tournament.pivot_success == 'judge' || tournament.pivot_success == 'judge2'">
+<div class="form-group"
+	 ng-hide="
+	 tournament.format.toLowerCase() == 'bps' ||
+	 tournament.format.toLowerCase() == 'bp' ||
+	 tournament.pivot_partner1 == null ||
+	 tournament.pivot_success == null ||
+	 tournament.pivot_success == 'judge' ||
+	 tournament.pivot_success == 'judge2'
+">
 	<label for="partner2">Partner 2</label>
 	<select id="partner2"
 			ng-change="setPartner(selectedSuccess.pivot_partner2.id, tournament.pivot_id, 2)"

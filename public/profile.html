@@ -236,10 +236,17 @@
 		<textarea style="min-width: 180px" rows="3" placeholder="You can leave a comment here."
 				  ng-model="selected.pivot_comment" class="form-control"></textarea>
 	</td>
-	<td>
-		<input type="checkbox" class="form-check"
-			   ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1">
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_funding == 0" class="text-center">
+		<i class="fa fa-times" aria-hidden="true"></i>
 	</td>
+	<td ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_funding == 1" class="text-center">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</td>
+	<!--Funding beantragen derzeit nicht moeglich als User -> kann nur Vorstand machen-->
+	<!--<td>-->
+		<!--<input type="checkbox" class="form-check"-->
+			   <!--ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1">-->
+	<!--</td>-->
 	<td class="preventWrap">{{tournament.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap">{{tournament.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
