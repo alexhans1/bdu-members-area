@@ -1,10 +1,6 @@
 
-.gitignore
 node_modules
 .idea/*
-.idea/workspace.xml
 .env
-import
-import.sql
 npm-debug.log
 /dumps
