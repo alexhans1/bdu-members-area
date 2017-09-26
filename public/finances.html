@@ -46,6 +46,9 @@
                     </th>
                     <th>Tournaments</th>
                     <th>
+                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('judgeRatio')">Judging Ratio</button>
+                    </th>
+                    <th>
                         <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalDebt')">Debt</button>
                     </th>
                     <th>
@@ -78,6 +81,7 @@
 						</span>
 					</td>
                     <td>{{user.tournaments.length}}</td>
+                    <td>{{user.judgeRatio}}%</td>
                     <td>{{user.totalDebt | currency:"€"}}</td>
                     <td>{{user.totalPoints}}</td>
                     <td>{{user.last_login | date: 'medium'}}</td>

@@ -15,14 +15,39 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 				_.each(users, function (user) {
 					let totalPoints = 0;
 					let totalDebt = 0;
+					let judgeCount = 0;
+					let speakerCount = 0;
+					let totalAttendedTournaments = 0;
 					_.each(user.tournaments, function (tournament) {
+						// calculate totalPoints
 						if (moment(tournament.startdate).add(1, 'year').isAfter(moment())) {
 							totalPoints += tournament.pivot_points;
 						}
+						// calculate judging-speaking ratio
+						if (tournament.pivot_role === 'judge') {
+							judgeCount++;
+						} else if (tournament.pivot_role === 'speaker') {
+							speakerCount++;
+						} else {
+							// if independent check points for clue
+							if (tournament.pivot_success === 'judge') {
+								judgeCount++;
+							} else if (tournament.pivot_success !== 'judge' &&
+								tournament.pivot_success !== null &&
+								tournament.pivot_success !== '') {
+								speakerCount++;
+							}
+						}
+						// calculate totalDebt
 						totalDebt += (tournament.pivot_price_owed - tournament.pivot_price_paid);
+						// calculate attended tournaments
+						if (tournament.pivot_attended === 1) {
+							totalAttendedTournaments++;
+						}
 					});
 					user.totalPoints = totalPoints;
 					user.totalDebt = totalDebt;
+					user.judgeRatio = (totalAttendedTournaments) ? Math.round(judgeCount*100/(judgeCount + speakerCount)) : -1;
 					$scope.totalClubDebt += totalDebt;
 				});
 				$scope.users = _.orderBy(users, ['last_login'], 'desc');
