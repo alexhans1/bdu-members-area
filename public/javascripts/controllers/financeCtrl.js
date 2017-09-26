@@ -24,11 +24,11 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 							totalPoints += tournament.pivot_points;
 						}
 						// calculate judging-speaking ratio
-						if (tournament.pivot_role === 'judge') {
+						if (tournament.pivot_role === 'judge' && tournament.pivot_attended === 1) {
 							judgeCount++;
-						} else if (tournament.pivot_role === 'speaker') {
+						} else if (tournament.pivot_role === 'speaker' && tournament.pivot_attended === 1) {
 							speakerCount++;
-						} else {
+						} else if (tournament.pivot_attended === 1) {
 							// if independent check points for clue
 							if (tournament.pivot_success === 'judge') {
 								judgeCount++;
