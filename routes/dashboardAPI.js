@@ -47,19 +47,23 @@ module.exports = function(Bookshelf){
 			data: []
 		};
 
-		Models.Club_Debt_Col.forge().fetch()
-		.then((clubDebtCollection) => {
-			console.info('Successfully retrieved all daily club debt.');
-			clubDebtCollection = clubDebtCollection.toJSON();
+		try {
+			Models.Club_Debt_Col.forge().fetch()
+			.then((clubDebtCollection) => {
+				console.info('Successfully retrieved all daily club debt.');
+				clubDebtCollection = clubDebtCollection.toJSON();
 
-			clubDebtCollection.forEach((obj) => {
-				result.data.push([
-					moment(obj.timestamp).unix()*1000,
-					obj.debt
-				])
+				clubDebtCollection.forEach((obj) => {
+					result.data.push([
+						moment(obj.timestamp).unix()*1000,
+						obj.debt
+					])
+				});
+				res.send(result);
 			});
-			res.send(result);
-		});
+		} catch (ex) {
+		    console.log(ex);
+		}
 
 	});
 

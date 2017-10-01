@@ -2,6 +2,9 @@ let sslRedirect = require('heroku-ssl-redirect');
 let express = require('express');
 let app = express();
 let path = require('path');
+if (process.env.NODE_ENV !== 'production'){
+	require('longjohn');
+}
 let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
@@ -30,7 +33,6 @@ let index = require('./routes/index');
 let restApi = require('./routes/restAPI')(Bookshelf);
 let rankingApi = require('./routes/rankingAPI')(Bookshelf);
 let dashboard = require('./routes/dashboardAPI')(Bookshelf);
-let authenticate = require('./routes/authenticate')(passport);
 
 // https redirect
 app.use(sslRedirect());
@@ -69,7 +71,6 @@ initPassport(passport, Bookshelf);
 
 //setup routes URIs
 app.use('/', index);
-app.use('/auth', authenticate);
 app.use('/app', restApi);
 app.use('/ranking', rankingApi);
 app.use('/dashboard', dashboard);
