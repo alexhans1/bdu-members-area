@@ -13,9 +13,16 @@ require('console-stamp')( console, { pattern : "dd/mm/yyyy HH:MM:ss" } ); //adds
 let flash = require('req-flash'); //lets me parse individual messages to requests
 let session = require('express-session'); //browser sessions for authentication
 let passport = require('passport'); //Passport is the library we will use to handle storing users within HTTP sessions
-let conn = require('./knexfile.js'); //read out the DB Conn Data
-let knex = require('knex')(conn[process.env.NODE_ENV || 'development']); //require knex query binder
-let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
+
+// connect to database
+let conn, knex, Bookshelf;
+try {
+	conn = require('./knexfile.js'); //read out the DB Conn Data
+	knex = require('knex')(conn[process.env.NODE_ENV || 'local']); //require knex query binder
+	Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
+} catch (ex) {
+	console.log(ex);
+}
 
 //IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
 //sets up routes variables

@@ -4,9 +4,14 @@
 let dotenv = require('dotenv'); //enables environment variables for development
 dotenv.load();
 
-let conn = require('../knexfile.js'); //read out the DB Conn Data
-let knex = require('knex')(conn[process.env.NODE_ENV || 'local']); //require knex query binder
-let Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
+let conn, knex, Bookshelf;
+try {
+	conn = require('../knexfile.js'); //read out the DB Conn Data
+	knex = require('knex')(conn[process.env.NODE_ENV || 'local']); //require knex query binder
+	Bookshelf = require('bookshelf')(knex); //require Bookshelf ORM Framework
+} catch (ex) {
+	console.log(ex);
+}
 
 // DEFINE MODELS
 let Models = require('../models/bookshelfModels.js')(Bookshelf);
