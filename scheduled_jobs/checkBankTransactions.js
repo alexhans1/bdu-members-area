@@ -533,13 +533,7 @@ async function processTransactions(transactions) {
 
 }
 
-
-schedule.scheduleJob('0 2 * * *', function(){
-	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
-	authenticateClient();
-});
-
-schedule.scheduleJob('0 12 * * *', function(){
+schedule.scheduleJob('0 17 * * *', function(){
 	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
 	authenticateClient();
 });
