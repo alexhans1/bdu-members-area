@@ -90,7 +90,7 @@
 
 <nav class="navbar navbar-inverse bg-inverse navbar-fixed-top navbar-toggleable-md bg-faded">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <i class="fa fa-bars fa-lg" aria-hidden="true"></i>
     </button>
     <a class="navbar-brand" href="#/profile">
         <img class="nav-logo" ng-src="http://debating.de/BDUDBdev/bdu_white_logo.png" onerror="this.src='images/bdu_quad.png'" alt=""/>
@@ -116,6 +116,10 @@
                 <a class="nav-link hidden-sm-down" href="/#/ranking">Ranking</a>
                 <a class="nav-link hidden-md-up" href="/#/ranking" data-toggle="collapse" data-target=".navbar-collapse">Ranking</a>
             </li>
+            <li class="nav-item" ng-show="authenticated">
+                <a class="nav-link hidden-sm-down" href="/#/dashboard">Dashboard</a>
+                <a class="nav-link hidden-md-up" href="/#/dashboard" data-toggle="collapse" data-target=".navbar-collapse">Dashboard</a>
+            </li>
             <li ng-show="istVorstand" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Vorstand
@@ -125,8 +129,6 @@
                     <a class="dropdown-item hidden-md-up" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>
                     <a class="dropdown-item hidden-sm-down" href="/#/finances">Club Members</a>
                     <a class="dropdown-item hidden-md-up" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Club Members</a>
-                    <a class="dropdown-item hidden-sm-down" href="/#/dashboard">Dashboard</a>
-                    <a class="dropdown-item hidden-md-up" href="/#/dashboard" data-toggle="collapse" data-target=".navbar-collapse">Dashboard</a>
                 </div>
             </li>
         </ul>

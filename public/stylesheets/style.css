@@ -368,6 +368,14 @@ textarea {
     margin-right: 10px;
 }
 
+.navbar-toggler {
+    border: none;
+}
+.navbar-toggler .fa-bars{
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin-top: 9px;
+}
+
 .dropdown-item {
     font-size: larger;
     padding: 10px;

@@ -115,7 +115,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 			// Gender Charts
 			setTimeout(function () {
 				createCharts();
-			}, 1500);
+			}, 500);
 
 			function createCharts() {
 
@@ -389,7 +389,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 
 		});
 
-		// Time since existence
+		// Time since existence of BDU
 		let foundationDate = moment('2001-12-17T23:00:00.000+02:00');
 		$interval(() => {
 			$scope.timeExisting = moment.preciseDiff(foundationDate, moment());
