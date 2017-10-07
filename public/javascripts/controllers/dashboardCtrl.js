@@ -100,12 +100,14 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 					}
 				}
 
-				if (moment(user.last_login).isAfter(moment().subtract(2, 'weeks'))) $scope.activeUsers++;
-
 				let currentTournaments = _.filter(user.tournaments, (tournament) => {
 					return moment(tournament.startdate).isAfter(moment());
 				});
+				let wentTournaments = _.filter(user.tournaments, (tournament) => {
+				    return tournament.pivot_attended;
+				});
 				if (currentTournaments.length) $scope.registeredUsers++;
+				if (wentTournaments.length) $scope.activeUsers++;
 			});
 
 			//make sure you don't carriage return the css inline statement, or else it'll be error as ILLEGAL
