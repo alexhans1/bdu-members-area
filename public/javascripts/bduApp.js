@@ -306,6 +306,31 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+				$scope.tournamentsusers = $scope.tournamentsusers.map((tournament) => {
+					hasOpenReg = false;
+					if (moment().isBefore(moment(tournament.enddate))) {
+						return {
+							...tournament,
+							hasOpenReg
+						}
+					}
+					let BreakException = {};
+					try {
+						tournament.users.forEach((user) => {
+							if (user.pivot_attended !== 1) {
+								hasOpenReg = true;
+								throw BreakException;
+							}
+						});
+					} catch (ex) {
+						if (ex !== BreakException) console.error(ex);
+					}
+
+					return {
+						...tournament,
+						hasOpenReg
+					}
+				});
 				$scope.tournamentsusers.map((tournament) => {
 					tournament.isOld = moment(tournament.startdate).isBefore(moment());
 					return tournament;
