@@ -15,7 +15,7 @@ try {
 // DEFINE MODELS
 let Models = require('../models/bookshelfModels.js')(Bookshelf);
 
-let test = false;
+let test = (process.env.NODE_ENV === 'local');
 
 // GENERATE EMAIL ARRAY
 let emailArr = [];
