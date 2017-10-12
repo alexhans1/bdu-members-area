@@ -15,7 +15,7 @@ try {
 // DEFINE MODELS
 let Models = require('../models/bookshelfModels.js')(Bookshelf);
 
-let test = (process.env.NODE_ENV === 'local');
+let test = false;
 
 // GENERATE EMAIL ARRAY
 let emailArr = [];
@@ -249,7 +249,9 @@ async function sendNotification() {
 let schedule = require('node-schedule');
 
 schedule.scheduleJob('0 19 * * *', function(){
-	execute();
+	if (!((process.env.NODE_ENV === 'local'))) {
+		execute();
+	}
 });
 
 if (test) execute();

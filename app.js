@@ -77,7 +77,9 @@ app.use('/dashboard', dashboard);
 require('./routes/routes.js')(app, passport, Bookshelf);
 
 //setup scheduled jobs
-require('./scheduled_jobs/sendDebtMails');
+if (!((process.env.NODE_ENV === 'local'))) {
+	require('./scheduled_jobs/sendDebtMails');
+}
 require('./scheduled_jobs/saveTotalClubDebt');
 require('./scheduled_jobs/checkBankTransactions');
 
