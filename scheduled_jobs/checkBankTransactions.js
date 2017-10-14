@@ -534,7 +534,7 @@ async function processTransactions(transactions) {
 }
 
 // run banking service Mondays, Wednesdays and Fridays at 7pm German time (or 5pm iso time)
-schedule.scheduleJob('0 17 * * 1, 3, 5', function(){
+schedule.scheduleJob('0 17 * * 1,3,5', function(){
 	console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
 	authenticateClient();
 });
