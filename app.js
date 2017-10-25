@@ -2,8 +2,8 @@ let sslRedirect = require('heroku-ssl-redirect');
 let express = require('express');
 let app = express();
 let path = require('path');
-if (process.env.NODE_ENV !== 'production'){
-	require('longjohn');
+if (process.env.NODE_ENV !== 'production'){ //only if not production
+	require('longjohn'); // for extensive logging in local
 }
 let favicon = require('serve-favicon');
 let logger = require('morgan');
