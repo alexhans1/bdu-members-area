@@ -85,8 +85,8 @@
                     <td>{{user.totalDebt | currency:"€"}}</td>
                     <td>{{user.totalPoints}}</td>
                     <td>{{user.last_login | date: 'medium'}}</td>
-                    <td ng-hide="user.last_mail == '0000-00-00 00:00:00'" class="hidden-sm-down">{{user.last_mail | date: 'medium'}}</td>
-                    <td ng-show="user.last_mail == '0000-00-00 00:00:00'" class="hidden-sm-down">never</td>
+                    <td ng-hide="user.last_mail == '0000-00-00 00:00:00'">{{user.last_mail | date: 'medium'}}</td>
+                    <td ng-show="user.last_mail == '0000-00-00 00:00:00'">never</td>
                 </tr>
                 <tr style="font-weight: bold;">
 					<td class="hidden-sm-down"></td>

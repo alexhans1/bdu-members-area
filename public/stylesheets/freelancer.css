@@ -81,6 +81,7 @@ header img {
   margin: 0 auto 20px;
 }
 header .intro-text .name {
+  word-wrap: break-word;
   display: block;
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
