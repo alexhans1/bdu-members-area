@@ -242,7 +242,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 
 		$scope.editContact = function (tournament) {
 			$scope.selected = angular.copy(tournament);
-			$scope.selected.pivot_funding = ($scope.selected.pivot_funding) ? true : false;
+			$scope.selected.pivot_funding = !!($scope.selected.pivot_funding);
 			$scope.selected.pivot_role = _.find($scope.roles, {'value': $scope.selected.pivot_role});
 		};
 
@@ -309,10 +309,8 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 				$scope.tournamentsusers = $scope.tournamentsusers.map((tournament) => {
 					hasOpenReg = false;
 					if (moment().isBefore(moment(tournament.enddate))) {
-						return {
-							...tournament,
-							hasOpenReg
-						}
+						tournament.hasOpenReg = hasOpenReg;
+						return tournament;
 					}
 					let BreakException = {};
 					try {
@@ -326,10 +324,8 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 						if (ex !== BreakException) console.error(ex);
 					}
 
-					return {
-						...tournament,
-						hasOpenReg
-					}
+					tournament.hasOpenReg = hasOpenReg;
+					return tournament;
 				});
 				$scope.tournamentsusers.map((tournament) => {
 					tournament.isOld = moment(tournament.startdate).isBefore(moment());
