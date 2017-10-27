@@ -68,13 +68,19 @@
 	</div>
 </div>
 
-<div class="ngdialog-buttons">
+<div class="row ngdialog-buttons reg-form">
 	<!--HIDE Funding button for now-->
-	<div class="checkbox help-tip tournaments-dialog-checkbox" style="visibility: hidden">
-		<label><input ng-model="funding" type="checkbox" value=""> I want to receive <b>funding</b> for this tournament.</label>
-		<!--TODO Fill with funding criteria-->
-		<p>The funding criteria will be updated and published on 1 September 2017</p>
+	<div class="col-6 checkbox tournaments-dialog-checkbox help-tip">
+		<label class="pointer">
+			<input ng-model="is_independent" type="checkbox"> Independent
+		</label>
+		<p>Check ´Independent´ if the BDU is not paying your team spot (i.e. independent adjudicator / CA / you go for a different institution...).</p>
+		<!--<label><input ng-model="funding" type="checkbox" value=""> I want to receive <b>funding</b> for this tournament.</label>-->
+		<!--&lt;!&ndash;TODO Fill with funding criteria&ndash;&gt;-->
+		<!--<p>The funding criteria will be updated and published on 1 September 2017</p>-->
 	</div>
 
-	<button class="btn btn-outline-success pull-right" ng-click="reg()">Register</button>
+	<div class="col-6">
+		<button class="btn btn-outline-success pull-right" ng-click="reg()">Register</button>
+	</div>
 </div>

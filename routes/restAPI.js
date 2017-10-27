@@ -93,6 +93,9 @@ module.exports = function(Bookshelf){
 
 	// no create user function here as we do that in the passport-init.js
 
+
+	//----- DISABLE IMAGE UPLOAD FOR NOW --------
+
 	// router.route('/user/image')
 	// //upload new image for current user
 	// .post(upload.single('pic'), function (req, res) {
@@ -439,25 +442,13 @@ module.exports = function(Bookshelf){
 									tournament_id: req.params.t_id,
 									user_id: req.body.id,
 									role: req.body.role,
+									is_independent: req.body.is_independent,
 									comment: req.body.comment,
 									funding: req.body.funding
 								})
 								.save()
 								.then(function(entry) {
 									console.info('Successfully registered for ' + req.params.t_id + ' as judge.');
-									res.status(200).send(entry);
-								})
-							} else if(req.body.role === 'independent') {
-								//if reg request is for independent reg user
-								Registration.forge({
-									tournament_id: req.params.t_id,
-									user_id: req.body.id,
-									role: req.body.role,
-									comment: req.body.comment
-								})
-								.save()
-								.then(function(entry) {
-									console.info('Successfully registered for ' + req.params.t_id + ' as independent.');
 									res.status(200).send(entry);
 								})
 							} else if(req.body.role === 'speaker') {
@@ -495,6 +486,7 @@ module.exports = function(Bookshelf){
 																tournament_id: req.params.t_id,
 																user_id: req.body.id,
 																role: req.body.role,
+																is_independent: req.body.is_independent,
 																comment: req.body.comment,
 																funding: req.body.funding,
 																teamname: req.body.team || ''
@@ -544,6 +536,7 @@ module.exports = function(Bookshelf){
 														tournament_id: req.params.t_id,
 														user_id: req.body.id,
 														role: req.body.role,
+														is_independent: req.body.is_independent,
 														comment: req.body.comment,
 														funding: req.body.funding,
 														teamname: req.body.team || ''
@@ -571,6 +564,7 @@ module.exports = function(Bookshelf){
 										tournament_id: req.params.t_id,
 										user_id: req.body.id,
 										role: req.body.role,
+										is_independent: req.body.is_independent,
 										comment: req.body.comment,
 										funding: req.body.funding,
 										teamname: req.body.team || '',
@@ -602,7 +596,7 @@ module.exports = function(Bookshelf){
 			Registration.forge({id: req.params.id})
 			.fetch({require: true})
 			.then(function (registration) {
-				if(registration.toJSON().user_id != req.user.id && req.user.position != 1) {
+				if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
 					console.info('You are not authorized to delete that registration.');
 					res.json({error: true, message: 'You are not authorized to delete that registration.'});
 					return false;
@@ -638,6 +632,7 @@ module.exports = function(Bookshelf){
 
 				registration.save({
 					role: req.body.role,
+					is_independent: req.body.is_independent,
 					teamname: req.body.teamname,
 					comment: req.body.comment,
 					funding: req.body.funding,
@@ -756,7 +751,7 @@ module.exports = function(Bookshelf){
 				if (req.body.attended === 1) {
 					registration.save({
 						attended: 1,
-						price_owed: (registration.toJSON().role === 'independent') ? 0 : req.body.price
+						price_owed: (registration.toJSON().is_independent) ? 0 : req.body.price
 					});
 				} else {
 					registration.save({

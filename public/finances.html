@@ -116,6 +116,7 @@
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('name')">Name</button></th>
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('startdate')">Date</button></th>
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_role')">Role</button></th>
+                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_is_independent')">Independent</button></th>
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_success')">Success</button></th>
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_points')">Points</button></th>
                     <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
@@ -147,6 +148,12 @@
     </td>
     <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
     <td>{{tournament.pivot_role}}</td>
+	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</td>
+	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
+		<i class="fa fa-times" aria-hidden="true"></i>
+	</td>
 	<!--<td>{{tournament.pivot_success}} <i ng-click="showSuccessOptions" class="fa fa-pencil-square-o text-info pointer" aria-hidden="true"></i></td>-->
 	<td class="text-center" ng-controller="successCtrl" ng-include="getSuccessTemplate(tournament.id)"></td>
 	<!--<td>-->
@@ -198,6 +205,12 @@
     </td>
     <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
     <td>{{tournament.pivot_role}}</td>
+	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
+		<i class="fa fa-check" aria-hidden="true"></i>
+	</td>
+	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
+		<i class="fa fa-times" aria-hidden="true"></i>
+	</td>
     <td>{{tournament.pivot_success}}</td>
     <td>{{tournament.pivot_points}}</td>
     <td>

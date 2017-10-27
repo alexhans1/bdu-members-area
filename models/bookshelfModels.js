@@ -10,6 +10,7 @@ module.exports = function (Bookshelf) {
 			return this.belongsToMany(Tournament).withPivot([
 				'id',
 				'role',
+				'is_independent',
 				'attended',
 				'teamname',
 				'comment',
@@ -41,6 +42,7 @@ module.exports = function (Bookshelf) {
 			return this.belongsToMany(User).withPivot([
 				'id',
 				'role',
+				'is_independent',
 				'attended',
 				'teamname',
 				'comment',

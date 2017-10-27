@@ -59,15 +59,11 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.roles = [{
 			id: 1,
 			value: 'judge',
-			label: 'judge'
+			label: 'judge',
 		}, {
 			id: 2,
 			value: 'speaker',
-			label: 'speaker'
-		}, {
-			id: 3,
-			value: 'independent',
-			label: 'independent'
+			label: 'speaker',
 		}];
 
 		$scope.selected = $scope.roles[0];
@@ -86,6 +82,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 
 		$scope.team = '';
 		$scope.comment = '';
+		$scope.funding = false;
+		$scope.is_independent = false;
 
 		$scope.isSpeaker = false;
 		$scope.setRole = function () {
@@ -103,9 +101,8 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		};
 
 		//REG FUNCTION TO BE CLICKED FROM THE DIALOG
-		$scope.funding = false;
 		$scope.reg = function () {
-			// check if firtTeamPartner and secondTeamPartner are the same
+			// check if firstTeamPartner and secondTeamPartner are the same
 			if ($scope.firstTeamPartner.id === $scope.secondTeamPartner.id) {
 			    return showSnackbar(false, 'First and second teammate must not be the same. Duh...')
 			}
@@ -114,11 +111,12 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
+				is_independent: ($scope.is_independent) ? 1 : 0,
 				team: $scope.team,
 				partner1: $scope.firstTeamPartner.id,
 				partner2: $scope.secondTeamPartner.id,
 				comment: $scope.comment,
-				funding: $scope.funding
+				funding: $scope.funding,
 			});
 			$http.post(url, parameters)
 			.then(function successCallback(response) {

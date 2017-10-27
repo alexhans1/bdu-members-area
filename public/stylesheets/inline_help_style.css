@@ -62,6 +62,10 @@
 	left:0;
 }
 
+.reg-form .help-tip p:after {
+	height: 0 !important;
+}
+
 @-webkit-keyframes fadeIn {
 	0% { 
 		opacity:0; 
@@ -69,12 +73,12 @@
 	}
 
 	100% {
-		opacity:100%;
+		opacity:100;
 		transform: scale(1);
 	}
 }
 
 @keyframes fadeIn {
 	0% { opacity:0; }
-	100% { opacity:100%; }
+	100% { opacity:100; }
 }

@@ -28,15 +28,6 @@ app.controller('FinanceCtrl', function ($scope, $http, $rootScope, $location, an
 							judgeCount++;
 						} else if (tournament.pivot_role === 'speaker' && tournament.pivot_attended === 1) {
 							speakerCount++;
-						} else if (tournament.pivot_attended === 1) {
-							// if independent check points for clue
-							if (tournament.pivot_success === 'judge') {
-								judgeCount++;
-							} else if (tournament.pivot_success !== 'judge' &&
-								tournament.pivot_success !== null &&
-								tournament.pivot_success !== '') {
-								speakerCount++;
-							}
 						}
 						// calculate totalDebt
 						totalDebt += (tournament.pivot_price_owed - tournament.pivot_price_paid);

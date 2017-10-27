@@ -243,6 +243,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 		$scope.editContact = function (tournament) {
 			$scope.selected = angular.copy(tournament);
 			$scope.selected.pivot_funding = !!($scope.selected.pivot_funding);
+			$scope.selected.pivot_is_independent = !!($scope.selected.pivot_is_independent);
 			$scope.selected.pivot_role = _.find($scope.roles, {'value': $scope.selected.pivot_role});
 		};
 
@@ -253,6 +254,7 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			let parameters = JSON.stringify({
 				reg_id: reg_id,
 				role: $scope.selected.pivot_role.value,
+				is_independent: ($scope.selected.pivot_is_independent) ? 1 : 0,
 				teamname: team,
 				funding: $scope.selected.pivot_funding,
 				comment: $scope.selected.pivot_comment
@@ -284,10 +286,6 @@ app.controller('mainCtrl', function ($scope, $http, $rootScope, $location, $wind
 			id: 2,
 			value: 'speaker',
 			label: 'speaker'
-		}, {
-			id: 3,
-			value: 'independent',
-			label: 'independent'
 		}];
 
 	}
