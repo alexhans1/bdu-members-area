@@ -24,7 +24,7 @@ let ftp = {
 
 // let uplkoad = multer({
 // 	storage: new FTPStorage({
-// 		basepath: '/public_html/BDUDBdev/userpics/',
+// 		basepath: '/public_html/members_area/userpics/',
 // 		ftp: ftp
 // 	})
 // });
@@ -105,7 +105,7 @@ module.exports = function(Bookshelf){
 	// 		User.forge({id: req.user.id}).fetch()
 	// 		.then(function (user) {
 	// 			//save the image path from the db
-	// 			let deletePath = '/public_html/BDUDBdev/userpics/' + user.get('image');
+	// 			let deletePath = '/public_html/members_area/userpics/' + user.get('image');
 	//
 	// 			//update the file name in the db
 	// 			user.save({
