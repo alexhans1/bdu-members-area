@@ -13,7 +13,6 @@
   "dependencies": {
     "angular-bootstrap-datetimepicker": "^1.1.3",
     "array-flatten": "^2.1.1",
-    "async": "^2.1.4",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "~1.18.2",
@@ -25,7 +24,6 @@
     "ejs": "~2.5.2",
     "express": "~4.16.1",
     "express-session": "^1.14.2",
-    "ftp": "^0.3.10",
     "heroku-ssl-redirect": "0.0.4",
     "inherits": "^2.0.3",
     "knex": "^0.13.0",
@@ -34,7 +32,7 @@
     "moment": "^2.18.1",
     "morgan": "~1.9.0",
     "multer": "^1.3.0",
-    "multer-ftp": "^1.2.0",
+    "multer-sftp": "^0.2.0",
     "mysql": "^2.5.4",
     "ng-file-upload": "^12.2.13",
     "node-schedule": "^1.2.3",
@@ -47,6 +45,7 @@
     "request-promise": "^4.2.1",
     "sendgrid": "^5.2.3",
     "serve-favicon": "~2.4.5",
-    "serve-static": "^1.12.1"
+    "serve-static": "^1.12.1",
+    "ssh2": "^0.5.5"
   }
 }

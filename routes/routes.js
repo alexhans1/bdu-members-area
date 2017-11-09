@@ -1,6 +1,5 @@
 //stuff for reset password function
 let crypto = require('crypto');
-let async = require('async');
 let sg = require('sendgrid')(process.env.SENDGRID_KEY);
 let helper = require('sendgrid').mail;
 
@@ -61,68 +60,53 @@ module.exports = function(app, passport, Bookshelf) {
 	
 	//FIRST: SEND FORGOT PASSWORD EMAIL
 	//THIS SETS THE resetPasswordToken AND resetPasswordExpires AND SENDS LINK WITH TOKEN TO USEREMAIL
-	
+
+
 	// User model
-	var User = Bookshelf.Model.extend({
-		tableName: 'users'
-	});
+	let Models = require('../models/bookshelfModels.js')(Bookshelf);
+	let User = Models.User;
+	let Bug = Models.Bug;
+	let Bugs = Models.Bugs;
 
-	app.post('/forgot', function (req, res) {
-		async.waterfall([
-			function(done) {
-				crypto.randomBytes(20, function(err, buf) {
-					let token = buf.toString('hex');
-					done(err, token);
-				});
-			},
-			function(token, done) {
+	app.post('/forgot', async function (req, res) {
+		let token;
+		await crypto.randomBytes(20, function(err, buf) {
+			token = buf.toString('hex');
+		});
 
-				new User({email: req.body.email})
-				.fetch()
-				.then(function (user) {
-					if (!user) {
-						console.error('No account with that email address exists.');
-						res.status(404).json({error: true, data: {}, message: 'No account with that email address exists.\nEmail: ' + req.body.email});
-						return done(null, false, req.flash('authMsg', 'No account with that email address exists.'));
-					}
-					user.save({
-						resetPasswordToken: token,
-						resetPasswordExpires: Date.now() + 1800000 // set the time to 30 minutes from now
-					});
-					done(null, token, user);
-				});
-			},
-			function(token) {
+		await User.forge({email: req.body.email})
+		.fetch({require: true})
+		.then(function (user) {
+			user.save({
+				resetPasswordToken: token,
+				resetPasswordExpires: Date.now() + 1800000 // set the time to 30 minutes from now
+			})
+		});
 
-				let from_email = new helper.Email('bdudb_password_reset@debating.de');
-				let to_email = new helper.Email(req.body.email);
-				let subject = 'BDUDB Password Reset';
-				let text = 'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n' +
-					'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-					'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-					'If you did not request this, please ignore this email and your password will remain unchanged.\n';
-				let content = new helper.Content('text/plain', text);
-				let mail = new helper.Mail(from_email, subject, to_email, content);
-				
-				let request = sg.emptyRequest({
-					method: 'POST',
-					path: '/v3/mail/send',
-					body: mail.toJSON()
-				});
+		let from_email = new helper.Email('bdudb_password_reset@debating.de');
+		let to_email = new helper.Email(req.body.email);
+		let subject = 'BDUDB Password Reset';
+		let text = 'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n' +
+			'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+			'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+			'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+		let content = new helper.Content('text/plain', text);
+		let mail = new helper.Mail(from_email, subject, to_email, content);
 
-				sg.API(request, function(error, response) {
-					console.info(response.statusCode);
-					console.info(response.body);
-					console.info(response.headers);
-					if (error) console.error(error);
-				});
-				console.log('An e-mail has been sent to ' + req.body.email);
-				res.status(200).send();
-			}
-		], function (err, result) {
-            if(err) console.error(err);
-            else console.info(result);
-        });
+		let request = sg.emptyRequest({
+			method: 'POST',
+			path: '/v3/mail/send',
+			body: mail.toJSON()
+		});
+
+		await sg.API(request, function(error, response) {
+			console.info(response.statusCode);
+			console.info(response.body);
+			console.info(response.headers);
+			if (error) console.error(error);
+		});
+		console.log('An e-mail has been sent to ' + req.body.email);
+		res.status(200).send();
 	});
 
 	//SECOND: RENDER THE RESET PASSWORD PAGE
@@ -180,30 +164,6 @@ module.exports = function(app, passport, Bookshelf) {
     // =========================================================================
     // ========================== BUG REPORT SYSTEM ============================
     // =========================================================================
-
-	//MODELS
-
-    // User model
-    var User = Bookshelf.Model.extend({
-        tableName: 'users',
-
-        bugs: function() {
-            return this.hasMany(Bug);
-        }
-    });
-
-    let Bug = Bookshelf.Model.extend({
-        tableName: 'bugs',
-        hasTimestamps: true,
-
-        user: function() {
-            return this.belongsTo(User);
-        }
-    });
-
-    let Bugs = Bookshelf.Collection.extend({
-        model: Bug
-    });
 
 	app.get('/bugs', function (req, res) {
         //Check if session user is authorized

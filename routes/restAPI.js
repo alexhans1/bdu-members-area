@@ -1,7 +1,6 @@
 let express = require('express');
 let router = express.Router();
 let _ = require('lodash');
-let multer = require('multer');
 let moment = require('moment');
 
 //rename-keys is used to change bookshelf's pivot table returns from _pivot_[attribute] to pivot_[attribute]
@@ -11,23 +10,25 @@ let removeUnderscores = function(key) {
 	return _.replace(key,'_','');
 };
 
-async = require('async');
-let Client = require('ftp');
-let FTPStorage = require('multer-ftp');
+let multer = require('multer');
+let sftpStorage = require('multer-sftp');
 
-let ftp = {
-	host: 'ftp.hosting-agency.de',
-	// secure: (process.env.NODE_ENV === 'production'), // enables FTPS/FTP with TLS
-	user: 'u0023243923',
-	password: process.env.BDU_ftp_server
-};
+let storage = sftpStorage({
+	sftp: {
+		host: process.env.BDU_sftp_server,
+		port: 22,
+		username: process.env.BDU_sftp_server_user,
+		password: process.env.BDU_sftp_server_pw,
+	},
+	destination: function (req, file, cb) {
+		cb(null, '/members_area/userpics')
+	},
+	filename: function (req, file, cb) {
+		cb(null, file.fieldname + '-' + Date.now())
+	}
+});
 
-// let uplkoad = multer({
-// 	storage: new FTPStorage({
-// 		basepath: '/public_html/members_area/userpics/',
-// 		ftp: ftp
-// 	})
-// });
+let upload = multer({ storage: storage });
 
 
 
@@ -94,44 +95,62 @@ module.exports = function(Bookshelf){
 	// no create user function here as we do that in the passport-init.js
 
 
-	//----- DISABLE IMAGE UPLOAD FOR NOW --------
+	router.route('/user/image')
+	//upload new image for current user
+	.post(upload.single('pic'), function (req, res) {
+		try {
+			console.log(res);
+			console.info('Uploaded new user pic.');
+			//then get the current user
+			User.forge({id: req.user.id}).fetch()
+			.then(function (user) {
+				//save the image path from the db
+				let deletePath = '/members_area/userpics/' + user.get('image');
 
-	// router.route('/user/image')
-	// //upload new image for current user
-	// .post(upload.single('pic'), function (req, res) {
-	// 	try {
-	// 		console.info('Uploaded new user pic.');
-	// 		//then get the current user
-	// 		User.forge({id: req.user.id}).fetch()
-	// 		.then(function (user) {
-	// 			//save the image path from the db
-	// 			let deletePath = '/public_html/members_area/userpics/' + user.get('image');
-	//
-	// 			//update the file name in the db
-	// 			user.save({
-	// 				//we only want to store the file name not the entire path
-	// 				image: req.file.path.split("/")[req.file.path.split("/").length-1]
-	// 			});
-	//
-	// 			//lastly use node-ftp to delete the current profile pic using the deletePath
-	// 			let c = new Client();
-	// 			c.on('ready', function() {
-	// 				c.delete(deletePath, function(err) {
-	// 					if (err) console.error(err);
-	// 					else console.info('Successfully deleted old user pic: ' + deletePath);
-	// 					c.end();
-	// 				});
-	// 			});
-	// 			c.connect(ftp);
-	// 		})
-	// 		.then(function () {
-	// 			res.send({error: false, message: 'Uploading new profile image successful.'});
-	// 		})
-	// 	} catch (err) {
-	// 		console.error('Error while uploading profile pic. Error message:\n' + err.message);
-	// 		res.status(500).json({error: true, message: 'Error while uploading profile pic.'});
-	// 	}
-	// });
+				//update the file name in the db
+				user.save({
+					//we only want to store the file name not the entire path
+					image: req.file.path.split("/")[req.file.path.split("/").length-1]
+				});
+
+				//lastly use node-ftp to delete the current profile pic using the deletePath
+				let Client = require('ssh2').Client;
+				let connSettings = {
+					host: 'home707433467.1and1-data.host',
+					port: 22, // Normal is 22 port
+					username: 'u91065973',
+					password: 'BDU.Doro24'
+					// You can use a key file too, read the ssh2 documentation
+				};
+
+				let conn = new Client();
+				conn.on('ready', function() {
+					conn.sftp(function(err, sftp) {
+						if (err) throw err;
+						else console.info('Successfully deleted old user pic: ' + deletePath);
+
+						sftp.unlink(deletePath);
+					});
+				}).connect(connSettings);
+
+				// let c = new Client();
+				// c.on('ready', function() {
+				// 	c.delete(deletePath, function(err) {
+				// 		if (err) console.error(err);
+				// 		else console.info('Successfully deleted old user pic: ' + deletePath);
+				// 		c.end();
+				// 	});
+				// });
+				// c.connect(ftp);
+			})
+			.then(function () {
+				res.send({error: false, message: 'Uploading new profile image successful.'});
+			})
+		} catch (err) {
+			console.error('Error while uploading profile pic. Error message:\n' + err.message);
+			res.status(500).json({error: true, message: 'Error while uploading profile pic.'});
+		}
+	});
 
 	router.route('/user/:id')
 	// fetch user
