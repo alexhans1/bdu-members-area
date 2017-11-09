@@ -99,7 +99,6 @@ module.exports = function(Bookshelf){
 	//upload new image for current user
 	.post(upload.single('pic'), function (req, res) {
 		try {
-			console.log(res);
 			console.info('Uploaded new user pic.');
 			//then get the current user
 			User.forge({id: req.user.id}).fetch()

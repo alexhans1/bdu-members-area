@@ -714,6 +714,7 @@ app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootSco
 		$scope.submit = false;
 
 		$scope.upload = function (dataUrl, name) {
+			$rootScope.loader = true;
 			Upload.upload({
 				url: '/app/user/image',
 				data: {
@@ -721,6 +722,7 @@ app.controller('UploadCtrl', ['$scope', 'Upload', '$timeout', '$http', '$rootSco
 				}
 			}).then(function (response) {
 				showSnackbar(!response.data.error, response.data.message);
+				$rootScope.loader = false;
 				$location.path('/profile');
 			});
 		}
