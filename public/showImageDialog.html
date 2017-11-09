@@ -6,9 +6,11 @@
 </nav>
 
 <div class="col-sm-12">
-    <img style="height: 100%; width: 100%; border:4px solid gainsboro; border-radius: 0%;" class="img-hor" ng-src="http://debating.de/members_area/userpics/{{imgDialogURL}}" onerror="this.src='images/bdu_quad.png'" alt=""/>
+    <img style="height: 100%; width: 100%; border:4px solid gainsboro; border-radius: 0%;" class="img-hor"
+         data-ng-src="http://root.debating.de/members_area/userpics/{{imgDialogURL}}"
+         onerror="this.src='images/bdu_quad.png'" alt=""/>
 </div>
 
 <div class="ngdialog-buttons" style="padding-top: 10px">
-    <button class="btn btn-outline-danger pull-right" ng-click="close()">Close</button>
+    <button class="btn btn-outline-danger pull-right" data-ng-click="close()">Close</button>
 </div>
