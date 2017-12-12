@@ -67,7 +67,7 @@ module.exports = function(Bookshelf){
 
 					_.forEach(users, function (user, index) {
 						result.push({
-							name: user.vorname,
+							name: user.vorname + ' ' + user.name.substring(0,1) + '.',
 							data: [],
 							showInNavigator: true
 						});
