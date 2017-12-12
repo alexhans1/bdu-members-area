@@ -31,15 +31,16 @@ async function buildEmailArr() {
 
 		await promise.then((tournaments) => {
 			tournaments = tournaments.toJSON();
-			// tournaments = _.reject(tournaments.toJSON(), function (tournament) {
-			// 	return moment(tournament.enddate).add(2, 'weeks').diff(moment()) > 0 //reject if tournament younger than two weeks
-			// });
 			_.each(tournaments, function (tournament) {
 				tournament.users = _.reject(tournament.users, function (user) {
 					return moment(user.last_mail).add(9, 'days').diff(moment()) > 0 //reject if last mail younger than 10 days
 				});
 				_.each(tournament.users, function (user) {
-					if (user._pivot_price_owed !== user._pivot_price_paid) {
+					if (
+						user._pivot_price_owed !== user._pivot_price_paid &&
+						user._pivot_price_owed !== null &&
+						user._pivot_price_paid !== null
+					) {
 						// if user is not already in emailArr add user
 						if (!_.find(emailArr, {email: user.email})) {
 							emailArr.push({
