@@ -32,7 +32,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-6 offset-md-3">
-				<div class="user-info-table" ng-hide="change">
+				<div class="user-info-table" data-ng-hide="change">
 
 					<table class="table table-responsive">
 						<tr>
@@ -41,24 +41,24 @@
 						</tr>
 						<tr>
 							<th>email:</th>
-							<td ng-hide="update">{{user.email}}</td>
-							<td ng-show="update"><input class="form-control" name="email" ng-model="user.email" required="true"></td>
+							<td data-ng-hide="update">{{user.email}}</td>
+							<td data-ng-show="update"><input class="form-control" name="email" data-ng-model="user.email" required="true"></td>
 						</tr>
 						<tr>
 							<th>vorname:</th>
-							<td ng-hide="update">{{user.vorname}}</td>
-							<td ng-show="update"><input class="form-control" name="vorname" ng-model="user.vorname"></td>
+							<td data-ng-hide="update">{{user.vorname}}</td>
+							<td data-ng-show="update"><input class="form-control" name="vorname" data-ng-model="user.vorname"></td>
 						</tr>
 						<tr>
 							<th>name:</th>
-							<td ng-hide="update">{{user.name}}</td>
-							<td ng-show="update"><input class="form-control" name="name" ng-model="user.name"></td>
+							<td data-ng-hide="update">{{user.name}}</td>
+							<td data-ng-show="update"><input class="form-control" name="name" data-ng-model="user.name"></td>
 						</tr>
 						<tr>
 							<th>gender:</th>
-							<td ng-hide="update">{{user.gender}}</td>
-							<td ng-show="update">
-								<select class="form-control" ng-model="user.gender">
+							<td data-ng-hide="update">{{user.gender}}</td>
+							<td data-ng-show="update">
+								<select class="form-control" data-ng-model="user.gender">
 									<option value=""></option>
 									<option value="f">female</option>
 									<option value="m">male</option>
@@ -68,50 +68,50 @@
 						</tr>
 						<tr>
 							<th>food preference:</th>
-							<td ng-hide="update">{{user.food}}</td>
-							<td ng-show="update"><input class="form-control" name="food" ng-model="user.food"></td>
+							<td data-ng-hide="update">{{user.food}}</td>
+							<td data-ng-show="update"><input class="form-control" name="food" data-ng-model="user.food"></td>
 						</tr>
 					</table>
 
-					<div ng-hide="update">
-						<button ng-click="update = !update;" class="btn btn-outline-primary pull-left" role="button">Update Info</button>
+					<div data-ng-hide="update">
+						<button data-ng-click="update = !update;" class="btn btn-outline-primary pull-left" role="button">Update Info</button>
 					</div>
-					<div ng-show="update">
-						<button ng-click="update = false" class="btn btn-outline-danger" role="button">Cancel</button>
-						<button ng-click="updateUser()" class="btn btn-outline-primary" role="button">Submit</button>
-						<button ng-click="change = !change;" class="btn btn-outline-secondary btn-sm pull-right" role="button">Change<br>password</button>
+					<div data-ng-show="update">
+						<button data-ng-click="update = false" class="btn btn-outline-danger" role="button">Cancel</button>
+						<button data-ng-click="updateUser()" class="btn btn-outline-primary" role="button">Submit</button>
+						<button data-ng-click="change = !change;" class="btn btn-outline-secondary btn-sm pull-right" role="button">Change<br>password</button>
 					</div>
 
 				</div>
-				<div ng-show="change">
+				<div data-ng-show="change">
 					<div class="col-md-12">
 						<div class="form-group">
 							<label>Your old password</label>
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-unlock"></i></span>
-								<input type="password" ng-model="oldPassword" placeholder="Enter old password" class="form-control">
+								<input type="password" data-ng-model="oldPassword" placeholder="Enter old password" class="form-control">
 							</div>
 						</div>
 					</div>
 					<div class="col-md-12">
-						<form ng-submit="changePwd()">
+						<form data-ng-submit="changePwd()">
 							<div class="form-group">
 								<label>Your new password</label>
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-									<input type="password" ng-model="newPassword" ng-change="checkMatch()" placeholder="Enter new password" class="form-control" required>
+									<input type="password" data-ng-model="newPassword" data-ng-change="checkMatch()" placeholder="Enter new password" class="form-control" required>
 								</div>
 							</div>
 							<div class="form-group">
 								<label>Confirm new password</label>
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-									<input type="password" ng-model="confirmPassword" ng-change="checkMatch()" placeholder="Confirm new password" class="form-control" required>
+									<input type="password" data-ng-model="confirmPassword" data-ng-change="checkMatch()" placeholder="Confirm new password" class="form-control" required>
 								</div>
-								<p ng-show="!match" class="alert alert-danger">Passwords don't match</p>
+								<p data-ng-show="!match" class="alert alert-danger">Passwords don't match</p>
 							</div>
 
-							<button ng-click="change = !change; update = false" class="btn btn-outline-danger">Cancel</button>
+							<button data-ng-click="change = !change; update = false" class="btn btn-outline-danger">Cancel</button>
 							<button type="submit" class="btn btn-outline-primary">Submit</button>
 						</form>
 					</div>
@@ -154,7 +154,7 @@
 						</tr>
 						</thead>
 						<tbody>
-						<tr ng-repeat="tournament in user.tournaments" ng-include="getTemplate(tournament)" class="pointer"></tr>
+						<tr data-ng-repeat="tournament in user.tournaments" data-ng-include="getTemplate(tournament)" class="pointer"></tr>
 						<tr style="border-top: solid 2px black; font-weight: bold">
 							<td></td>
 							<td></td>
@@ -206,21 +206,17 @@
 	<td class="preventWrap" data-ng-click="openDetails(tournament)">{{tournament.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign"
 		data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 0" class="text-center">
-		<i class="fa fa-times" aria-hidden="true"></i>
+	<td data-ng-click="openDetails(tournament)" class="text-center">
+		<p>{{attendanceStatus(tournament.pivot_attended)}}</p>
 	</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 1" class="text-center">
-		<i class="fa fa-check" aria-hidden="true"></i>
-	</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_attended == 2" class="text-center">You can go!</td>
-	<td ng-controller="successCtrl" ng-include="getSuccessTemplate(tournament.id)"></td>
+	<td data-ng-controller="successCtrl" data-ng-include="getSuccessTemplate(tournament.id)"></td>
 	<td class="text-center">
 		{{tournament.pivot_points}}
 	</td>
 	<td class="text-center">
-		<button data-ng-hide="tournament.pivot_attended == 1" ng-click="editContact(tournament)"
+		<button data-ng-hide="tournament.pivot_attended == 1" data-ng-click="editContact(tournament)"
 				class="btn btn-sm btn-outline-info"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-		<button data-ng-hide="tournament.pivot_attended == 1" ng-click="unreg(tournament.pivot_id, tournament.id)"
+		<button data-ng-hide="tournament.pivot_attended == 1" data-ng-click="unreg(tournament.pivot_id, tournament.id)"
 				class="btn btn-sm btn-outline-danger" style="margin-top: 4px">
 			<i class="fa fa-trash-o" aria-hidden="true"></i>
 		</button>
@@ -258,13 +254,14 @@
 	<!--Funding beantragen derzeit nicht moeglich als User -> kann nur Vorstand machen-->
 	<!--<td>-->
 		<!--<input type="checkbox" class="form-check"-->
-			   <!--ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1">-->
+			   <!--ng-model="selected.pivot_funding" data-ng-checked="selected.pivot_funding == 1">-->
 	<!--</td>-->
 	<td class="preventWrap">{{tournament.pivot_price_owed | currency:"€"}}</td>
 	<td class="preventWrap">{{tournament.pivot_price_paid | currency:"€"}}</td>
 	<td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-	<td data-ng-hide="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-times" aria-hidden="true"></i></td>
-	<td data-ng-show="tournament.pivot_attended == 1" class="text-center"><i class="fa fa-check" aria-hidden="true"></i></td>
+	<td data-ng-click="openDetails(tournament)" class="text-center">
+		<p>{{attendanceStatus(tournament.pivot_attended)}}</p>
+	</td>
 	<td></td>
 	<td></td>
 	<td>

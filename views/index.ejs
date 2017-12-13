@@ -77,6 +77,8 @@
     <script src="/javascripts/controllers/dashboardCtrl.js"></script>
     <script src="/javascripts/controllers/financeCtrl.js"></script>
     <script src="/javascripts/controllers/tournamentsCtrl.js"></script>
+    <script src="/javascripts/controllers/regOverviewCtrl.js"></script>
+    <script src="/javascripts/controllers/profileCtrl.js"></script>
 
     <link rel="stylesheet" href="stylesheets/style.css">
     <link rel="stylesheet" href="stylesheets/inline_help_style.css">
@@ -189,7 +191,7 @@
 <strong id="snackbarError" class="alert alert-danger"></strong>
 
 <!--LOADER-->
-<div ng-class="{'overlay': loader}"></div>
+<div data-ng-class="{'overlay': loader}"></div>
 <div ng-show="loader" class="showbox">
     <div class="loader">
         <svg class="circular" viewBox="25 25 50 50">

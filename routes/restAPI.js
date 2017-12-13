@@ -265,7 +265,7 @@ module.exports = function(Bookshelf){
 				res.status(500).json({error: true, message: err.message});
 			});
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	})
 
@@ -352,7 +352,7 @@ module.exports = function(Bookshelf){
 				res.status(500).json({error: true, message: err.message});
 			});
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	})
 
@@ -392,7 +392,7 @@ module.exports = function(Bookshelf){
 					res.json({error: true, message: 'Error while updating tournament.'});
 				})
 			} catch (ex) {
-			    console.log(ex);
+				console.log(ex);
 			}
 		} else {
 			console.info('User is not authorized to update tournament');
@@ -419,7 +419,7 @@ module.exports = function(Bookshelf){
 					res.json({ error: true, message: 'Error while deleting tournament.' });
 				})
 			} catch (ex) {
-			    console.log(ex);
+				console.log(ex);
 			}
 		} else {
 			console.info('User is not authorized to delete tournament');
@@ -603,7 +603,7 @@ module.exports = function(Bookshelf){
 				}
 			})
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	});
 
@@ -672,7 +672,7 @@ module.exports = function(Bookshelf){
 				res.json({error: true, message: 'Error while updating registration.'});
 			})
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	});
 
@@ -706,7 +706,7 @@ module.exports = function(Bookshelf){
 				res.json({error: true, message: 'Error while setting record.'});
 			})
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	});
 
@@ -747,90 +747,55 @@ module.exports = function(Bookshelf){
 				res.json({error: true, message: 'Error while setting partner.'});
 			})
 		} catch (ex) {
-		    console.log(ex);
+			console.log(ex);
 		}
 	});
 
 	//update registration
-	router.route('/setAttended')
+	router.route('/setAttendance')
 	.put(function (req, res) {
+		try {
+			//CHECK AUTHORIZATION
+			if(req.user.position !== 1) {
+				console.info('You are not authorized to update that registration.');
+				res.json({error: true, message: 'You are not authorized to update that registration.'});
+				return false;
+			}
+		} catch (ex) {
+			console.error(ex);
+			res.json({error: true, message: 'You are not authorized to update that registration.'});
+			throw ex;
+		}
+
 		try {
 			Registration.forge({id: req.body.reg_id})
 			.fetch({require: true})
 			.then(function (registration) {
 
-				//CHECK AUTHORIZATION
-				if(req.user.position !== 1) {
-					console.info('You are not authorized to update that registration.');
-					res.json({error: true, message: 'You are not authorized to update that registration.'});
-					return false;
-				}
+				const role = registration.toJSON().role,
+					attendanceStatus = parseInt(req.body.attendanceStatus);
+				const WENT = 1, CAN_GO = 2, REGISTERED = 0, DIDNT_GO = 3;
+				
+				console.log(attendanceStatus === REGISTERED);
 
-				if (req.body.attended === 1) {
+				if (attendanceStatus === REGISTERED ||
+					attendanceStatus === CAN_GO ||
+					attendanceStatus === DIDNT_GO) {
 					registration.save({
-						attended: 1,
-						price_owed: (registration.toJSON().is_independent) ? 0 : req.body.price
-					});
-				} else {
-					registration.save({
-						attended: req.body.attended,
-					});
-				}
-				if (req.body.attended === 1 && registration.toJSON().role === 'judge')  {
-					console.info('Automatically saving five points as success due to judging.');
-					registration.save({
-						points: 5,
-						success: 'judge'
-					});
-				}
-				return true;
-			})
-			.then(function (authorized) {
-				if(authorized) {
-					console.info('Successfully set attendance status.');
-					res.status(200).json({error: false, message: 'Successfully set attendance status.'});
-				}
-			})
-		}
-		catch (err) {
-			console.error('Error while setting attendance. Error: ' + err.message);
-			res.json({error: true, message: 'Error while setting attendance.'});
-		}
-
-	});
-
-	//update registration
-	router.route('/undoAttended')
-	.put(function (req, res) {
-		try {
-			Registration.forge({id: req.body.reg_id})
-			.fetch({require: true})
-			.then(function (registration) {
-
-				//CHECK AUTHORIZATION
-				if(req.user.position !== 1) {
-					console.info('You are not authorized to update that registration.');
-					res.json({error: true, message: 'You are not authorized to update that registration.'});
-					return false;
-				}
-
-				role = registration.toJSON().role;
-				currentStatus = registration.toJSON().attended;
-
-				if (currentStatus === 2) {
-					//if status is 'can go', set it back to 0
-					registration.save({
-						attended: 0
-					});
-				}
-
-				else if (currentStatus === 1) {
-					registration.save({
-						attended: 2,
+						attended: attendanceStatus,
 						price_owed: 0,
 						points: 0,
-						success: null
-					})
+						success: null,
+					});
+				}
+
+				else if (attendanceStatus === WENT) {
+					registration.save({
+						attended: WENT,
+						price_owed: ((registration.toJSON().is_independent) ? 0 : req.body.price) || 0,
+						points: (role === 'judge') ? 5 : 0,
+						success: (role === 'judge') ? 'judge' : null,
+					});
 				}
 
 				return true;
