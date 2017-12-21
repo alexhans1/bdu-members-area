@@ -11,16 +11,18 @@ app.controller('OverviewCtrl', function ($scope, $http, $rootScope, $window, $lo
 			$rootScope.loader = true;
 			let tournaments = TournamentService.query(function () {
 				$scope.tournamentsusers = _.orderBy(tournaments, ['startdate'], 'desc');
+				// check if tournament has past but has open registrations (status 'Registered' or 'Can Go')
 				$scope.tournamentsusers = $scope.tournamentsusers.map((tournament) => {
 					hasOpenReg = false;
 					if (moment().isBefore(moment(tournament.enddate))) {
-						tournament.hasOpenReg = hasOpenReg;
+						// if the tournament has not yet taken place return hasOpenReg = false
+						tournament.hasOpenReg = false;
 						return tournament;
 					}
 					let BreakException = {};
 					try {
 						tournament.users.forEach((user) => {
-							if (user.pivot_attended !== 1) {
+							if (user.pivot_attended !== 1 && user.pivot_attended !== 3) {
 								hasOpenReg = true;
 								throw BreakException;
 							}
