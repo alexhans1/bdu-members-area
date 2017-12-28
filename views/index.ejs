@@ -1,6 +1,18 @@
 <!doctype html>
-<html ng-app="bduApp">
+<html data-ng-app="bduApp">
 <head>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108079084-2"></script>
+    <script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-108079084-2');
+    </script>
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--for sharing on facebook and others-->
@@ -100,37 +112,37 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" ng-show="authenticated">
-                <a href="/#/profile" class="nav-link hidden-sm-down">Profile</a>
-                <a href="/#/profile" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
+                <a href="/#/profile" class="nav-link hidden-md-down">Profile</a>
+                <a href="/#/profile" class="nav-link hidden-lg-up" data-toggle="collapse" data-target=".navbar-collapse">Profile</a>
             </li>
             <li class="nav-item" ng-show="authenticated">
-                <a href="/#/tournaments" class="nav-link hidden-sm-down">
-                    Tournaments
+                <a href="/#/tournaments" class="nav-link hidden-md-down">
+                    Tournamenlg
                     <span ng-show="user.new_tournament_count > 0" class="count">{{user.new_tournament_count}}</span>
                 </a>
                 <a href="/#/tournaments" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Tournaments</a>
             </li>
             <li class="nav-item" ng-show="authenticated">
-                <a href="/#/anmeldungen" class="nav-link hidden-sm-down">Reg Overview</a>
-                <a href="/#/anmeldungen" class="nav-link hidden-md-up" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
+                <a href="/#/anmeldungen" class="nav-link hidden-md-down">Reg Overview</a>
+                <a href="/#/anmeldungen" class="nav-link hidden-lg-up" data-toggle="collapse" data-target=".navbar-collapse">Reg Overview</a>
             </li>
             <li class="nav-item" ng-show="authenticated">
-                <a class="nav-link hidden-sm-down" href="/#/ranking">Ranking</a>
-                <a class="nav-link hidden-md-up" href="/#/ranking" data-toggle="collapse" data-target=".navbar-collapse">Ranking</a>
+                <a class="nav-link hidden-md-down" href="/#/ranking">Ranking</a>
+                <a class="nav-link hidden-lg-up" href="/#/ranking" data-toggle="collapse" data-target=".navbar-collapse">Ranking</a>
             </li>
             <li class="nav-item" ng-show="authenticated">
-                <a class="nav-link hidden-sm-down" href="/#/dashboard">Dashboard</a>
-                <a class="nav-link hidden-md-up" href="/#/dashboard" data-toggle="collapse" data-target=".navbar-collapse">Dashboard</a>
+                <a class="nav-link hidden-md-down" href="/#/dashboard">Dashboard</a>
+                <a class="nav-link hidden-lg-up" href="/#/dashboard" data-toggle="collapse" data-target=".navbar-collapse">Dashboard</a>
             </li>
             <li ng-show="istVorstand" class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Vorstand
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item hidden-sm-down" href="/#/vorstand">Create Tournament</a>
-                    <a class="dropdown-item hidden-md-up" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>
-                    <a class="dropdown-item hidden-sm-down" href="/#/finances">Club Members</a>
-                    <a class="dropdown-item hidden-md-up" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Club Members</a>
+                    <a class="dropdown-item hidden-md-down" href="/#/vorstand">Create Tournament</a>
+                    <a class="dropdown-item hidden-lg-up" href="/#/vorstand" data-toggle="collapse" data-target=".navbar-collapse">Create Tournament</a>
+                    <a class="dropdown-item hidden-md-down" href="/#/finances">Club Members</a>
+                    <a class="dropdown-item hidden-lg-up" href="/#/finances" data-toggle="collapse" data-target=".navbar-collapse">Club Members</a>
                 </div>
             </li>
         </ul>
