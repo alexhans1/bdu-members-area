@@ -63,6 +63,7 @@ module.exports = function(passport, Bookshelf){
 				});
 			} catch (ex) {
 			    console.log(ex);
+				return done(null, false, req.flash('authMsg', 'Error during login'));
 			}
 		}
     ));
