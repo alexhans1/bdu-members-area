@@ -679,75 +679,85 @@ module.exports = function(Bookshelf){
 	//set success
 	router.route('/setSuccess')
 	.put(function (req, res) {
-		try {
-			Registration.forge({id: req.body.reg_id})
-			.fetch({require: true})
-			.then(function (registration) {
-				if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
-					console.info('You are not authorized to change that entry.');
-					res.json({error: true, message: 'You are not authorized to change that entry.'});
-					return false;
-				}
+		if(req.user.position === 1){
+			try {
+				Registration.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
+					if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
+						console.info('You are not authorized to change that entry.');
+						res.json({error: true, message: 'You are not authorized to change that entry.'});
+						return false;
+					}
 
-				registration.save({
-					points: req.body.points,
-					success: req.body.success
-				});
-				return true;
-			})
-			.then(function (authorized) {
-				if(authorized) {
-					console.info('Setting record successful.');
-					res.json({error: false, message: 'Setting record successful.'});
-				}
-			})
-			.catch(function (err) {
-				console.error('Error while setting record. Error: ' + err.message);
-				res.json({error: true, message: 'Error while setting record.'});
-			})
-		} catch (ex) {
-			console.log(ex);
+					registration.save({
+						points: req.body.points,
+						success: req.body.success
+					});
+					return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+						console.info('Setting record successful.');
+						res.json({error: false, message: 'Setting record successful.'});
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while setting record. Error: ' + err.message);
+					res.json({error: true, message: 'Error while setting record.'});
+				})
+			} catch (ex) {
+				console.log(ex);
+			}
+		} else {
+			console.info('User is not authorized to set success');
+			res.json({ error: true, message: 'Unauthorized' });
 		}
 	});
 
 	//set success
 	router.route('/setPartner')
 	.put(function (req, res) {
-		try {
-			Registration.forge({id: req.body.reg_id})
-			.fetch({require: true})
-			.then(function (registration) {
-				if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
-					console.info('You are not authorized to change that registration.');
-					res.json({error: true, message: 'You are not authorized to change that registration.'});
-					return false;
-				}
+		if(req.user.position === 1){
+			try {
+				Registration.forge({id: req.body.reg_id})
+				.fetch({require: true})
+				.then(function (registration) {
+					if(registration.toJSON().user_id !== req.user.id && req.user.position !== 1) {
+						console.info('You are not authorized to change that registration.');
+						res.json({error: true, message: 'You are not authorized to change that registration.'});
+						return false;
+					}
 
-				if(req.body.partnerNumber === 1) {
-					registration.save({
-						partner1: req.body.partnerID
-					});
-				} else if (req.body.partnerNumber === 2) {
-					registration.save({
-						partner2: req.body.partnerID
-					});
-				} else {
-					throw error;
-				}
-				return true;
-			})
-			.then(function (authorized) {
-				if(authorized) {
-					console.info('Setting partner successful.');
-					res.json({error: false, message: 'Setting partner successful.'});
-				}
-			})
-			.catch(function (err) {
-				console.error('Error while setting partner. Error: ' + err.message);
-				res.json({error: true, message: 'Error while setting partner.'});
-			})
-		} catch (ex) {
-			console.log(ex);
+					if(req.body.partnerNumber === 1) {
+						registration.save({
+							partner1: req.body.partnerID
+						});
+					} else if (req.body.partnerNumber === 2) {
+						registration.save({
+							partner2: req.body.partnerID
+						});
+					} else {
+						throw error;
+					}
+					return true;
+				})
+				.then(function (authorized) {
+					if(authorized) {
+						console.info('Setting partner successful.');
+						res.json({error: false, message: 'Setting partner successful.'});
+					}
+				})
+				.catch(function (err) {
+					console.error('Error while setting partner. Error: ' + err.message);
+					res.json({error: true, message: 'Error while setting partner.'});
+				})
+			} catch (ex) {
+				console.log(ex);
+			}
+		} else {
+			console.info('User is not authorized to set partner');
+			res.json({ error: true, message: 'Unauthorized' });
 		}
 	});
 
