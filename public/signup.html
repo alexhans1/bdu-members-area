@@ -16,7 +16,6 @@
 
 			<!-- SIGNUP FORM -->
 			<form ng-submit="register()">
-				<p ng-show="error_message.length > 0" class="alert alert-danger">{{error_message}}</p>
 				<fieldset>
 					<div class="form-group">
 						<label>Email</label>
@@ -58,7 +57,7 @@
 						<label>Gender</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="fa fa-circle"></i></span>
-							<select class="form-control" ng-model="reguser.gender">
+							<select class="form-control" ng-model="reguser.gender" required>
 								<option value=""></option>
 								<option value="f">female</option>
 								<option value="m">male</option>
