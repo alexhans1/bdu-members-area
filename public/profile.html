@@ -148,6 +148,7 @@
 							<th>Paid</th>
 							<th>Debt</th>
 							<th>Attended</th>
+							<th>Success</th>
 							<th>Points</th>
 							<th></th>
 						</tr>
@@ -165,6 +166,7 @@
 							<td></td>
 							<td></td>
 							<td class="currencySign" data-monetary-amount="{{debt | currency:'€'}}"></td>
+							<td></td>
 							<td></td>
 							<td>{{totalPoints}}</td>
 							<td></td>
@@ -207,10 +209,9 @@
 	<td data-ng-click="openDetails(tournament)" class="text-center">
 		<p>{{attendanceStatus(tournament.pivot_attended)}}</p>
 	</td>
+	<td data-ng-controller="successCtrl" data-ng-include="getSuccessTemplate(tournament.id)"></td>
 	<td class="text-center">
 		{{tournament.pivot_points}}
-		<br>
-		{{tournament.pivot_success}}
 	</td>
 	<td class="text-center">
 		<button data-ng-hide="tournament.pivot_attended == 1" data-ng-click="editContact(tournament)"
