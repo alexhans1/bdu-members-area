@@ -97,7 +97,6 @@ app.config(function ($routeProvider) {
 	//the ranking display
 	.when('/ranking', {
 		templateUrl: 'views/ranking.html',
-		controller: 'RankingCtrl'
 	})
 	//the dashboard display
 	.when('/dashboard', {
