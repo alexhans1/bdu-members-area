@@ -59,6 +59,24 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="col-12 pretty-checkbox">
+			<div class="form-check">
+				<input data-ng-model="is_independent" class="form-check-input" type="radio"
+					   id="independentRadioYes" data-ng-change="independentChangeEvent()" value="1">
+				<label class="form-check-label" for="independentRadioYes">
+					Yes, the BDU does NOT pay for my spot.
+				</label>
+			</div>
+			<div class="form-check">
+				<input data-ng-model="is_independent" class="form-check-input" type="radio"
+					   id="independentRadioNo" data-ng-change="independentChangeEvent()" value="0">
+				<label class="form-check-label" for="independentRadioNo">
+					No, the BDU pays for my spot in advance.
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group">
 				<label><b>Comment</b></label>
@@ -69,17 +87,6 @@
 </div>
 
 <div class="row ngdialog-buttons reg-form">
-	<!--HIDE Funding button for now-->
-	<div class="col-6 checkbox tournaments-dialog-checkbox help-tip">
-		<label class="pointer">
-			<input ng-model="is_independent" type="checkbox"> Independent
-		</label>
-		<p>Check ´Independent´ if the BDU is not paying your team spot (i.e. independent adjudicator / CA / you go for a different institution...).</p>
-		<!--<label><input ng-model="funding" type="checkbox" value=""> I want to receive <b>funding</b> for this tournament.</label>-->
-		<!--&lt;!&ndash;TODO Fill with funding criteria&ndash;&gt;-->
-		<!--<p>The funding criteria will be updated and published on 1 September 2017</p>-->
-	</div>
-
 	<div class="col-6">
 		<button class="btn btn-outline-success pull-right" ng-click="reg()">Register</button>
 	</div>

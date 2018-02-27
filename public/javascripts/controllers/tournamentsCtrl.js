@@ -83,7 +83,10 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 		$scope.team = '';
 		$scope.comment = '';
 		$scope.funding = false;
-		$scope.is_independent = false;
+		$scope.is_independent = null;
+		$scope.independentChangeEvent = () => {
+			$('.pretty-checkbox').removeClass('alert-checkbox');
+		};
 
 		$scope.isSpeaker = false;
 		$scope.setRole = function () {
@@ -107,11 +110,17 @@ app.controller('TournamentCtrl', function ($scope, $http, $rootScope, $location,
 			    return showSnackbar(false, 'First and second teammate must not be the same. Duh...')
 			}
 
+			// check if independent radio button is set
+			if (!$scope.is_independent) {
+				$('.pretty-checkbox').addClass('alert-checkbox');
+			  	return showSnackbar(false, 'Please specify who pays for your team spot.');
+			}
+
 			let url = '/app/reg/' + $scope.tournament.id;
 			let parameters = JSON.stringify({
 				id: $scope.personToRegister.id,
 				role: $scope.selected.value,
-				is_independent: ($scope.is_independent) ? 1 : 0,
+				is_independent: (parseInt($scope.is_independent)) ? 1 : 0,
 				team: $scope.team,
 				partner1: $scope.firstTeamPartner.id,
 				partner2: $scope.secondTeamPartner.id,
