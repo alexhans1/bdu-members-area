@@ -69,36 +69,27 @@
 
 			<div class="row">
 				<!-- Total Club Debt Chart -->
-				<div class="col-md-8 bottom30">
-					<div id="container" class="box-shadow" style="width:100%; height:400px;"></div>
-				</div>
-				<div class="col-md-4 bottom30" style="position: relative;">
-					<div class="row" style="position: relative; height: 50%;">
-						<div class="col-md-12" style="position: relative;">
-							<div id="box1" class="box-shadow text-center">
-								<h3>Total Victories</h3>
-								<div class="item">
-									<div>
-										<h1>{{wins}}</h1>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" style="position: relative; height: 50%;">
-						<div class="col-md-12" style="position: relative;">
-							<div id="box2" class="box-shadow text-center">
-								<h3>Time since BDU foundation</h3>
-								<div class="item">
-									<div>
-										<p>{{timeExisting}}</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+				<div class="col-md-7 bottom30">
+					<div id="debtContainer" class="box-shadow" style="width:100%; height:400px;"></div>
 				</div>
 
+				<!--Victories Chart-->
+				<div class="col-md-5 bottom30" style="position: relative;">
+					<div id="victoryChartContainer" class="box-shadow"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 bottom30" style="position: relative;">
+					<div id="timeBox" class="box-shadow text-center">
+						<h3>Time since BDU foundation</h3>
+						<div class="item">
+							<div>
+								<p>{{timeExisting}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="row">

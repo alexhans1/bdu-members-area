@@ -14,7 +14,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 			let data = response.data;
 
 			$(function () {
-				Highcharts.stockChart('container', {
+				Highcharts.stockChart('debtContainer', {
 					chart: {
 						type: 'line'
 					},
@@ -27,7 +27,7 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 						}
 					},
 					xAxis: {
-						type: 'datetime'
+						type: 'datetime',
 					},
 					tooltip: {
 						shared: false,
@@ -376,14 +376,120 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $http, UserService
 
 		// Tournaments Overview
 		let tournaments = TournamentService.query(() => {
-			$scope.tournaments = tournaments;
-			$scope.wins = 0;
-			tournaments.forEach((tournament) => {
-				let winningUsers = _.filter(tournament.users, (user) => {
+			let wonTournaments = tournaments.filter((tournament) => {
+				return tournament.users.find((user) => {
 					return user.pivot_success === 'win' || user.pivot_success === 'win2';
-				});
-				if (winningUsers.length) $scope.wins++;
+				})
 			});
+			wonTournaments = wonTournaments.sort((a,b) => { return moment(a.startdate).unix() - moment(b.startdate).unix()});
+			$scope.wins = wonTournaments.length;
+			let annotationsArray = [];
+			const victoryChartData = wonTournaments.map((tournament, index) => {
+				const unixStartdate = moment(tournament.startdate).unix() * 1000;
+				annotationsArray.push({
+					point: {
+						x: unixStartdate,
+						y: index + 0.7,
+						xAxis: 0,
+						yAxis: 0,
+					},
+					text: tournament.name,
+				});
+				return [unixStartdate, index + 1];
+			});
+
+			// victory chart
+			$(function () {
+
+				// Now create the chart
+				Highcharts.chart('victoryChartContainer', {
+
+					chart: {
+						type: 'area',
+						zoomType: 'x',
+						backgroundColor: '#fabb3d',
+						borderColor: '#f9aa0b',
+
+						resetZoomButton: {
+							position: {
+								x: -5,
+								y: -45,
+							},
+						},
+					},
+
+					title: {
+						style: {
+							color: '#ffffff',
+						},
+						text: 'Total victories: ' + wonTournaments.length,
+					},
+
+					subtitle: {
+						text: 'Zoom in to see details',
+						style: {
+							color: '#fdfdfd',
+						}
+					},
+
+					annotations: [{
+						labelOptions: {
+							style: {
+								fontSize: '8px',
+								fontWeight: 'lighter',
+							},
+							// verticalAlign: 'top',
+						},
+						labels: annotationsArray,
+					}],
+
+					xAxis: {
+						labels: {
+							style: {
+								color: '#ffffff',
+							},
+						},
+						type: 'datetime',
+						title: {
+							style: {
+								color: '#ffffff',
+							},
+							text: 'Date',
+						}
+					},
+
+					yAxis: {
+						labels: {
+							style: {
+								color: '#ffffff',
+							},
+						},
+						title: {
+							style: {
+								color: '#ffffff',
+							},
+							text: 'Number of wins',
+						},
+						gridLineWidth: 0,
+					},
+
+					tooltip: { enabled: false },
+
+					legend: { enabled: false },
+
+					exporting: { enabled: false },
+
+					series: [{
+						data: victoryChartData,
+						lineColor: Highcharts.getOptions().colors[3],
+						color: Highcharts.getOptions().colors[5],
+						fillOpacity: 0.5,
+					}]
+
+				});
+			});
+
+
 
 			//make sure you don't carriage return the css inline statement, or else it'll be error as ILLEGAL
 			$('<style>@keyframes activeUsers{to {stroke-dashoffset:'+(440-$scope.activeUsers/users.length*440)+';}}</style>').appendTo('head');
