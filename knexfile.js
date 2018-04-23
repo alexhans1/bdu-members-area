@@ -36,7 +36,7 @@ module.exports = {
 			host: 'localhost',
 			user: 'root',
 			password: process.env.localDBPassword,
-			database: 'heroku_9b6f95eb7a9adf8',
+			database: 'bdudb',
 			charset: 'utf8'
 		},
 		migrations: {
@@ -66,6 +66,10 @@ module.exports = {
 			password: process.env.clearDB_password,
 			database: 'heroku_9b6f95eb7a9adf8',
 			charset: 'utf8'
+		},
+		pool: {
+			max: 10,
+			min: 0,
 		},
 		migrations: {
 			tableName: 'knex_migrations'
