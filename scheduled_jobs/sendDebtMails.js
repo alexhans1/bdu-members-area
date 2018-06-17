@@ -130,9 +130,11 @@ async function sendDebtMails () {
 		);
 		obj.tournaments.forEach(function (tournament) {
 			content.value = content.value + '<tr><th align="left">' + tournament.name +
-				'</th><td>' + tournament.debt + '€</td></tr>'
+				'</th><td>' + Math.round(tournament.debt*100)/100 + '€</td></tr>'
 		});
-		content.value = content.value + '<tr><th align="left">Total</th><td><b>' + obj.total_debt + '€</b></td></tr>' +
+		content.value = content.value + '<tr><th align="left">Total</th><td><b>' +
+			Math.round(obj.total_debt*100)/100 +
+			'€</b></td></tr>' +
 			'</table>' +
 			'<br>BDU Bank Info:<br>' +
 			'<table>' +
