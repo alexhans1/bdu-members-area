@@ -47,5 +47,12 @@
     "serve-favicon": "~2.4.5",
     "serve-static": "^1.12.1",
     "ssh2": "^0.5.5"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1"
   }
 }
