@@ -1,236 +1,229 @@
 <header>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="intro-text">
-                    <span class="name"><span class="fa fa-group"></span> Mitgliederübersicht</span>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="intro-text">
+          <span class="name"><span class="fa fa-group"></span> Mitgliederübersicht</span>
         </div>
+      </div>
     </div>
+  </div>
 </header>
 
 <!-- SHOWN ONLY TO PEOPLE WITHOUT PROPPER RIGHTS -->
 <section ng-hide="istVorstand">
-	<div class="container">
-		<div class="row">
-			<!-- Table -->
-			<div class="col-sm-8 col-sm-offset-2">
-				<div class="user-info-table">
+  <div class="container">
+    <div class="row">
+      <!-- Table -->
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="user-info-table">
 
-					<h3>
-						Sorry you don't have the right to see this.
-					</h3>
-				</div>
-			</div>
-		</div>
-	</div>
+          <h3>
+            Sorry you don't have the right to see this.
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section ng-show="istVorstand" style="margin-left: 4%; margin-right: 4%">
-    <div class="container">
+  <div class="container">
 
     <div class="row">
-        <!--USER TABLE-->
-        <div class="col-md-12">
+      <!--USER TABLE-->
+      <div class="col-md-12">
 
-            <table class="table table-hover table-responsive">
-                <thead>
-                <tr>
-                    <th class="hidden-sm-down"></th>
-                    <th class="hidden-xs">
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button>
-                    </th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('vorname')">Name</button>
-                    </th>
-                    <th>Tournaments</th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('judgeRatio')">Judging Ratio</button>
-                    </th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalDebt')">Debt</button>
-                    </th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalPoints')">Points</button>
-                    </th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
-                    </th>
-                    <th>
-                        <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_mail')">Last Debt Email</button>
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="left-align">
-                <tr ng-repeat="user in users" ng-click="goToTournaments(user)" class="pointer">
-                    <td class="hidden-sm-down">
-						<img data-ng-show="user.image"
-							 style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
-							 class="img-hor"
-							 ng-src="http://root.debating.de/members_area/userpics/{{user.image}}" alt="profile image"/>
-						<img data-ng-hide="user.image"
-							 style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
-							 class="img-hor" src="images/bdu_quad.png" alt="">
-					</td>
-					<td class="hidden-xs">{{user.id}}</td>
-					<td>{{user.vorname}} {{user.name}}
-						<span ng-show="user.position == 1 && user.id != 21" class="help-tip hidden-md-down">
+        <table class="table table-hover table-responsive">
+          <thead>
+          <tr>
+            <th class="hidden-sm-down"></th>
+            <th class="hidden-xs">
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('id')">User ID</button>
+            </th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('vorname')">Name</button>
+            </th>
+            <th>Tournaments</th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('judgeRatio')">Judging Ratio</button>
+            </th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalDebt')">Debt</button>
+            </th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('totalPoints')">Points</button>
+            </th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_login')">Last Login</button>
+            </th>
+            <th>
+              <button class="btn btn-outline-info btn-sm" ng-click="sortUsers('last_mail')">Last Debt Email</button>
+            </th>
+          </tr>
+          </thead>
+          <tbody class="left-align">
+          <tr ng-repeat="user in users" ng-click="goToTournaments(user)" class="pointer">
+            <td class="hidden-sm-down">
+              <img data-ng-show="user.image"
+                   style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
+                   class="img-hor"
+                   ng-src="http://root.debating.de/members_area/userpics/{{user.image}}" alt="profile image"/>
+              <img data-ng-hide="user.image"
+                   style="height: 50px; width: 50px; border:1px solid gainsboro; border-radius: 50%;"
+                   class="img-hor" src="images/bdu_quad.png" alt="">
+            </td>
+            <td class="hidden-xs">{{user.id}}</td>
+            <td>{{user.vorname}} {{user.name}}
+              <span ng-show="user.position == 1 && user.id != 21" class="help-tip hidden-md-down">
 							<i class="fa fa-star" aria-hidden="true"></i>
 							<p style="width: 140px!important;">Board member</p>
 						</span>
-					</td>
-                    <td>{{user.tournaments.length}}</td>
-                    <td>{{user.judgeRatio}}%</td>
-                    <td>{{user.totalDebt | currency:"€"}}</td>
-                    <td>{{user.totalPoints}}</td>
-                    <td>{{user.last_login | date: 'medium'}}</td>
-                    <td ng-hide="user.last_mail == '0000-00-00 00:00:00'">{{user.last_mail | date: 'medium'}}</td>
-                    <td ng-show="user.last_mail == '0000-00-00 00:00:00'">never</td>
-                </tr>
-                <tr style="font-weight: bold;">
-					<td class="hidden-sm-down"></td>
-                    <td class="hidden-xs">#</td>
-                    <td>{{users.length}}</td>
-                    <td></td>
-                    <td></td>
-                    <td>{{totalClubDebt | currency:"€"}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            </td>
+            <td>{{user.tournaments.length}}</td>
+            <td>{{user.judgeRatio}}%</td>
+            <td>{{user.totalDebt | currency:"€"}}</td>
+            <td>{{user.totalPoints}}</td>
+            <td>{{user.last_login | date: 'medium'}}</td>
+            <td ng-hide="user.last_mail == '0000-00-00 00:00:00'">{{user.last_mail | date: 'medium'}}</td>
+            <td ng-show="user.last_mail == '0000-00-00 00:00:00'">never</td>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td class="hidden-sm-down"></td>
+            <td class="hidden-xs">#</td>
+            <td>{{users.length}}</td>
+            <td></td>
+            <td></td>
+            <td>{{totalClubDebt | currency:"€"}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
 
     <!-- TOURNAMENT TABLE -->
     <div id="tournaments" class="row">
-        <div ng-show="showTournaments" class="col-md-12">
+      <div ng-show="showTournaments" class="col-md-12">
 
-            <h3>{{user.vorname}}</h3>
-            <table class="table table-hover table-responsive">
-                <thead>
-                <tr>
-                    <th class="hidden-xs"><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('id')">Tournament ID</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('name')">Name</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('startdate')">Date</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_role')">Role</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_is_independent')">Independent</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_success')">Success</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_points')">Points</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
-                    <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
-                    <th>Debt</th>
-					<th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_funding')">Funding</button></th>
-					<th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_transaction_date')">Transaction Date</button></th>
-					<th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_transaction_from')">Transaction From</button></th>
-					<th></th>
-                </tr>
-                </thead>
-                <tbody class="left-align">
-                    <tr ng-repeat="tournament in user.tournaments" ng-include="getTemplate(tournament)"></tr>
-                </tbody>
-            </table>
-        </div>
+        <h3>{{user.vorname}}</h3>
+        <table class="table table-hover table-responsive">
+          <thead>
+          <tr>
+            <th class="hidden-xs"><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('id')">ID</button></th>
+            <th class="hidden-xs"><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('id')">Tournament ID</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('name')">Name</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('startdate')">Date</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_role')">Role</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_is_independent')">Independent</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_success')">Success</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_points')">Points</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_price_paid')">Price Paid</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_price_owed')">Price Owed</button></th>
+            <th>Debt</th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_funding')">Funding</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_transaction_date')">Transaction Date</button></th>
+            <th><button class="btn btn-outline-info btn-sm" data-ng-click="sortTournaments('pivot_transaction_from')">Transaction From</button></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody class="left-align">
+          <tr ng-repeat="tournament in user.tournaments"
+              ng-include="getTemplate(tournament)">
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    </div>
+  </div>
+
 </section>
 
 
 <!--TEMPLATE FOR NORMAL VIEW-->
 <script type="text/ng-template" id="display">
-
-    <td class="text-center hidden-xs">{{tournament.id}}</td>
-    <td>
-        {{tournament.name}}
-    </td>
-    <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
-    <td>{{tournament.pivot_role}}</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
-		<i class="fa fa-check" aria-hidden="true"></i>
-	</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
-		<i class="fa fa-times" aria-hidden="true"></i>
-	</td>
-	<!--<td>{{tournament.pivot_success}} <i ng-click="showSuccessOptions" class="fa fa-pencil-square-o text-info pointer" aria-hidden="true"></i></td>-->
-	<td class="text-center" ng-controller="successCtrl" ng-include="getSuccessTemplate(tournament.id)"></td>
-	<!--<td>-->
-		<!--<div class="form-group">-->
-			<!--<label for="success">Success</label>-->
-			<!--<select id="success"-->
-					<!--ng-change="setSuccess(success, tournament.rankingvalue, tournament.pivot_id)"-->
-					<!--class="form-control" ng-options="success as success.label for success in successes track by success.id"-->
-					<!--ng-model="success(tournament.pivot_success)"-->
-					<!--ng-disabled="tournament.pivot_attended != 1">-->
-			<!--</select>-->
-		<!--</div>-->
-	<!--</td>-->
-	<td>{{tournament.pivot_points}}</td>
-    <td>{{tournament.pivot_price_paid | currency:'€'}}</td>
-    <td>{{tournament.pivot_price_owed | currency:'€'}}</td>
-    <td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
-	<td class="text-center" data-ng-show="tournament.pivot_funding"><i class="fa fa-check" aria-hidden="true"></i></td>
-	<td class="text-center" data-ng-hide="tournament.pivot_funding"><i class="fa fa-times" aria-hidden="true"></i></td>
-	<td class="text-center"
-		data-ng-show="tournament.pivot_transaction_date != null">
-		{{tournament.pivot_transaction_date | date: 'dd.MM.yyyy'}}
-	</td>
-	<td class="text-center" data-ng-hide="tournament.pivot_transaction_date != null">-</td>
-	<td	data-ng-show="tournament.pivot_transaction_from != null">
-		{{tournament.pivot_transaction_from}}
-	</td>
-	<td class="text-center"
-		data-ng-hide="tournament.pivot_transaction_from != null">
-		 -
-	</td>
-	<td class="text-center">
-        <button data-ng-click="editReg(tournament)" class="btn btn-outline-info">
-			<i class="fa fa-pencil" aria-hidden="true"></i>
-		</button>
-		<button data-ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)"
-				class="btn btn-outline-success"
-				ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">
-			<i class="fa fa-eur" aria-hidden="true"></i>
-		</button>
-    </td>
+<td class="text-center hidden-xs">{{tournament.pivot_id}}</td>
+<td class="text-center hidden-xs">{{tournament.id}}</td>
+<td>
+  {{tournament.name}}
+</td>
+<td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
+<td>{{tournament.pivot_role}}</td>
+<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
+  <i class="fa fa-check" aria-hidden="true"></i>
+</td>
+<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
+  <i class="fa fa-times" aria-hidden="true"></i>
+</td>
+<td class="text-center" ng-controller="successCtrl" ng-include="getSuccessTemplate(tournament.id)"></td>
+<td>{{tournament.pivot_points}}</td>
+<td>{{tournament.pivot_price_paid | currency:'€'}}</td>
+<td>{{tournament.pivot_price_owed | currency:'€'}}</td>
+<td class="currencySign" data-monetary-amount="{{tournament.pivot_price_paid - tournament.pivot_price_owed | currency:'€'}}"></td>
+<td class="text-center" data-ng-show="tournament.pivot_funding"><i class="fa fa-check" aria-hidden="true"></i></td>
+<td class="text-center" data-ng-hide="tournament.pivot_funding"><i class="fa fa-times" aria-hidden="true"></i></td>
+<td class="text-center"
+    data-ng-show="tournament.pivot_transaction_date != null">
+  {{tournament.pivot_transaction_date | date: 'dd.MM.yyyy'}}
+</td>
+<td class="text-center" data-ng-hide="tournament.pivot_transaction_date != null">-</td>
+<td	data-ng-show="tournament.pivot_transaction_from != null">
+  {{tournament.pivot_transaction_from}}
+</td>
+<td class="text-center"
+    data-ng-hide="tournament.pivot_transaction_from != null">
+  -
+</td>
+<td class="text-center">
+  <button data-ng-click="editReg(tournament)" class="btn btn-outline-info">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+  </button>
+  <button data-ng-click="setPaid(tournament.pivot_id, tournament.pivot_price_owed)"
+          class="btn btn-outline-success"
+          ng-disabled="tournament.pivot_price_owed == tournament.pivot_price_paid || !(tournament.pivot_price_owed > 0)">
+    <i class="fa fa-eur" aria-hidden="true"></i>
+  </button>
+</td>
 </script>
 
 <!--TEMPLATE FOR INLINE EDIT VIEW-->
 <script type="text/ng-template" id="edit">
-    <td class="text-center hidden-xs">{{tournament.id}}</td>
-    <td>
-        {{tournament.name}}
-    </td>
-    <td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
-    <td>{{tournament.pivot_role}}</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
-		<i class="fa fa-check" aria-hidden="true"></i>
-	</td>
-	<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
-		<i class="fa fa-times" aria-hidden="true"></i>
-	</td>
-    <td>{{tournament.pivot_success}}</td>
-    <td>{{tournament.pivot_points}}</td>
-    <td>
-        <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_paid" />
-    </td>
-    <td>
-        <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_owed" />
-    </td>
-    <td class="currencySign" data-monetary-amount="{{selected.pivot_price_paid - selected.pivot_price_owed | currency:'€'}}"></td>
-	<td>
-		<input class="form-control" type="checkbox" ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1" />
-	</td>
-	<td>
-		<input class="form-control" type="date" ng-model="selected.pivot_transaction_date">
-	</td>
-	<td>
-		<input class="form-control" ng-model="selected.pivot_transaction_from">
-	</td>
-	<td>
-        <button class="btn btn-sm btn-outline-success" ng-click="saveReg($index, tournament.pivot_id)" style="margin: 3px">Save</button>
-        <button class="btn btn-sm btn-outline-danger" ng-click="reset()" style="margin: 3px">Cancel</button>
-    </td>
+<td class="text-center hidden-xs">{{tournament.pivot_id}}</td>
+<td class="text-center hidden-xs">{{tournament.id}}</td>
+<td>
+  {{tournament.name}}
+</td>
+<td>{{tournament.startdate | date: 'dd.MM.yyyy'}}</td>
+<td>{{tournament.pivot_role}}</td>
+<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 1" class="text-center">
+  <i class="fa fa-check" aria-hidden="true"></i>
+</td>
+<td data-ng-click="openDetails(tournament)" data-ng-show="tournament.pivot_is_independent == 0" class="text-center">
+  <i class="fa fa-times" aria-hidden="true"></i>
+</td>
+<td>{{tournament.pivot_success}}</td>
+<td>{{tournament.pivot_points}}</td>
+<td>
+  <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_paid" />
+</td>
+<td>
+  <input class="form-control" type="number" step="0.01" ng-model="selected.pivot_price_owed" />
+</td>
+<td class="currencySign" data-monetary-amount="{{selected.pivot_price_paid - selected.pivot_price_owed | currency:'€'}}"></td>
+<td>
+  <input class="form-control" type="checkbox" ng-model="selected.pivot_funding" ng-checked="selected.pivot_funding == 1" />
+</td>
+<td>
+  <input class="form-control" type="date" ng-model="selected.pivot_transaction_date">
+</td>
+<td>
+  <input class="form-control" ng-model="selected.pivot_transaction_from">
+</td>
+<td>
+  <button class="btn btn-sm btn-outline-success" ng-click="saveReg($index, tournament.pivot_id)" style="margin: 3px">Save</button>
+  <button class="btn btn-sm btn-outline-danger" ng-click="reset()" style="margin: 3px">Cancel</button>
+</td>
 </script>
