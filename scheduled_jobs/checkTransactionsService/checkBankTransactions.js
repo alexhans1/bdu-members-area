@@ -1,8 +1,8 @@
-// if (process.env.NODE_ENV !== 'production') {
-  const dotenv = require('dotenv');
-  // enables environment variables for development
-  dotenv.config({ path: '../../.env' });
-// }
+// enables environment variables for development
+const dotenv = require('dotenv');
+
+dotenv.config({ path: '../../.env' });
+
 const moment = require('moment');
 const schedule = require('node-schedule');
 
@@ -16,6 +16,7 @@ const baseURL = process.env.finAPIBaseURL;
 const CLIENT_ID = process.env.finApiClientID;
 const CLIENT_SECRET = process.env.finApiClientSecret;
 
+let USER_TOKEN;
 let USER_REFRESH_TOKEN;
 let USER_SESSION_EXPIRES_IN;
 
@@ -98,8 +99,7 @@ async function getAllTransactions(userToken) {
       direction: 'income',
       includeChildCategories: true,
       perPage: 500,
-      minBankBookingDate: moment('07/02/2018').format('YYYY-MM-DD'),
-      // minBankBookingDate: moment().subtract(15, 'days').format('YYYY-MM-DD'),
+      minBankBookingDate: moment().subtract(1, 'days').format('YYYY-MM-DD'),
     },
     headers: {
       Authorization: `Bearer ${userToken}`,
@@ -125,10 +125,10 @@ async function getAllTransactions(userToken) {
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // run banking service Mondays, Wednesdays and Fridays at 7pm German time (or 5pm iso time)
-// schedule.scheduleJob('0 17 * * *', () => {
-//   console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
-//   authenticateClient();
-// });
+schedule.scheduleJob('0 17 * * *', () => {
+  console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
+  authenticateClient();
+});
 
 
 // const test = async () => {
@@ -139,5 +139,3 @@ async function getAllTransactions(userToken) {
 //   transactionIdModelHelpers.saveTransactionIds(newTransactions);
 // };
 // test();
-
-authenticateClient();
