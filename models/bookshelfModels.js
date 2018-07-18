@@ -1,111 +1,122 @@
-'use strict';
 
-module.exports = function (Bookshelf) {
-	// User model
-	const User = Bookshelf.Model.extend({
-		tableName: 'users',
-		hasTimestamps: true,
 
-		tournaments: function () {
-			return this.belongsToMany(Tournament).withPivot([
-				'id',
-				'role',
-				'is_independent',
-				'attended',
-				'teamname',
-				'comment',
-				'price_owed',
-				'price_paid',
-				'success',
-				'points',
-				'funding',
-				'transaction_date',
-				'transaction_from',
-				'partner1',
-				'partner2',
-				'created_at',
-				'updated_at'
-			]);
-		}
-	});
+module.exports = (Bookshelf) => {
+  // User model
+  const User = Bookshelf.Model.extend({
+    tableName: 'users',
+    hasTimestamps: true,
 
-	const Users = Bookshelf.Collection.extend({
-		model: User
-	});
+    tournaments() {
+      return this.belongsToMany(Tournament).withPivot([
+        'id',
+        'role',
+        'is_independent',
+        'attended',
+        'teamname',
+        'comment',
+        'price_owed',
+        'price_paid',
+        'success',
+        'points',
+        'funding',
+        'transaction_date',
+        'transaction_from',
+        'partner1',
+        'partner2',
+        'created_at',
+        'updated_at',
+      ]);
+    },
+  });
 
-// Tournament model
-	const Tournament = Bookshelf.Model.extend({
-		tableName: 'tournaments',
-		hasTimestamps: true,
+  const Users = Bookshelf.Collection.extend({
+    model: User,
+  });
 
-		users: function () {
-			return this.belongsToMany(User).withPivot([
-				'id',
-				'role',
-				'is_independent',
-				'attended',
-				'teamname',
-				'comment',
-				'price_owed',
-				'price_paid',
-				'success',
-				'points',
-				'funding',
-				'transaction_date',
-				'transaction_from',
-				'partner1',
-				'partner2',
-				'created_at',
-				'updated_at'
-			]);
-		}
-	});
+  // Tournament model
+  const Tournament = Bookshelf.Model.extend({
+    tableName: 'tournaments',
+    hasTimestamps: true,
 
-	const Tournaments = Bookshelf.Collection.extend({
-		model: Tournament
-	});
+    users() {
+      return this.belongsToMany(User).withPivot([
+        'id',
+        'role',
+        'is_independent',
+        'attended',
+        'teamname',
+        'comment',
+        'price_owed',
+        'price_paid',
+        'success',
+        'points',
+        'funding',
+        'transaction_date',
+        'transaction_from',
+        'partner1',
+        'partner2',
+        'created_at',
+        'updated_at',
+      ]);
+    },
+  });
 
-	//Registration model
-	const Registration = Bookshelf.Model.extend({
-		tableName: 'tournaments_users',
-		hasTimestamps: true
-	});
+  const Tournaments = Bookshelf.Collection.extend({
+    model: Tournament,
+  });
 
-	const Registrations = Bookshelf.Collection.extend({
-		model: Registration
-	});
+  // Registration model
+  const Registration = Bookshelf.Model.extend({
+    tableName: 'tournaments_users',
+    hasTimestamps: true,
+  });
 
-	const Bug = Bookshelf.Model.extend({
-		tableName: 'bugs',
-		hasTimestamps: true,
+  const Registrations = Bookshelf.Collection.extend({
+    model: Registration,
+  });
 
-		user: function() {
-			return this.belongsTo(User);
-		}
-	});
+  const Bug = Bookshelf.Model.extend({
+    tableName: 'bugs',
+    hasTimestamps: true,
 
-	const Bugs = Bookshelf.Collection.extend({
-		model: Bug
-	});
+    user() {
+      return this.belongsTo(User);
+    },
+  });
 
-	const Club_Debt = Bookshelf.Model.extend({
-		tableName: 'club_debt',
-	});
+  const Bugs = Bookshelf.Collection.extend({
+    model: Bug,
+  });
 
-	const Club_Debt_Col = Bookshelf.Collection.extend({
-		model: Club_Debt,
-	});
+  const Club_Debt = Bookshelf.Model.extend({
+    tableName: 'club_debt',
+  });
 
-	return {
-		User,
-		Users,
-		Tournament,
-		Tournaments,
-		Registration,
-		Registrations,
-		Bug,
-		Bugs,
-		Club_Debt,
-		Club_Debt_Col
-	}
+  const Club_Debt_Col = Bookshelf.Collection.extend({
+    model: Club_Debt,
+  });
+
+  const Transaction_Ids = Bookshelf.Model.extend({
+    tableName: 'transaction_ids',
+    hasTimestamps: true,
+  });
+
+  const Transaction_Ids_Col = Bookshelf.Collection.extend({
+    model: Transaction_Ids,
+  });
+
+  return {
+    User,
+    Users,
+    Tournament,
+    Tournaments,
+    Registration,
+    Registrations,
+    Bug,
+    Bugs,
+    Club_Debt,
+    Club_Debt_Col,
+    Transaction_Ids,
+    Transaction_Ids_Col,
+  };
 };
