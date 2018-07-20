@@ -13,7 +13,7 @@ module.exports = function(passport, Bookshelf){
 	// required for persistent login sessions
 	// passport needs ability to serialize and deserialize users out of session
 	// Passport needs to be able to serialize and deserialize users to support persistent login sessions
-	
+
 	passport.serializeUser(function(user, done) {
 		done(null, user);
 	});
