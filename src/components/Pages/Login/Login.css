@@ -1,0 +1,15 @@
+#loginPage {
+  background: no-repeat center center fixed;
+  background-image: url("./background.jpg");
+  background-size: cover;
+  min-height: calc(100vh - 61px - 36px);
+}
+
+.login-box {
+  background: rgba(356,356,356,0.9);
+}
+
+#photoCredit {
+  font-size: x-small;
+  color: white;
+}
