@@ -1,6 +1,6 @@
 const sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
-
+const cors = require('cors');
 const app = express();
 const path = require('path');
 
@@ -40,6 +40,8 @@ const dashboard = require('./routes/dashboardAPI')(Bookshelf);
 // https redirect
 app.use(sslRedirect());
 
+// disable cors when local
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

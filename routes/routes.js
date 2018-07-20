@@ -6,6 +6,7 @@ let helper = require('sendgrid').mail;
 module.exports = function(app, passport, Bookshelf) {
 	//sends successful login state back to angular
 	app.get('/success', function(req, res){
+	  console.log(req.sessionStore.sessions);
 		res.send({state: 'success', user: req.user ? req.user : null});
 	});
 
@@ -57,7 +58,7 @@ module.exports = function(app, passport, Bookshelf) {
 	// =============================================================================
 	// ========================== RESET PASSWORD FUNCTION ==========================
 	// =============================================================================
-	
+
 	//FIRST: SEND FORGOT PASSWORD EMAIL
 	//THIS SETS THE resetPasswordToken AND resetPasswordExpires AND SENDS LINK WITH TOKEN TO USEREMAIL
 
@@ -183,7 +184,7 @@ module.exports = function(app, passport, Bookshelf) {
             res.status(401).json({error: true, message: 'Unauthorized'});
         }
     });
-    
+
     app.post('/bugs', function (req, res) {
     	let user_id = (typeof req.user === 'undefined') ? null : req.user.id;
 		Bug.forge({

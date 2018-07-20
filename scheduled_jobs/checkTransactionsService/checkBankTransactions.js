@@ -22,7 +22,7 @@ const CLIENT_SECRET = process.env.finApiClientSecret;
 
 const authenticateClient = () => {
   const options = {
-    method: 'POST',
+    method: 'post',
     url: `${baseURL}/oauth/token`,
     qs: {
       grant_type: 'client_credentials',
