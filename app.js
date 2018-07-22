@@ -1,22 +1,21 @@
-const sslRedirect = require('heroku-ssl-redirect');
 const express = require('express');
-const cors = require('cors');
 const app = express();
 const path = require('path');
+const session = require('express-session'); // browser sessions for authentication
+const mysql = require('mysql');
+const MySQLStore = require('express-mysql-session')(session);
+const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
 
 if (process.env.NODE_ENV !== 'production') { // only if not production
   require('longjohn'); // for extensive logging in local
 }
-const favicon = require('serve-favicon');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv'); // enables environment variables for development
 if (process.env.NODE_ENV !== 'production') dotenv.load();
 require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss' }); // adds a timestamp to each console log
 const flash = require('req-flash'); // lets me parse individual messages to requests
-const session = require('express-session'); // browser sessions for authentication
-const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
 
 // connect to database
 let conn,
@@ -30,40 +29,15 @@ try {
   console.log(ex);
 }
 
-// IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
-// sets up routes variables
-const index = require('./routes/index');
-const restApi = require('./routes/restAPI')(Bookshelf);
-const rankingApi = require('./routes/rankingAPI')(Bookshelf);
-const dashboard = require('./routes/dashboardAPI')(Bookshelf);
-
 // https redirect
+const sslRedirect = require('heroku-ssl-redirect');
 app.use(sslRedirect());
 
 // disable cors when local
-app.use(cors());
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// ---------Middleware--------------
-
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public/images', 'BDU.png')));
-app.use(logger('dev'));
-
-// initialize sessions middleware, set secret to 'keyboard cat' to be used by cookies later I guess ?
-app.use(session({
-  secret: 'keyboard cat2',
-  resave: true,
-  saveUninitialized: true,
-}));
-
-app.use(flash());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+if (process.env.NODE_ENV !== 'production') {
+  const cors = require('cors');
+  app.use(cors());
+}
 
 // use passport & sessions
 app.use(passport.initialize());
@@ -71,8 +45,60 @@ app.use(passport.session());
 
 // Initialize Passport using passport-init.js
 const initPassport = require('./config/passport-init');
-
 initPassport(passport, Bookshelf);
+
+// sessionStore options
+const options = {
+  checkExpirationInterval: 1000 * 60 * 15, // 15 min // How frequently expired sessions will be cleared; milliseconds.
+  expiration: 1000 * 60 * 60 * 24 * 30, // 30 days // The maximum age of a valid session; milliseconds.
+  createDatabaseTable: true, // Whether or not to create the sessions database table, if one does not already exist.
+  schema: {
+    tableName: 'sessions',
+    columnNames: {
+      session_id: 'session_id',
+      expires: 'expires',
+      data: 'data',
+    },
+  },
+};
+
+// connect to the db
+const dbConnectionInfo = {
+  host: process.env.NODE_ENV !== 'production' ? 'localhost' : 'us-cdbr-iron-east-03.cleardb.net',
+  port: 3306,
+  user: process.env.NODE_ENV !== 'production' ? 'root' : 'bb41eedfd379a8',
+  password: process.env.NODE_ENV !== 'production' ? process.env.localDBPassword : process.env.clearDB_password,
+  database: process.env.NODE_ENV !== 'production' ? 'bdudb' : 'heroku_9b6f95eb7a9adf8',
+  connectionLimit: 10, // if you use a pool like I did
+};
+
+const pool = mysql.createPool(dbConnectionInfo); // create connection pool
+const sessionStore = new MySQLStore(options, pool);
+
+app.use(session({
+  // key: 'cookie_key',
+  secret: 'cookie_secret',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false },
+}));
+
+
+// ---------Middleware--------------
+app.use(morgan('tiny'));
+app.use(flash());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
+// sets up routes variables
+const index = require('./routes/index');
+const restApi = require('./routes/restAPI')(Bookshelf);
+const rankingApi = require('./routes/rankingAPI')(Bookshelf);
+const dashboard = require('./routes/dashboardAPI')(Bookshelf);
 
 // setup routes URIs
 app.use('/', index);
