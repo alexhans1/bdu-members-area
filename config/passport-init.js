@@ -39,7 +39,7 @@ module.exports = function (passport, Bookshelf) {
           .then((user) => {
             if (!user) {
               console.error(`No user found with that email: ${userEmail}.`);
-              // req.flash is the way to set flashdata using connect-flash
+              // req.flash is the way to set flash data using connect-flash
               return done(null, false, req.flash('authMsg',
                 `No user found with that email: ${userEmail}.`));
             }
@@ -61,7 +61,7 @@ module.exports = function (passport, Bookshelf) {
             return done(null, false, req.flash('authMsg', 'Error during login'));
           });
       } catch (ex) {
-			    console.log(ex);
+        console.log(ex);
         return done(null, false, req.flash('authMsg', 'Error during login'));
       }
     })));
@@ -75,8 +75,7 @@ module.exports = function (passport, Bookshelf) {
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true, // allows us to pass back the entire request to the callback
-  },
-    ((req, userEmail, password, done) => {
+  }, ((req, userEmail, password, done) => {
       try {
       // find a user whose email is the same as the forms email
       // check if user already exists in DB
@@ -120,7 +119,7 @@ module.exports = function (passport, Bookshelf) {
             return done(null, false, req.flash('authMsg', 'Error during signup.'));
           });
       } catch (ex) {
-		    console.log(ex);
+        console.log(ex);
       }
     })));
 
@@ -136,8 +135,8 @@ module.exports = function (passport, Bookshelf) {
   },
     ((req, userID, password, done) => {
       try {
-      // find a user whose email is the same as the forms email
-      // check if user already exists in DB
+        // find a user whose email is the same as the forms email
+        // check if user already exists in DB
         new User({ id: userID })
           .fetch()
           .then((user) => {
@@ -169,7 +168,7 @@ module.exports = function (passport, Bookshelf) {
             return done(null, false, req.flash('reset', 'Error during password reset.'));
           });
       } catch (ex) {
-		    console.log(ex);
+        console.log(ex);
       }
     })));
 
@@ -187,7 +186,7 @@ module.exports = function (passport, Bookshelf) {
     ((req, userID, newPwd, done) => {
       console.log(`Change password method called for user: ${userID}`);
       try {
-      // find a user whose email is the same as the forms email
+        // find a user whose email is the same as the forms email
         new User({ id: userID })
           .fetch()
           .then((user) => {

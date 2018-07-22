@@ -3,27 +3,30 @@ const crypto = require('crypto');
 const sg = require('sendgrid')(process.env.SENDGRID_KEY);
 const helper = require('sendgrid').mail;
 
-module.exports = (app, passport, Bookshelf) => {
+module.exports = ({ router, Bookshelf, passport }) => {
+  console.info('> adding authentication routes...');
 
   // sends successful login state back to angular
-  app.get('/success', (req, res) => {
+  router.route('/success').get((req, res) => {
     res.send({ state: 'success', user: req.user ? req.user : null });
   });
 
   // sends failure login state back to angular
-  app.get('/failure', (req, res) => {
+  router.route('/failure').get((req, res) => {
     res.send({ state: 'failure', user: null, message: req.flash('authMsg') || null });
   });
 
   // process the login form
-  app.post('/login', passport.authenticate('login', {
+  console.info('> > adding login route...');
+  router.route('/login').post(passport.authenticate('login', {
     successRedirect: '/success', // redirect to the secure profile section
     failureRedirect: '/failure', // redirect back to the signup page if there is an error
     failureFlash: true, // allow flash messages
   }));
 
   // process the signup form
-  app.post('/signup', passport.authenticate('signup', {
+  console.info('> > adding signup route...');
+  router.route('/signup').post(passport.authenticate('signup', {
     successRedirect: '/success', // redirect to the secure profile section
     failureRedirect: '/failure', // redirect back to the signup page if there is an error
     failureFlash: true, // allow flash messages
@@ -32,7 +35,8 @@ module.exports = (app, passport, Bookshelf) => {
   // =====================================
   // LOGOUT ==============================
   // =====================================
-  app.get('/logout', (req, res) => {
+  console.info('> > adding logout route...');
+  router.route('/logout').get((req, res) => {
     req.logout();
     res.send('success');
     // res.redirect('/');
@@ -42,12 +46,12 @@ module.exports = (app, passport, Bookshelf) => {
   // HELP ROUTES==========================
   // =====================================
   // sends login state back to angular
-  app.get('/isAuthenticated', (req, res) => {
+  router.route('/isAuthenticated').get((req, res) => {
     res.send(req.isAuthenticated());
   });
 
   // sends successful login state back to angular
-  app.get('/sendUser', (req, res) => {
+  router.route('/sendUser').get((req, res) => {
     if (req.isAuthenticated()) {
       res.send(req.user);
     } else {
@@ -65,17 +69,14 @@ module.exports = (app, passport, Bookshelf) => {
 
   // User model
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
-  const User = Models.User;
-  const Bug = Models.Bug;
-  const Bugs = Models.Bugs;
 
-  app.post('/forgot', async (req, res) => {
+  router.route('/forgot').post(async (req, res) => {
     let token;
     await crypto.randomBytes(20, (err, buf) => {
       token = buf.toString('hex');
     });
 
-    await User.forge({ email: req.body.email })
+    await Models.User.forge({ email: req.body.email })
       .fetch({ require: true })
       .then((user) => {
         user.save({
@@ -111,8 +112,8 @@ module.exports = (app, passport, Bookshelf) => {
   });
 
   // SECOND: RENDER THE RESET PASSWORD PAGE
-  app.get('/reset/:token', (req, res) => {
-    new User({ resetPasswordToken: req.params.token })
+  router.route('/reset/:token').get((req, res) => {
+    new Models.User({ resetPasswordToken: req.params.token })
       .fetch()
       .then((user) => {
         if (!user) {
@@ -130,14 +131,14 @@ module.exports = (app, passport, Bookshelf) => {
   });
 
   // THIRD: RESET PASSWORD METHOD
-  app.post('/reset', passport.authenticate('reset', {
+  router.route('/reset').post(passport.authenticate('reset', {
     successRedirect: '/', // redirect to the login section
     failureRedirect: '/resetFailure', // redirect back to the signup page if there is an error
     failureFlash: true, // allow flash messages
   }));
 
   // sends failure login state back to angular
-  app.get('/resetFailure', (req, res) => {
+  router.route('/resetFailure').get((req, res) => {
     res.render('reset.ejs', { message: req.flash('reset'), user: null });
   });
 
@@ -145,7 +146,7 @@ module.exports = (app, passport, Bookshelf) => {
   // ========================== CHANGE PASSWORD FUNCTION =========================
   // =============================================================================
 
-  app.post('/changePassword', passport.authenticate('change', {
+  router.route('/changePassword').post(passport.authenticate('change', {
     successRedirect: '/changeSuccess', // redirect to the secure profile section
     failureRedirect: '/changeFailure', // redirect back to the signup page if there is an error
     successFlash: true, // allow flash messages
@@ -153,101 +154,12 @@ module.exports = (app, passport, Bookshelf) => {
   }));
 
   // sends failure password change state back to angular
-  app.get('/changeSuccess', (req, res) => {
+  router.route('/changeSuccess').get((req, res) => {
     res.send({ state: 'success', error: false, message: req.flash('changeMsg') || null });
   });
 
   // sends failure password change state back to angular
-  app.get('/changeFailure', (req, res) => {
+  router.route('/changeFailure').get((req, res) => {
     res.send({ state: 'failure', error: true, message: req.flash('changeMsg') || null });
-  });
-
-  // =========================================================================
-  // ========================== BUG REPORT SYSTEM ============================
-  // =========================================================================
-
-  app.get('/bugs', (req, res) => {
-    // Check if session user is authorized
-    if (req.user.position === 1) {
-      Bugs.forge().fetch({ withRelated: ['user'] })
-        .then((bugs) => {
-          bugs = bugs.toJSON();
-          console.log('Getting all bugs successful');
-          res.json({ error: false, data: bugs });
-        })
-        .catch((err) => {
-          console.error(`Error while getting all bugs. Error message:\n${err}`);
-          res.json({ error: true, err, message: `Error while getting all bugs. Error message:\n${err}` });
-        });
-    } else {
-      console.log('User is not authorized to get all bugs');
-      res.status(401).json({ error: true, message: 'Unauthorized' });
-    }
-  });
-
-  app.post('/bugs', (req, res) => {
-    	const user_id = (typeof req.user === 'undefined') ? null : req.user.id;
-    Bug.forge({
-      description: req.body.description,
-      type: req.body.type,
-      user_id,
-    })
-      .save()
-      .then((bug) => {
-        console.log('Report bug successful.');
-        res.json({ error: false, message: 'Report bug successful.' });
-      })
-      .catch((err) => {
-        console.log(`Error while reporting new bug. Error: \n${err}`);
-        res.json({ error: true, message: `Error while reporting new bug. Error: \n${err.message}` });
-      });
-  });
-
-  app.put('/bugs/:id', (req, res) => {
-    // Check if session user is authorized
-    if (req.user.position === 1) {
-      Bug.forge({ id: req.params.id })
-        .fetch({ require: true })
-        .then((bug) => {
-          bug.save({
-            description: req.body.description,
-            type: req.body.type,
-            status: req.body.status,
-          });
-        })
-        .then(() => {
-          console.log('Updating bug successful.');
-          res.status(200).json({ error: false, message: 'Updating bug successful.' });
-        })
-        .catch((err) => {
-          console.error(`Error while updating bug. Error: ${err.message}`);
-          res.json({ error: true, message: 'Error while updating bug.' });
-        });
-    } else {
-      console.log('User is not authorized to update bug');
-      res.json({ error: true, message: 'Unauthorized' });
-    }
-  });
-
-  app.delete('/bugs/:id', (req, res) => {
-    // Check if session user is authorized
-    if (req.user.position === 1) {
-      Bug.forge({ id: req.params.id })
-        .fetch({ require: true })
-        .then((bug) => {
-          bug.destroy();
-        })
-        .then(() => {
-          console.log('Deleting bug successful');
-          res.status(200).json({ error: false, message: 'Deleting bug successful.' });
-        })
-        .catch((err) => {
-          console.error(`Error while deleting bug. Error: ${err.message}`);
-          res.json({ error: true, message: 'Error while deleting bug.' });
-        });
-    } else {
-      console.log('User is not authorized to delete bug');
-      res.json({ error: true, message: 'Unauthorized' });
-    }
   });
 };

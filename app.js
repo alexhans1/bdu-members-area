@@ -1,21 +1,34 @@
-const express = require('express');
-const app = express();
-const path = require('path');
-const session = require('express-session'); // browser sessions for authentication
-const mysql = require('mysql');
-const MySQLStore = require('express-mysql-session')(session);
-const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
+// load configuration settings from environment file .env
+require('dotenv').load();
 
-if (process.env.NODE_ENV !== 'production') { // only if not production
-  require('longjohn'); // for extensive logging in local
-}
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
+// require all the necessary dependencies
+const express = require('express');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv'); // enables environment variables for development
-if (process.env.NODE_ENV !== 'production') dotenv.load();
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const sslRedirect = require('heroku-ssl-redirect');
+const flash = require('req-flash');
+
+const app = express();
+
+// https redirect
+app.use(sslRedirect());
+
+// add security
+app.use(cors());
+
+// add parsers for body and cookies
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
+app.use(cookieParser());
+
+// add HTTP Request logging
+app.use(require('morgan')('tiny'));
+
+// add timestamps to logs
 require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss' }); // adds a timestamp to each console log
-const flash = require('req-flash'); // lets me parse individual messages to requests
 
 // connect to database
 let conn,
@@ -26,26 +39,14 @@ try {
   knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
   Bookshelf = require('bookshelf')(knex); // require Bookshelf ORM Framework
 } catch (ex) {
-  console.log(ex);
+  console.error(ex.message);
 }
 
-// https redirect
-const sslRedirect = require('heroku-ssl-redirect');
-app.use(sslRedirect());
-
-// disable cors when local
-if (process.env.NODE_ENV !== 'production') {
-  const cors = require('cors');
-  app.use(cors());
-}
-
-// use passport & sessions
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Initialize Passport using passport-init.js
-const initPassport = require('./config/passport-init');
-initPassport(passport, Bookshelf);
+// browser sessions for authentication
+const session = require('express-session');
+const mysql = require('mysql');
+const MySQLStore = require('express-mysql-session')(session);
+const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
 
 // sessionStore options
 const options = {
@@ -76,7 +77,6 @@ const pool = mysql.createPool(dbConnectionInfo); // create connection pool
 const sessionStore = new MySQLStore(options, pool);
 
 app.use(session({
-  // key: 'cookie_key',
   secret: 'cookie_secret',
   store: sessionStore,
   resave: false,
@@ -84,28 +84,18 @@ app.use(session({
   cookie: { secure: false },
 }));
 
+// use passport & sessions
+app.use(passport.initialize());
+app.use(passport.session());
 
-// ---------Middleware--------------
-app.use(morgan('tiny'));
+// Initialize Passport using passport-init.js
+require('./config/passport-init')(passport, Bookshelf);
+
+// lets me parse individual messages to requests
 app.use(flash());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// IF NEW ROUTE IS CREATED, DEFINE NEW ROUTE HERE AND SET URI FURTHER DOWN
-// sets up routes variables
-const index = require('./routes/index');
-const restApi = require('./routes/restAPI')(Bookshelf);
-const rankingApi = require('./routes/rankingAPI')(Bookshelf);
-const dashboard = require('./routes/dashboardAPI')(Bookshelf);
-
-// setup routes URIs
-app.use('/', index);
-app.use('/app', restApi);
-app.use('/ranking', rankingApi);
-app.use('/dashboard', dashboard);
-require('./routes/routes.js')(app, passport, Bookshelf);
+// add basic routes needed in all environments
+app.use('/', require('./routes/')({ express, Bookshelf, passport }));
 
 // setup scheduled jobs
 if (process.env.NODE_ENV === 'production') {
