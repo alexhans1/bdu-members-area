@@ -22,10 +22,6 @@ module.exports = function (passport, Bookshelf) {
     done(null, user);
   });
 
-  // LOCAL LOGIN =============================================================
-  // =========================================================================
-  // we are using named strategies since we have one for login and one for signup
-
   passport.use('login', new LocalStrategy({
     // by default, local strategy uses username and password, we will override with email
     usernameField: 'email',
@@ -61,7 +57,7 @@ module.exports = function (passport, Bookshelf) {
             return done(null, false, req.flash('authMsg', 'Error during login'));
           });
       } catch (ex) {
-        console.log(ex);
+        console.error(ex.message);
         return done(null, false, req.flash('authMsg', 'Error during login'));
       }
     })));
