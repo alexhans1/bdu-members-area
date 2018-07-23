@@ -69,32 +69,6 @@ module.exports = function (Bookshelf) {
   // ------------------------------USER REST API-------------------------------
   // --------------------------------------------------------------------------
 
-  router.route('/user')
-  // fetch all users
-    .get((req, res) => {
-      try {
-        Users.forge()
-          .fetch({ withRelated: ['tournaments'] })
-          .then((collection) => {
-            collection = collection.toJSON();
-            _.forEach(collection, (user) => {
-              user.tournaments.forEach((part, index) => {
-                user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
-              });
-            });
-            console.info('Getting all users successful');
-            res.send(collection);
-            // res.json({error: false, data: collection.toJSON()});
-          });
-      } catch (err) {
-        console.error(`Error while getting all users. Error message:\n${err}`);
-        res.status(500).json({ error: true, message: err.message });
-      }
-    });
-
-  // no create user function here as we do that in the passport-init.js
-
-
   router.route('/user/image')
   // upload new image for current user
     .post(upload.single('pic'), (req, res) => {
@@ -140,73 +114,6 @@ module.exports = function (Bookshelf) {
         res.status(500).json({ error: true, message: 'Error while uploading profile pic.' });
       }
     });
-
-  router.route('/user/:id')
-  // fetch user
-  // show update user info form
-    .get((req, res) => {
-      // check if session user is the requested user
-      if (req.user.id == req.params.id || req.user.position === 1) {
-        try {
-          User.forge({ id: req.params.id })
-            .fetch({ withRelated: ['tournaments'] })
-            .then((user) => {
-              if (!user) {
-                console.error(`The user with the ID "${req.params.id}" is not in the database.`);
-                res.status(404).json({
-                  error: true,
-                  data: {},
-                  message: `The user with the ID "${req.params.id}" is not in the database.`,
-                });
-              } else {
-                user = user.toJSON();
-                user.tournaments.forEach((part, index) => {
-                  user.tournaments[index] = rename(user.tournaments[index], removeUnderscores);
-                });
-                console.info('Getting specific user successful');
-                res.status(200).send(user);
-              }
-            });
-        } catch (err) {
-          console.error(`Error while getting specfic user. Error message:\n${err}`);
-          res.status(500).json({ error: true, message: 'Error while getting specfic user.' });
-        }
-      } else {
-        console.info(`User is not authorized to get user information of user with the ID: ${req.params.id}`);
-        res.status(401).json({ error: true, message: 'Unauthorized' });
-      }
-    })
-
-  // update user details
-    .put((req, res) => {
-      // check if session user is the requested user
-      if (req.params.id == req.user.id || req.user.position === 1) {
-        try {
-          User.forge({ id: req.params.id })
-            .fetch({ require: true })
-            .then((user) => {
-              user.save({
-                email: req.body.email,
-                name: req.body.name,
-                vorname: req.body.vorname,
-                gender: req.body.gender,
-                food: req.body.food,
-                new_tournament_count: req.body.new_tournament_count,
-              });
-            })
-            .then(() => {
-              console.info('Updating user successful');
-              res.status(200).json({ error: false, message: 'Update successful.' });
-            });
-        } catch (err) {
-          console.error(`Error while updating user. Error message:\n ${err}`);
-          res.status(500).json({ error: true, message: 'Error while updating.' });
-        }
-      } else {
-        console.info(`User is not authorized to update user information of user with the ID: ${req.params.id}`);
-        res.status(401).json({ error: true, message: 'Unauthorized' });
-      }
-    })
 
   // delete a user
     .delete((req, res) => {

@@ -40,12 +40,10 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "qs": "^6.5.0",
-    "rename-keys": "^1.1.2",
     "req-flash": "0.0.3",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "sendgrid": "^5.2.3",
-    "serve-favicon": "~2.4.5",
     "serve-static": "^1.13.2",
     "ssh2": "^0.5.5"
   },

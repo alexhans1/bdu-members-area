@@ -8,7 +8,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
 
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
 
-  console.info('> > adding get clubDebt route...');
+  console.info('> > adding get /clubDebt route...');
   router.route('/clubDebt')
   // fetch all users
     .get((req, res) => {
