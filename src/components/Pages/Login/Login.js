@@ -33,7 +33,7 @@ class Login extends Component {
           <img src={membersAreaImage} width={342} alt="" />
         </div>
         <div className="row d-flex align-items-center justify-content-center py-3">
-          <div className="col-md-5 col-sm-12 login-box p-4">
+          <div className="col-lg-4 col-md-5 col-sm-12 login-box p-4">
             <h4><i className="fas fa-sign-in-alt" /> Login</h4>
             <hr />
             <form onSubmit={this.handleLogin}>

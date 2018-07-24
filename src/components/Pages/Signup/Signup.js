@@ -7,7 +7,7 @@ class Signup extends Component {
     return (
       <div className="d-flex">
         <div id="sideImage" className="col-5 d-none d-md-flex align-items-center justify-content-center">
-          <h1 className="text-white text-center">Signup and Register for Tournaments for the BDU</h1>
+          <h1 className="text-white text-center">Signup and Register for Tournaments with the BDU</h1>
         </div>
         <div className="col-sm-12 col-md-7 py-3 px-5">
           <form>
@@ -56,7 +56,7 @@ class Signup extends Component {
           </form>
           <hr />
           <span>
-            Already have an account? <Link to="/login">Signup</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </span>
         </div>
       </div>
