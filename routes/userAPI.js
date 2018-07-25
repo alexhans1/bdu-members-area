@@ -26,13 +26,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               message: `The user with the ID "${req.params.id}" is not in the database.`,
             });
           } else {
-            console.info('Getting specific user successful');
-            res.status(200).send(user.toJSON());
+            res.status(200).json(user.toJSON());
           }
         });
     } catch (err) {
       console.error(`Error while getting specfic user. Error message:\n${err}`);
-      res.status(500).json({ error: true, message: 'Error while getting specfic user.' });
+      res.status(500).json({ error: true, message: 'Error while getting specific user.' });
     }
   });
 
@@ -43,12 +42,11 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       Models.Users.forge()
         .fetch({ withRelated: ['tournaments'] })
         .then((collection) => {
-          console.info('Getting all users successful');
-          res.send(collection.toJSON());
+          res.status(200).send(collection.toJSON());
         });
     } catch (err) {
       console.error(`Error while getting all users. Error message:\n${err}`);
-      res.status(500).json({ error: true, message: err.message });
+      res.status(500).json({ error: true, message: 'Error while getting all users.' });
     }
   });
 
@@ -83,12 +81,11 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           }
         })
         .then(() => {
-          console.info('Updating user successful');
           res.status(200).json({ error: false, message: 'Update successful.' });
         });
     } catch (err) {
       console.error(`Error while updating user. Error message:\n ${err}`);
-      res.status(500).json({ error: true, message: 'Error while updating.' });
+      res.status(500).json({ error: true, message: 'Error while updating user.' });
     }
   });
 
@@ -116,8 +113,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           }
         })
         .then(() => {
-          console.info('Deleting user successful');
-          res.json({ error: false, data: { message: 'User successfully deleted' } });
+          res.status(200).json({ message: 'User successfully deleted' });
         });
     } catch (err) {
       console.error(`Error while deleting user. Error: ${err.message}`);
