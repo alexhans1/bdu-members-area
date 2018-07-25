@@ -34,18 +34,15 @@ module.exports = ({ express, Bookshelf, passport }) => {
   require('./registrationAPI')({
     router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
   });
-  // require('./restAPI')({
-  //   router, Bookshelf,
-  // });
   require('./bugsAPI')({
     router, Bookshelf,
   });
   require('./dashboardAPI')({
     router, Bookshelf, isAuthenticated,
   });
-  // require('./rankingAPI')({
-  //   router, Bookshelf,
-  // });
+  require('./rankingAPI')({
+    router, Bookshelf, isAuthenticated,
+  });
 
   return router;
 };
