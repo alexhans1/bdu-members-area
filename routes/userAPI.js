@@ -81,7 +81,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           }
         })
         .then(() => {
-          res.status(200).json({ error: false, message: 'Update successful.' });
+          res.status(200).json({ error: false, message: 'Update user successful.' });
         });
     } catch (err) {
       console.error(`Error while updating user. Error message:\n ${err}`);

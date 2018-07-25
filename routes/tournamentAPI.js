@@ -39,10 +39,10 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           res.status(200).json(collection.toJSON());
         });
     } catch (err) {
-      console.error(`Error while getting all tournaments. Error message:\n${err.message()}`);
+      console.error(`Error while getting all tournaments. Error message:\n${err.message}`);
       res.status(500).json({
         error: true,
-        message: `Error while getting all tournaments. Error message:\n${err.message()}`,
+        message: 'Error while getting all tournaments.',
       });
     }
   });
