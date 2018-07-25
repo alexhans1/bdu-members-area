@@ -27,13 +27,10 @@ app.use(cookieParser());
 // add HTTP Request logging
 app.use(require('morgan')('tiny'));
 
-// add timestamps to logs
-require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss' }); // adds a timestamp to each console log
-
 // connect to database
-let conn,
-  knex,
-  Bookshelf;
+let conn;
+let knex;
+let Bookshelf;
 try {
   conn = require('./knexfile.js'); // read out the DB Conn Data
   knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
@@ -51,7 +48,7 @@ const passport = require('passport'); // Passport is the library we will use to 
 // sessionStore options
 const options = {
   checkExpirationInterval: 1000 * 60 * 15, // 15 min // How frequently expired sessions will be cleared; milliseconds.
-  expiration: 1000 * 60 * 60 * 24 * 30, // 30 days // The maximum age of a valid session; milliseconds.
+  expiration: 1000 * 60 * 60 * 24 * 90, // 90 days // The maximum age of a valid session; milliseconds.
   createDatabaseTable: true, // Whether or not to create the sessions database table, if one does not already exist.
   schema: {
     tableName: 'sessions',

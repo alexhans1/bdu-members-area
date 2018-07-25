@@ -31,6 +31,9 @@ module.exports = ({ express, Bookshelf, passport }) => {
   require('./tournamentAPI')({
     router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
   });
+  require('./registrationAPI')({
+    router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
+  });
   // require('./restAPI')({
   //   router, Bookshelf,
   // });
