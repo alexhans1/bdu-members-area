@@ -56,17 +56,17 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
             });
           })
           .then(() => {
-            const nowData = _.map(result, (obj) => {
+            const nowData = result.map((obj) => {
               if (obj.type === 'flags') return obj;
               return {
                 name: obj.name,
                 currentPoints: obj.data[0][1],
               };
             });
-            let topNames = _.map(_.orderBy(nowData, ['currentPoints'], ['desc']).slice(0, 10), obj => obj.name);
+            let topNames = _.orderBy(nowData, ['currentPoints'], ['desc']).slice(0, 10).map(obj => obj.name);
             if (req.user) topNames = _.union([req.user.vorname], topNames);
 
-            result = _.filter(result, obj => _.includes(topNames, obj.name));
+            result = result.filter(obj => topNames.includes(obj.name));
           })
           .then(() => {
             // add tournament flags
@@ -89,7 +89,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
                 .fetch()
                 .then((tournaments) => {
                   tournaments = tournaments.toJSON();
-                  _.each(tournaments, (obj) => {
+                  tournaments.forEach((obj) => {
                     if (moment(obj.startdate).isAfter(moment())) return;
                     const startdate = moment(obj.startdate);
                     if (startdate.day() === 5) startdate.add(1, 'days');
