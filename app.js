@@ -10,6 +10,7 @@ const sslRedirect = require('heroku-ssl-redirect');
 const flash = require('req-flash');
 
 const app = express();
+const port = process.env.PORT || 8080;
 
 // https redirect
 app.use(sslRedirect());
@@ -112,11 +113,15 @@ app.use((req, res, next) => {
 app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = app.get('env') === 'local' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(port);
+console.log(`\nENV: ${app.get('env')}`);
+console.log(`Listening to port: ${port}\n`);
 
 module.exports = app;
