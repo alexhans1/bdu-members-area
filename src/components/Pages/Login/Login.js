@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import './Login.css';
 import { Link } from 'react-router-dom';
+import Snackbar from '../../Snackbar/Snackbar';
+import './Login.css';
 import membersAreaImage from './BDU_memberArea_512.png';
+import AuthenticationStore from '../../../stores/AuthenticationStore';
 import * as Auth from '../../../actions/AuthenticationActions';
 
 class Login extends Component {
@@ -10,9 +12,26 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      modalOpen: false,
+      modalMessage: '',
     };
+    this.handleAuthChange = this.handleAuthChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  componentWillMount() {
+    AuthenticationStore.on('authChange', this.handleAuthChange);
+  }
+
+  componentWillUnmount() {
+    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
+  }
+
+  handleAuthChange() {
+    if (AuthenticationStore.getAuthenticationStatus()) {
+      this.props.history.push('/');
+    }
   }
 
   handleChange(e) {
@@ -27,6 +46,7 @@ class Login extends Component {
   }
 
   render() {
+    const { modalOpen, modalMessage } = this.state;
     return (
       <div id="loginPage" className="container-fluid">
         <div className="row d-flex align-items-center justify-content-center py-4">
@@ -57,10 +77,18 @@ class Login extends Component {
           </div>
         </div>
         <span id="photoCredit" className="d-flex justify-content-end">
-          photo credit:&nbsp;<a target="_blank" href="https://www.flickr.com/photos/jaehyunlee/">Jaehyun Lee</a>,&nbsp;
-          <a target="_blank" href="https://www.flickr.com/photos/jaehyunlee/33543411320/">"Museum Island"</a>&nbsp;
-          is licensed under&nbsp;<a target="_blank" href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0</a>
+          photo credit:&nbsp;<a target="_blank" rel="noopener noreferrer"
+                                href="https://www.flickr.com/photos/jaehyunlee/">Jaehyun Lee
+          </a>,&nbsp;
+          <a target="_blank" rel="noopener noreferrer"
+             href="https://www.flickr.com/photos/jaehyunlee/33543411320/">
+            "Museum Island"
+          </a>&nbsp;is licensed under&nbsp;
+          <a target="_blank" rel="noopener noreferrer"
+             href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0
+          </a>
         </span>
+        <Snackbar open={modalOpen} duration={6000} message={modalMessage} />
       </div>
     );
   }

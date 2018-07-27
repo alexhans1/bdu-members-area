@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
-import AuthenticationStore from '../stores/AuthenticationStore';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
 import Signup from './Pages/Signup/Signup';
+import * as Auth from '../actions/AuthenticationActions';
 import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
 import Tournament from './Pages/tournamentPages/Tournament/Tournament';
 import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
@@ -20,6 +20,10 @@ import Profile from './Pages/Profile/Profile';
 import Home from './Pages/Home/Home';
 
 class App extends Component {
+  componentDidMount() {
+    Auth.checkAuthentication();
+  }
+
   render() {
     return (
       <div>

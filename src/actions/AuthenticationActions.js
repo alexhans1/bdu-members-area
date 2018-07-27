@@ -1,5 +1,11 @@
 import dispatcher from '../dispatcher';
 
+export function checkAuthentication() {
+  dispatcher.dispatch({
+    type: 'CHECK_AUTHENTICATION',
+  });
+}
+
 export function login(email, password) {
   dispatcher.dispatch({
     type: 'LOGIN',
