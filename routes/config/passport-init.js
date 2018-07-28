@@ -1,12 +1,9 @@
 const LocalStrategy = require('passport-local').Strategy;
 const bCrypt = require('bcrypt-nodejs');
 
-module.exports = function (passport, Bookshelf) {
+module.exports = (passport, Bookshelf) => {
   // User model
-  const User = Bookshelf.Model.extend({
-    tableName: 'users',
-    hasTimestamps: true,
-  });
+  const Models = require('../../models/bookshelfModels.js')(Bookshelf);
 
   // passport session setup ==================================================
   // =========================================================================
@@ -30,35 +27,30 @@ module.exports = function (passport, Bookshelf) {
   },
     ((req, userEmail, password, done) => { // callback with email and password from our form
       try {
-        new User({ email: userEmail })
+        new Models.User({ email: userEmail })
           .fetch()
           .then((user) => {
             if (!user) {
               console.error(`No user found with that email: ${userEmail}.`);
-              // req.flash is the way to set flash data using connect-flash
-              return done(null, false, req.flash('authMsg',
-                `No user found with that email: ${userEmail}.`));
+              return done(null, false, { message: `No user found with that email: ${userEmail}.` });
             }
             if (!isValidPassword(password, user.get('password'))) {
               console.error('Oops! Wrong password.');
-              return done(null, false, req.flash('authMsg', 'Oops! Wrong password.'));
+              return done(null, false, { message: 'Incorrect password.' });
             }
 
             // all is well, return successful user
-            console.log('Login successful');
-            console.info(user.toJSON().vorname, user.toJSON().name);
             user.save({
               last_login: new Date(),
             });
-            return done(null, user, req.flash('authMsg', `Login successful. email: ${userEmail}`));
-          })
-          .catch((err) => {
-            console.error(`Error during login. Error message:${err}`);
-            return done(null, false, req.flash('authMsg', 'Error during login'));
+            return done(null, user);
+          }).catch((ex) => {
+            console.error(ex.message);
+            return done(null, false, { message: 'Error during login' });
           });
       } catch (ex) {
         console.error(ex.message);
-        return done(null, false, req.flash('authMsg', 'Error during login'));
+        return done(null, false, { message: 'Error during login' });
       }
     })));
 
@@ -73,25 +65,24 @@ module.exports = function (passport, Bookshelf) {
     passReqToCallback: true, // allows us to pass back the entire request to the callback
   }, ((req, userEmail, password, done) => {
       try {
-      // find a user whose email is the same as the forms email
-      // check if user already exists in DB
-        new User({ email: userEmail })
+        // check if signup password is correct
+        if (req.body.signup_password !== process.env.signup_password) {
+          return done(null, false, {
+            message: 'Signup password is not correct. Please ask the BDU board members for help.',
+          });
+        }
+        // find a user whose email is the same as the forms email
+        // check if user already exists in DB
+        new Models.User({ email: userEmail })
           .fetch()
           .then((user) => {
             if (user) {
-              console.info(`User already exists:${user.toJSON()}`);
-              return done(null, false, req.flash('authMsg', 'A User with that email already exists.'));
-            }
-            if (req.body.signup_password !== process.env.signup_password) {
-              console.info('Signup password is not correct.', req.body.vorname, req.body.name,
-                req.body.signup_password, process.env.signup_password);
-              return done(null, false, req.flash('authMsg',
-                'Signup password is not correct. Please ask the BDU board members for help.'));
+              return done(null, false, { message: 'A User with that email already exists.' });
             }
 
             // if there is no user with that email
             // create the user
-            User.forge({
+            Models.User.forge({
               email: req.body.email,
               password: createHash(req.body.password),
               vorname: req.body.vorname,
@@ -101,21 +92,19 @@ module.exports = function (passport, Bookshelf) {
               last_login: new Date(),
             })
               .save()
-              .then((user) => {
-                console.log('Signup user successful');
-                return done(null, user, req.flash('authMsg', `Signup successful.${user.toJSON}`));
-              })
+              .then(newUser => done(null, newUser))
               .catch((err) => {
-                console.error(`Error during saving new user. Error message:${err}`);
-                return done(null, false, req.flash('authMsg', 'Error during signup.'));
+                console.error(`Error while saving new user. Error message:\n${err.message}`);
+                return done(null, false, { message: 'Error during signup.' });
               });
           })
           .catch((err) => {
-            console.error(`Error during fetching user during signup. Error message:${err}`);
-            return done(null, false, req.flash('authMsg', 'Error during signup.'));
+            console.error(`Error during fetching user during signup. Error message:\n${err.message}`);
+            return done(null, false, { message: 'Error during signup.' });
           });
-      } catch (ex) {
-        console.log(ex);
+      } catch (err) {
+        console.error(`Error during signup. Error message:\n${err.message}`);
+        return done(null, false, { message: 'Error during signup.' });
       }
     })));
 
@@ -133,7 +122,7 @@ module.exports = function (passport, Bookshelf) {
       try {
         // find a user whose email is the same as the forms email
         // check if user already exists in DB
-        new User({ id: userID })
+        new Models.User({ id: userID })
           .fetch()
           .then((user) => {
             if (!user) {
@@ -183,7 +172,7 @@ module.exports = function (passport, Bookshelf) {
       console.log(`Change password method called for user: ${userID}`);
       try {
         // find a user whose email is the same as the forms email
-        new User({ id: userID })
+        new Models.User({ id: userID })
           .fetch()
           .then((user) => {
             if (!user) {
@@ -220,7 +209,7 @@ module.exports = function (passport, Bookshelf) {
 
   // Helper Functions
 
-  let isValidPassword = function (pwd, pwdHash) {
+  let isValidPassword = (pwd, pwdHash) => {
     try {
       return bCrypt.compareSync(pwd, pwdHash);
     } catch (err) {
@@ -229,7 +218,5 @@ module.exports = function (passport, Bookshelf) {
     }
   };
   // Generates hash using bCrypt
-  let createHash = function (password) {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
+  let createHash = password => bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };

@@ -6,57 +6,48 @@ const helper = require('sendgrid').mail;
 module.exports = ({ router, Bookshelf, passport }) => {
   console.info('> adding authentication routes...');
 
-  // sends successful login state back to angular
-  router.route('/success').get((req, res) => {
-    res.send({ state: 'success', user: req.user ? req.user : null });
-  });
-
   // sends failure login state back to angular
   router.route('/failure').get((req, res) => {
-    res.send({ state: 'failure', user: null, message: req.flash('authMsg') || null });
+    res.status(409).json({
+      message: req.flash().error || 'Error during login. Check username and password.',
+    });
   });
 
   // process the login form
   console.info('> > adding login route...');
   router.route('/login').post(passport.authenticate('login', {
-    successRedirect: '/success', // redirect to the secure profile section
     failureRedirect: '/failure', // redirect back to the signup page if there is an error
     failureFlash: true, // allow flash messages
-  }));
+  }), (req, res) => {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.status(200).json(req.user);
+  });
 
   // process the signup form
   console.info('> > adding signup route...');
   router.route('/signup').post(passport.authenticate('signup', {
-    successRedirect: '/success', // redirect to the secure profile section
     failureRedirect: '/failure', // redirect back to the signup page if there is an error
     failureFlash: true, // allow flash messages
-  }));
+  }), (req, res) => {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.status(200).json(req.user);
+  });
 
-  // =====================================
-  // LOGOUT ==============================
-  // =====================================
+  // process the logout
   console.info('> > adding logout route...');
   router.route('/logout').get((req, res) => {
     req.logout();
-    res.send('success');
-    // res.redirect('/');
+    res.status(200).send('success');
   });
 
-  // =====================================
-  // HELP ROUTES==========================
-  // =====================================
-  // sends login state back to angular
-  router.route('/isAuthenticated').get((req, res) => {
-    res.send(req.isAuthenticated());
-  });
-
-  // sends successful login state back to angular
-  router.route('/sendUser').get((req, res) => {
+  // get current authenticated user
+  router.route('/currentUser').get((req, res) => {
     if (req.isAuthenticated()) {
-      res.send(req.user);
-    } else {
-      res.status(204).send('No user logged in.');
+      return res.status(200).json(req.user);
     }
+    res.status(401).json({ message: 'No user logged in.' });
   });
 
   // =============================================================================
@@ -89,9 +80,9 @@ module.exports = ({ router, Bookshelf, passport }) => {
     const to_email = new helper.Email(req.body.email);
     const subject = 'BDUDB Password Reset';
     const text = `${'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n'
-			+ 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-			+ 'http://'}${req.headers.host}/reset/${token}\n\n`
-			+ 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+      + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
+      + 'http://'}${req.headers.host}/reset/${token}\n\n`
+      + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
     const content = new helper.Content('text/plain', text);
     const mail = new helper.Mail(from_email, subject, to_email, content);
 

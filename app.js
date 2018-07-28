@@ -16,7 +16,19 @@ const port = process.env.PORT || 8080;
 app.use(sslRedirect());
 
 // add security
-app.use(cors());
+const whitelist = [
+  'http://localhost:3000',
+  'http://local.members.debating.de:3000',
+];
+const corsOptions = {
+  origin: whitelist,
+  optionsSuccessStatus: 200,
+  credentials: true,
+  preflightContinue: false,
+  methods: 'GET,PUT,PATCH,POST,DELETE',
+};
+
+app.use(cors(corsOptions));
 
 // add parsers for body and cookies
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -87,7 +99,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Initialize Passport using passport-init.js
-require('./config/passport-init')(passport, Bookshelf);
+require('./routes/config/passport-init')(passport, Bookshelf);
 
 // lets me parse individual messages to requests
 app.use(flash());
