@@ -9,7 +9,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding get /user/:id route...');
   router.route('/user/:id').get((req, res) => {
     // check if session user is the requested user
-    if (req.user.id !== req.params.id && !isAdmin(req)) {
+    if (req.user.id !== parseInt(req.params.id, 10) && !isAdmin(req)) {
       return handleUnauthorized(
         res,
         `User is not authorized to get user information of user with the ID: "${req.params.id}"`,

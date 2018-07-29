@@ -8,6 +8,7 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // sends failure login state back to angular
   router.route('/failure').get((req, res) => {
+    console.error(req.flash().error || 'Error during login. Check username and password.');
     res.status(409).json({
       message: req.flash().error || 'Error during login. Check username and password.',
     });
@@ -43,9 +44,15 @@ module.exports = ({ router, Bookshelf, passport }) => {
   });
 
   // get current authenticated user
-  router.route('/currentUser').get((req, res) => {
+  router.route('/currentUser').get(async (req, res) => {
     if (req.isAuthenticated()) {
-      return res.status(200).json(req.user);
+      try {
+        const currentUser = await Models.User.forge({ id: req.user.id }).fetch({ withRelated: ['tournaments'] });
+        return res.status(200).json(await currentUser.toJSON());
+      } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Could not fetch user.' });
+      }
     }
     res.status(401).json({ message: 'No user logged in.' });
   });
@@ -62,7 +69,7 @@ module.exports = ({ router, Bookshelf, passport }) => {
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
 
   router.route('/forgot').post(async (req, res) => {
-    let token;
+    let token = null;
     await crypto.randomBytes(20, (err, buf) => {
       token = buf.toString('hex');
     });
@@ -79,7 +86,8 @@ module.exports = ({ router, Bookshelf, passport }) => {
     const from_email = new helper.Email('bdudb_password_reset@debating.de');
     const to_email = new helper.Email(req.body.email);
     const subject = 'BDUDB Password Reset';
-    const text = `${'You are receiving this because you (or someone else) have requested the reset of the password for your BDUDB account.\n\n'
+    const text = `${'You are receiving this because you (or someone else) have '
+      + 'requested the reset of the password for your BDUDB account.\n\n'
       + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
       + 'http://'}${req.headers.host}/reset/${token}\n\n`
       + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
