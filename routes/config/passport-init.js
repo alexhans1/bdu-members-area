@@ -12,7 +12,13 @@ module.exports = (passport, Bookshelf) => {
   // Passport needs to be able to serialize and deserialize users to support persistent login sessions
 
   passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, {
+      id: user.attributes.id,
+      email: user.attributes.email,
+      vorname: user.attributes.vorname,
+      name: user.attributes.name,
+      position: user.attributes.position,
+    });
   });
 
   passport.deserializeUser((user, done) => {
@@ -28,18 +34,15 @@ module.exports = (passport, Bookshelf) => {
     ((req, userEmail, password, done) => { // callback with email and password from our form
       try {
         new Models.User({ email: userEmail })
-          .fetch()
+          .fetch({ withRelated: ['tournaments'] })
           .then((user) => {
             if (!user) {
-              console.error(`No user found with that email: ${userEmail}.`);
               return done(null, false, { message: `No user found with that email: ${userEmail}.` });
             }
             if (!isValidPassword(password, user.get('password'))) {
-              console.error('Oops! Wrong password.');
               return done(null, false, { message: 'Incorrect password.' });
             }
-
-            // all is well, return successful user
+            // all is well, return user
             user.save({
               last_login: new Date(),
             });
@@ -65,7 +68,7 @@ module.exports = (passport, Bookshelf) => {
     passReqToCallback: true, // allows us to pass back the entire request to the callback
   }, ((req, userEmail, password, done) => {
       try {
-        // check if signup password is correct
+      // check if signup password is correct
         if (req.body.signup_password !== process.env.signup_password) {
           return done(null, false, {
             message: 'Signup password is not correct. Please ask the BDU board members for help.',
@@ -74,7 +77,7 @@ module.exports = (passport, Bookshelf) => {
         // find a user whose email is the same as the forms email
         // check if user already exists in DB
         new Models.User({ email: userEmail })
-          .fetch()
+          .fetch({ withRelated: ['tournaments'] })
           .then((user) => {
             if (user) {
               return done(null, false, { message: 'A User with that email already exists.' });

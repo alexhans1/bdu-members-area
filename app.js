@@ -60,8 +60,9 @@ const passport = require('passport'); // Passport is the library we will use to 
 
 // sessionStore options
 const options = {
-  checkExpirationInterval: 1000 * 60 * 15, // 15 min // How frequently expired sessions will be cleared; milliseconds.
-  expiration: 1000 * 60 * 60 * 24 * 90, // 90 days // The maximum age of a valid session; milliseconds.
+  clearExpired: true, // Whether or not to automatically check for and clear expired sessions:
+  checkExpirationInterval: 1000 * 60 * 60 * 24, // once a day // How frequently expired sessions will be cleared; milliseconds.
+  expiration: 1000 * 60 * 60 * 24 * 200, // 200 days // The maximum age of a valid session; milliseconds.
   createDatabaseTable: true, // Whether or not to create the sessions database table, if one does not already exist.
   schema: {
     tableName: 'sessions',
@@ -90,8 +91,12 @@ app.use(session({
   secret: 'cookie_secret',
   store: sessionStore,
   resave: false,
+  unset: 'destroy',
   saveUninitialized: false,
-  cookie: { secure: false },
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 24 * 200, // 200 days // The maximum age of a valid session; milliseconds.
+  },
 }));
 
 // use passport & sessions
@@ -127,9 +132,7 @@ app.use((err, req, res) => {
   res.locals.message = err.message;
   res.locals.error = app.get('env') === 'local' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).send(err.message);
 });
 
 app.listen(port);
