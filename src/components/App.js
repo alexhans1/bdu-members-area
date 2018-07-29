@@ -18,6 +18,7 @@ import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Profile from './Pages/Profile/Profile';
 import Home from './Pages/Home/Home';
+import Spinner from './Spinner/Spinner';
 
 class App extends Component {
   constructor() {
@@ -52,8 +53,8 @@ class App extends Component {
       return (
         <div>
           <Navbar />
-          <div id="mainContent" className="d-flex justify-content-center align-items-center">
-            <p>Loading ...</p>
+          <div id="mainContent">
+            <Spinner />
           </div>
           <Footer />
         </div>
