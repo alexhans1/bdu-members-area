@@ -16,7 +16,11 @@ class Signup extends Component {
       gender: 'm',
       food: '',
       signupPassword: '',
+      passwordsMatch: false,
     };
+
+    this.confirmPasswordInput = null;
+
     this.handleAuthChange = this.handleAuthChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
@@ -39,20 +43,36 @@ class Signup extends Component {
   handleChange(e) {
     const change = {};
     change[e.target.name] = e.target.value;
+    if (e.target.name === 'confirmPassword') change.passwordsMatch = this.state.password === e.target.value;
     this.setState(change);
   }
 
   handleSignup(e) {
     e.preventDefault();
     if (this.state.password !== this.state.confirmPassword) {
-      return alert('Passwords do not match');
+      return this.confirmPasswordInput.focus();
     }
     const { email, password, firstName, lastName, gender, food, signupPassword } = this.state;
     return Auth.signup(email, password, firstName, lastName, gender, food, signupPassword);
   }
 
   render() {
-    const { email, password, confirmPassword, firstName, lastName, gender, food, signupPassword } = this.state;
+    const {
+      email,
+      password,
+      confirmPassword,
+      firstName,
+      lastName,
+      gender,
+      food,
+      signupPassword,
+      passwordsMatch,
+    } = this.state;
+
+    let confirmPasswordClass = 'form-control';
+    if (confirmPassword.length > 0) {
+      confirmPasswordClass += passwordsMatch ? ' is-valid' : ' is-invalid';
+    }
 
     return (
       <div className="d-flex">
@@ -75,9 +95,13 @@ class Signup extends Component {
             </div>
             <div className="form-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
-              <input type="password" className="form-control" value={confirmPassword}
+              <input type="password" className={confirmPasswordClass} value={confirmPassword}
+                     ref={input => this.confirmPasswordInput = input}
                      onChange={this.handleChange} id="confirmPassword" name="confirmPassword"
                      autoComplete="confirmPassword" placeholder="Confirm your password" required />
+              {(!passwordsMatch && confirmPassword.length > 0) ? (
+                <small className="text-danger">Passwords don´t match.</small>
+              ) : null}
             </div>
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
