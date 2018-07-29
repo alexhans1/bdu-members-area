@@ -28,7 +28,7 @@ class AuthenticationStore extends EventEmitter {
         this.isAuthenticated = true;
         this.authenticatedUser = await response.json();
         this.emit('authChange');
-      } else console.error(response); // TODO: handle error whole login
+      } else console.error(response); // TODO: handle error
     } catch (ex) {
       console.error(ex.message);
     }
@@ -39,6 +39,7 @@ class AuthenticationStore extends EventEmitter {
       try {
         const response = await fetch(`${this.baseURL}/login`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
             'Access-Control-Request-Method': 'POST',
@@ -46,12 +47,42 @@ class AuthenticationStore extends EventEmitter {
           body: JSON.stringify({ email, password }),
         });
         if (response.status === 200) {
-          const user = await response.json();
+          this.authenticatedUser = await response.json();
           this.isAuthenticated = true;
-          console.log(user);
-          this.authenticatedUser = user;
           this.emit('authChange');
-        } else console.error(response); // TODO: handle error whole login
+        } else console.error(response); // TODO: handle error
+      } catch (ex) {
+        console.error(ex.message);
+      }
+    }
+  }
+
+  async signup(email, password, firstName, lastName, gender, food, signupPassword) {
+    console.log(email, password, firstName, lastName, gender, food, signupPassword);
+    if (email && password && firstName && lastName && gender && food && signupPassword) {
+      try {
+        const response = await fetch(`${this.baseURL}/signup`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Request-Method': 'POST',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            vorname: firstName,
+            name: lastName,
+            gender,
+            food,
+            signup_password: signupPassword,
+          }),
+        });
+        if (response.status === 200) {
+          this.authenticatedUser = await response.json();
+          this.isAuthenticated = true;
+          this.emit('authChange');
+        } else console.error(response); // TODO: handle error
       } catch (ex) {
         console.error(ex.message);
       }
@@ -62,12 +93,13 @@ class AuthenticationStore extends EventEmitter {
     try {
       const response = await fetch(`${this.baseURL}/logout`, {
         method: 'GET',
+        credentials: 'include',
       });
       if (response.status === 200) {
         this.isAuthenticated = false;
         this.authenticatedUser = {};
         this.emit('authChange');
-      } else console.error(response); // TODO: handle error whole login
+      } else console.error(response); // TODO: handle error
     } catch (ex) {
       console.error(ex.message);
     }

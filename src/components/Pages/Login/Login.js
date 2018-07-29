@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Snackbar from '../../Snackbar/Snackbar';
 import './Login.css';
 import membersAreaImage from './BDU_memberArea_512.png';
 import AuthenticationStore from '../../../stores/AuthenticationStore';
@@ -12,8 +11,6 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      modalOpen: false,
-      modalMessage: '',
     };
     this.handleAuthChange = this.handleAuthChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -46,7 +43,7 @@ class Login extends Component {
   }
 
   render() {
-    const { modalOpen, modalMessage } = this.state;
+    const { email, password } = this.state;
     return (
       <div id="loginPage" className="container-fluid">
         <div className="row d-flex align-items-center justify-content-center py-4">
@@ -59,13 +56,13 @@ class Login extends Component {
             <form onSubmit={this.handleLogin}>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" className="form-control" id="email" value={this.state.email}
+                <input type="email" className="form-control" id="email" value={email}
                        onChange={this.handleChange} name="email"
                        aria-describedby="emailHelp" placeholder="Enter your email" required />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <input type="password" className="form-control" value={this.state.password}
+                <input type="password" className="form-control" value={password}
                        onChange={this.handleChange} name="password"
                        id="password" placeholder="Enter your password" required />
               </div>
@@ -88,7 +85,6 @@ class Login extends Component {
              href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0
           </a>
         </span>
-        <Snackbar open={modalOpen} duration={6000} message={modalMessage} />
       </div>
     );
   }

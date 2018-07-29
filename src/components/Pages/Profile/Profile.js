@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 class Profile extends Component {
   render() {
     return (
-      <div id="loginPage" className="container-fluid" />
+      <div className="container-fluid">
+        <h2>Profile</h2>
+      </div>
     );
   }
 }

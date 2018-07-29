@@ -8,6 +8,8 @@
     "no-console": 0,
     "no-undef": 0,
     "no-use-before-define": 0,
+    "no-underscore-dangle": 0,
+    "object-curly-newline": 0,
     "react/prefer-stateless-function": 0,
     "react/jsx-one-expression-per-line": 0,
     "react/jsx-max-props-per-line": 0,

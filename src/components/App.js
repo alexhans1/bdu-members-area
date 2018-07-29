@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
+import AuthenticationStore from '../stores/AuthenticationStore';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
 import Signup from './Pages/Signup/Signup';
-import * as Auth from '../actions/AuthenticationActions';
 import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
 import Tournament from './Pages/tournamentPages/Tournament/Tournament';
 import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
@@ -20,11 +20,46 @@ import Profile from './Pages/Profile/Profile';
 import Home from './Pages/Home/Home';
 
 class App extends Component {
-  componentDidMount() {
-    Auth.checkAuthentication();
+  constructor() {
+    super();
+    this.state = {
+      authCheckHasFinished: false,
+    };
+  }
+
+  async componentWillMount() {
+    await AuthenticationStore.checkAuthentication();
+    this.setState({ authCheckHasFinished: true });
   }
 
   render() {
+    const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
+      <Route {...rest} render={props => (
+        AuthenticationStore.getAuthenticationStatus()
+          ? <ComponentToRender {...props} />
+          : <Redirect to="/login" />
+      )} />
+    );
+    const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
+      <Route {...rest} render={props => (
+        (AuthenticationStore.getAuthenticationStatus() && AuthenticationStore.getAuthenticatedUser().position)
+          ? <ComponentToRender {...props} />
+          : <Redirect to="/login" />
+      )} />
+    );
+
+    if (!this.state.authCheckHasFinished) {
+      return (
+        <div>
+          <Navbar />
+          <div id="mainContent" className="d-flex justify-content-center align-items-center">
+            <p>Loading ...</p>
+          </div>
+          <Footer />
+        </div>
+      );
+    }
+
     return (
       <div>
         <Navbar />
@@ -33,23 +68,23 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
 
-            <Route path="/tournament" component={TournamentList} />
-            <Route path="/tournament/:id" component={Tournament} />
-            <Route path="/createTournament" component={CreateTournament} />
-            <Route path="/editTournament" component={EditTournament} />
+            <PrivateRoute exact path="/tournament" component={TournamentList} />
+            <PrivateRoute path="/tournament/:id" component={Tournament} />
+            <AdminRoute path="/createTournament" component={CreateTournament} />
+            <AdminRoute path="/editTournament" component={EditTournament} />
 
-            <Route path="/member" component={MemberList} />
+            <AdminRoute path="/member" component={MemberList} />
 
-            <Route path="/registration/:id" component={Registration} />
+            <PrivateRoute path="/registration/:id" component={Registration} />
 
-            <Route path="/transaction" component={TransactionList} />
-            <Route path="/transaction/:id" component={Transaction} />
+            <AdminRoute exact path="/transaction" component={TransactionList} />
+            <AdminRoute path="/transaction/:id" component={Transaction} />
 
             <Route path="/bug" component={BugList} />
-            <Route path="/dashboard" component={Dashboard} />
+            <PrivateRoute path="/dashboard" component={Dashboard} />
 
-            <Route path="/edit" component={Profile} />
-            <Route path="/" component={Home} />
+            <PrivateRoute path="/edit" component={Profile} />
+            <PrivateRoute path="/" component={Home} />
           </Switch>
         </div>
         <Footer />

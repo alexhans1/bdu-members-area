@@ -2,3 +2,20 @@
   color: white;
   background-color: var(--light-olive);
 }
+
+#profileImageContainer {
+  border: white 4px solid;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#profileImageContainer img {
+  width: 200px;
+  height: 200px;
+}
+
+@media screen and (min-width: 576px) {
+  #profileContainer {
+    min-height: calc(100vh - 61px - 36px);
+  }
+}
