@@ -25,31 +25,31 @@ class App extends Component {
     super();
     this.state = {
       authCheckHasFinished: false,
+      isAuthenticated: false,
     };
+
+    this.handleAuthChange = this.handleAuthChange.bind(this);
   }
 
   async componentWillMount() {
+    AuthenticationStore.on('authChange', this.handleAuthChange);
     await AuthenticationStore.checkAuthentication();
     this.setState({ authCheckHasFinished: true });
   }
 
-  render() {
-    const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
-      <Route {...rest} render={props => (
-        AuthenticationStore.getAuthenticationStatus()
-          ? <ComponentToRender {...props} />
-          : <Redirect to="/login" />
-      )} />
-    );
-    const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
-      <Route {...rest} render={props => (
-        (AuthenticationStore.getAuthenticationStatus() && AuthenticationStore.getAuthenticatedUser().position)
-          ? <ComponentToRender {...props} />
-          : <Redirect to="/login" />
-      )} />
-    );
+  componentWillUnmount() {
+    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
+  }
 
-    if (!this.state.authCheckHasFinished) {
+  handleAuthChange() {
+    this.setState({
+      isAuthenticated: AuthenticationStore.getAuthenticationStatus(),
+    });
+  }
+
+  render() {
+    const { authCheckHasFinished, isAuthenticated } = this.state;
+    if (!authCheckHasFinished) {
       return (
         <div>
           <Navbar />
@@ -61,6 +61,21 @@ class App extends Component {
       );
     }
 
+    const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
+      <Route {...rest} render={props => (
+        isAuthenticated
+          ? <ComponentToRender {...props} />
+          : <Redirect to="/login" />
+      )} />
+    );
+    const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
+      <Route {...rest} render={props => (
+        (isAuthenticated && AuthenticationStore.getAuthenticatedUser().position)
+          ? <ComponentToRender {...props} />
+          : <Redirect to="/login" />
+      )} />
+    );
+
     return (
       <div>
         <Navbar />
@@ -69,20 +84,21 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
 
+            <Route path="/bug" component={BugList} />
+
             <PrivateRoute exact path="/tournament" component={TournamentList} />
             <PrivateRoute path="/tournament/:id" component={Tournament} />
+
+            <PrivateRoute path="/registration/:id" component={Registration} />
+            <PrivateRoute path="/dashboard" component={Dashboard} />
+
             <AdminRoute path="/createTournament" component={CreateTournament} />
             <AdminRoute path="/editTournament" component={EditTournament} />
 
             <AdminRoute path="/member" component={MemberList} />
 
-            <PrivateRoute path="/registration/:id" component={Registration} />
-
             <AdminRoute exact path="/transaction" component={TransactionList} />
             <AdminRoute path="/transaction/:id" component={Transaction} />
-
-            <Route path="/bug" component={BugList} />
-            <PrivateRoute path="/dashboard" component={Dashboard} />
 
             <PrivateRoute path="/edit" component={Profile} />
             <PrivateRoute path="/" component={Home} />

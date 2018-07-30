@@ -1,0 +1,12 @@
+.dropdown-item{
+  font-size: 1.2rem;
+}
+.text-white:hover {
+  background-color: #1c1f23;
+}
+#navbarProfileImage {
+  height: 30px;
+  width: 30px;
+  border: 0.1px solid gainsboro;
+  border-radius: 50%;
+}

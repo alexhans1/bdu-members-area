@@ -1,17 +1,25 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
+import './Navbar.css';
 import { Link } from 'react-router-dom';
 import logo from './bdu_white_logo.png';
 import AuthenticationStore from '../../stores/AuthenticationStore';
 import * as Auth from '../../actions/AuthenticationActions';
+import profileImageDefault from '../../images/bdu_quad.png';
 
 class Navbar extends Component {
+  static handleLogout() {
+    Auth.logout();
+  }
+
   constructor() {
     super();
     this.state = {
       isAuthenticated: false,
+      authenticatedUser: false,
     };
     this.handleAuthChange = this.handleAuthChange.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
+    Navbar.handleLogout = Navbar.handleLogout.bind(this);
   }
 
   componentWillMount() {
@@ -23,19 +31,25 @@ class Navbar extends Component {
   }
 
   handleAuthChange() {
+    const user = AuthenticationStore.getAuthenticatedUser();
     this.setState({
       isAuthenticated: AuthenticationStore.getAuthenticationStatus(),
+      authenticatedUser: user !== {} ? user : false,
     });
   }
 
-  handleLogout() {
-    Auth.logout();
-  }
-
   render() {
-    const { isAuthenticated } = this.state;
+    const { isAuthenticated, authenticatedUser } = this.state;
+    let isAdmin = false;
+    let profileImage = null;
+    if (isAuthenticated) {
+      isAdmin = authenticatedUser.position === 1;
+      profileImage = authenticatedUser.image
+        ? `http://root.debating.de/members_area/userpics/${authenticatedUser.image}`
+        : profileImageDefault;
+    }
 
-    let navbarLinks = (
+    const navbarLinks = !isAuthenticated ? (
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
           <Link className="nav-link" to="/login">
@@ -48,18 +62,43 @@ class Navbar extends Component {
           </Link>
         </li>
       </ul>
-    );
-    if (isAuthenticated) {
-      navbarLinks = (
-        <ul className="navbar-nav ml-auto">
+    ) : (
+      <ul className="navbar-nav d-flex w-100">
+        <li className="nav-item">
+          <Link to="/" className="nav-link">Profile</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/tournament" className="nav-link">Tournaments</Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        </li>
+        {isAdmin ? (
+          <li className="nav-item dropdown cursorPointer">
+            <a className="nav-link dropdown-toggle" id="navbarDropdown"
+               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin
+            </a>
+            <div className="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+              <Link to="/createTournament" className="dropdown-item text-white">Create Tournament</Link>
+              <Link to="/member" className="dropdown-item text-white">Members</Link>
+            </div>
+          </li>
+        ) : null}
+        <div className="ml-auto d-flex align-items-center">
           <li className="nav-item">
-            <a className="nav-link" onClick={this.handleLogout}>
+            <Link to="/" className="nav-link">
+              <img id="navbarProfileImage" src={profileImage} alt="" />
+            </Link>
+          </li>
+          <li className="nav-item cursorPointer">
+            <a className="nav-link" role="button" tabIndex="0" onClick={Navbar.handleLogout}>
               <i className="fas fa-sign-out-alt" /> Logout
             </a>
           </li>
-        </ul>
-      );
-    }
+        </div>
+      </ul>
+    );
 
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

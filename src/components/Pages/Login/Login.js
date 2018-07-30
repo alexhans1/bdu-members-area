@@ -57,13 +57,13 @@ class Login extends Component {
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input type="email" className="form-control" id="email" value={email}
-                       onChange={this.handleChange} name="email"
+                       onChange={this.handleChange} name="email" autoComplete="username email"
                        aria-describedby="emailHelp" placeholder="Enter your email" required />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <input type="password" className="form-control" value={password}
-                       onChange={this.handleChange} name="password"
+                       onChange={this.handleChange} name="password" autoComplete="current-password"
                        id="password" placeholder="Enter your password" required />
               </div>
               <button type="submit" className="btn btn-lg btn-outline-info">Login</button>
@@ -74,12 +74,15 @@ class Login extends Component {
           </div>
         </div>
         <span id="photoCredit" className="d-flex justify-content-end">
-          photo credit:&nbsp;<a target="_blank" rel="noopener noreferrer"
-                                href="https://www.flickr.com/photos/jaehyunlee/">Jaehyun Lee
-          </a>,&nbsp;
+          photo credit:&nbsp;
+          <a target="_blank" rel="noopener noreferrer"
+            href="https://www.flickr.com/photos/jaehyunlee/">
+            Jaehyun Lee
+          </a>
+          ,&nbsp;
           <a target="_blank" rel="noopener noreferrer"
              href="https://www.flickr.com/photos/jaehyunlee/33543411320/">
-            "Museum Island"
+            ´´Museum Island´´
           </a>&nbsp;is licensed under&nbsp;
           <a target="_blank" rel="noopener noreferrer"
              href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0

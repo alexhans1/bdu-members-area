@@ -13,7 +13,6 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </div>,
-  // eslint-disable-next-line no-undef
   document.getElementById('root'),
 );
 registerServiceWorker();
