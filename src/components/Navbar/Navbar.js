@@ -85,18 +85,20 @@ class Navbar extends Component {
             </div>
           </li>
         ) : null}
-        <div className="ml-auto d-flex align-items-center">
-          <li className="nav-item">
-            <Link to="/" className="nav-link">
-              <img id="navbarProfileImage" src={profileImage} alt="" />
-            </Link>
-          </li>
-          <li className="nav-item cursorPointer">
-            <a className="nav-link" role="button" tabIndex="0" onClick={Navbar.handleLogout}>
+        <li id="profileDropdown" className="nav-item dropdown cursorPointer">
+          <a className="nav-link dropdown-toggle" id="navbarDropdown"
+              role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="navbarProfileImage" src={profileImage} className="mr-2" alt="" />
+            <span>{authenticatedUser.vorname}</span>
+          </a>
+          <div className="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="navbarDropdown">
+            <Link to="/edit" className="dropdown-item text-white">Edit Profile</Link>
+            <div class="dropdown-divider border-secondary" />
+            <a className="dropdown-item text-white" role="button" tabIndex="0" onClick={Navbar.handleLogout}>
               <i className="fas fa-sign-out-alt" /> Logout
             </a>
-          </li>
-        </div>
+          </div>
+        </li>
       </ul>
     );
 

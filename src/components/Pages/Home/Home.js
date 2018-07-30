@@ -72,7 +72,7 @@ class Home extends Component {
               <img src={profileImage} alt="" />
             </div>
             <h4 className="text-center">{user.vorname} {user.name}</h4>
-            <Link to="/edit" className="btn btn-sm btn-outline-light">Update Profile</Link>
+            <Link to="/edit" className="btn btn-sm btn-outline-light">Edit Profile</Link>
           </div>
           <div className="col-12 col-sm-7 col-md-8 col-lg-9">
             <h1 className="py-3">Your Tournaments</h1>
