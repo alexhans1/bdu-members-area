@@ -9,10 +9,6 @@ class UserStore extends EventEmitter {
       : 'http://localhost:8080';
   }
 
-  getAuthenticationStatus() {
-    return this.userList;
-  }
-
   async getAllUsers() {
     try {
       const response = await fetch(`${this.baseURL}/user`, {
@@ -29,7 +25,7 @@ class UserStore extends EventEmitter {
 
   handleAction(action) {
     switch (action.type) {
-      case 'GET_USER_List': {
+      case 'GET_USER_LIST': {
         this.getAllUsers();
         break;
       }

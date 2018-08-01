@@ -93,7 +93,7 @@ class Navbar extends Component {
           </a>
           <div className="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="navbarDropdown">
             <Link to="/edit" className="dropdown-item text-white">Edit Profile</Link>
-            <div class="dropdown-divider border-secondary" />
+            <div className="dropdown-divider border-secondary" />
             <a className="dropdown-item text-white" role="button" tabIndex="0" onClick={Navbar.handleLogout}>
               <i className="fas fa-sign-out-alt" /> Logout
             </a>

@@ -92,13 +92,13 @@ class Home extends Component {
                   const status = this.attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
                   const dateFormat = 'YYYY/MM/DD';
                   const startdate = moment(tournament.startdate).format(dateFormat);
-                  const endddate = moment(tournament.endddate).format(dateFormat);
+                  const enddate = moment(tournament.endddate).format(dateFormat);
                   const debt = Math.round((tournament._pivot_price_owed - tournament._pivot_price_paid));
                   return (
                     <tr key={tournament.id} className="cursorPointer"
                         onClick={() => this.forwardToRegistration(tournament._pivot_id)}>
                       <td>{tournament.name}</td>
-                      <td>{startdate} - {endddate}</td>
+                      <td>{startdate} - {enddate}</td>
                       <td>{tournament._pivot_role}</td>
                       <td><Currency quantity={debt} currency="EUR" /></td>
                       <td>{status.label}</td>
