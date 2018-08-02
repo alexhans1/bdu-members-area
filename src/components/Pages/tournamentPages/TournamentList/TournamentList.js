@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import './TournamentList.css';
 import moment from 'moment';
+import profileImageDefault from '../../../../images/bdu_quad.png';
 import FlexTable from '../../../FlexTable/FlexTable';
+import RegistrationModal from './RegistrationModal/RegistrationModal';
 import Spinner from '../../../Spinner/Spinner';
 import TournamentStore from '../../../../stores/TournamentStore';
 import * as TournamentActions from '../../../../actions/TournamentActions';
-import profileImageDefault from '../../../../images/bdu_quad.png';
+import UserStore from '../../../../stores/UserStore';
+import * as UserActions from '../../../../actions/UserActions';
 
 class TournamentList extends Component {
   constructor() {
@@ -13,25 +16,37 @@ class TournamentList extends Component {
     this.state = {
       tournaments: [],
       showSpinner: false,
+      users: [],
     };
 
     this.loadOldTournaments = this.loadOldTournaments.bind(this);
     this.handleTournamentChange = this.handleTournamentChange.bind(this);
+    this.handleUserChange = this.handleUserChange.bind(this);
+    this.handleClickRegister = this.handleClickRegister.bind(this);
   }
 
   componentWillMount() {
     TournamentStore.on('tournamentChange', this.handleTournamentChange);
     TournamentActions.getCurrentTournaments();
+    UserStore.on('userChange', this.handleUserChange);
+    UserActions.getUserList();
   }
 
   componentWillUnmount() {
     TournamentStore.removeListener('tournamentChange', this.handleTournamentChange);
+    UserStore.removeListener('userChange', this.handleUserChange);
   }
 
   handleTournamentChange() {
     this.setState({
       tournaments: TournamentStore.getAllTournaments(),
       showSpinner: false,
+    });
+  }
+
+  handleUserChange() {
+    this.setState({
+      users: UserStore.getUserList(),
     });
   }
 
@@ -42,8 +57,12 @@ class TournamentList extends Component {
     });
   }
 
+  handleClickRegister(tournamentId) {
+    window.$(`#registrationModal_${tournamentId}`).modal('toggle');
+  }
+
   render() {
-    const { tournaments, showSpinner } = this.state;
+    const { tournaments, showSpinner, users } = this.state;
     const dateFormat = 'LL';
     const tournamentBodyRows = tournaments.map((tournament) => {
       const startdate = moment(tournament.startdate).format(dateFormat);
@@ -112,7 +131,10 @@ class TournamentList extends Component {
                       data-toggle="tooltip" title="Add to calendar">
                 <i className="far fa-calendar-alt" />
               </button>
-              <button type="button" className="btn btn-danger btn-lg ml-auto registerButton">Register</button>
+              <button type="button" className="btn btn-danger btn-lg ml-auto registerButton"
+                      onClick={() => { this.handleClickRegister(tournament.id); }}>
+                Register
+              </button>
             </div>
           </div>
           <div className="collapseUserContainer">
@@ -125,6 +147,7 @@ class TournamentList extends Component {
               <p>There are no registrations for this tournament yet.</p>
             )}
           </div>
+          <RegistrationModal tournament={tournament} users={users} />
         </div>
       );
     });
