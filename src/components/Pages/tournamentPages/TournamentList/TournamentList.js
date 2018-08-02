@@ -57,22 +57,20 @@ class TournamentList extends Component {
       ];
     });
     const collapseRows = tournaments.map((tournament) => {
-      const userTableRows = tournament.users.map((user) => {
-        const profileImage = user.image
-          ? `http://root.debating.de/members_area/userpics/${user.image}`
-          : profileImageDefault;
-        return [
-          <img className="tournamentsProfileImage" src={profileImage} alt="" />,
-          `${user.vorname} ${user.name}`,
-          user._pivot_role,
-          user._pivot_teamname,
-          user._pivot_comment,
-          moment(user._pivot_created_at).format('LLL'),
-        ];
-      });
-
       const startdate = moment(tournament.startdate).format(dateFormat);
       const enddate = moment(tournament.enddate).format(dateFormat);
+      let { link } = tournament;
+      if (tournament.link.includes('http://') || tournament.link.includes('https://')) {
+        const isFaceBookLink = tournament.link.includes('facebook');
+        const linkLabel = isFaceBookLink
+          ? <i className="fab fa-lg fa-facebook-square" />
+          : <i className="fas fa-lg fa-link" />;
+        link = (
+          <a className="text-white" href={tournament.link} target="_blank" rel="noopener noreferrer">
+            {linkLabel}
+          </a>
+        );
+      }
       const tournamentTableRows = [
         tournament.ort ? ['Location', tournament.ort] : null,
         tournament.startdate ? ['Date', `${startdate} - ${enddate}`] : null,
@@ -85,9 +83,24 @@ class TournamentList extends Component {
         tournament.accommodation ? ['Accommodation', tournament.accommodation] : null,
         tournament.rankingvalue ? ['BDU ranking factor:', tournament.rankingvalue] : null,
         tournament.league ? ['League', tournament.league] : null,
-        tournament.link ? ['Link', tournament.link] : null,
+        tournament.link ? ['Link', link] : null,
         tournament.comments ? ['Comments', tournament.comments] : null,
       ].filter(row => row);
+
+      const userTableRows = tournament.users.length ? tournament.users.map((user) => {
+        const profileImage = user.image
+          ? `http://root.debating.de/members_area/userpics/${user.image}`
+          : profileImageDefault;
+        return [
+          <img className="tournamentsProfileImage" src={profileImage} alt="" />,
+          `${user.vorname} ${user.name}`,
+          user._pivot_role,
+          user._pivot_teamname,
+          user._pivot_comment,
+          moment(user._pivot_created_at).format('LLL'),
+        ];
+      }) : null;
+
       return (
         <div className="collapseContainer">
           <div className="collapseTournamentContainer">
@@ -104,9 +117,13 @@ class TournamentList extends Component {
           </div>
           <div className="collapseUserContainer">
             <h3>Registered Users</h3>
-            <FlexTable key={`userTable_${tournament.name}`} tableName={`userTable_${tournament.name}`}
-                       headColumns={['Image', 'Name', 'Role', 'Team', 'Comment', 'Registered at']}
-                       bodyRows={userTableRows} striped />
+            {tournament.users.length ? (
+              <FlexTable key={`userTable_${tournament.name}`} tableName={`userTable_${tournament.name}`}
+                         headColumns={['Image', 'Name', 'Role', 'Team', 'Comment', 'Registered at']}
+                         bodyRows={userTableRows} striped />
+            ) : (
+              <p>There are no registrations for this tournament yet.</p>
+            )}
           </div>
         </div>
       );

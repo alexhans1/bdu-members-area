@@ -33,7 +33,7 @@ class FlexTable extends Component {
         {bodyRows.map((bodyRow, rowIndex) => (
           <div key={`BodyRow_${rowIndex}`} className={tableClass}>
             <div role="row" className={collapse ? 'flex-table-row cursorPointer' : 'flex-table-row'}
-                 onClick={() => { this.handleToggleCollapse(rowIndex); }}>
+                 onClick={collapse ? () => { this.handleToggleCollapse(rowIndex); } : null}>
               {bodyRow.map((column, columnIndex) => (
                 <div key={`BodyColumn_${columnIndex}`} className="flex-table-cell">
                   {column}

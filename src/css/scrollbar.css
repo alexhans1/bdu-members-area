@@ -1,0 +1,25 @@
+html::-webkit-scrollbar-track
+{
+  width: 2px;
+  height: 2px;
+  border-radius: 10px;
+  background-color: transparent;
+  margin-right: 2px;
+}
+
+html::-webkit-scrollbar
+{
+  height: 9px;
+  width: 9px;
+  background: white; /* For browsers that do not support gradients */
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+html::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background-color: rgba(0,0,0,0.3);
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
