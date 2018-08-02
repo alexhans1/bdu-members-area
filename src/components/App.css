@@ -8,3 +8,10 @@
     margin: 0 auto;
   }
 }
+
+#spinnerContainer {
+  min-height: calc(100vh - 61px - 36px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

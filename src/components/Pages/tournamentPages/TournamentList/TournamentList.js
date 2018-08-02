@@ -2,23 +2,21 @@ import React, { Component } from 'react';
 import './TournamentList.css';
 import moment from 'moment';
 import FlexTable from '../../../FlexTable/FlexTable';
+import Spinner from '../../../Spinner/Spinner';
 import TournamentStore from '../../../../stores/TournamentStore';
 import * as TournamentActions from '../../../../actions/TournamentActions';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 
 class TournamentList extends Component {
-  static loadOldTournaments() {
-    TournamentActions.getAllTournaments();
-  }
-
   constructor() {
     super();
     this.state = {
       tournaments: [],
+      showSpinner: false,
     };
 
+    this.loadOldTournaments = this.loadOldTournaments.bind(this);
     this.handleTournamentChange = this.handleTournamentChange.bind(this);
-    TournamentList.loadOldTournaments = TournamentList.loadOldTournaments.bind(this);
   }
 
   componentWillMount() {
@@ -33,11 +31,19 @@ class TournamentList extends Component {
   handleTournamentChange() {
     this.setState({
       tournaments: TournamentStore.getAllTournaments(),
+      showSpinner: false,
+    });
+  }
+
+  loadOldTournaments() {
+    TournamentActions.getAllTournaments();
+    this.setState({
+      showSpinner: true,
     });
   }
 
   render() {
-    const { tournaments } = this.state;
+    const { tournaments, showSpinner } = this.state;
     const dateFormat = 'LL';
     const tournamentBodyRows = tournaments.map((tournament) => {
       const startdate = moment(tournament.startdate).format(dateFormat);
@@ -110,10 +116,17 @@ class TournamentList extends Component {
         <h2 className="mb-4">BDU Tournaments</h2>
         <FlexTable tableName="tournamentsTable" headColumns={['Name', 'Date', 'Location', 'Language', 'Users']}
                    bodyRows={tournamentBodyRows} collapse={collapseRows} />
-        <button type="button" className="btn btn-outline-info mt-4"
-                onClick={TournamentList.loadOldTournaments}>
-          Load old tournaments
-        </button>
+        <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
+          <button type="button" className="btn btn-outline-info"
+                  onClick={this.loadOldTournaments}>Load old tournaments
+          </button>
+          {showSpinner ? (
+            <div className="mx-auto mt-4 mt-sm-0">
+              <Spinner />
+            </div>
+          ) : null}
+        </div>
+
       </div>
     );
   }

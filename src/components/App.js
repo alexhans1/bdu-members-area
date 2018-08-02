@@ -54,7 +54,9 @@ class App extends Component {
         <div>
           <Navbar />
           <div id="mainContent">
-            <Spinner />
+            <div id="spinnerContainer">
+              <Spinner xl />
+            </div>
           </div>
           <Footer />
         </div>

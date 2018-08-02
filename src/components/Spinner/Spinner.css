@@ -1,15 +1,11 @@
-#spinnerContainer {
-  min-height: calc(100vh - 61px - 36px);
-}
-
 .spinner {
-  width: 240px;
+  width: 120px;
   text-align: center;
 }
 
 .spinner > div {
-  width: 25px;
-  height: 25px;
+  width: 13px;
+  height: 13px;
   background-color: #212529;
 
   border-radius: 100%;
@@ -41,4 +37,13 @@
       -webkit-transform: scale(2.0);
       transform: scale(2.0);
     }
+}
+
+.spinner.xl {
+  width: 240px;
+}
+
+.spinner.xl > div {
+  width: 25px;
+  height: 25px;
 }
