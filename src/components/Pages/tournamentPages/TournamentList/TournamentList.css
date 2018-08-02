@@ -1,6 +1,57 @@
+.collapseContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.collapseTournamentContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.collapseUserContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .collapseContainer {
+    flex-direction: row;
+    padding: 1.5rem;
+  }
+
+  .collapseTournamentContainer {
+    margin-bottom: 0;
+  }
+
+  .collapseUserContainer {
+    margin-left: 3rem;
+  }
+
+  .tournamentsProfileImage {
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .collapseTournamentContainer {
+    width: 25%;
+  }
+
+  .collapseUserContainer {
+    width: 75%;
+  }
+}
+
 .tournamentsProfileImage {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background-color: white;
+  margin-left: auto;
+}
+
+.registerButton {
+  min-width: 60%;
 }

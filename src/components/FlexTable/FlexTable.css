@@ -36,21 +36,25 @@
   font-weight: bold;
 }
 
-div[aria-expanded="true"] {
+.collapse.show, .collapsing {
   background-color: var(--gray-dark);
   color: #f3f3f3;
 }
 
-div[aria-expanded="true"] .flex-table-striped:nth-child(even), .flex-table-hover:hover {
+.collapse.show .flex-table-striped:nth-child(even), .flex-table-hover:hover,
+.collapsing .flex-table-striped:nth-child(even), .flex-table-hover:hover {
   background-color: #3b4248;
 }
 
-div[aria-expanded="true"] .flex-table-row {
+.collapse.show .flex-table-row,
+.collapsing .flex-table-row {
   border-color: #676869;
 }
 
-div[aria-expanded="true"] > .flex-table-row:first-child {
-  display: none;
+.flex-table-collapse-close {
+  cursor: pointer;
+  position: absolute;
+  font-size: 2rem;
+  top: 12px;
+  right: 15px;
 }
-
-

@@ -1,3 +1,10 @@
 #mainContent {
   min-height: calc(100vh - 61px - 36px);
 }
+
+@media (min-width: 992px) {
+  #mainContent {
+    max-width: 2000px;
+    margin: 0 auto;
+  }
+}

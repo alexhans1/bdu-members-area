@@ -56,19 +56,18 @@ class TournamentList extends Component {
           ? `http://root.debating.de/members_area/userpics/${user.image}`
           : profileImageDefault;
         return [
-          <img className="tournamentsProfileImage mx-auto" src={profileImage} alt="" />,
+          <img className="tournamentsProfileImage" src={profileImage} alt="" />,
           `${user.vorname} ${user.name}`,
           user._pivot_role,
           user._pivot_teamname,
           user._pivot_comment,
-          moment(user._pivot_created_at).format(dateFormat),
+          moment(user._pivot_created_at).format('LLL'),
         ];
       });
 
       const startdate = moment(tournament.startdate).format(dateFormat);
       const enddate = moment(tournament.enddate).format(dateFormat);
       const tournamentTableRows = [
-        tournament.name ? ['Name', tournament.name] : null,
         tournament.ort ? ['Location', tournament.ort] : null,
         tournament.startdate ? ['Date', `${startdate} - ${enddate}`] : null,
         tournament.format ? ['Format', tournament.format] : null,
@@ -84,22 +83,31 @@ class TournamentList extends Component {
         tournament.comments ? ['Comments', tournament.comments] : null,
       ].filter(row => row);
       return (
-        <div className="d-flex">
-          <div className="w-25">
+        <div className="collapseContainer">
+          <div className="collapseTournamentContainer">
+            <h3 className="pr-4 pr-sm-0">{tournament.name}</h3>
             <FlexTable key={`tournamentTable_${tournament.name}`} tableName={`tournamentTable_${tournament.name}`}
                        bodyRows={tournamentTableRows} striped />
+            <div className="d-flex mt-4">
+              <button type="button" className="btn btn-outline-light btn-lg"
+                      data-toggle="tooltip" title="Add to calendar">
+                <i className="far fa-calendar-alt" />
+              </button>
+              <button type="button" className="btn btn-danger btn-lg ml-auto registerButton">Register</button>
+            </div>
           </div>
-          <div className="w-75 ml-5">
+          <div className="collapseUserContainer">
+            <h3>Registered Users</h3>
             <FlexTable key={`userTable_${tournament.name}`} tableName={`userTable_${tournament.name}`}
-                       headColumns={['', 'Name', 'Role', 'Team', 'Comment', 'Registered at']}
+                       headColumns={['Image', 'Name', 'Role', 'Team', 'Comment', 'Registered at']}
                        bodyRows={userTableRows} striped />
           </div>
         </div>
       );
     });
     return (
-      <div className="container-fluid">
-        <h2 className="my-4">BDU Tournaments</h2>
+      <div className="container-fluid py-4">
+        <h2 className="mb-4">BDU Tournaments</h2>
         <FlexTable tableName="tournamentsTable" headColumns={['Name', 'Date', 'Location', 'Language', 'Users']}
                    bodyRows={tournamentBodyRows} collapse={collapseRows} />
         <button type="button" className="btn btn-outline-info mt-4"

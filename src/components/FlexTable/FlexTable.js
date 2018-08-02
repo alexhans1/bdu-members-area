@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import './FlexTable.css';
 
 class FlexTable extends Component {
+  handleToggleCollapse(rowIndex) {
+    this.props.bodyRows.forEach((bodyRow, index) => {
+      if (index !== rowIndex) window.$(`#rowCollapse_${index}`).collapse('hide');
+    });
+    window.$(`#rowCollapse_${rowIndex}`).collapse('toggle');
+  }
+
   render() {
     const { tableName, headColumns, bodyRows, striped, hover, collapse } = this.props;
+    this.handleToggleCollapse = this.handleToggleCollapse.bind(this);
     let tableClass = '';
-    if (collapse) tableClass += ' cursorPointer';
     if (striped) tableClass += ' flex-table-striped';
     if (hover) tableClass += ' flex-table-hover';
     if (!headColumns) tableClass += ' flex-table-columnHead';
@@ -24,9 +31,9 @@ class FlexTable extends Component {
         ) : null}
 
         {bodyRows.map((bodyRow, rowIndex) => (
-          <div key={`BodyRow_${rowIndex}`} className={tableClass}
-               data-toggle={collapse ? 'collapse' : ''} data-target={collapse ? `#rowCollapse_${rowIndex}` : ''}>
-            <div className="flex-table-row">
+          <div key={`BodyRow_${rowIndex}`} className={tableClass}>
+            <div role="row" className={collapse ? 'flex-table-row cursorPointer' : 'flex-table-row'}
+                 onClick={() => { this.handleToggleCollapse(rowIndex); }}>
               {bodyRow.map((column, columnIndex) => (
                 <div key={`BodyColumn_${columnIndex}`} className="flex-table-cell">
                   {column}
@@ -35,7 +42,9 @@ class FlexTable extends Component {
             </div>
             {collapse ? (
               <div id={`rowCollapse_${rowIndex}`} className="collapse">
-                <div className="w-100">
+                <div className="w-100 position-relative">
+                  <i role="button" className="fas fa-times flex-table-collapse-close"
+                     onClick={() => { this.handleToggleCollapse(rowIndex); }} />
                   {collapse[rowIndex]}
                 </div>
               </div>
