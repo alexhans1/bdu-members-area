@@ -1,9 +1,12 @@
 import { EventEmitter } from 'events';
 import dispatcher from '../dispatcher';
+import AlertTypes from './alertTypes';
 
 class UserStore extends EventEmitter {
   constructor() {
     super();
+    this.alertMessage = '';
+    this.alertType = AlertTypes.INFO;
     this.userList = [];
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';

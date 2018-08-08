@@ -1,16 +1,22 @@
 import { EventEmitter } from 'events';
 import dispatcher from '../dispatcher';
+import AlertTypes from './alertTypes';
 
 class TournamentStore extends EventEmitter {
   constructor() {
     super();
-    this.message = '';
+    this.alertMessage = '';
+    this.alertType = AlertTypes.INFO;
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';
   }
 
-  getMessage() {
-    return this.message;
+  getAlertMessage() {
+    return this.alertMessage;
+  }
+
+  getAlertType() {
+    return this.alertType;
   }
 
   async register(tournamentId, userId, role, comment, independent, funding, partner1, partner2, teamname) {
@@ -36,15 +42,18 @@ class TournamentStore extends EventEmitter {
       });
       const body = await response.json();
       if (response.status === 200) {
-        this.message = body.message;
+        this.alertMessage = body.message;
+        this.alertType = AlertTypes.SUCCESS;
         this.emit('alertChange');
       } else {
-        this.message = body.message;
+        this.alertMessage = body.message;
+        this.alertType = AlertTypes.ERROR;
         this.emit('alertChange');
       }
     } catch (ex) {
       console.error(ex.message);
-      this.message = 'Registration failed.';
+      this.alertMessage = 'Registration failed.';
+      this.alertType = AlertTypes.ERROR;
       this.emit('alertChange');
     }
   }

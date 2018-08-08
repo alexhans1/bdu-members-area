@@ -1,12 +1,14 @@
 import { EventEmitter } from 'events';
 import dispatcher from '../dispatcher';
+import AlertTypes from './alertTypes';
 
 class AuthenticationStore extends EventEmitter {
   constructor() {
     super();
     this.isAuthenticated = false;
     this.authenticatedUser = {};
-    this.message = '';
+    this.alertMessage = '';
+    this.alertType = AlertTypes.INFO;
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';
   }
@@ -19,8 +21,12 @@ class AuthenticationStore extends EventEmitter {
     return this.authenticatedUser;
   }
 
-  getMessage() {
-    return this.message;
+  getAlertMessage() {
+    return this.alertMessage;
+  }
+
+  getAlertType() {
+    return this.alertType;
   }
 
   async checkAuthentication() {
@@ -57,11 +63,13 @@ class AuthenticationStore extends EventEmitter {
           this.isAuthenticated = true;
           this.emit('authChange');
         } else {
-          this.message = responseBody.message;
+          this.alertMessage = responseBody.message;
+          this.alertType = AlertTypes.ERROR;
           this.emit('alertChange');
         }
       } catch (ex) {
-        this.message = 'Login failed.';
+        this.alertMessage = 'Login failed.';
+        this.alertType = AlertTypes.ERROR;
         console.error(ex.message);
         this.emit('alertChange');
       }
@@ -94,12 +102,14 @@ class AuthenticationStore extends EventEmitter {
           this.isAuthenticated = true;
           this.emit('authChange');
         } else {
-          this.message = responseBody.message;
+          this.alertMessage = responseBody.message;
+          this.alertType = AlertTypes.ERROR;
           this.emit('alertChange');
         }
       } catch (ex) {
-        this.message = 'Signup failed.';
+        this.alertMessage = 'Signup failed.';
         console.error(ex.message);
+        this.alertType = AlertTypes.ERROR;
         this.emit('alertChange');
       }
     }

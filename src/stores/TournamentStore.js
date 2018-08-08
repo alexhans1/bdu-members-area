@@ -1,10 +1,12 @@
 import { EventEmitter } from 'events';
 import dispatcher from '../dispatcher';
+import AlertTypes from './alertTypes';
 
 class TournamentStore extends EventEmitter {
   constructor() {
     super();
-    this.message = '';
+    this.alertMessage = '';
+    this.alertType = AlertTypes.INFO;
     this.tournamentList = [];
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';
@@ -12,6 +14,14 @@ class TournamentStore extends EventEmitter {
 
   getAllTournaments() {
     return this.tournamentList;
+  }
+
+  getAlertMessage() {
+    return this.alertMessage;
+  }
+
+  getAlertType() {
+    return this.alertType;
   }
 
   async fetchTournaments({ minDate }) {

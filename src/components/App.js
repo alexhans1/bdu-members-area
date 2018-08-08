@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import AuthenticationStore from '../stores/AuthenticationStore';
 import RegistrationStore from '../stores/RegistrationStore';
 import UserStore from '../stores/UserStore';
@@ -21,34 +23,51 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Profile from './Pages/Profile/Profile';
 import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
-import Snackbar from './Snackbar/Snackbar';
 
 class App extends Component {
+  static handleAlertChange(store) {
+    const type = store.getAlertType();
+    const message = store.getAlertMessage();
+    switch (type) {
+      case 'info':
+        NotificationManager.info(message);
+        break;
+      case 'success':
+        NotificationManager.success(message);
+        break;
+      case 'warning':
+        NotificationManager.warning(message);
+        break;
+      case 'error':
+        NotificationManager.error(message);
+        break;
+      default:
+      // do nothing
+    }
+  }
+
   constructor() {
     super();
     this.state = {
       authCheckHasFinished: false,
       isAuthenticated: false,
-      showSnackbar: false,
-      snackbarMessage: '',
     };
 
     this.handleAuthChange = this.handleAuthChange.bind(this);
-    this.handleAlertChange = this.handleAlertChange.bind(this);
   }
 
   async componentWillMount() {
     AuthenticationStore.on('authChange', this.handleAuthChange);
     await AuthenticationStore.checkAuthentication();
     this.setState({ authCheckHasFinished: true });
-    RegistrationStore.on('alertChange', () => { this.handleAlertChange(RegistrationStore); });
-    AuthenticationStore.on('alertChange', () => { this.handleAlertChange(AuthenticationStore); });
-    UserStore.on('alertChange', () => { this.handleAlertChange(UserStore); });
+    RegistrationStore.on('alertChange', () => { App.handleAlertChange(RegistrationStore); });
+    AuthenticationStore.on('alertChange', () => { App.handleAlertChange(AuthenticationStore); });
+    UserStore.on('alertChange', () => { App.handleAlertChange(UserStore); });
   }
 
   componentWillUnmount() {
     AuthenticationStore.removeListener('authChange', this.handleAuthChange);
-    RegistrationStore.removeListener('alertChange', this.handleAlertChange);
+    RegistrationStore.removeListener('alertChange', App.handleAlertChange);
   }
 
   handleAuthChange() {
@@ -57,15 +76,8 @@ class App extends Component {
     });
   }
 
-  handleAlertChange(store) {
-    this.setState({
-      showSnackbar: true,
-      snackbarMessage: store.getMessage(),
-    });
-  }
-
   render() {
-    const { authCheckHasFinished, isAuthenticated, showSnackbar, snackbarMessage } = this.state;
+    const { authCheckHasFinished, isAuthenticated } = this.state;
     if (!authCheckHasFinished) {
       return (
         <div>
@@ -124,7 +136,7 @@ class App extends Component {
           </Switch>
         </div>
         <Footer />
-        <Snackbar open={showSnackbar} message={snackbarMessage} duration={8000} />
+        <NotificationContainer />
       </div>
     );
   }
