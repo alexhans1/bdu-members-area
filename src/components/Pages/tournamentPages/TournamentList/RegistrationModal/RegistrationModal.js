@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import RegistrationStore from '../../../../../stores/RegistrationStore';
+import AuthenticationStore from '../../../../../stores/AuthenticationStore';
 import * as RegistrationActions from '../../../../../actions/RegistrationActions';
 
 class RegistrationModal extends Component {
@@ -10,22 +10,11 @@ class RegistrationModal extends Component {
       partner1: '-',
       partner2: '-',
       teamName: '',
+      comment: '',
     };
 
-    this.handleRegistrationChange = this.handleRegistrationChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handlePostRegister = this.handlePostRegister.bind(this);
-  }
-
-  componentWillMount() {
-    RegistrationStore.on('registrationChange', this.handleRegistrationChange);
-  }
-
-  componentWillUnmount() {
-    RegistrationStore.removeListener('registrationChange', this.handleRegistrationChange);
-  }
-
-  handleRegistrationChange() {
   }
 
   handleChange(e) {
@@ -34,50 +23,99 @@ class RegistrationModal extends Component {
     this.setState(change);
   }
 
-  handlePostRegister() {
-    console.log(123, this.props.tournament);
+  handlePostRegister(e) {
+    e.preventDefault();
+    window.$(`#registrationModal_${this.props.tournament.id}`).modal('hide');
+    const { role, partner1, partner2, teamName, comment } = this.state;
+    const { tournament } = this.props;
+    const currentUserId = AuthenticationStore.getAuthenticatedUser().id;
+    RegistrationActions.postRegistration(
+      tournament.id,
+      currentUserId,
+      role,
+      comment,
+      0,
+      0,
+      partner1,
+      partner2,
+      teamName,
+    );
   }
 
   render() {
-    const { role, partner1, partner2, teamName } = this.state;
+    const { role, partner1, partner2, teamName, comment } = this.state;
     const { tournament, users } = this.props;
     return (
       <div className="modal fade text-body" id={`registrationModal_${tournament.id}`} tabIndex="-1" role="dialog"
            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalCenterTitle">Register for {tournament.name}</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label htmlFor="roleSelect">Register as</label>
-                <select className="form-control" id="roleSelect" name="role" value={role} onChange={this.handleChange}>
-                  <option value="judge">Judge</option>
-                  <option value="speaker">Speaker</option>
-                </select>
+            <form onSubmit={this.handlePostRegister}>
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalCenterTitle">Register for {tournament.name}</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-              {role === 'speaker' ? (
+              <div className="modal-body">
                 <div className="form-group">
-                  <label htmlFor="partner1Select">Teammate</label>
-                  <p>Don't have a team partner yet? No problem.</p>
-                  <select className="form-control" id="partner1Select" name="partner1"
-                          value={partner1} onChange={this.handleChange}>
-                    <option value="-">None</option>
-                    {users.map(user => (
-                      <option key={`partner1List_${user.id}`} value={user.id}>{`${user.vorname} ${user.name}`}</option>
-                    ))}
+                  <label htmlFor="roleSelect">Register as</label>
+                  <select className="form-control" id="roleSelect"
+                          name="role" value={role} onChange={this.handleChange}>
+                    <option value="judge">Judge</option>
+                    <option value="speaker">Speaker</option>
                   </select>
                 </div>
-              ) : null}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-success" onClick={this.handlePostRegister}>Register</button>
-            </div>
+                {role === 'speaker' ? (
+                  <div className="form-group d-flex flex-column">
+                    <label htmlFor="partner1Select">Teammate</label>
+                    <select className="form-control" id="partner1Select" name="partner1"
+                            value={partner1} onChange={this.handleChange}>
+                      <option value="-">None</option>
+                      {users.map(user => (
+                        <option key={`partner1List_${user.id}`} value={user.id}>
+                          {`${user.vorname} ${user.name}`}
+                        </option>
+                      ))}
+                    </select>
+                    <small>Don´t have a team partner yet? No problem.</small>
+                  </div>
+                ) : null}
+                {role === 'speaker' && partner1 && partner1 !== '-' && !['BPS', 'BP'].includes(tournament.format) ? (
+                  <div className="form-group">
+                    <label htmlFor="partner2Select">Teammate 2</label>
+                    <select className="form-control" id="partner2Select" name="partner2"
+                            value={partner2} onChange={this.handleChange}>
+                      <option value="-">None</option>
+                      {users.map(user => (
+                        <option key={`partner1List_${user.id}`} value={user.id}
+                                disabled={user.id === parseInt(partner1, 10)}>
+                          {`${user.vorname} ${user.name}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : null}
+                {role === 'speaker' ? (
+                  <div className="form-group">
+                    <label htmlFor="teamName">Team Name</label>
+                    <input className="form-control" id="teamName" name="teamName"
+                           placeholder="Be funny, creative, critical, ..."
+                           value={teamName} onChange={this.handleChange} />
+                  </div>
+                ) : null}
+                <div className="form-group">
+                  <label htmlFor="comment">Comment</label>
+                  <input className="form-control" id="comment" name="comment"
+                         placeholder="Anything you want us to know?"
+                         value={comment} onChange={this.handleChange} />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" className="btn btn-success">Register</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

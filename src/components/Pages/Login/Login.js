@@ -45,12 +45,12 @@ class Login extends Component {
   render() {
     const { email, password } = this.state;
     return (
-      <div id="loginPage" className="container-fluid">
+      <div id="loginPage" className="container-fluid d-flex flex-column">
         <div className="row d-flex align-items-center justify-content-center py-4">
-          <img src={membersAreaImage} width={342} alt="" />
+          <img id="loginMembersAreaImage" src={membersAreaImage} alt="" />
         </div>
         <div className="row d-flex align-items-center justify-content-center py-3">
-          <div className="col-lg-4 col-md-5 col-sm-12 login-box p-4">
+          <div className="col-lg-4 col-md-5 col-sm-7 col-11 login-box p-4">
             <h4><i className="fas fa-sign-in-alt" /> Login</h4>
             <hr />
             <form onSubmit={this.handleLogin}>
@@ -73,7 +73,7 @@ class Login extends Component {
             <p>Need an account? <Link to="/signup">Signup</Link></p>
           </div>
         </div>
-        <span id="photoCredit" className="d-flex justify-content-end">
+        <div id="photoCredit" className="d-flex justify-content-end flex-wrap mt-auto">
           photo credit:&nbsp;
           <a target="_blank" rel="noopener noreferrer"
             href="https://www.flickr.com/photos/jaehyunlee/">
@@ -87,7 +87,7 @@ class Login extends Component {
           <a target="_blank" rel="noopener noreferrer"
              href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0
           </a>
-        </span>
+        </div>
       </div>
     );
   }

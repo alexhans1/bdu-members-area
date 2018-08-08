@@ -6,6 +6,7 @@ class AuthenticationStore extends EventEmitter {
     super();
     this.isAuthenticated = false;
     this.authenticatedUser = {};
+    this.message = '';
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';
   }
@@ -18,6 +19,10 @@ class AuthenticationStore extends EventEmitter {
     return this.authenticatedUser;
   }
 
+  getMessage() {
+    return this.message;
+  }
+
   async checkAuthentication() {
     try {
       const response = await fetch(`${this.baseURL}/currentUser`, {
@@ -28,7 +33,7 @@ class AuthenticationStore extends EventEmitter {
         this.isAuthenticated = true;
         this.authenticatedUser = await response.json();
         this.emit('authChange');
-      } else console.error(response); // TODO: handle error
+      }
     } catch (ex) {
       console.error(ex.message);
     }
@@ -46,20 +51,25 @@ class AuthenticationStore extends EventEmitter {
           },
           body: JSON.stringify({ email, password }),
         });
+        const responseBody = await response.json();
         if (response.status === 200) {
-          this.authenticatedUser = await response.json();
+          this.authenticatedUser = responseBody;
           this.isAuthenticated = true;
           this.emit('authChange');
-        } else console.error(response); // TODO: handle error
+        } else {
+          this.message = responseBody.message;
+          this.emit('alertChange');
+        }
       } catch (ex) {
+        this.message = 'Login failed.';
         console.error(ex.message);
+        this.emit('alertChange');
       }
     }
   }
 
   async signup(email, password, firstName, lastName, gender, food, signupPassword) {
-    console.log(email, password, firstName, lastName, gender, food, signupPassword);
-    if (email && password && firstName && lastName && gender && food && signupPassword) {
+    if (email && password && firstName && lastName && gender && signupPassword) {
       try {
         const response = await fetch(`${this.baseURL}/signup`, {
           method: 'POST',
@@ -78,13 +88,19 @@ class AuthenticationStore extends EventEmitter {
             signup_password: signupPassword,
           }),
         });
+        const responseBody = await response.json();
         if (response.status === 200) {
-          this.authenticatedUser = await response.json();
+          this.authenticatedUser = responseBody;
           this.isAuthenticated = true;
           this.emit('authChange');
-        } else console.error(response); // TODO: handle error
+        } else {
+          this.message = responseBody.message;
+          this.emit('alertChange');
+        }
       } catch (ex) {
+        this.message = 'Signup failed.';
         console.error(ex.message);
+        this.emit('alertChange');
       }
     }
   }

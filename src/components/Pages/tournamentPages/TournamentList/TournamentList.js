@@ -11,6 +11,10 @@ import UserStore from '../../../../stores/UserStore';
 import * as UserActions from '../../../../actions/UserActions';
 
 class TournamentList extends Component {
+  static handleClickRegister(tournamentId) {
+    window.$(`#registrationModal_${tournamentId}`).modal('toggle');
+  }
+
   constructor() {
     super();
     this.state = {
@@ -22,7 +26,6 @@ class TournamentList extends Component {
     this.loadOldTournaments = this.loadOldTournaments.bind(this);
     this.handleTournamentChange = this.handleTournamentChange.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
-    this.handleClickRegister = this.handleClickRegister.bind(this);
   }
 
   componentWillMount() {
@@ -57,10 +60,6 @@ class TournamentList extends Component {
     });
   }
 
-  handleClickRegister(tournamentId) {
-    window.$(`#registrationModal_${tournamentId}`).modal('toggle');
-  }
-
   render() {
     const { tournaments, showSpinner, users } = this.state;
     const dateFormat = 'LL';
@@ -69,7 +68,7 @@ class TournamentList extends Component {
       const enddate = moment(tournament.enddate).format(dateFormat);
       return [
         tournament.name,
-        `${startdate} \n ${enddate}`,
+        `${startdate} - ${enddate}`,
         tournament.ort,
         tournament.language,
         tournament.users.length,
@@ -132,7 +131,7 @@ class TournamentList extends Component {
                 <i className="far fa-calendar-alt" />
               </button>
               <button type="button" className="btn btn-danger btn-lg ml-auto registerButton"
-                      onClick={() => { this.handleClickRegister(tournament.id); }}>
+                      onClick={() => { TournamentList.handleClickRegister(tournament.id); }}>
                 Register
               </button>
             </div>

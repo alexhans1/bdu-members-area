@@ -13,3 +13,8 @@
   font-size: x-small;
   color: white;
 }
+
+#loginMembersAreaImage {
+  width: 342px;
+  max-width: 90%;
+}

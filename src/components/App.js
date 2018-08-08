@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import AuthenticationStore from '../stores/AuthenticationStore';
+import RegistrationStore from '../stores/RegistrationStore';
+import UserStore from '../stores/UserStore';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
@@ -19,6 +21,7 @@ import Dashboard from './Pages/Dashboard/Dashboard';
 import Profile from './Pages/Profile/Profile';
 import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
+import Snackbar from './Snackbar/Snackbar';
 
 class App extends Component {
   constructor() {
@@ -26,19 +29,26 @@ class App extends Component {
     this.state = {
       authCheckHasFinished: false,
       isAuthenticated: false,
+      showSnackbar: false,
+      snackbarMessage: '',
     };
 
     this.handleAuthChange = this.handleAuthChange.bind(this);
+    this.handleAlertChange = this.handleAlertChange.bind(this);
   }
 
   async componentWillMount() {
     AuthenticationStore.on('authChange', this.handleAuthChange);
     await AuthenticationStore.checkAuthentication();
     this.setState({ authCheckHasFinished: true });
+    RegistrationStore.on('alertChange', () => { this.handleAlertChange(RegistrationStore); });
+    AuthenticationStore.on('alertChange', () => { this.handleAlertChange(AuthenticationStore); });
+    UserStore.on('alertChange', () => { this.handleAlertChange(UserStore); });
   }
 
   componentWillUnmount() {
     AuthenticationStore.removeListener('authChange', this.handleAuthChange);
+    RegistrationStore.removeListener('alertChange', this.handleAlertChange);
   }
 
   handleAuthChange() {
@@ -47,8 +57,15 @@ class App extends Component {
     });
   }
 
+  handleAlertChange(store) {
+    this.setState({
+      showSnackbar: true,
+      snackbarMessage: store.getMessage(),
+    });
+  }
+
   render() {
-    const { authCheckHasFinished, isAuthenticated } = this.state;
+    const { authCheckHasFinished, isAuthenticated, showSnackbar, snackbarMessage } = this.state;
     if (!authCheckHasFinished) {
       return (
         <div>
@@ -107,6 +124,7 @@ class App extends Component {
           </Switch>
         </div>
         <Footer />
+        <Snackbar open={showSnackbar} message={snackbarMessage} duration={8000} />
       </div>
     );
   }

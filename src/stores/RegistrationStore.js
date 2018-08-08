@@ -4,13 +4,16 @@ import dispatcher from '../dispatcher';
 class TournamentStore extends EventEmitter {
   constructor() {
     super();
-    this.success = false;
     this.message = '';
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';
   }
 
-  async register(tournamentId, userId, role, comment, independent, funding) {
+  getMessage() {
+    return this.message;
+  }
+
+  async register(tournamentId, userId, role, comment, independent, funding, partner1, partner2, teamname) {
     try {
       const response = await fetch(`${this.baseURL}/registration`, {
         method: 'POST',
@@ -26,22 +29,23 @@ class TournamentStore extends EventEmitter {
           comment,
           is_independent: independent,
           funding,
+          partner1,
+          partner2,
+          teamname,
         }),
       });
+      const body = await response.json();
       if (response.status === 200) {
-        this.success = true;
-        this.message = await response.json().message;
-        this.emit('registrationChange');
+        this.message = body.message;
+        this.emit('alertChange');
       } else {
-        this.success = false;
-        this.message = await response.json().message;
-        this.emit('registrationChange');
+        this.message = body.message;
+        this.emit('alertChange');
       }
     } catch (ex) {
       console.error(ex.message);
-      this.success = false;
       this.message = 'Registration failed.';
-      this.emit('registrationChange');
+      this.emit('alertChange');
     }
   }
 
@@ -55,6 +59,9 @@ class TournamentStore extends EventEmitter {
           action.comment,
           action.independent,
           action.funding,
+          action.partner1,
+          action.partner2,
+          action.teamname,
         );
         break;
       }

@@ -3,10 +3,18 @@ import './FlexTable.css';
 
 class FlexTable extends Component {
   handleToggleCollapse(rowIndex) {
-    this.props.bodyRows.forEach((bodyRow, index) => {
-      if (index !== rowIndex) window.$(`#rowCollapse_${index}`).collapse('hide');
-    });
-    window.$(`#rowCollapse_${rowIndex}`).collapse('toggle');
+    const openCollapse = window.$('.collapse.show');
+    const wantedCollapse = window.$(`#rowCollapse_${rowIndex}`);
+    const wantedTableRow = window.$(`#BodyRow_${this.props.tableName}_${rowIndex}`);
+    let heightOfOpenCollapse = 0;
+    if (openCollapse.length && (openCollapse.offset().top < wantedTableRow.offset().top)) {
+      heightOfOpenCollapse = openCollapse.height();
+    }
+    openCollapse.collapse('hide');
+    wantedCollapse.collapse('toggle');
+    window.$('html, body').stop().animate({
+      scrollTop: wantedTableRow.offset().top - heightOfOpenCollapse,
+    }, 700);
   }
 
   render() {
@@ -31,7 +39,7 @@ class FlexTable extends Component {
         ) : null}
 
         {bodyRows.map((bodyRow, rowIndex) => (
-          <div key={`BodyRow_${rowIndex}`} className={tableClass}>
+          <div key={`BodyRow_${rowIndex}`} id={`BodyRow_${tableName}_${rowIndex}`} className={tableClass}>
             <div role="row" className={collapse ? 'flex-table-row cursorPointer' : 'flex-table-row'}
                  onClick={collapse ? () => { this.handleToggleCollapse(rowIndex); } : null}>
               {bodyRow.map((column, columnIndex) => (

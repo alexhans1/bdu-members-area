@@ -4,6 +4,7 @@ import dispatcher from '../dispatcher';
 class TournamentStore extends EventEmitter {
   constructor() {
     super();
+    this.message = '';
     this.tournamentList = [];
     this.baseURL = (process.env.NODE_ENV === 'production') ? 'https://debate-now-api.herokuapp.com'
       : 'http://localhost:8080';

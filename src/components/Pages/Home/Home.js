@@ -90,7 +90,7 @@ class Home extends Component {
               <tbody>
                 {tournaments.map((tournament) => {
                   const status = this.attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
-                  const dateFormat = 'YYYY/MM/DD';
+                  const dateFormat = 'LL';
                   const startdate = moment(tournament.startdate).format(dateFormat);
                   const enddate = moment(tournament.endddate).format(dateFormat);
                   const debt = Math.round((tournament._pivot_price_owed - tournament._pivot_price_paid));
