@@ -171,7 +171,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               },
             ]).invokeThen('save')
               .then(() => {
-                res.status(200).json('Successfully registered you and your partners as speakers.');
+                res.status(200).json({ message: 'Successfully registered you and your partners as speakers.' });
               });
           } else {
             // if only first partner is named,
@@ -207,7 +207,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               },
             ]).invokeThen('save')
               .then(() => {
-                res.status(200).json('Successfully registered you and your partner as speakers.');
+                res.status(200).json({ message: 'Successfully registered you and your partner as speakers.' });
               });
           }
         } else {
@@ -243,7 +243,6 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       if (!registration) {
         console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
         return res.status(404).json({
-          error: true,
           message: `The registration with the ID "${req.params.id}" is not in the database.`,
         });
       }
@@ -261,11 +260,11 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         transaction_date: req.body.transaction_date,
         transaction_from: req.body.transaction_from,
       }).then(() => {
-        res.status(200).json({ error: false, message: 'Update registration successful.' });
+        res.status(200).json({ message: 'Update registration successful.' });
       });
     } catch (err) {
       console.error(`Error while updating registration. Error message:\n ${err.message}`);
-      res.status(500).json({ error: true, message: 'Error while updating registration.' });
+      res.status(500).json({ message: 'Error while updating registration.' });
     }
   });
 
@@ -276,7 +275,6 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       if (!registration) {
         console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
         return res.status(404).json({
-          error: true,
           message: `The registration with the ID "${req.params.id}" is not in the database.`,
         });
       }
@@ -284,11 +282,11 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         return handleUnauthorized(res, 'User is not authorized to delete registration.');
       }
       registration.destroy().then(() => {
-        res.status(200).json({ error: false, message: 'Delete registration successful.' });
+        res.status(200).json({ message: 'Delete registration successful.' });
       });
     } catch (err) {
       console.error(`Error while deleting registration. Error message:\n ${err}`);
-      res.status(500).json({ error: true, message: 'Error while deleting registration.' });
+      res.status(500).json({ message: 'Error while deleting registration.' });
     }
   });
 
