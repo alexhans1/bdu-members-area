@@ -19,6 +19,7 @@ app.use(sslRedirect());
 const whitelist = [
   'http://localhost:3000',
   'http://local.members.debating.de:3000',
+  'http://local.members.debating.de:3006',
 ];
 const corsOptions = {
   origin: whitelist,

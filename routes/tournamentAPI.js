@@ -36,7 +36,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       const tournamentQuery = (req.query.filterByMinDate)
         ? Models.Tournaments.query('where', 'startdate', '>', moment(req.query.filterByMinDate).format())
         : Models.Tournaments.forge();
-      tournamentQuery.orderBy('startdate', 'ASC').fetch({ withRelated: ['users'] })
+      tournamentQuery.orderBy('startdate', 'DESC').fetch({ withRelated: ['users'] })
         .then((collection) => {
           res.status(200).json(collection.toJSON());
         });
