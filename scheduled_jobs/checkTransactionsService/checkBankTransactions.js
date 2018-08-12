@@ -154,6 +154,6 @@ async function getAllTransactions(userToken) {
 
 // run banking service Mondays, Wednesdays and Fridays at 7pm German time (or 5pm iso time)
 schedule.scheduleJob('0 17 * * *', () => {
-  console.log('\n\n $$$ Starting to check Bank Transactions $$$ \n\n');
+  console.log('$$$ Starting to check Bank Transactions $$$');
   authenticateClient();
 });
