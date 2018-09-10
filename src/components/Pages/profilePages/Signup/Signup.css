@@ -1,0 +1,8 @@
+#signupContainer {
+  min-height: calc(100vh - 62px - 36px);
+}
+
+#sideImage {
+  background: url("pexels-photo-417023.jpeg") no-repeat right;
+  background-size: cover;
+}

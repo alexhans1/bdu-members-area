@@ -1,45 +1,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from 'react';
 import './Navbar.css';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logout } from '../../js/actions/AuthenticationActions';
 import logo from './bdu_white_logo.png';
-import AuthenticationStore from '../../stores/AuthenticationStore';
-import * as Auth from '../../actions/AuthenticationActions';
 import profileImageDefault from '../../images/bdu_quad.png';
 
-class Navbar extends Component {
-  static handleLogout() {
-    Auth.logout();
-  }
+const mapDispatchToProps = { logout };
 
+class Navbar extends Component {
   constructor() {
     super();
-    this.state = {
-      isAuthenticated: false,
-      authenticatedUser: false,
-    };
-    this.handleAuthChange = this.handleAuthChange.bind(this);
-    Navbar.handleLogout = Navbar.handleLogout.bind(this);
+
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
-  componentWillMount() {
-    AuthenticationStore.on('authChange', this.handleAuthChange);
-  }
-
-  componentWillUnmount() {
-    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
-  }
-
-  handleAuthChange() {
-    const user = AuthenticationStore.getAuthenticatedUser();
-    this.setState({
-      isAuthenticated: AuthenticationStore.getAuthenticationStatus(),
-      authenticatedUser: user !== {} ? user : false,
-    });
+  handleLogout() {
+    this.props.logout();
   }
 
   render() {
-    const { isAuthenticated, authenticatedUser } = this.state;
+    const { isAuthenticated, authenticatedUser } = this.props;
     let isAdmin = false;
     let profileImage = null;
     if (isAuthenticated) {
@@ -94,7 +76,7 @@ class Navbar extends Component {
           <div className="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="navbarDropdown">
             <Link to="/edit" className="dropdown-item text-white">Edit Profile</Link>
             <div className="dropdown-divider border-secondary" />
-            <a className="dropdown-item text-white" role="button" tabIndex="0" onClick={Navbar.handleLogout}>
+            <a className="dropdown-item text-white" role="button" tabIndex="0" onClick={this.handleLogout}>
               <i className="fas fa-sign-out-alt" /> Logout
             </a>
           </div>
@@ -120,4 +102,4 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+export default connect(null, mapDispatchToProps)(Navbar);

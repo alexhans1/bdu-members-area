@@ -24,3 +24,10 @@ export function postRegistration(
     teamname,
   });
 }
+
+export function deleteRegistration(registrationId) {
+  dispatcher.dispatch({
+    type: 'DELETE',
+    registrationId,
+  });
+}

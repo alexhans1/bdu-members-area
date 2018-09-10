@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import './App.css';
 import 'react-notifications/lib/notifications.css';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import AuthenticationStore from '../stores/AuthenticationStore';
-import RegistrationStore from '../stores/RegistrationStore';
-import UserStore from '../stores/UserStore';
+import { connect } from 'react-redux';
+import { NotificationContainer } from 'react-notifications';
+import { checkAuthentication } from '../js/actions/AuthenticationActions';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
-import Signup from './Pages/Signup/Signup';
+import Signup from './Pages/profilePages/Signup/Signup';
 import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
 import Tournament from './Pages/tournamentPages/Tournament/Tournament';
 import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
@@ -20,64 +19,28 @@ import TransactionList from './Pages/transactionPages/TransactionList/Transactio
 import Transaction from './Pages/transactionPages/Transaction/Transaction';
 import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
-import Profile from './Pages/Profile/Profile';
+import Profile from './Pages/profilePages/Profile/Profile';
 import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
 
+const mapStateToProps = ({
+  isAuthenticated,
+  authenticatedUser,
+  authCheckHasFinished,
+}) => ({
+  isAuthenticated,
+  authenticatedUser,
+  authCheckHasFinished,
+});
+const mapDispatchToProps = { checkAuthentication };
+
 class App extends Component {
-  static handleAlertChange(store) {
-    const type = store.getAlertType();
-    const message = store.getAlertMessage();
-    switch (type) {
-      case 'info':
-        NotificationManager.info(message);
-        break;
-      case 'success':
-        NotificationManager.success(message);
-        break;
-      case 'warning':
-        NotificationManager.warning(message);
-        break;
-      case 'error':
-        NotificationManager.error(message);
-        break;
-      default:
-      // do nothing
-    }
-  }
-
-  constructor() {
-    super();
-    this.state = {
-      authCheckHasFinished: false,
-      isAuthenticated: false,
-    };
-
-    this.handleAuthChange = this.handleAuthChange.bind(this);
-  }
-
-  async componentWillMount() {
-    AuthenticationStore.on('authChange', this.handleAuthChange);
-    await AuthenticationStore.checkAuthentication();
-    this.setState({ authCheckHasFinished: true });
-    RegistrationStore.on('alertChange', () => { App.handleAlertChange(RegistrationStore); });
-    AuthenticationStore.on('alertChange', () => { App.handleAlertChange(AuthenticationStore); });
-    UserStore.on('alertChange', () => { App.handleAlertChange(UserStore); });
-  }
-
-  componentWillUnmount() {
-    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
-    RegistrationStore.removeListener('alertChange', App.handleAlertChange);
-  }
-
-  handleAuthChange() {
-    this.setState({
-      isAuthenticated: AuthenticationStore.getAuthenticationStatus(),
-    });
+  componentWillMount() {
+    this.props.checkAuthentication();
   }
 
   render() {
-    const { authCheckHasFinished, isAuthenticated } = this.state;
+    const { isAuthenticated, authenticatedUser, authCheckHasFinished } = this.props;
     if (!authCheckHasFinished) {
       return (
         <div>
@@ -101,7 +64,7 @@ class App extends Component {
     );
     const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
       <Route {...rest} render={props => (
-        (isAuthenticated && AuthenticationStore.getAuthenticatedUser().position)
+        (isAuthenticated && authenticatedUser.position)
           ? <ComponentToRender {...props} />
           : <Redirect to="/login" />
       )} />
@@ -109,7 +72,7 @@ class App extends Component {
 
     return (
       <div>
-        <Navbar />
+        <Navbar isAuthenticated={isAuthenticated} authenticatedUser={authenticatedUser} />
         <div id="mainContent">
           <Switch>
             <Route path="/login" component={Login} />
@@ -142,4 +105,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

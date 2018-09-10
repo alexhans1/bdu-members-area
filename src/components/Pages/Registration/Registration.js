@@ -1,66 +1,30 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import Currency from 'react-currency-formatter';
-import AuthenticationStore from '../../../stores/AuthenticationStore';
+import { attendanceStatuses } from '../../../js/constants/applicationConstants';
+
+const mapStateToProps = ({
+  authenticatedUser,
+}) => ({
+  user: authenticatedUser,
+});
 
 class Registration extends Component {
-  constructor() {
-    super();
-    this.state = {
-      user: {},
-      tournament: {},
-    };
-
-    this.attendanceStatuses = [
-      {
-        id: 0,
-        label: 'Registered',
-      }, {
-        id: 1,
-        label: 'Went',
-      }, {
-        id: 2,
-        label: 'Can Go',
-      }, {
-        id: 3,
-        label: 'Didn´t Go',
-      },
-    ];
-
-    this.handleAuthChange = this.handleAuthChange.bind(this);
-  }
-
-  componentWillMount() {
-    AuthenticationStore.on('authChange', this.handleAuthChange);
-  }
-
-  componentDidMount() {
-    this.handleAuthChange();
-  }
-
-  componentWillUnmount() {
-    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
-  }
-
-  handleAuthChange() {
-    const authenticatedUser = AuthenticationStore.getAuthenticatedUser();
-
-    if (authenticatedUser && authenticatedUser.tournaments) {
-      const tournament = authenticatedUser.tournaments.find(
-        tournamentObj => tournamentObj._pivot_id === parseInt(this.props.match.params.id, 10),
-      );
-      if (tournament) {
-        this.setState({
-          user: authenticatedUser,
-          tournament,
-        });
-      }
-    }
-  }
-
   render() {
-    const { user, tournament } = this.state;
-    const attendanceStatusObj = this.attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
+    const { user } = this.props;
+    const tournament = user.tournaments.find(
+      tournamentObj => tournamentObj._pivot_id === parseInt(this.props.match.params.id, 10),
+    );
+    if (!tournament) {
+      return (
+        <div className="container">
+          <h2>Tournament not found.</h2>
+        </div>
+      );
+    }
+
+    const attendanceStatusObj = attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
     const attendanceStatus = attendanceStatusObj ? attendanceStatusObj.label : '';
     const dateFormat = 'DD.MM.YYYY';
     const startdate = tournament.startdate ? moment(tournament.startdate).format(dateFormat) : '';
@@ -154,4 +118,4 @@ class Registration extends Component {
   }
 }
 
-export default Registration;
+export default connect(mapStateToProps)(Registration);

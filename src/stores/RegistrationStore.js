@@ -58,6 +58,30 @@ class TournamentStore extends EventEmitter {
     }
   }
 
+  async deleteRegistration(registrationId) {
+    try {
+      const response = await fetch(`${this.baseURL}/registration/${registrationId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      const body = await response.json();
+      if (response.status === 200) {
+        this.alertMessage = body.message;
+        this.alertType = AlertTypes.SUCCESS;
+        this.emit('alertChange');
+      } else {
+        this.alertMessage = body.message;
+        this.alertType = AlertTypes.ERROR;
+        this.emit('alertChange');
+      }
+    } catch (ex) {
+      console.error(ex.message);
+      this.alertMessage = 'Deleting the registration failed.';
+      this.alertType = AlertTypes.ERROR;
+      this.emit('alertChange');
+    }
+  }
+
   handleAction(action) {
     switch (action.type) {
       case 'REGISTER': {
@@ -72,6 +96,10 @@ class TournamentStore extends EventEmitter {
           action.partner2,
           action.teamname,
         );
+        break;
+      }
+      case 'DELETE': {
+        this.deleteRegistration(action.registrationId);
         break;
       }
       default: {

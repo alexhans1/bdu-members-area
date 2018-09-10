@@ -2,7 +2,7 @@
   background: no-repeat center center fixed;
   background-image: url("./background.jpg");
   background-size: cover;
-  min-height: calc(100vh - 61px - 36px);
+  min-height: calc(100vh - 62px - 36px);
 }
 
 .login-box {

@@ -1,0 +1,7 @@
+#profileImage {
+  overflow: hidden;
+  border-radius: 50%;
+  border: #e4e4e4 1px solid;
+  height: 100px;
+  width: 100px;
+}

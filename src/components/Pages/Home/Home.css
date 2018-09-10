@@ -1,3 +1,11 @@
+#home tbody tr td {
+  cursor: pointer;
+}
+
+#home tbody tr td:last-child {
+  cursor: unset;
+}
+
 #profileContainer {
   color: white;
   background-color: var(--gray-dark);
@@ -16,6 +24,6 @@
 
 @media screen and (min-width: 576px) {
   #profileContainer {
-    min-height: calc(100vh - 61px - 36px);
+    min-height: calc(100vh - 62px - 36px);
   }
 }

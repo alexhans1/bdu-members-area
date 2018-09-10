@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.css';
+import { connect } from 'react-redux';
 import membersAreaImage from './BDU_memberArea_512.png';
-import AuthenticationStore from '../../../stores/AuthenticationStore';
-import * as Auth from '../../../actions/AuthenticationActions';
+import { login } from '../../../js/actions/AuthenticationActions';
+
+const mapDispatchToProps = { login };
 
 class Login extends Component {
   constructor() {
@@ -12,23 +14,8 @@ class Login extends Component {
       email: '',
       password: '',
     };
-    this.handleAuthChange = this.handleAuthChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
-  }
-
-  componentWillMount() {
-    AuthenticationStore.on('authChange', this.handleAuthChange);
-  }
-
-  componentWillUnmount() {
-    AuthenticationStore.removeListener('authChange', this.handleAuthChange);
-  }
-
-  handleAuthChange() {
-    if (AuthenticationStore.getAuthenticationStatus()) {
-      this.props.history.push('/');
-    }
   }
 
   handleChange(e) {
@@ -39,7 +26,7 @@ class Login extends Component {
 
   handleLogin(e) {
     e.preventDefault();
-    Auth.login(this.state.email, this.state.password);
+    this.props.login(this.state.email, this.state.password);
   }
 
   render() {
@@ -93,4 +80,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);

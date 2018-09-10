@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
-import AuthenticationStore from '../../../../../stores/AuthenticationStore';
+import { connect } from 'react-redux';
 import * as RegistrationActions from '../../../../../actions/RegistrationActions';
+
+const mapStateToProps = ({
+  authenticatedUser,
+}) => ({
+  user: authenticatedUser,
+});
 
 class RegistrationModal extends Component {
   constructor() {
@@ -28,7 +34,7 @@ class RegistrationModal extends Component {
     window.$(`#registrationModal_${this.props.tournament.id}`).modal('hide');
     const { role, partner1, partner2, teamName, comment } = this.state;
     const { tournament } = this.props;
-    const currentUserId = AuthenticationStore.getAuthenticatedUser().id;
+    const currentUserId = this.props.user.id;
     RegistrationActions.postRegistration(
       tournament.id,
       currentUserId,
@@ -123,4 +129,4 @@ class RegistrationModal extends Component {
   }
 }
 
-export default RegistrationModal;
+export default connect(mapStateToProps)(RegistrationModal);
