@@ -24,13 +24,11 @@ import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
 
 const mapStateToProps = ({
-  isAuthenticated,
-  authenticatedUser,
-  authCheckHasFinished,
+  authentication,
 }) => ({
-  isAuthenticated,
-  authenticatedUser,
-  authCheckHasFinished,
+  isAuthenticated: authentication.isAuthenticated,
+  authenticatedUser: authentication.authenticatedUser,
+  authCheckHasFinished: authentication.authCheckHasFinished,
 });
 const mapDispatchToProps = { checkAuthentication };
 

@@ -6,9 +6,9 @@ import profileImageDefault from '../../../../images/bdu_quad.png';
 import * as UserActions from '../../../../actions/UserActions';
 
 const mapStateToProps = ({
-  authenticatedUser,
+  authentication,
 }) => ({
-  authenticatedUser,
+  authenticatedUser: authentication.authenticatedUser,
 });
 
 class Profile extends Component {

@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import './TournamentList.css';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
 import Spinner from '../../../Spinner/Spinner';
-import TournamentStore from '../../../../stores/TournamentStore';
-import * as TournamentActions from '../../../../actions/TournamentActions';
 import UserStore from '../../../../stores/UserStore';
 import * as UserActions from '../../../../actions/UserActions';
+import { getTournaments } from '../../../../js/actions/TournamentActions';
+
+const mapStateToProps = ({
+  tournament,
+}) => ({
+  tournaments: tournament.tournamentList,
+  showSpinner: tournament.isLoading,
+});
+const mapDispatchToProps = { getTournaments };
 
 class TournamentList extends Component {
   static handleClickRegister(tournamentId) {
@@ -18,33 +26,21 @@ class TournamentList extends Component {
   constructor() {
     super();
     this.state = {
-      tournaments: [],
-      showSpinner: false,
       users: [],
     };
 
     this.loadOldTournaments = this.loadOldTournaments.bind(this);
-    this.handleTournamentChange = this.handleTournamentChange.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
   }
 
   componentWillMount() {
-    TournamentStore.on('tournamentChange', this.handleTournamentChange);
-    TournamentActions.getCurrentTournaments();
+    this.props.getTournaments(true);
     UserStore.on('userChange', this.handleUserChange);
     UserActions.getUserList();
   }
 
   componentWillUnmount() {
-    TournamentStore.removeListener('tournamentChange', this.handleTournamentChange);
     UserStore.removeListener('userChange', this.handleUserChange);
-  }
-
-  handleTournamentChange() {
-    this.setState({
-      tournaments: TournamentStore.getAllTournaments(),
-      showSpinner: false,
-    });
   }
 
   handleUserChange() {
@@ -54,14 +50,12 @@ class TournamentList extends Component {
   }
 
   loadOldTournaments() {
-    TournamentActions.getAllTournaments();
-    this.setState({
-      showSpinner: true,
-    });
+    this.props.getTournaments();
   }
 
   render() {
-    const { tournaments, showSpinner, users } = this.state;
+    const { users } = this.state;
+    const { tournaments, showSpinner } = this.props;
     const dateFormat = 'LL';
     const tournamentBodyRows = tournaments.map((tournament) => {
       const startdate = moment(tournament.startdate).format(dateFormat);
@@ -171,4 +165,4 @@ class TournamentList extends Component {
   }
 }
 
-export default TournamentList;
+export default connect(mapStateToProps, mapDispatchToProps)(TournamentList);

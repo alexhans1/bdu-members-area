@@ -11,9 +11,9 @@ import profileImageDefault from '../../../images/bdu_quad.png';
 import { attendanceStatuses } from '../../../js/constants/applicationConstants';
 
 const mapStateToProps = ({
-  authenticatedUser,
+  authentication,
 }) => ({
-  user: authenticatedUser,
+  user: authentication.authenticatedUser,
 });
 
 class Home extends Component {

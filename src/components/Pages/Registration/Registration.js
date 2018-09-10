@@ -5,9 +5,9 @@ import Currency from 'react-currency-formatter';
 import { attendanceStatuses } from '../../../js/constants/applicationConstants';
 
 const mapStateToProps = ({
-  authenticatedUser,
+  authentication,
 }) => ({
-  user: authenticatedUser,
+  user: authentication.authenticatedUser,
 });
 
 class Registration extends Component {

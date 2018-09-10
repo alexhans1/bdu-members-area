@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import * as RegistrationActions from '../../../../../actions/RegistrationActions';
 
 const mapStateToProps = ({
-  authenticatedUser,
+  authentication,
 }) => ({
-  user: authenticatedUser,
+  user: authentication.authenticatedUser,
 });
 
 class RegistrationModal extends Component {

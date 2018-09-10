@@ -10,3 +10,7 @@ export const LOGOUT = 'LOGOUT';
 // Registration Actions
 export const REGISTER = 'REGISTER';
 export const DELETE_REGISTRATION = 'DELETE_REGISTRATION';
+
+// Tournament Actions
+export const SET_TOURNAMENTS_ARE_LOADING = 'SET_TOURNAMENTS_ARE_LOADING';
+export const GET_TOURNAMENTS = 'GET_TOURNAMENTS';
