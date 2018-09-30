@@ -9,6 +9,8 @@ import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
 import Signup from './Pages/profilePages/Signup/Signup';
+import Home from './Pages/Home/Home';
+import Profile from './Pages/profilePages/Profile/Profile';
 import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
 import Tournament from './Pages/tournamentPages/Tournament/Tournament';
 import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
@@ -19,8 +21,6 @@ import TransactionList from './Pages/transactionPages/TransactionList/Transactio
 import Transaction from './Pages/transactionPages/Transaction/Transaction';
 import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
-import Profile from './Pages/profilePages/Profile/Profile';
-import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
 
 const mapStateToProps = ({
@@ -53,6 +53,13 @@ class App extends Component {
       );
     }
 
+    const AuthenticationRoute = ({ component: ComponentToRender, ...rest }) => (
+      <Route {...rest} render={props => (
+        isAuthenticated
+          ? <Redirect to="/" />
+          : <ComponentToRender {...props} />
+      )} />
+    );
     const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
       <Route {...rest} render={props => (
         isAuthenticated
@@ -73,8 +80,8 @@ class App extends Component {
         <Navbar isAuthenticated={isAuthenticated} authenticatedUser={authenticatedUser} />
         <div id="mainContent">
           <Switch>
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
+            <AuthenticationRoute path="/login" component={Login} />
+            <AuthenticationRoute path="/signup" component={Signup} />
 
             <Route path="/bug" component={BugList} />
 
