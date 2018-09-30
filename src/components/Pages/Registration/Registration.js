@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import Currency from 'react-currency-formatter';
-import { attendanceStatuses } from '../../../js/constants/applicationConstants';
+import { attendanceStatuses } from '../../../constants/applicationConstants';
 
 const mapStateToProps = ({
-  authentication,
+  user,
 }) => ({
-  user: authentication.authenticatedUser,
+  user: user.authenticatedUser,
 });
 
 class Registration extends Component {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './Login.css';
 import { connect } from 'react-redux';
 import membersAreaImage from './BDU_memberArea_512.png';
-import { login } from '../../../js/actions/AuthenticationActions';
+import { login } from '../../../actions/UserActions';
 
 const mapDispatchToProps = { login };
 

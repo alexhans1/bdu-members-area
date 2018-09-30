@@ -1,52 +1,35 @@
 import React, { Component } from 'react';
-import './TournamentList.css';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import './TournamentList.css';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
 import Spinner from '../../../Spinner/Spinner';
-import UserStore from '../../../../stores/UserStore';
-import * as UserActions from '../../../../actions/UserActions';
-import { getTournaments } from '../../../../js/actions/TournamentActions';
+import { getTournaments } from '../../../../actions/TournamentActions';
+import { getUserList } from '../../../../actions/UserActions';
 
 const mapStateToProps = ({
   tournament,
+  user,
 }) => ({
+  users: user.users,
   tournaments: tournament.tournamentList,
   showSpinner: tournament.isLoading,
 });
-const mapDispatchToProps = { getTournaments };
+const mapDispatchToProps = { getUserList, getTournaments };
 
 class TournamentList extends Component {
   static handleClickRegister(tournamentId) {
     window.$(`#registrationModal_${tournamentId}`).modal('toggle');
   }
 
-  constructor() {
-    super();
-    this.state = {
-      users: [],
-    };
+  constructor(props) {
+    super(props);
 
+    props.getTournaments(true);
+    props.getUserList();
     this.loadOldTournaments = this.loadOldTournaments.bind(this);
-    this.handleUserChange = this.handleUserChange.bind(this);
-  }
-
-  componentWillMount() {
-    this.props.getTournaments(true);
-    UserStore.on('userChange', this.handleUserChange);
-    UserActions.getUserList();
-  }
-
-  componentWillUnmount() {
-    UserStore.removeListener('userChange', this.handleUserChange);
-  }
-
-  handleUserChange() {
-    this.setState({
-      users: UserStore.getUserList(),
-    });
   }
 
   loadOldTournaments() {
@@ -54,8 +37,7 @@ class TournamentList extends Component {
   }
 
   render() {
-    const { users } = this.state;
-    const { tournaments, showSpinner } = this.props;
+    const { users, tournaments, showSpinner } = this.props;
     const dateFormat = 'LL';
     const tournamentBodyRows = tournaments.map((tournament) => {
       const startdate = moment(tournament.startdate).format(dateFormat);

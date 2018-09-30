@@ -6,7 +6,7 @@ import './css/button.css';
 import './css/colors.css';
 import './css/scrollbar.css';
 import { Provider } from 'react-redux';
-import store from './js/store';
+import store from './store';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 

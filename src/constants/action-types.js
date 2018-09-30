@@ -1,14 +1,15 @@
 // Application Actions
 export const TRIGGER_ALERT = 'TRIGGER_ALERT';
 
-// Authentication Actions
+// User Actions
 export const CHECK_AUTHENTICATION = 'CHECK_AUTHENTICATION';
 export const LOGIN = 'LOGIN';
 export const SIGNUP = 'SIGNUP';
 export const LOGOUT = 'LOGOUT';
+export const SET_USER_LIST = 'SET_USER_LIST';
+export const UPDATE_USER = 'UPDATE_USER';
 
 // Registration Actions
-export const REGISTER = 'REGISTER';
 export const DELETE_REGISTRATION = 'DELETE_REGISTRATION';
 
 // Tournament Actions

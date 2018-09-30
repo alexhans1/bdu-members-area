@@ -1,25 +1,21 @@
-/* eslint-disable no-case-declarations */
-import { NotificationManager } from 'react-notifications';
+/* eslint-disable no-case-declarations,camelcase */
 import {
   CHECK_AUTHENTICATION,
   LOGIN,
   SIGNUP,
   LOGOUT,
-  TRIGGER_ALERT,
+  DELETE_REGISTRATION,
+  SET_USER_LIST,
 } from '../constants/action-types';
-import { alertTypes } from '../constants/applicationConstants';
 
 const initialState = {
   isAuthenticated: false,
   authenticatedUser: {},
   authCheckHasFinished: false,
-  alert: {
-    message: '',
-    type: null,
-  },
+  users: [],
 };
 
-const authenticationReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case CHECK_AUTHENTICATION:
       return {
@@ -42,26 +38,23 @@ const authenticationReducer = (state = initialState, action) => {
       };
     case LOGOUT:
       return { ...state, isAuthenticated: false, authenticatedUser: {} };
-    case TRIGGER_ALERT:
-      switch (action.payload.alert.type) {
-        case alertTypes.INFO:
-          NotificationManager.info(action.payload.alert.message);
-          break;
-        case alertTypes.SUCCESS:
-          NotificationManager.success(action.payload.alert.message);
-          break;
-        case alertTypes.WARNING:
-          NotificationManager.warning(action.payload.alert.message);
-          break;
-        case alertTypes.DANGER:
-          NotificationManager.error(action.payload.alert.message);
-          break;
-        default:
-        // do nothing
-      }
+    case SET_USER_LIST:
+      return {
+        ...state,
+        users: action.payload.users,
+      };
+    case DELETE_REGISTRATION:
+      return {
+        ...state,
+        authenticatedUser: {
+          ...state.authenticatedUser,
+          // eslint-disable-next-line max-len
+          tournaments: state.authenticatedUser.tournaments.filter(({ _pivot_id }) => _pivot_id !== action.payload.registrationId),
+        },
+      };
     default:
       return state;
   }
 };
 
-export default authenticationReducer;
+export default userReducer;

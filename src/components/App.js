@@ -4,7 +4,7 @@ import './App.css';
 import 'react-notifications/lib/notifications.css';
 import { connect } from 'react-redux';
 import { NotificationContainer } from 'react-notifications';
-import { checkAuthentication } from '../js/actions/AuthenticationActions';
+import { getCurrentUser } from '../actions/UserActions';
 import Navbar from './Navbar/Navbar';
 import Footer from './Footer/Footer';
 import Login from './Pages/Login/Login';
@@ -24,17 +24,17 @@ import Home from './Pages/Home/Home';
 import Spinner from './Spinner/Spinner';
 
 const mapStateToProps = ({
-  authentication,
+  user,
 }) => ({
-  isAuthenticated: authentication.isAuthenticated,
-  authenticatedUser: authentication.authenticatedUser,
-  authCheckHasFinished: authentication.authCheckHasFinished,
+  isAuthenticated: user.isAuthenticated,
+  authenticatedUser: user.authenticatedUser,
+  authCheckHasFinished: user.authCheckHasFinished,
 });
-const mapDispatchToProps = { checkAuthentication };
+const mapDispatchToProps = { getCurrentUser };
 
 class App extends Component {
   componentWillMount() {
-    this.props.checkAuthentication();
+    this.props.getCurrentUser();
   }
 
   render() {

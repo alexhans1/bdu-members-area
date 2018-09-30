@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as RegistrationActions from '../../../../../actions/RegistrationActions';
+import { register } from '../../../../../actions/RegistrationActions';
 
 const mapStateToProps = ({
-  authentication,
+  user,
 }) => ({
-  user: authentication.authenticatedUser,
+  user: user.authenticatedUser,
 });
+const mapDispatchToProps = { register };
 
 class RegistrationModal extends Component {
   constructor() {
@@ -34,18 +35,18 @@ class RegistrationModal extends Component {
     window.$(`#registrationModal_${this.props.tournament.id}`).modal('hide');
     const { role, partner1, partner2, teamName, comment } = this.state;
     const { tournament } = this.props;
-    const currentUserId = this.props.user.id;
-    RegistrationActions.postRegistration(
-      tournament.id,
-      currentUserId,
+    const userId = this.props.user.id;
+    this.props.register({
+      tournament,
+      userId,
       role,
       comment,
-      0,
-      0,
+      independent: 0,
+      funding: 0,
       partner1,
       partner2,
       teamName,
-    );
+    });
   }
 
   render() {
@@ -129,4 +130,4 @@ class RegistrationModal extends Component {
   }
 }
 
-export default connect(mapStateToProps)(RegistrationModal);
+export default connect(mapStateToProps, mapDispatchToProps)(RegistrationModal);
