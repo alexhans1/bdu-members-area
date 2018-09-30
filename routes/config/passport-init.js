@@ -90,6 +90,7 @@ module.exports = (passport, Bookshelf) => {
               password: createHash(req.body.password),
               vorname: req.body.vorname,
               name: req.body.name,
+              image: req.body.image,
               gender: req.body.gender,
               food: req.body.food,
               last_login: new Date(),
@@ -142,9 +143,9 @@ module.exports = (passport, Bookshelf) => {
               resetPasswordToken: null,
               resetPasswordExpires: null,
             })
-              .then((user) => {
+              .then((newUser) => {
                 console.log('New password saved.');
-                return done(null, user, req.flash('reset', 'New password saved.'));
+                return done(null, newUser, req.flash('reset', 'New password saved.'));
               })
               .catch((err) => {
                 console.error(`Error during password reset. Error message:${err}`);
@@ -191,9 +192,9 @@ module.exports = (passport, Bookshelf) => {
             user.save({
               password: createHash(newPwd),
             })
-              .then((user) => {
+              .then((newUser) => {
                 console.log('New password saved.');
-                return done(null, user, req.flash('changeMsg', 'New password saved.'));
+                return done(null, newUser, req.flash('changeMsg', 'New password saved.'));
               })
               .catch((err) => {
                 console.error(`Error during password change. Error message: ${err}`);

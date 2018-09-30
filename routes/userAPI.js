@@ -31,7 +31,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         });
     } catch (err) {
       console.error(`Error while getting specfic user. Error message:\n${err}`);
-      res.status(500).json({ error: true, message: 'Error while getting specific user.' });
+      res.status(500).json({ message: 'Error while getting specific user.' });
     }
   });
 
@@ -46,7 +46,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         });
     } catch (err) {
       console.error(`Error while getting all users. Error message:\n${err}`);
-      res.status(500).json({ error: true, message: 'Error while getting all users.' });
+      res.status(500).json({ message: 'Error while getting all users.' });
     }
   });
 
@@ -65,27 +65,29 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .then((user) => {
           if (!user) {
             console.error(`The user with the ID "${req.params.id}" is not in the database.`);
-            res.status(404).json({
+            return res.status(404).json({
               error: true,
               message: `The user with the ID "${req.params.id}" is not in the database.`,
             });
-          } else {
-            user.save({
-              email: req.body.email,
-              name: req.body.name,
-              vorname: req.body.vorname,
-              gender: req.body.gender,
-              food: req.body.food,
-              new_tournament_count: req.body.new_tournament_count,
-            });
           }
+          user.save({
+            email: req.body.email,
+            name: req.body.name,
+            vorname: req.body.vorname,
+            gender: req.body.gender,
+            food: req.body.food,
+            new_tournament_count: req.body.new_tournament_count,
+          }).then(() => {
+            res.status(200).json({ message: 'Update user successful.' });
+          });
         })
-        .then(() => {
-          res.status(200).json({ error: false, message: 'Update user successful.' });
+        .catch((err) => {
+          console.error(`Error while updating user. Error message:\n ${err}`);
+          res.status(500).json({ message: 'Error while updating user.' });
         });
     } catch (err) {
       console.error(`Error while updating user. Error message:\n ${err}`);
-      res.status(500).json({ error: true, message: 'Error while updating user.' });
+      res.status(500).json({ message: 'Error while updating user.' });
     }
   });
 
