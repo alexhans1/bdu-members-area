@@ -6,6 +6,7 @@ import {
   LOGOUT,
   DELETE_REGISTRATION,
   SET_USER_LIST,
+  UPDATE_USER,
 } from '../constants/action-types';
 
 const initialState = {
@@ -38,6 +39,20 @@ const userReducer = (state = initialState, action) => {
       };
     case LOGOUT:
       return { ...state, isAuthenticated: false, authenticatedUser: {} };
+    case UPDATE_USER:
+      const { email, firstName, lastName, gender, food, newTournamentCount } = action.payload;
+      return {
+        ...state,
+        authenticatedUser: {
+          ...state.authenticatedUser,
+          email: email || state.authenticatedUser.email,
+          vorname: firstName || state.authenticatedUser.vorname,
+          name: lastName || state.authenticatedUser.name,
+          gender: gender || state.authenticatedUser.gender,
+          food: food || state.authenticatedUser.food,
+          new_tournament_count: newTournamentCount || state.authenticatedUser.new_tournament_count,
+        },
+      };
     case SET_USER_LIST:
       return {
         ...state,

@@ -3,17 +3,24 @@ import { connect } from 'react-redux';
 import UserForm from '../UserForm';
 import './Profile.css';
 import profileImageDefault from '../../../../images/bdu_quad.png';
-import * as UserActions from '../../../../actions/UserActions';
+import { updateUser } from '../../../../actions/UserActions';
 
 const mapStateToProps = ({
   user,
 }) => ({
   authenticatedUser: user.authenticatedUser,
 });
+const mapDispatchToProps = { updateUser };
 
 class Profile extends Component {
-  static handleUserUpdate(userId, email, firstName, lastName, gender, food) {
-    return UserActions.updateUser(userId, email, firstName, lastName, gender, food);
+  constructor() {
+    super();
+
+    this.handleUserUpdate = this.handleUserUpdate.bind(this);
+  }
+
+  handleUserUpdate({ email, firstName, lastName, gender, food }) {
+    this.props.updateUser({ userId: this.props.authenticatedUser.id, email, firstName, lastName, gender, food });
   }
 
   render() {
@@ -26,7 +33,7 @@ class Profile extends Component {
           <h2>Edit your profile information</h2>
         </div>
         <UserForm context="edit"
-                  handleSubmit={Profile.handleUserUpdate}
+                  handleSubmit={this.handleUserUpdate}
                   email={email}
                   firstName={vorname}
                   lastName={name}
@@ -37,4 +44,4 @@ class Profile extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

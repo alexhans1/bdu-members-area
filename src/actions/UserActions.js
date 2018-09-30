@@ -128,11 +128,45 @@ export const getUserList = () => dispatch => fetch(`${BASE_URL}/user`, {
   });
 });
 
-export const updateUser = userId => dispatch => fetch(`${BASE_URL}/user/${userId}`, {
+export const updateUser = ({
+  userId,
+  email,
+  firstName,
+  lastName,
+  gender,
+  food,
+  newTournamentCount,
+}) => dispatch => fetch(`${BASE_URL}/user/${userId}`, {
   method: 'PUT',
   credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Request-Method': 'PUT',
+  },
+  body: JSON.stringify({
+    email,
+    vorname: firstName,
+    name: lastName,
+    gender,
+    food,
+    new_tournament_count: newTournamentCount,
+  }),
 }).then((response) => {
-  if (response.status === 200) {
-
-  }
+  response.json().then((body) => {
+    if (response.status === 200) {
+      dispatchAlert(dispatch, body.message, alertTypes.SUCCESS);
+      dispatch({
+        type: UPDATE_USER,
+        payload: {
+          email,
+          firstName,
+          lastName,
+          gender,
+          food,
+          newTournamentCount,
+        },
+      });
+    } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);
+    else dispatchAlert(dispatch, 'Error during signup.', alertTypes.WARNING);
+  });
 });

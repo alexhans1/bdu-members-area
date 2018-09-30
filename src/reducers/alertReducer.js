@@ -30,6 +30,7 @@ const alertReducer = (state = initialState, action) => {
         default:
           // do nothing
       }
+      return state;
     default:
       return state;
   }

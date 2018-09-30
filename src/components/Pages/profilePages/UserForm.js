@@ -44,7 +44,7 @@ class UserForm extends Component {
     if (password !== confirmPassword) {
       return this.confirmPasswordInput.focus();
     }
-    return this.props.handleSubmit(email, password, firstName, lastName, gender, food, signupPassword);
+    return this.props.handleSubmit({ email, password, firstName, lastName, gender, food, signupPassword });
   }
 
   render() {
@@ -141,7 +141,7 @@ class UserForm extends Component {
         )}
         <button type="submit" className="btn btn-lg btn-outline-info" disabled={!disableSubmit}
                 style={{ cursor: disableSubmit ? 'pointer' : 'not-allowed' }}>
-          Signup
+          {context === 'edit' ? 'Submit' : 'Signup'}
         </button>
       </form>
     );

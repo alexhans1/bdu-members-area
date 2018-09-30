@@ -15,7 +15,7 @@ class Signup extends Component {
     this.handleSignup = this.handleSignup.bind(this);
   }
 
-  handleSignup(email, password, firstName, lastName, gender, food, signupPassword) {
+  handleSignup({ email, password, firstName, lastName, gender, food, signupPassword }) {
     this.props.signup(email, password, firstName, lastName, gender, food, signupPassword);
   }
 
