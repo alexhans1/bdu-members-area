@@ -1,0 +1,10 @@
+#tournamentForm > .form-group {
+  min-width: 300px;
+  padding: 0 1em;
+}
+
+@media (min-width: 992px) {
+  #tournamentForm > .form-group {
+    padding: 0 1.5em;
+  }
+}

@@ -2,22 +2,24 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import './TournamentList.css';
+import { confirmAlert } from 'react-confirm-alert';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
 import Spinner from '../../../Spinner/Spinner';
-import { getTournaments } from '../../../../actions/TournamentActions';
+import { getTournaments, deleteTournament } from '../../../../actions/TournamentActions';
 import { getUserList } from '../../../../actions/UserActions';
 
 const mapStateToProps = ({
   tournament,
   user,
 }) => ({
+  authenticatedUser: user.authenticatedUser,
   users: user.users,
   tournaments: tournament.tournamentList,
   showSpinner: tournament.isLoading,
 });
-const mapDispatchToProps = { getUserList, getTournaments };
+const mapDispatchToProps = { getUserList, getTournaments, deleteTournament };
 
 class TournamentList extends Component {
   static handleClickRegister(tournamentId) {
@@ -30,14 +32,38 @@ class TournamentList extends Component {
     props.getTournaments(true);
     props.getUserList();
     this.loadOldTournaments = this.loadOldTournaments.bind(this);
+    this.forwardToEditTournament = this.forwardToEditTournament.bind(this);
+    this.deleteTournament = this.deleteTournament.bind(this);
   }
 
   loadOldTournaments() {
     this.props.getTournaments();
   }
 
+  forwardToEditTournament(tournamentId) {
+    this.props.history.push(`/editTournament/${tournamentId}`);
+  }
+
+  deleteTournament(tournamentId) {
+    confirmAlert({
+      title: 'Confirm',
+      message: 'Are you sure you want to delete this tournament?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.props.deleteTournament(tournamentId),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
+  }
+
   render() {
-    const { users, tournaments, showSpinner } = this.props;
+    const { users, authenticatedUser, tournaments, showSpinner } = this.props;
+    const isAdmin = authenticatedUser.position === 1;
     const dateFormat = 'LL';
     const tournamentBodyRows = tournaments.map((tournament) => {
       const startdate = moment(tournament.startdate).format(dateFormat);
@@ -113,7 +139,23 @@ class TournamentList extends Component {
             </div>
           </div>
           <div className="collapseUserContainer">
-            <h3>Registered Users</h3>
+            <div className="d-flex">
+              <h3>Registered Users</h3>
+              {isAdmin ? (
+                <div className="d-flex mb-1">
+                  <button
+                    onClick={() => { this.forwardToEditTournament(tournament.id); }}
+                    type="button"
+                    className="btn btn-outline-light ml-4">Edit
+                  </button>
+                  <button
+                    onClick={() => { this.deleteTournament(tournament.id); }}
+                    type="button"
+                    className="btn btn-outline-danger ml-2">Delete
+                  </button>
+                </div>
+              ) : null}
+            </div>
             {tournament.users.length ? (
               <FlexTable key={`userTable_${tournament.name}`} tableName={`userTable_${tournament.name}`}
                          headColumns={['Image', 'Name', 'Role', 'Team', 'Comment', 'Registered at']}

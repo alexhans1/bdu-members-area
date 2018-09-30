@@ -92,7 +92,7 @@ class App extends Component {
             <PrivateRoute path="/dashboard" component={Dashboard} />
 
             <AdminRoute path="/createTournament" component={CreateTournament} />
-            <AdminRoute path="/editTournament" component={EditTournament} />
+            <AdminRoute path="/editTournament/:id" component={EditTournament} />
 
             <AdminRoute path="/member" component={MemberList} />
 
