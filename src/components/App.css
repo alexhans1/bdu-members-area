@@ -1,17 +1,10 @@
-#mainContent {
+.mainContent {
   min-height: calc(100vh - 62px - 36px);
 }
 
 @media (min-width: 992px) {
-  #mainContent {
+  .mainContent {
     max-width: 2000px;
     margin: 0 auto;
   }
-}
-
-#spinnerContainer {
-  min-height: calc(100vh - 62px - 36px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

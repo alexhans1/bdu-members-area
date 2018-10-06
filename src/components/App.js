@@ -43,10 +43,8 @@ class App extends Component {
       return (
         <div>
           <Navbar />
-          <div id="mainContent">
-            <div id="spinnerContainer">
-              <Spinner xl />
-            </div>
+          <div className="mainContent d-flex justify-content-center align-items-center">
+            <Spinner xl />
           </div>
           <Footer />
         </div>
@@ -78,7 +76,7 @@ class App extends Component {
     return (
       <div>
         <Navbar isAuthenticated={isAuthenticated} authenticatedUser={authenticatedUser} />
-        <div id="mainContent">
+        <div className="mainContent">
           <Switch>
             <AuthenticationRoute path="/login" component={Login} />
             <AuthenticationRoute path="/signup" component={Signup} />

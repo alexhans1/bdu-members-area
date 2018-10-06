@@ -18,7 +18,7 @@ class FlexTable extends Component {
   }
 
   render() {
-    const { tableName, headColumns, bodyRows, striped, hover, collapse } = this.props;
+    const { tableName, headColumns, bodyRows, striped, hover, collapse, sortColumn } = this.props;
     this.handleToggleCollapse = this.handleToggleCollapse.bind(this);
     let tableClass = '';
     if (striped) tableClass += ' flex-table-striped';
@@ -31,7 +31,12 @@ class FlexTable extends Component {
             {headColumns.map((headColumn, index) => (
               <div key={`HeadRow_${index}`} className="flex-table-cell">
                 <div>
-                  {headColumn}
+                  {sortColumn ? (
+                    <button type="button" className="btn btn-sm btn-outline-info"
+                            onClick={() => { sortColumn(index); }}>
+                      {headColumn}
+                    </button>
+                  ) : headColumn}
                 </div>
               </div>
             ))}

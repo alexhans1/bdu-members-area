@@ -24,3 +24,8 @@ export const attendanceStatuses = [
     label: 'Didn´t Go',
   },
 ];
+
+export const registrationRoles = {
+  SPEAKER: 'speaker',
+  JUDGE: 'judge',
+};
