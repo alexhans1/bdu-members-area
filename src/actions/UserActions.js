@@ -5,6 +5,7 @@ import {
   LOGOUT,
   SET_USER_LIST,
   UPDATE_USER,
+  ADD_TO_USER_ARRAY,
 } from '../constants/action-types';
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import dispatchAlert from './actionHelpers';
@@ -23,6 +24,12 @@ export const getCurrentUser = () => dispatch => fetch(`${BASE_URL}/currentUser`,
           authCheckHasFinished: true,
         },
       });
+      dispatch({
+        type: ADD_TO_USER_ARRAY,
+        payload: {
+          user: body,
+        },
+      });
     });
   } else {
     dispatch({
@@ -32,6 +39,23 @@ export const getCurrentUser = () => dispatch => fetch(`${BASE_URL}/currentUser`,
         authenticatedUser: {},
         authCheckHasFinished: true,
       },
+    });
+  }
+});
+
+// eslint-disable-next-line max-len
+export const getUserByRegistrationId = registrationId => dispatch => fetch(`${BASE_URL}/user/?filterByRegistrationId=${registrationId}`, {
+  method: 'GET',
+  credentials: 'include',
+}).then((response) => {
+  if (response.status === 200) {
+    response.json().then((body) => {
+      dispatch({
+        type: ADD_TO_USER_ARRAY,
+        payload: {
+          user: body,
+        },
+      });
     });
   }
 });
@@ -52,6 +76,12 @@ export const login = (email, password) => dispatch => fetch(`${BASE_URL}/login`,
         payload: {
           isAuthenticated: true,
           authenticatedUser: body,
+        },
+      });
+      dispatch({
+        type: ADD_TO_USER_ARRAY,
+        payload: {
+          user: body,
         },
       });
     } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);
@@ -91,6 +121,12 @@ export const signup = (
         payload: {
           isAuthenticated: true,
           authenticatedUser: body,
+        },
+      });
+      dispatch({
+        type: ADD_TO_USER_ARRAY,
+        payload: {
+          user: body,
         },
       });
     } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);

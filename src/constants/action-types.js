@@ -8,6 +8,7 @@ export const SIGNUP = 'SIGNUP';
 export const LOGOUT = 'LOGOUT';
 export const SET_USER_LIST = 'SET_USER_LIST';
 export const UPDATE_USER = 'UPDATE_USER';
+export const ADD_TO_USER_ARRAY = 'ADD_TO_USER_ARRAY';
 
 // Registration Actions
 export const DELETE_REGISTRATION = 'DELETE_REGISTRATION';

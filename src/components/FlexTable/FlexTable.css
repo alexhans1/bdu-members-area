@@ -58,3 +58,17 @@
   top: 12px;
   right: 15px;
 }
+
+.collapseContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+
+@media (min-width: 768px) {
+  .collapseContainer {
+    flex-direction: row;
+    padding: 1.5rem;
+  }
+}

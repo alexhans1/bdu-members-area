@@ -7,6 +7,7 @@ import {
   DELETE_REGISTRATION,
   SET_USER_LIST,
   UPDATE_USER,
+  ADD_TO_USER_ARRAY,
 } from '../constants/action-types';
 
 const initialState = {
@@ -66,6 +67,13 @@ const userReducer = (state = initialState, action) => {
           // eslint-disable-next-line max-len
           tournaments: state.authenticatedUser.tournaments.filter(({ _pivot_id }) => _pivot_id !== action.payload.registrationId),
         },
+      };
+    case ADD_TO_USER_ARRAY:
+      const userAlreadyExists = state.users.findIndex(({ id }) => id === action.payload.user.id) > -1;
+      if (userAlreadyExists) return state;
+      return {
+        ...state,
+        users: [...state.users, action.payload.user],
       };
     default:
       return state;

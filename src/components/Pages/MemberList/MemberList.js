@@ -6,7 +6,12 @@ import Currency from 'react-currency-formatter';
 import FlexTable from '../../FlexTable/FlexTable';
 import Spinner from '../../Spinner/Spinner';
 import { getUserList } from '../../../actions/UserActions';
-import { registrationRoles } from '../../../constants/applicationConstants';
+import { DATE_TIME_FORMAT, registrationRoles } from '../../../constants/applicationConstants';
+import MemberRowCollapse from './MemberRowCollapse';
+
+const sortUserList = (a, b, sortBy, sortDirection) => ((a[sortBy] > b[sortBy])
+  ? sortDirection
+  : ((b[sortBy] > a[sortBy]) ? -1 * sortDirection : 0));
 
 const mapStateToProps = ({
   user,
@@ -20,8 +25,8 @@ class MembersList extends Component {
   constructor() {
     super();
     this.state = {
-      sortBy: 1,
-      sortDirection: 1,
+      sortBy: 'totalDebt',
+      sortDirection: -1,
     };
 
     this.sortColumn = this.sortColumn.bind(this);
@@ -32,19 +37,27 @@ class MembersList extends Component {
   }
 
   sortColumn(columnIndex) {
-    const { sortBy, sortDirection } = this.state;
-    if (columnIndex === sortBy) {
-      return this.setState({
-        sortDirection: sortDirection * -1,
-      });
+    const { sortBy } = this.state;
+    const sortableColumns = [
+      'vorname',
+      'totalDebt',
+      'totalTournaments',
+      'judgingRatio',
+      'totalPoints',
+      'last_login',
+    ];
+    if (columnIndex === sortableColumns.indexOf(sortBy)) {
+      return this.setState(previousState => ({
+        sortDirection: previousState.sortDirection * -1,
+      }));
     }
     return this.setState({
-      sortBy: columnIndex,
+      sortBy: sortableColumns[columnIndex],
     });
   }
 
   render() {
-    const { users } = this.props;
+    const { users, history } = this.props;
     const { sortBy, sortDirection } = this.state;
 
     if (!users.length) {
@@ -55,9 +68,7 @@ class MembersList extends Component {
       );
     }
 
-    const dateFormat = 'LL';
-    const membersBodyRows = users.map((user) => {
-      const lastLoginDate = moment(user.last_login).format(dateFormat);
+    const enrichedUserList = users.map((user) => {
       const totalPoints = user.tournaments.reduce((total, tournament) => {
         const addedPoints = moment(tournament.startdate).isBefore(moment().subtract(1, 'years'))
           ? 0
@@ -73,32 +84,27 @@ class MembersList extends Component {
         const debt = tournament._pivot_price_paid - tournament._pivot_price_owed;
         return total - debt;
       }, 0);
-      return [
-        `${user.vorname} ${user.name}`,
-        <Currency quantity={Math.round(totalDebt * 100) / 100} currency="EUR" />,
-        user.tournaments.length,
-        `${judgingRatio}%`,
-        totalPoints,
-        lastLoginDate,
-      ];
-    }).sort((a, b) => {
-      // custom sort for debt
-      if (sortBy === 1) {
-        return (b[sortBy].props.quantity < a[sortBy].props.quantity) ? -1 * sortDirection : sortDirection;
-      }
-      // custom sort for percentages
-      if (sortBy === 3) {
-        return (parseInt(b[sortBy].substr(0, b[sortBy].search('%')), 10)
-          < parseInt(a[sortBy].substr(0, a[sortBy].search('%')), 10)) ? -1 * sortDirection : sortDirection;
-      }
-      // custom sort for dates
-      if (sortBy === 5) {
-        return moment(a[sortBy]).isAfter(b[sortBy]) ? -1 * sortDirection : sortDirection;
-      }
-      if (b[sortBy] < a[sortBy]) return -1 * sortDirection;
-      if (b[sortBy] > a[sortBy]) return sortDirection;
-      return 0;
+      user.totalPoints = totalPoints;
+      user.totalTournaments = totalTournaments;
+      user.judgingRatio = judgingRatio;
+      user.totalDebt = totalDebt;
+
+      return user;
     });
+    const sortedUsers = enrichedUserList.sort((a, b) => sortUserList(a, b, sortBy, sortDirection));
+    const membersBodyRows = sortedUsers.map(user => [
+      `${user.vorname} ${user.name}`,
+      <Currency quantity={Math.round(user.totalDebt * 100) / 100} currency="EUR" />,
+      user.tournaments.length,
+      `${user.judgingRatio}%`,
+      user.totalPoints,
+      moment(user.last_login).format(DATE_TIME_FORMAT),
+    ]);
+
+    const collapseRows = sortedUsers.map(user => (
+      <MemberRowCollapse user={user} history={history} />
+    ));
+
 
     return (
       <div className="container-fluid py-4">
@@ -106,7 +112,7 @@ class MembersList extends Component {
         <FlexTable tableName="membersTable"
                    headColumns={['Name', 'Debt', 'Tournaments', 'Judging Ratio', 'Points', 'Last Login']}
                    sortColumn={this.sortColumn}
-                   bodyRows={membersBodyRows} />
+                   bodyRows={membersBodyRows} collapse={collapseRows} />
       </div>
     );
   }

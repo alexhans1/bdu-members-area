@@ -18,12 +18,13 @@ class FlexTable extends Component {
   }
 
   render() {
-    const { tableName, headColumns, bodyRows, striped, hover, collapse, sortColumn } = this.props;
+    const { tableName, headColumns, bodyRows, striped, hover, collapse, sortColumn, actionOnRowClick } = this.props;
     this.handleToggleCollapse = this.handleToggleCollapse.bind(this);
     let tableClass = '';
     if (striped) tableClass += ' flex-table-striped';
     if (hover) tableClass += ' flex-table-hover';
     if (!headColumns) tableClass += ' flex-table-columnHead';
+    if (actionOnRowClick) tableClass += ' cursorPointer';
     return (
       <div key={tableName} className="flex-table">
         {headColumns ? (
@@ -44,7 +45,10 @@ class FlexTable extends Component {
         ) : null}
 
         {bodyRows.map((bodyRow, rowIndex) => (
-          <div key={`BodyRow_${rowIndex}`} id={`BodyRow_${tableName}_${rowIndex}`} className={tableClass}>
+          <div key={`BodyRow_${rowIndex}`}
+               id={`BodyRow_${tableName}_${rowIndex}`}
+               onClick={actionOnRowClick ? () => { actionOnRowClick(rowIndex); } : null}
+               className={tableClass}>
             <div role="row" className={collapse ? 'flex-table-row cursorPointer' : 'flex-table-row'}
                  onClick={collapse ? () => { this.handleToggleCollapse(rowIndex); } : null}>
               {bodyRow.map((column, columnIndex) => (

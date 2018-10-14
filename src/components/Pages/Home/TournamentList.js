@@ -4,7 +4,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import Currency from 'react-currency-formatter';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { attendanceStatuses } from '../../../constants/applicationConstants';
+import { attendanceStatuses, DATE_FORMAT } from '../../../constants/applicationConstants';
 import { deleteRegistration } from '../../../actions/RegistrationActions';
 
 const mapDispatchToProps = { deleteRegistration };
@@ -58,9 +58,8 @@ class TournamentList extends Component {
         <tbody>
           {tournaments.map((tournament) => {
             const status = attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
-            const dateFormat = 'LL';
-            const startdate = moment(tournament.startdate).format(dateFormat);
-            const enddate = moment(tournament.enddate).format(dateFormat);
+            const startdate = moment(tournament.startdate).format(DATE_FORMAT);
+            const enddate = moment(tournament.enddate).format(DATE_FORMAT);
             const debt = Math.round((tournament._pivot_price_owed - tournament._pivot_price_paid));
             return (
               <tr key={tournament.id}>

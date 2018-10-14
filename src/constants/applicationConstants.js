@@ -29,3 +29,7 @@ export const registrationRoles = {
   SPEAKER: 'speaker',
   JUDGE: 'judge',
 };
+
+export const DATE_FORMAT = 'LL';
+
+export const DATE_TIME_FORMAT = 'LLL';
