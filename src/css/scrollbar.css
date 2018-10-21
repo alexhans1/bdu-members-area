@@ -1,4 +1,4 @@
-html::-webkit-scrollbar-track
+::-webkit-scrollbar-track
 {
   width: 2px;
   height: 2px;
@@ -7,7 +7,7 @@ html::-webkit-scrollbar-track
   margin-right: 2px;
 }
 
-html::-webkit-scrollbar
+::-webkit-scrollbar
 {
   height: 9px;
   width: 9px;
@@ -16,10 +16,15 @@ html::-webkit-scrollbar
   margin-bottom: 2px;
 }
 
-html::-webkit-scrollbar-thumb
+::-webkit-scrollbar-thumb
 {
   border-radius: 10px;
   background-color: rgba(0,0,0,0.3);
   margin-right: 2px;
   margin-bottom: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover
+{
+  background-color: rgba(0, 0, 0, 0.5);
 }
