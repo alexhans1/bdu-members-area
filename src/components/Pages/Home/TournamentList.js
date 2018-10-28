@@ -67,7 +67,9 @@ class TournamentList extends Component {
                 <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{startdate} - {enddate}</td>
                 <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{tournament._pivot_role}</td>
                 <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>
-                  <Currency quantity={debt} currency="EUR" />
+                  <span className={debt > 0 ? 'text-danger' : null}>
+                    <Currency quantity={debt || 0} currency="EUR" />
+                  </span>
                 </td>
                 <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{status.label}</td>
                 <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>

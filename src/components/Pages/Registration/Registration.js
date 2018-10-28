@@ -63,7 +63,11 @@ class Registration extends Component {
       tournament._pivot_price_owed
         ? [
           'Debt',
-          <Currency quantity={tournament._pivot_price_owed - tournament._pivot_price_paid || 0} currency="EUR" />,
+          (
+            <span className={tournament._pivot_price_owed - tournament._pivot_price_paid > 0 ? 'text-danger' : null}>
+              <Currency quantity={tournament._pivot_price_owed - tournament._pivot_price_paid || 0} currency="EUR" />
+            </span>
+          ),
         ] : null,
       attendanceStatus ? ['Status', attendanceStatus] : null,
       tournament._pivot_success ? ['Success', tournament._pivot_success] : null,

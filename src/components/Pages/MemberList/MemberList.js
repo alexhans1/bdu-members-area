@@ -94,7 +94,9 @@ class MembersList extends Component {
     const sortedUsers = enrichedUserList.sort((a, b) => sortUserList(a, b, sortBy, sortDirection));
     const membersBodyRows = sortedUsers.map(user => [
       `${user.vorname} ${user.name}`,
-      <Currency quantity={Math.round(user.totalDebt * 100) / 100} currency="EUR" />,
+      <span className={Math.round(user.totalDebt * 100) / 100 > 0 ? 'text-danger' : null}>
+        <Currency quantity={Math.round(user.totalDebt * 100) / 100 || 0} currency="EUR" />
+      </span>,
       user.tournaments.length,
       `${user.judgingRatio}%`,
       user.totalPoints,
