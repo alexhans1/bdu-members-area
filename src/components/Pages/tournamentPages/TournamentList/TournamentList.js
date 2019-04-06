@@ -10,11 +10,8 @@ import { getUserList } from '../../../../actions/UserActions';
 import { DATE_FORMAT } from '../../../../constants/applicationConstants';
 import TournamentRowCollapse from './TournamentRowCollapse';
 
-const mapStateToProps = ({
-  tournament,
-  user,
-}) => ({
-  authenticatedUser: user.authenticatedUser,
+const mapStateToProps = ({ tournament, user }) => ({
+  authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
   users: user.users,
   tournaments: tournament.tournamentList,
   showSpinner: tournament.isLoading,
@@ -59,7 +56,7 @@ class TournamentList extends Component {
 
   render() {
     const { tournaments, showSpinner, history } = this.props;
-    const tournamentBodyRows = tournaments.map((tournament) => {
+    const tournamentBodyRows = tournaments.map(tournament => {
       const startdate = moment(tournament.startdate).format(DATE_FORMAT);
       const enddate = moment(tournament.enddate).format(DATE_FORMAT);
       return [
@@ -71,18 +68,20 @@ class TournamentList extends Component {
       ];
     });
     const collapseRows = tournaments.map(tournament => (
-      <TournamentRowCollapse
-          history={history}
-          tournament={tournament} />
+      <TournamentRowCollapse history={history} tournament={tournament} />
     ));
     return (
       <div className="container-fluid py-4">
         <h2 className="mb-4">BDU Tournaments</h2>
-        <FlexTable tableName="tournamentsTable" headColumns={['Name', 'Date', 'Location', 'Language', 'Users']}
-                   bodyRows={tournamentBodyRows} collapse={collapseRows} />
+        <FlexTable
+          tableName="tournamentsTable"
+          headColumns={['Name', 'Date', 'Location', 'Language', 'Users']}
+          bodyRows={tournamentBodyRows}
+          collapse={collapseRows}
+        />
         <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
-          <button type="button" className="btn btn-outline-info"
-                  onClick={this.loadOldTournaments}>Load old tournaments
+          <button type="button" className="btn btn-outline-info" onClick={this.loadOldTournaments}>
+            Load old tournaments
           </button>
           {showSpinner ? (
             <div className="mx-auto mt-4 mt-sm-0">
@@ -90,10 +89,12 @@ class TournamentList extends Component {
             </div>
           ) : null}
         </div>
-
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TournamentList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TournamentList);

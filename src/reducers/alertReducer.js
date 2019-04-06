@@ -1,7 +1,5 @@
 import { NotificationManager } from 'react-notifications';
-import {
-  TRIGGER_ALERT,
-} from '../constants/action-types';
+import { TRIGGER_ALERT } from '../constants/action-types';
 import { alertTypes } from '../constants/applicationConstants';
 
 const initialState = {
@@ -28,9 +26,8 @@ const alertReducer = (state = initialState, action) => {
           NotificationManager.error(action.payload.alert.message);
           break;
         default:
-          // do nothing
+          break;
       }
-      return state;
     default:
       return state;
   }

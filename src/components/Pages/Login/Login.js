@@ -38,41 +38,78 @@ class Login extends Component {
         </div>
         <div className="row d-flex align-items-center justify-content-center py-3">
           <div className="col-lg-4 col-md-5 col-sm-7 col-11 login-box p-4">
-            <h4><i className="fas fa-sign-in-alt" /> Login</h4>
+            <h4>
+              <i className="fas fa-sign-in-alt" /> Login
+            </h4>
             <hr />
             <form onSubmit={this.handleLogin}>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" className="form-control" id="email" value={email}
-                       onChange={this.handleChange} name="email" autoComplete="username email"
-                       aria-describedby="emailHelp" placeholder="Enter your email" required />
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  value={email}
+                  onChange={this.handleChange}
+                  name="email"
+                  autoComplete="username email"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter your email"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <input type="password" className="form-control" value={password}
-                       onChange={this.handleChange} name="password" autoComplete="current-password"
-                       id="password" placeholder="Enter your password" required />
+                <input
+                  type="password"
+                  className="form-control"
+                  value={password}
+                  onChange={this.handleChange}
+                  name="password"
+                  autoComplete="current-password"
+                  id="password"
+                  placeholder="Enter your password"
+                  required
+                />
               </div>
-              <button type="submit" className="btn btn-lg btn-outline-info">Login</button>
+              <button type="submit" className="btn btn-lg btn-outline-info">
+                Login
+              </button>
             </form>
             <hr />
-            <p>Forgot your password? <Link to="/forgot">Reset Password</Link></p>
-            <p>Need an account? <Link to="/signup">Signup</Link></p>
+            <p>
+              Forgot your password? <Link to="/forgot">Reset Password</Link>
+            </p>
+            <p>
+              Need an account? <Link to="/signup">Signup</Link>
+            </p>
           </div>
         </div>
         <div id="photoCredit" className="d-flex justify-content-end flex-wrap mt-auto">
           photo credit:&nbsp;
-          <a target="_blank" rel="noopener noreferrer"
-            href="https://www.flickr.com/photos/jaehyunlee/">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.flickr.com/photos/jaehyunlee/"
+          >
             Jaehyun Lee
           </a>
           ,&nbsp;
-          <a target="_blank" rel="noopener noreferrer"
-             href="https://www.flickr.com/photos/jaehyunlee/33543411320/">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.flickr.com/photos/jaehyunlee/33543411320/"
+          >
             ´´Museum Island´´
-          </a>&nbsp;is licensed under&nbsp;
-          <a target="_blank" rel="noopener noreferrer"
-             href="https://creativecommons.org/licenses/by/2.0/"> CC BY 2.0
+          </a>
+          &nbsp;is licensed under&nbsp;
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://creativecommons.org/licenses/by/2.0/"
+          >
+            {' '}
+            CC BY 2.0
           </a>
         </div>
       </div>
@@ -80,4 +117,7 @@ class Login extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Login);

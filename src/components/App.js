@@ -23,12 +23,11 @@ import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Spinner from './Spinner/Spinner';
 
-const mapStateToProps = ({
-  user,
-}) => ({
+const mapStateToProps = ({ user }) => ({
   isAuthenticated: user.isAuthenticated,
-  authenticatedUser: user.authenticatedUser,
+  authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
   authCheckHasFinished: user.authCheckHasFinished,
+  users: user.users,
 });
 const mapDispatchToProps = { getCurrentUser };
 
@@ -52,25 +51,30 @@ class App extends Component {
     }
 
     const AuthenticationRoute = ({ component: ComponentToRender, ...rest }) => (
-      <Route {...rest} render={props => (
-        isAuthenticated
-          ? <Redirect to="/" />
-          : <ComponentToRender {...props} />
-      )} />
+      <Route
+        {...rest}
+        render={props => (isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />)}
+      />
     );
     const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
-      <Route {...rest} render={props => (
-        isAuthenticated
-          ? <ComponentToRender {...props} />
-          : <Redirect to="/login" />
-      )} />
+      <Route
+        {...rest}
+        render={props =>
+          isAuthenticated ? <ComponentToRender {...props} /> : <Redirect to="/login" />
+        }
+      />
     );
     const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
-      <Route {...rest} render={props => (
-        (isAuthenticated && authenticatedUser.position)
-          ? <ComponentToRender {...props} />
-          : <Redirect to="/login" />
-      )} />
+      <Route
+        {...rest}
+        render={props =>
+          isAuthenticated && authenticatedUser.position ? (
+            <ComponentToRender {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
     );
 
     return (
@@ -108,4 +112,9 @@ class App extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(App),
+);

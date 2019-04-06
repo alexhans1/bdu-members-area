@@ -5,10 +5,8 @@ import './Profile.css';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 import { updateUser } from '../../../../actions/UserActions';
 
-const mapStateToProps = ({
-  user,
-}) => ({
-  authenticatedUser: user.authenticatedUser,
+const mapStateToProps = ({ user }) => ({
+  authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
 });
 const mapDispatchToProps = { updateUser };
 
@@ -20,7 +18,14 @@ class Profile extends Component {
   }
 
   handleUserUpdate({ email, firstName, lastName, gender, food }) {
-    this.props.updateUser({ userId: this.props.authenticatedUser.id, email, firstName, lastName, gender, food });
+    this.props.updateUser({
+      userId: this.props.authenticatedUser.id,
+      email,
+      firstName,
+      lastName,
+      gender,
+      food,
+    });
   }
 
   render() {
@@ -29,19 +34,29 @@ class Profile extends Component {
     return (
       <div className="container px-5">
         <div className="d-flex align-items-center py-4">
-          <img id="profileImage" src={image || profileImageDefault} alt="" className="mr-3 cursorPointer" />
+          <img
+            id="profileImage"
+            src={image || profileImageDefault}
+            alt=""
+            className="mr-3 cursorPointer"
+          />
           <h2>Edit your profile information</h2>
         </div>
-        <UserForm context="edit"
-                  handleSubmit={this.handleUserUpdate}
-                  email={email}
-                  firstName={vorname}
-                  lastName={name}
-                  gender={gender}
-                  food={food} />
+        <UserForm
+          context="edit"
+          handleSubmit={this.handleUserUpdate}
+          email={email}
+          firstName={vorname}
+          lastName={name}
+          gender={gender}
+          food={food}
+        />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Profile);

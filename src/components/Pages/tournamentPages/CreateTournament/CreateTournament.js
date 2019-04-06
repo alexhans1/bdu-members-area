@@ -12,8 +12,24 @@ class CreateTournamentForm extends Component {
     this.createTournament = this.createTournament.bind(this);
   }
 
-  createTournament({ name, location, accommodation, startDate, endDate, deadline, format, language, league,
-    rankingFactor, speakerPrice, judgePrice, teamSpots, judgeSpots, link, comment }) {
+  createTournament({
+    name,
+    location,
+    accommodation,
+    startDate,
+    endDate,
+    deadline,
+    format,
+    language,
+    league,
+    rankingFactor,
+    speakerPrice,
+    judgePrice,
+    teamSpots,
+    judgeSpots,
+    link,
+    comment,
+  }) {
     this.props.createTournament({
       name,
       location,
@@ -44,4 +60,7 @@ class CreateTournamentForm extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(CreateTournamentForm);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(CreateTournamentForm);

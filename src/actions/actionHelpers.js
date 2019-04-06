@@ -1,13 +1,21 @@
-import { TRIGGER_ALERT } from '../constants/action-types';
+import { NotificationManager } from 'react-notifications';
+import { alertTypes } from '../constants/applicationConstants';
 
-export default (dispatch, message, type) => {
-  dispatch({
-    type: TRIGGER_ALERT,
-    payload: {
-      alert: {
-        message,
-        type,
-      },
-    },
-  });
+export default (message, type) => {
+  switch (type) {
+    case alertTypes.INFO:
+      NotificationManager.info(message);
+      break;
+    case alertTypes.SUCCESS:
+      NotificationManager.success(message);
+      break;
+    case alertTypes.WARNING:
+      NotificationManager.warning(message);
+      break;
+    case alertTypes.DANGER:
+      NotificationManager.error(message);
+      break;
+    default:
+    // do nothing
+  }
 };

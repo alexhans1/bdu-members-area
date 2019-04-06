@@ -2,63 +2,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment/moment';
+import BootstrapTable from 'react-bootstrap-table-next';
 import Currency from 'react-currency-formatter';
-import FlexTable from '../../FlexTable/FlexTable';
 import Spinner from '../../Spinner/Spinner';
 import { getUserList } from '../../../actions/UserActions';
 import { DATE_TIME_FORMAT, registrationRoles } from '../../../constants/applicationConstants';
 import MemberRowCollapse from './MemberRowCollapse';
 
-const sortUserList = (a, b, sortBy, sortDirection) => ((a[sortBy] > b[sortBy])
-  ? sortDirection
-  : ((b[sortBy] > a[sortBy]) ? -1 * sortDirection : 0));
-
-const mapStateToProps = ({
-  user,
-}) => ({
+const mapStateToProps = ({ user }) => ({
   users: user.users,
 });
 
 const mapDispatchToProps = { getUserList };
 
 class MembersList extends Component {
-  constructor() {
-    super();
-    this.state = {
-      sortBy: 'totalDebt',
-      sortDirection: -1,
-    };
-
-    this.sortColumn = this.sortColumn.bind(this);
-  }
-
   componentWillMount() {
     this.props.getUserList();
   }
 
-  sortColumn(columnIndex) {
-    const { sortBy } = this.state;
-    const sortableColumns = [
-      'vorname',
-      'totalDebt',
-      'totalTournaments',
-      'judgingRatio',
-      'totalPoints',
-      'last_login',
-    ];
-    if (columnIndex === sortableColumns.indexOf(sortBy)) {
-      return this.setState(previousState => ({
-        sortDirection: previousState.sortDirection * -1,
-      }));
-    }
-    return this.setState({
-      sortBy: sortableColumns[columnIndex],
-    });
-  }
-
   render() {
     const { users, history } = this.props;
-    const { sortBy, sortDirection } = this.state;
 
     if (!users.length) {
       return (
@@ -68,7 +31,7 @@ class MembersList extends Component {
       );
     }
 
-    const enrichedUserList = users.map((user) => {
+    const enrichedUserList = users.map(user => {
       const totalPoints = user.tournaments.reduce((total, tournament) => {
         const addedPoints = moment(tournament.startdate).isBefore(moment().subtract(1, 'years'))
           ? 0
@@ -76,10 +39,10 @@ class MembersList extends Component {
         return total + addedPoints;
       }, 0);
       const totalTournaments = user.tournaments.length || 0;
-      const totalTorunamentsAsJudge = user.tournaments.filter(
-        ({ _pivot_role }) => _pivot_role === registrationRoles.JUDGE,
-      ).length || 0;
-      const judgingRatio = Math.round(totalTorunamentsAsJudge * 100 / totalTournaments) || -1;
+      const totalTournamentsAsJudge =
+        user.tournaments.filter(({ _pivot_role }) => _pivot_role === registrationRoles.JUDGE)
+          .length || 0;
+      const judgingRatio = Math.round((totalTournamentsAsJudge * 100) / totalTournaments) || -1;
       const totalDebt = user.tournaments.reduce((total, tournament) => {
         const debt = tournament._pivot_price_paid - tournament._pivot_price_owed;
         return total - debt;
@@ -91,33 +54,87 @@ class MembersList extends Component {
 
       return user;
     });
-    const sortedUsers = enrichedUserList.sort((a, b) => sortUserList(a, b, sortBy, sortDirection));
-    const membersBodyRows = sortedUsers.map(user => [
-      `${user.vorname} ${user.name}`,
-      <span className={Math.round(user.totalDebt * 100) / 100 > 0 ? 'text-danger' : null}>
-        <Currency quantity={Math.round(user.totalDebt * 100) / 100 || 0} currency="EUR" />
-      </span>,
-      user.tournaments.length,
-      `${user.judgingRatio}%`,
-      user.totalPoints,
-      moment(user.last_login).format(DATE_TIME_FORMAT),
-    ]);
 
-    const collapseRows = sortedUsers.map(user => (
-      <MemberRowCollapse user={user} history={history} />
-    ));
+    const membersTableColumns = [
+      {
+        dataField: 'id',
+        text: 'ID',
+        hidden: true,
+      },
+      {
+        dataField: 'vorname',
+        isDummyField: true,
+        text: 'Name',
+        sort: true,
+        formatter: (cellContent, row) => `${row.vorname} ${row.name}`,
+      },
+      {
+        dataField: 'totalDebt',
+        text: 'Debt',
+        sort: true,
+        formatter: cellContent => (
+          <span className={cellContent > 0 ? 'text-danger' : null}>
+            <Currency quantity={cellContent || 0} currency="EUR" />
+          </span>
+        ),
+      },
+      {
+        dataField: 'totalTournaments',
+        text: 'Tournaments',
+        classes: 'd-none d-lg-table-cell',
+        headerClasses: 'd-none d-lg-table-cell',
+        sort: true,
+      },
+      {
+        dataField: 'judgingRatio',
+        text: 'Judging Ratio',
+        sort: true,
+      },
+      {
+        dataField: 'totalPoints',
+        text: 'Points',
+        sort: true,
+        classes: 'd-none d-lg-table-cell',
+        headerClasses: 'd-none d-lg-table-cell',
+      },
+      {
+        dataField: 'last_login',
+        text: 'Last Login',
+        sort: true,
+        formatter: cellContent => moment(cellContent).format(DATE_TIME_FORMAT),
+      },
+    ];
 
+    const expandRow = {
+      renderer: row => <MemberRowCollapse user={row} history={history} />,
+      onlyOneExpanding: true,
+    };
 
     return (
       <div className="container-fluid py-4">
         <h2 className="mb-4">MembersList</h2>
-        <FlexTable tableName="membersTable"
-                   headColumns={['Name', 'Debt', 'Tournaments', 'Judging Ratio', 'Points', 'Last Login']}
-                   sortColumn={this.sortColumn}
-                   bodyRows={membersBodyRows} collapse={collapseRows} />
+        <BootstrapTable
+          bootstrap4
+          hover
+          keyField="id"
+          data={enrichedUserList}
+          columns={membersTableColumns}
+          defaultSorted={[
+            {
+              dataField: 'totalDebt',
+              order: 'desc',
+            },
+          ]}
+          rowClasses="cursorPointer"
+          expandRow={expandRow}
+          bordered={false}
+        />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MembersList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MembersList);

@@ -4,13 +4,10 @@ import TournamentForm from '../TournamentForm';
 import { getTournament, updateTournament } from '../../../../actions/TournamentActions';
 import Spinner from '../../../Spinner/Spinner';
 
-const mapStateToProps = ({
-  tournament,
-}) => ({
+const mapStateToProps = ({ tournament }) => ({
   tournamentList: tournament.tournamentList,
 });
 const mapDispatchToProps = { getTournament, updateTournament };
-
 
 class EditTournament extends Component {
   constructor(props) {
@@ -26,8 +23,24 @@ class EditTournament extends Component {
     if (tournamentIndex < 0) this.props.getTournament(tournamentId);
   }
 
-  editTournament({ name, location, accommodation, startDate, endDate, deadline, format, language, league,
-    rankingFactor, speakerPrice, judgePrice, teamSpots, judgeSpots, link, comment }) {
+  editTournament({
+    name,
+    location,
+    accommodation,
+    startDate,
+    endDate,
+    deadline,
+    format,
+    language,
+    league,
+    rankingFactor,
+    speakerPrice,
+    judgePrice,
+    teamSpots,
+    judgeSpots,
+    link,
+    comment,
+  }) {
     const tournamentId = parseInt(this.props.match.params.id, 10);
     this.props.updateTournament(tournamentId, {
       name,
@@ -56,8 +69,24 @@ class EditTournament extends Component {
     if (!tournament) {
       return <Spinner />;
     }
-    const { name, ort, accommodation, startdate, enddate, deadline, format, language, league,
-      rankingvalue, speakerprice, judgeprice, teamspots, judgespots, link, comments } = tournament;
+    const {
+      name,
+      ort,
+      accommodation,
+      startdate,
+      enddate,
+      deadline,
+      format,
+      language,
+      league,
+      rankingvalue,
+      speakerprice,
+      judgeprice,
+      teamspots,
+      judgespots,
+      link,
+      comments,
+    } = tournament;
     return (
       <div className="container-fluid py-4">
         <h2 className="mb-4">Edit Tournament</h2>
@@ -78,10 +107,14 @@ class EditTournament extends Component {
           teamSpots={teamspots}
           judgeSpots={judgespots}
           link={link}
-          comment={comments} />
+          comment={comments}
+        />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditTournament);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EditTournament);

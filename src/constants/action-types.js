@@ -12,6 +12,7 @@ export const ADD_TO_USER_ARRAY = 'ADD_TO_USER_ARRAY';
 
 // Registration Actions
 export const DELETE_REGISTRATION = 'DELETE_REGISTRATION';
+export const PATCH_REGISTRATION = 'PATCH_REGISTRATION';
 
 // Tournament Actions
 export const SET_TOURNAMENTS_ARE_LOADING = 'SET_TOURNAMENTS_ARE_LOADING';

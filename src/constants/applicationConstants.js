@@ -1,6 +1,7 @@
-export const BASE_URL = (process.env.NODE_ENV === 'production')
-  ? 'https://debate-now-api.herokuapp.com'
-  : 'http://localhost:8080';
+export const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://debate-now-api.herokuapp.com'
+    : 'http://localhost:8080';
 
 export const alertTypes = {
   INFO: 'INFO',
@@ -13,13 +14,16 @@ export const attendanceStatuses = [
   {
     id: 0,
     label: 'Registered',
-  }, {
+  },
+  {
     id: 1,
     label: 'Went',
-  }, {
+  },
+  {
     id: 2,
     label: 'Can Go',
-  }, {
+  },
+  {
     id: 3,
     label: 'Didn´t Go',
   },
@@ -30,6 +34,6 @@ export const registrationRoles = {
   JUDGE: 'judge',
 };
 
-export const DATE_FORMAT = 'LL';
+export const DATE_FORMAT = 'MMM DD, YYYY';
 
 export const DATE_TIME_FORMAT = 'LLL';

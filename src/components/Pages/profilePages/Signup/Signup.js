@@ -16,14 +16,19 @@ class Signup extends Component {
   }
 
   handleSignup({ email, password, firstName, lastName, gender, food, signupPassword }) {
-    this.props.signup(email, password, firstName, lastName, gender, food, signupPassword);
+    this.props.signup({ email, password, firstName, lastName, gender, food, signupPassword });
   }
 
   render() {
     return (
       <div id="signupContainer" className="d-flex">
-        <div id="sideImage" className="col-5 d-none d-md-flex align-items-center justify-content-center">
-          <h1 className="text-white text-center">Signup and Register for Tournaments with the BDU</h1>
+        <div
+          id="sideImage"
+          className="col-5 d-none d-md-flex align-items-center justify-content-center"
+        >
+          <h1 className="text-white text-center">
+            Signup and Register for Tournaments with the BDU
+          </h1>
         </div>
         <div className="d-flex justify-content-center row w-100 align-items-center m-0">
           <div className="col-11 col-sm-10 col-md-9 col-lg-8 col-xl-6 p-4">
@@ -39,4 +44,7 @@ class Signup extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Signup);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Signup);

@@ -24,11 +24,12 @@
   padding: 0 5px;
 }
 
-.flex-table-striped:nth-child(even), .flex-table-hover:hover {
+.flex-table-striped:nth-child(even),
+.flex-table-hover:hover {
   background-color: #eaeaea;
 }
 
-.flex-table-columnHead > .flex-table-row >.flex-table-cell:first-child {
+.flex-table-columnHead > .flex-table-row > .flex-table-cell:first-child {
   font-weight: bold;
 }
 
@@ -36,13 +37,21 @@
   font-weight: bold;
 }
 
-.collapse.show, .collapsing {
-  background-color: var(--gray-dark);
+.collapse.show,
+.collapsing,
+.expanding-row,
+.expanding-row:hover {
+  background-color: var(--gray-dark) !important;
   color: #f3f3f3;
 }
 
-.collapse.show .flex-table-striped:nth-child(even), .flex-table-hover:hover,
-.collapsing .flex-table-striped:nth-child(even), .flex-table-hover:hover {
+.collapse.show .flex-table-striped:nth-child(even),
+.flex-table-hover:hover,
+.collapsing .flex-table-striped:nth-child(even),
+.flex-table-hover:hover,
+.expanding-row .flex-table-striped:nth-child(even),
+.flex-table-hover:hover,
+.expanding-row .table {
   background-color: #3b4248;
 }
 
@@ -64,7 +73,6 @@
   flex-direction: column;
   padding: 1rem;
 }
-
 
 @media (min-width: 768px) {
   .collapseContainer {

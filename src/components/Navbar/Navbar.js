@@ -47,36 +47,63 @@ class Navbar extends Component {
     ) : (
       <ul className="navbar-nav d-flex w-100">
         <li className="nav-item">
-          <Link to="/" className="nav-link">Profile</Link>
+          <Link to="/" className="nav-link">
+            Profile
+          </Link>
         </li>
         <li className="nav-item">
-          <Link to="/tournament" className="nav-link">Tournaments</Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+          <Link to="/tournament" className="nav-link">
+            Tournaments
+          </Link>
         </li>
         {isAdmin ? (
           <li className="nav-item dropdown cursorPointer">
-            <a className="nav-link dropdown-toggle" id="navbarDropdown"
-               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a
+              className="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
               Admin
             </a>
             <div className="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-              <Link to="/createTournament" className="dropdown-item text-white">Create Tournament</Link>
-              <Link to="/member" className="dropdown-item text-white">Members</Link>
+              <Link to="/createTournament" className="dropdown-item text-white">
+                Create Tournament
+              </Link>
+              <Link to="/member" className="dropdown-item text-white">
+                Members
+              </Link>
             </div>
           </li>
         ) : null}
         <li id="profileDropdown" className="nav-item dropdown cursorPointer">
-          <a className="nav-link dropdown-toggle" id="navbarDropdown"
-              role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a
+            className="nav-link dropdown-toggle"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
             <img id="navbarProfileImage" src={profileImage} className="mr-2" alt="" />
             <span>{authenticatedUser.vorname}</span>
           </a>
-          <div className="dropdown-menu dropdown-menu-right bg-dark" aria-labelledby="navbarDropdown">
-            <Link to="/edit" className="dropdown-item text-white">Edit Profile</Link>
+          <div
+            className="dropdown-menu dropdown-menu-right bg-dark"
+            aria-labelledby="navbarDropdown"
+          >
+            <Link to="/edit" className="dropdown-item text-white">
+              Edit Profile
+            </Link>
             <div className="dropdown-divider border-secondary" />
-            <a className="dropdown-item text-white" role="button" tabIndex="0" onClick={this.handleLogout}>
+            <a
+              className="dropdown-item text-white"
+              role="button"
+              tabIndex="0"
+              onClick={this.handleLogout}
+            >
               <i className="fas fa-sign-out-alt" /> Logout
             </a>
           </div>
@@ -89,8 +116,15 @@ class Navbar extends Component {
         <Link className="navbar-brand" to="/">
           <img src={logo} width="80" height="35" alt="logo" />
         </Link>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon" />
         </button>
 
@@ -102,4 +136,7 @@ class Navbar extends Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Navbar);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Navbar);

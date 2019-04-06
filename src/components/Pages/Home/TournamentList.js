@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import moment from 'moment/moment';
 import { confirmAlert } from 'react-confirm-alert';
 import Currency from 'react-currency-formatter';
-import { Link } from 'react-router-dom';
+import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { attendanceStatuses, DATE_FORMAT } from '../../../constants/applicationConstants';
 import { deleteRegistration } from '../../../actions/RegistrationActions';
 
@@ -13,12 +15,7 @@ class TournamentList extends Component {
   constructor() {
     super();
 
-    this.forwardToRegistration = this.forwardToRegistration.bind(this);
     this.deleteRegistration = this.deleteRegistration.bind(this);
-  }
-
-  forwardToRegistration(registrationId) {
-    this.props.history.push(`/registration/${registrationId}`);
   }
 
   deleteRegistration(registrationId) {
@@ -42,57 +39,118 @@ class TournamentList extends Component {
   render() {
     const { tournaments } = this.props;
 
+    const tournamentTableColumns = [
+      {
+        dataField: 'id',
+        text: 'ID',
+        hidden: true,
+      },
+      {
+        dataField: 'name',
+        text: 'Name',
+        sort: true,
+        style: { wordBreak: 'break-word' },
+      },
+      {
+        dataField: 'startdate',
+        text: 'Date',
+        isDummyField: true,
+        sort: true,
+        formatter: (cellContent, row) => (
+          <span>
+            {moment(row.startdate).format(DATE_FORMAT)}
+            <br />
+            {moment(row.enddate).format(DATE_FORMAT)}
+          </span>
+        ),
+      },
+      {
+        dataField: '_pivot_role',
+        text: 'Role',
+        classes: 'd-none d-md-table-cell',
+        headerClasses: 'd-none d-md-table-cell',
+        sort: true,
+      },
+      {
+        dataField: '_pivot_price_paid',
+        text: 'Debt',
+        isDummyField: true,
+        sort: true,
+        formatter: (cellContent, row) => (
+          <span
+            className={row._pivot_price_owed - row._pivot_price_paid > 0 ? 'text-danger' : null}
+          >
+            <Currency
+              quantity={row._pivot_price_owed - row._pivot_price_paid || 0}
+              currency="EUR"
+            />
+          </span>
+        ),
+      },
+      {
+        dataField: '_pivot_attended',
+        text: 'Status',
+        sort: true,
+        classes: 'd-none d-lg-table-cell',
+        headerClasses: 'd-none d-lg-table-cell',
+        formatter: cellContent =>
+          attendanceStatuses.find(statusObj => statusObj.id === cellContent).label,
+      },
+      {
+        dataField: '_pivot_points',
+        text: 'Success',
+        sort: true,
+        classes: 'd-none d-lg-table-cell',
+        headerClasses: 'd-none d-lg-table-cell',
+      },
+      {
+        dataField: 'actions',
+        isDummyField: true,
+        formatter: (cellContent, row) => (
+          <div className="d-flex flex-wrap justify-content-center align-items-center">
+            <Link to="/edit" className="m-1">
+              <i className="far fa-edit text-info" />
+            </Link>
+            <i
+              className="far fa-trash-alt text-danger m-1 cursorPointer"
+              role="button"
+              onClick={() => {
+                this.deleteRegistration(row._pivot_id);
+              }}
+            />
+          </div>
+        ),
+      },
+    ];
+
+    const forwardToRegistration = {
+      onClick: (e, { _pivot_id }) => {
+        this.props.history.push(`registration/${_pivot_id}`);
+      },
+    };
+
     return (
-      <table className="table table-hover table-responsive">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Role</th>
-            <th>Debt</th>
-            <th>Status</th>
-            <th>Success</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {tournaments.map((tournament) => {
-            const status = attendanceStatuses.find(statusObj => statusObj.id === tournament._pivot_attended);
-            const startdate = moment(tournament.startdate).format(DATE_FORMAT);
-            const enddate = moment(tournament.enddate).format(DATE_FORMAT);
-            const debt = Math.round((tournament._pivot_price_owed - tournament._pivot_price_paid));
-            return (
-              <tr key={tournament.id}>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{tournament.name}</td>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{startdate} - {enddate}</td>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{tournament._pivot_role}</td>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>
-                  <span className={debt > 0 ? 'text-danger' : null}>
-                    <Currency quantity={debt || 0} currency="EUR" />
-                  </span>
-                </td>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>{status.label}</td>
-                <td onClick={() => this.forwardToRegistration(tournament._pivot_id)}>
-                  {tournament._pivot_success}
-                  <br />
-                  {tournament._pivot_points ? `${tournament._pivot_points} points` : ''}
-                </td>
-                <td>
-                  <div className="d-flex flex-wrap justify-content-center align-items-center">
-                    <Link to="/edit" className="m-1">
-                      <i className="far fa-edit text-info" />
-                    </Link>
-                    <i className="far fa-trash-alt text-danger m-1 cursorPointer" role="button"
-                       onClick={() => { this.deleteRegistration(tournament._pivot_id); }} />
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <BootstrapTable
+        bootstrap4
+        hover
+        keyField="id"
+        data={tournaments}
+        columns={tournamentTableColumns}
+        defaultSorted={[
+          {
+            dataField: 'startdate',
+            order: 'desc',
+          },
+        ]}
+        rowEvents={forwardToRegistration}
+        rowClasses="cursorPointer"
+        bordered={false}
+      />
     );
   }
 }
 
-export default connect(null, mapDispatchToProps)(TournamentList);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(TournamentList);

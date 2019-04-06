@@ -8,11 +8,12 @@ import {
   SET_USER_LIST,
   UPDATE_USER,
   ADD_TO_USER_ARRAY,
+  PATCH_REGISTRATION,
 } from '../constants/action-types';
 
 const initialState = {
   isAuthenticated: false,
-  authenticatedUser: {},
+  authenticatedUserId: null,
   authCheckHasFinished: false,
   users: [],
 };
@@ -64,12 +65,24 @@ const userReducer = (state = initialState, action) => {
         ...state,
         authenticatedUser: {
           ...state.authenticatedUser,
-          // eslint-disable-next-line max-len
-          tournaments: state.authenticatedUser.tournaments.filter(({ _pivot_id }) => _pivot_id !== action.payload.registrationId),
+          tournaments: state.authenticatedUser.tournaments.filter(
+            ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
+          ),
+        },
+      };
+    case PATCH_REGISTRATION:
+      return {
+        ...state,
+        authenticatedUser: {
+          ...state.authenticatedUser,
+          tournaments: state.authenticatedUser.tournaments.filter(
+            ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
+          ),
         },
       };
     case ADD_TO_USER_ARRAY:
-      const userAlreadyExists = state.users.findIndex(({ id }) => id === action.payload.user.id) > -1;
+      const userAlreadyExists =
+        state.users.findIndex(({ id }) => id === action.payload.user.id) > -1;
       if (userAlreadyExists) return state;
       return {
         ...state,
