@@ -1,7 +1,7 @@
 import {
   SET_TOURNAMENTS_ARE_LOADING,
   GET_TOURNAMENT,
-  GET_TOURNAMENTS,
+  SET_TOURNAMENT_LIST,
 } from '../constants/action-types';
 
 const initialState = {
@@ -27,10 +27,10 @@ const tournamentReducer = (state = initialState, action) => {
         ...state,
         tournamentList: [...state.tournamentList, action.payload.tournament],
       };
-    case GET_TOURNAMENTS:
+    case SET_TOURNAMENT_LIST:
       return {
         ...state,
-        tournamentList: action.payload.tournamentList,
+        tournamentList: action.payload.tournaments,
         isLoading: false,
       };
     case SET_TOURNAMENTS_ARE_LOADING:

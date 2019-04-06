@@ -1,7 +1,7 @@
 import {
   SET_TOURNAMENTS_ARE_LOADING,
   GET_TOURNAMENT,
-  GET_TOURNAMENTS,
+  SET_TOURNAMENT_LIST,
 } from '../constants/action-types';
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
@@ -40,7 +40,7 @@ export const getTournaments = (upcommingOnly = false) => dispatch => {
     if (response.status === 200) {
       response.json().then(body => {
         dispatch({
-          type: GET_TOURNAMENTS,
+          type: SET_TOURNAMENT_LIST,
           payload: {
             tournamentList: body,
           },

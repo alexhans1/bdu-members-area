@@ -2,11 +2,7 @@
 // Copy this file, and add rule overrides as needed.
 {
   "extends": ["airbnb", "prettier"],
-  "plugins": [
-    "prettier"
-  ],
   "rules": {
-    "prettier/prettier": "error",
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "no-param-reassign": 0,
     "no-console": 0,

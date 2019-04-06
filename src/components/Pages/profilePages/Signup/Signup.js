@@ -4,7 +4,7 @@ import './Signup.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import UserForm from '../UserForm';
-import { signup } from '../../../../actions/UserActions';
+import { signup } from '../../../../actions/AuthActions';
 
 const mapDispatchToProps = { signup };
 

@@ -24,7 +24,7 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: action.payload.isAuthenticated,
-        authenticatedUser: action.payload.authenticatedUser,
+        authenticatedUserId: action.payload.authenticatedUserId,
         authCheckHasFinished: action.payload.authCheckHasFinished,
       };
     case LOGIN:

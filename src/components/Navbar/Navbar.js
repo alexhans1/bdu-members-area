@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './Navbar.css';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logout } from '../../actions/UserActions';
+import { logout } from '../../actions/AuthActions';
 import logo from './bdu_white_logo.png';
 import profileImageDefault from '../../images/bdu_quad.png';
 

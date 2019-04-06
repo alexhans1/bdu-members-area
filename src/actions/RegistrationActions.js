@@ -1,7 +1,7 @@
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
 import { DELETE_REGISTRATION } from '../constants/action-types';
-import { getCurrentUser } from './UserActions';
+import { getAppData } from './AuthActions';
 
 export const register = ({
   tournament,
@@ -36,7 +36,7 @@ export const register = ({
     response.json().then(body => {
       if (response.status === 200) {
         triggerAlert(body.message, alertTypes.SUCCESS);
-        dispatch(getCurrentUser());
+        dispatch(getAppData());
       } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
