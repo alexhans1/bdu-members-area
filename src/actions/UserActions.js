@@ -8,7 +8,7 @@ import {
   ADD_TO_USER_ARRAY,
 } from '../constants/action-types';
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
-import dispatchAlert from './actionHelpers';
+import triggerAlert from './actionHelpers';
 
 export const getCurrentUser = () => dispatch =>
   fetch(`${BASE_URL}/currentUser`, {
@@ -87,8 +87,8 @@ export const login = (email, password) => dispatch =>
             user: body,
           },
         });
-      } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);
-      else dispatchAlert(dispatch, 'Error during login.', alertTypes.WARNING);
+      } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
+      else triggerAlert('Error during login.', alertTypes.WARNING);
     });
   });
 
@@ -133,8 +133,8 @@ export const signup = ({
             user: body,
           },
         });
-      } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);
-      else dispatchAlert(dispatch, 'Error during signup.', alertTypes.WARNING);
+      } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
+      else triggerAlert('Error during signup.', alertTypes.WARNING);
     });
   });
 
@@ -197,7 +197,7 @@ export const updateUser = ({
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        dispatchAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch({
           type: UPDATE_USER,
           payload: {
@@ -209,7 +209,7 @@ export const updateUser = ({
             newTournamentCount,
           },
         });
-      } else if (body.message) dispatchAlert(dispatch, body.message, alertTypes.WARNING);
-      else dispatchAlert(dispatch, 'Error during signup.', alertTypes.WARNING);
+      } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
+      else triggerAlert('Error during signup.', alertTypes.WARNING);
     });
   });

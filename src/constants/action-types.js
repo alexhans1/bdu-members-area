@@ -1,6 +1,3 @@
-// Application Actions
-export const TRIGGER_ALERT = 'TRIGGER_ALERT';
-
 // User Actions
 export const CHECK_AUTHENTICATION = 'CHECK_AUTHENTICATION';
 export const LOGIN = 'LOGIN';

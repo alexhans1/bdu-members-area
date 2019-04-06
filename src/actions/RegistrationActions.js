@@ -1,5 +1,5 @@
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
-import dispatchAlert from './actionHelpers';
+import triggerAlert from './actionHelpers';
 import { DELETE_REGISTRATION } from '../constants/action-types';
 import { getCurrentUser } from './UserActions';
 
@@ -35,9 +35,9 @@ export const register = ({
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        dispatchAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch(getCurrentUser());
-      } else dispatchAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
 };
@@ -49,14 +49,14 @@ export const deleteRegistration = registrationId => dispatch =>
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        dispatchAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch({
           type: DELETE_REGISTRATION,
           payload: {
             registrationId,
           },
         });
-      } else dispatchAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
 
@@ -82,13 +82,13 @@ export const patchRegistration = (registrationId, patchedRegistration) => dispat
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        dispatchAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch({
           type: DELETE_REGISTRATION,
           payload: {
             registrationId,
           },
         });
-      } else dispatchAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });

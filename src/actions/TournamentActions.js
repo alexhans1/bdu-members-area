@@ -98,7 +98,7 @@ export const createTournament = ({
       if (response.status === 200) {
         triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch(getTournaments());
-      } else triggerAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
 
@@ -151,9 +151,9 @@ export const updateTournament = (
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        triggerAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch(getTournaments());
-      } else triggerAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
 
@@ -164,8 +164,8 @@ export const deleteTournament = tournamentId => dispatch =>
   }).then(response => {
     response.json().then(body => {
       if (response.status === 200) {
-        triggerAlert(dispatch, body.message, alertTypes.SUCCESS);
+        triggerAlert(body.message, alertTypes.SUCCESS);
         dispatch(getTournaments());
-      } else triggerAlert(dispatch, body.message, alertTypes.WARNING);
+      } else triggerAlert(body.message, alertTypes.WARNING);
     });
   });
