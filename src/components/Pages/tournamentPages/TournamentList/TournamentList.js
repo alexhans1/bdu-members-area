@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import './TournamentList.css';
-import { confirmAlert } from 'react-confirm-alert';
 import FlexTable from '../../../FlexTable/FlexTable';
 import Spinner from '../../../Spinner/Spinner';
-import { getTournaments, deleteTournament } from '../../../../actions/TournamentActions';
-import { getUserList } from '../../../../actions/UserActions';
 import { DATE_FORMAT } from '../../../../constants/applicationConstants';
 import TournamentRowCollapse from './TournamentRowCollapse';
 
@@ -16,42 +13,16 @@ const mapStateToProps = ({ tournament, user }) => ({
   tournaments: tournament.tournamentList,
   showSpinner: tournament.isLoading,
 });
-const mapDispatchToProps = { getUserList, getTournaments, deleteTournament };
 
 class TournamentList extends Component {
   constructor(props) {
     super(props);
 
-    props.getTournaments(true);
-    props.getUserList();
-    this.loadOldTournaments = this.loadOldTournaments.bind(this);
     this.forwardToEditTournament = this.forwardToEditTournament.bind(this);
-    this.deleteTournament = this.deleteTournament.bind(this);
-  }
-
-  loadOldTournaments() {
-    this.props.getTournaments();
   }
 
   forwardToEditTournament(tournamentId) {
     this.props.history.push(`/editTournament/${tournamentId}`);
-  }
-
-  deleteTournament(tournamentId) {
-    confirmAlert({
-      title: 'Confirm',
-      message: 'Are you sure you want to delete this tournament?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => this.props.deleteTournament(tournamentId),
-        },
-        {
-          label: 'No',
-          onClick: () => {},
-        },
-      ],
-    });
   }
 
   render() {
@@ -94,7 +65,4 @@ class TournamentList extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TournamentList);
+export default connect(mapStateToProps)(TournamentList);

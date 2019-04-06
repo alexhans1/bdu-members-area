@@ -104,7 +104,9 @@ class App extends Component {
             <AdminRoute path="/transaction/:id" component={Transaction} />
 
             <PrivateRoute path="/edit" component={Profile} />
-            <PrivateRoute path="/" component={Home} />
+            <PrivateRoute path="/home" component={Home} />
+
+            <PrivateRoute path="/" component={TournamentList} />
           </Switch>
         </div>
         <Footer />

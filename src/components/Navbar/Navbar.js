@@ -94,6 +94,9 @@ class Navbar extends Component {
             className="dropdown-menu dropdown-menu-right bg-dark"
             aria-labelledby="navbarDropdown"
           >
+            <Link to="/home" className="dropdown-item text-white">
+              My Tournaments
+            </Link>
             <Link to="/edit" className="dropdown-item text-white">
               Edit Profile
             </Link>

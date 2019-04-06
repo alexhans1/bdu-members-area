@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import Currency from 'react-currency-formatter';
 import moment from 'moment/moment';
 import { connect } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../../../constants/applicationConstants';
 import profileImageDefault from '../../../../images/bdu_quad.png';
+import { deleteTournament } from '../../../../actions/TournamentActions';
 
 const mapStateToProps = ({ user }) => ({
   authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
   users: user.users,
 });
+
+const mapDispatchToProps = {
+  deleteTournament,
+};
 
 class TournamentRowCollapse extends Component {
   static handleClickRegister(tournamentId) {
@@ -21,12 +27,30 @@ class TournamentRowCollapse extends Component {
     super();
 
     this.forwardToRegistration = this.forwardToRegistration.bind(this);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
 
   forwardToRegistration(rowIndex) {
     const { tournament } = this.props;
     const registrationId = tournament.users[rowIndex]._pivot_id;
     this.props.history.push(`/registration/${registrationId}`);
+  }
+
+  handleDeleteClick(tournamentId) {
+    confirmAlert({
+      title: 'Confirm',
+      message: 'Are you sure you want to delete this tournament?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.props.deleteTournament(tournamentId),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
   }
 
   render() {
@@ -131,7 +155,7 @@ class TournamentRowCollapse extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.deleteTournament(tournament.id);
+                    this.handleDeleteClick(tournament.id);
                   }}
                   type="button"
                   className="btn btn-outline-danger ml-2"
@@ -160,4 +184,7 @@ class TournamentRowCollapse extends Component {
   }
 }
 
-export default connect(mapStateToProps)(TournamentRowCollapse);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TournamentRowCollapse);
