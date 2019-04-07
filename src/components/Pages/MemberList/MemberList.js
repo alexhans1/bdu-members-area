@@ -93,6 +93,8 @@ class MembersList extends Component {
       {
         dataField: 'last_login',
         text: 'Last Login',
+        classes: 'd-none d-lg-table-cell',
+        headerClasses: 'd-none d-lg-table-cell',
         sort: true,
         formatter: cellContent => moment(cellContent).format(DATE_TIME_FORMAT),
       },
@@ -118,6 +120,15 @@ class MembersList extends Component {
               order: 'desc',
             },
           ]}
+          rowEvents={{
+            onClick: (e, row) => {
+              setTimeout(() => {
+                document
+                  .getElementById(row.id)
+                  .scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 1);
+            },
+          }}
           rowClasses="cursorPointer"
           expandRow={expandRow}
           bordered={false}
