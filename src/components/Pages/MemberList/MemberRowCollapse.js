@@ -64,7 +64,7 @@ class MemberRowCollapse extends Component {
                 currency="EUR"
               />
               <button
-                role="button"
+                type="button"
                 className="btn btn-outline-light"
                 onClick={() => {
                   console.log(123);
@@ -100,7 +100,7 @@ class MemberRowCollapse extends Component {
     };
 
     return (
-      <div className="d-flex flex-column flex-xl-row p-2 p-md-3 pd-lg-4">
+      <div id={user.id} className="d-flex flex-column flex-xl-row p-2 p-md-3 pd-lg-4">
         <div className="d-flex flex-column p-0 col-md-8 col-lg-6 col-xl-4">
           <h3 className="pr-4 pr-sm-0">
             {user.vorname} {user.name}

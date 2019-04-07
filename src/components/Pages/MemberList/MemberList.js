@@ -5,7 +5,6 @@ import moment from 'moment/moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Currency from 'react-currency-formatter';
 import Spinner from '../../Spinner/Spinner';
-import { getUserList } from '../../../actions/UserActions';
 import { DATE_TIME_FORMAT, registrationRoles } from '../../../constants/applicationConstants';
 import MemberRowCollapse from './MemberRowCollapse';
 
@@ -13,13 +12,7 @@ const mapStateToProps = ({ user }) => ({
   users: user.users,
 });
 
-const mapDispatchToProps = { getUserList };
-
 class MembersList extends Component {
-  componentWillMount() {
-    this.props.getUserList();
-  }
-
   render() {
     const { users, history } = this.props;
 
@@ -134,7 +127,4 @@ class MembersList extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MembersList);
+export default connect(mapStateToProps)(MembersList);
