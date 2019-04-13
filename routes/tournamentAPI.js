@@ -13,7 +13,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     try {
       Models.Tournament.forge({ id: req.params.id })
         .fetch({ withRelated: ['users'] })
-        .then((tournament) => {
+        .then(tournament => {
           if (!tournament) {
             console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
             res.status(404).json({
@@ -33,11 +33,18 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding get /tournament route...');
   router.route('/tournament').get((req, res) => {
     try {
-      const tournamentQuery = (req.query.filterByMinDate)
-        ? Models.Tournaments.query('where', 'startdate', '>', moment(req.query.filterByMinDate).format())
+      const tournamentQuery = req.query.filterByMinDate
+        ? Models.Tournaments.query(
+            'where',
+            'startdate',
+            '>',
+            moment(req.query.filterByMinDate).format(),
+          )
         : Models.Tournaments.forge();
-      tournamentQuery.orderBy('startdate', 'DESC').fetch({ withRelated: ['users'] })
-        .then((collection) => {
+      tournamentQuery
+        .orderBy('startdate', 'DESC')
+        .fetch({ withRelated: ['users'] })
+        .then(collection => {
           res.status(200).json(collection.toJSON());
         });
     } catch (err) {
@@ -52,7 +59,8 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding post /tournament route...');
   router.route('/tournament').post((req, res) => {
     // check if session user is an admin
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to create tournament.');
+    if (!isAdmin(req))
+      return handleUnauthorized(res, 'User is not authorized to create tournament.');
     try {
       Models.Tournament.forge({
         name: req.body.name,
@@ -73,15 +81,18 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         language: req.body.language,
       })
         .save()
-        .then(() => {
-          res.status(200).json({ message: 'Create Tournament successful.' });
+        .then(tournament => {
+          res
+            .status(200)
+            .json({ message: 'Create Tournament successful.', tournament: tournament.attributes });
         })
         .then(() => {
           if (moment(req.body.startdate).unix() > Date.now() / 1000) {
             try {
-              Models.Users.forge().fetch()
-                .then((users) => {
-                  users.forEach((user) => {
+              Models.Users.forge()
+                .fetch()
+                .then(users => {
+                  users.forEach(user => {
                     user.save({
                       new_tournament_count: user.toJSON().new_tournament_count + 1,
                     });
@@ -102,11 +113,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding put /tournament/:id route...');
   router.route('/tournament/:id').put((req, res) => {
     // check if session user is an admin
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to update tournament.');
+    if (!isAdmin(req))
+      return handleUnauthorized(res, 'User is not authorized to update tournament.');
     try {
       Models.Tournament.forge({ id: req.params.id })
         .fetch({ require: true })
-        .then((tournament) => {
+        .then(tournament => {
           if (!tournament) {
             console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
             res.status(404).json({
@@ -114,28 +126,32 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               message: `The tournament with the ID "${req.params.id}" is not in the database.`,
             });
           } else {
-            tournament.save({
-              name: req.body.name,
-              ort: req.body.ort,
-              startdate: moment(req.body.startdate).format('YYYY-MM-DD'),
-              enddate: moment(req.body.enddate).format('YYYY-MM-DD'),
-              deadline: req.body.deadline,
-              format: req.body.format,
-              league: req.body.league,
-              accommodation: req.body.accommodation,
-              speakerprice: req.body.speakerprice,
-              judgeprice: req.body.judgeprice,
-              rankingvalue: req.body.rankingvalue || null,
-              link: req.body.link,
-              teamspots: req.body.teamspots,
-              judgespots: req.body.judgespots,
-              comments: req.body.comments,
-              language: req.body.language,
-            });
+            tournament
+              .save({
+                name: req.body.name,
+                ort: req.body.ort,
+                startdate: moment(req.body.startdate).format('YYYY-MM-DD'),
+                enddate: moment(req.body.enddate).format('YYYY-MM-DD'),
+                deadline: req.body.deadline,
+                format: req.body.format,
+                league: req.body.league,
+                accommodation: req.body.accommodation,
+                speakerprice: req.body.speakerprice,
+                judgeprice: req.body.judgeprice,
+                rankingvalue: req.body.rankingvalue || null,
+                link: req.body.link,
+                teamspots: req.body.teamspots,
+                judgespots: req.body.judgespots,
+                comments: req.body.comments,
+                language: req.body.language,
+              })
+              .then(updatedTournament => {
+                res.status(200).json({
+                  tournament: updatedTournament,
+                  message: 'Update tournament successful.',
+                });
+              });
           }
-        })
-        .then(() => {
-          res.status(200).json({ message: 'Update tournament successful.' });
         });
     } catch (err) {
       console.error(`Error while updating user. Error message:\n ${err.message}`);
@@ -146,11 +162,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding delete /tournament/:id route...');
   router.route('/tournament/:id').delete((req, res) => {
     // check if session user is an admin
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to delete tournament.');
+    if (!isAdmin(req))
+      return handleUnauthorized(res, 'User is not authorized to delete tournament.');
     try {
       Models.Tournament.forge({ id: req.params.id })
         .fetch({ require: true })
-        .then((tournament) => {
+        .then(tournament => {
           if (!tournament) {
             console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
             res.status(404).json({

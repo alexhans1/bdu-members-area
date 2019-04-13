@@ -17,7 +17,6 @@ app.use(sslRedirect());
 
 // add security
 const whitelist = [
-  'http://localhost:3000',
   'http://local.members.debating.de:3000',
   'http://local.members.debating.de:3006',
 ];

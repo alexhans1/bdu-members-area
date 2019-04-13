@@ -18,7 +18,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     try {
       Models.User.forge({ id: req.params.id })
         .fetch({ withRelated: ['tournaments'] })
-        .then((user) => {
+        .then(user => {
           if (!user) {
             console.error(`The user with the ID "${req.params.id}" is not in the database.`);
             res.status(404).json({
@@ -42,28 +42,30 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     if (registrationId) {
       Models.Registration.forge({ id: registrationId })
         .fetch()
-        .then((registration) => {
+        .then(registration => {
           if (registration.toJSON()) {
             Models.User.forge({ id: registration.toJSON().user_id })
               .fetch({ withRelated: ['tournaments'] })
               .then(user => res.status(200).send(user.toJSON()))
-              .catch((err) => {
-                console.error(`Error while getting user by registration id. Error message:\n${err}`);
+              .catch(err => {
+                console.error(
+                  `Error while getting user by registration id. Error message:\n${err}`,
+                );
                 res.status(500).json({ message: 'Error while getting user by registration id.' });
               });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(`Error while getting user by registration id. Error message:\n${err}`);
           res.status(500).json({ message: 'Error while getting user by registration id.' });
         });
     } else {
       Models.Users.forge()
         .fetch({ withRelated: ['tournaments'] })
-        .then((collection) => {
+        .then(collection => {
           res.status(200).send(collection.toJSON());
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(`Error while getting all users. Error message:\n${err}`);
           res.status(500).json({ message: 'Error while getting all users.' });
         });
@@ -82,7 +84,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     try {
       Models.User.forge({ id: req.params.id })
         .fetch({ require: true })
-        .then((user) => {
+        .then(user => {
           if (!user) {
             console.error(`The user with the ID "${req.params.id}" is not in the database.`);
             return res.status(404).json({
@@ -90,18 +92,20 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               message: `The user with the ID "${req.params.id}" is not in the database.`,
             });
           }
-          user.save({
-            email: req.body.email,
-            name: req.body.name,
-            vorname: req.body.vorname,
-            gender: req.body.gender,
-            food: req.body.food,
-            new_tournament_count: req.body.new_tournament_count,
-          }).then(() => {
-            res.status(200).json({ message: 'Update user successful.' });
-          });
+          user
+            .save({
+              email: req.body.email,
+              name: req.body.name,
+              vorname: req.body.vorname,
+              gender: req.body.gender,
+              food: req.body.food,
+              new_tournament_count: req.body.new_tournament_count,
+            })
+            .then(() => {
+              res.status(200).json({ message: 'Update user successful.' });
+            });
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(`Error while updating user. Error message:\n ${err}`);
           res.status(500).json({ message: 'Error while updating user.' });
         });
@@ -123,7 +127,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     try {
       Models.User.forge({ id: req.params.id })
         .fetch({ require: true })
-        .then((user) => {
+        .then(user => {
           if (!user) {
             console.error(`The user with the ID "${req.params.id}" is not in the database.`);
             res.status(404).json({

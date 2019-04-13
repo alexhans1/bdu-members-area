@@ -1,7 +1,7 @@
 // Use this file as a starting point for your project's .eslintrc.
 // Copy this file, and add rule overrides as needed.
 {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier"],
   "rules": {
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "no-param-reassign": 0,

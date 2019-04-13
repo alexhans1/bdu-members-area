@@ -23,25 +23,44 @@ module.exports = ({ express, Bookshelf, passport }) => {
   console.info('adding api routes...');
 
   require('./authentication')({
-    router, Bookshelf, passport,
+    router,
+    Bookshelf,
+    passport,
   });
   require('./userAPI')({
-    router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
+    router,
+    Bookshelf,
+    isAuthenticated,
+    isAdmin,
+    handleUnauthorized,
   });
   require('./tournamentAPI')({
-    router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
+    router,
+    Bookshelf,
+    isAuthenticated,
+    isAdmin,
+    handleUnauthorized,
   });
   require('./registrationAPI')({
-    router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized,
+    router,
+    Bookshelf,
+    isAuthenticated,
+    isAdmin,
+    handleUnauthorized,
   });
   require('./bugsAPI')({
-    router, Bookshelf,
+    router,
+    Bookshelf,
   });
   require('./dashboardAPI')({
-    router, Bookshelf, isAuthenticated,
+    router,
+    Bookshelf,
+    isAuthenticated,
   });
   require('./rankingAPI')({
-    router, Bookshelf, isAuthenticated,
+    router,
+    Bookshelf,
+    isAuthenticated,
   });
 
   return router;

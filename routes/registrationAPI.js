@@ -7,15 +7,17 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
   const isUserRegisteredForTournament = async (tournament_id, user_id) => {
     try {
-      return await Models.Registration.forge({ tournament_id, user_id }).fetch()
+      return await Models.Registration.forge({ tournament_id, user_id })
+        .fetch()
         .then(registration => !!registration);
     } catch (err) {
       throw err;
     }
   };
-  const doesUserExist = async (user_id) => {
+  const doesUserExist = async user_id => {
     try {
-      return await Models.User.forge({ id: user_id }).fetch()
+      return await Models.User.forge({ id: user_id })
+        .fetch()
         .then(user => !!user);
     } catch (err) {
       throw err;
@@ -25,13 +27,16 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding get /registration/:id route...');
   router.route('/registration/:id').get((req, res) => {
     // check if session user is an admin
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to view registration.');
+    if (!isAdmin(req))
+      return handleUnauthorized(res, 'User is not authorized to view registration.');
     try {
       Models.Registration.forge({ id: req.params.id })
         .fetch()
-        .then((registration) => {
+        .then(registration => {
           if (!registration) {
-            console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The registration with the ID "${req.params.id}" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
               message: `The registration with the ID "${req.params.id}" is not in the database.`,
@@ -49,11 +54,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding get /registration route...');
   router.route('/registration').get((req, res) => {
     // check if session user is an admin
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to view registrations.');
+    if (!isAdmin(req))
+      return handleUnauthorized(res, 'User is not authorized to view registrations.');
     try {
       Models.Registrations.forge()
         .fetch()
-        .then((collection) => {
+        .then(collection => {
           res.status(200).json(collection.toJSON());
         });
     } catch (err) {
@@ -67,8 +73,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     // Step 1)
     // check if Tournament exists in DB
     try {
-      await Models.Tournament.forge({ id: req.body.tournament_id }).fetch()
-        .then((tournament) => {
+      await Models.Tournament.forge({ id: req.body.tournament_id })
+        .fetch()
+        .then(tournament => {
           if (!tournament) {
             console.error('Error while posting registration. Tournament is not in the DB.');
             return res.status(404).json({ message: 'Tournament is not in the DB.' });
@@ -82,7 +89,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
 
     // check if user exists in DB
     try {
-      if (!await doesUserExist(req.body.user_id)) {
+      if (!(await doesUserExist(req.body.user_id))) {
         return res.status(409).json({ message: 'User does not exist.' });
       }
     } catch (ex) {
@@ -114,9 +121,13 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           comment: req.body.comment,
           is_independent: req.body.is_independent || 0,
           funding: req.body.funding || 0,
-        }).save().then(() => res.status(200).json({
-          message: 'Successfully registered as judge.',
-        }));
+        })
+          .save()
+          .then(() =>
+            res.status(200).json({
+              message: 'Successfully registered as judge.',
+            }),
+          );
       }
 
       if (req.body.role === 'speaker') {
@@ -126,25 +137,40 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           if (req.body.partner2 && req.body.partner2 > 0) {
             // check if all users are unique
             if (
-              req.body.user_id === req.body.partner1
-              || req.body.user_id === req.body.partner2
-              || req.body.partner1 === req.body.partner2
-            ) return res.status(409).json({ message: 'All users to register must be different users.' });
+              req.body.user_id === req.body.partner1 ||
+              req.body.user_id === req.body.partner2 ||
+              req.body.partner1 === req.body.partner2
+            )
+              return res
+                .status(409)
+                .json({ message: 'All users to register must be different users.' });
 
             // if two partners are given, check if they exist and are already registered
-            if (!await doesUserExist(req.body.partner1)) {
-              return res.status(409).json({ message: 'Your first named partner does not exist in the database.' });
+            if (!(await doesUserExist(req.body.partner1))) {
+              return res
+                .status(409)
+                .json({ message: 'Your first named partner does not exist in the database.' });
             }
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner1)) {
-              return res.status(409).json({ message: 'Your first named partner is '
-                + 'already registered for this tournament.' });
+              return res
+                .status(409)
+                .json({
+                  message:
+                    'Your first named partner is ' + 'already registered for this tournament.',
+                });
             }
-            if (!await doesUserExist(req.body.partner2)) {
-              return res.status(409).json({ message: 'Your second named partner does not exist in the database.' });
+            if (!(await doesUserExist(req.body.partner2))) {
+              return res
+                .status(409)
+                .json({ message: 'Your second named partner does not exist in the database.' });
             }
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner2)) {
-              return res.status(409).json({ message: 'Your second named partner is '
-                + 'already registered for this tournament.' });
+              return res
+                .status(409)
+                .json({
+                  message:
+                    'Your second named partner is ' + 'already registered for this tournament.',
+                });
             }
             // register all three for the tournament
             Models.Registrations.forge([
@@ -169,23 +195,31 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
                 role: 'speaker',
                 teamname: req.body.team || '',
               },
-            ]).invokeThen('save')
+            ])
+              .invokeThen('save')
               .then(() => {
-                res.status(200).json({ message: 'Successfully registered you and your partners as speakers.' });
+                res
+                  .status(200)
+                  .json({ message: 'Successfully registered you and your partners as speakers.' });
               });
           } else {
             // if only first partner is named,
             // check if all users are unique
             if (req.body.user_id === req.body.partner1) {
-              return res.status(409).json({ message: 'All users to register must be different users.' });
+              return res
+                .status(409)
+                .json({ message: 'All users to register must be different users.' });
             }
             // check if partner exists and is already registered
-            if (!await doesUserExist(req.body.partner1)) {
-              return res.status(409).json({ message: 'Your first named partner does not exist in the database.' });
+            if (!(await doesUserExist(req.body.partner1))) {
+              return res
+                .status(409)
+                .json({ message: 'Your first named partner does not exist in the database.' });
             }
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner1)) {
-              return res.status(409).json({ message: 'Your partner is already'
-                + ' registered for this tournament.' });
+              return res
+                .status(409)
+                .json({ message: 'Your partner is already' + ' registered for this tournament.' });
             }
             // if no user was found,
             // register both
@@ -205,9 +239,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
                 role: 'speaker',
                 teamname: req.body.team || '',
               },
-            ]).invokeThen('save')
+            ])
+              .invokeThen('save')
               .then(() => {
-                res.status(200).json({ message: 'Successfully registered you and your partner as speakers.' });
+                res
+                  .status(200)
+                  .json({ message: 'Successfully registered you and your partner as speakers.' });
               });
           }
         } else {
@@ -220,9 +257,13 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
             is_independent: req.body.is_independent || 0,
             funding: req.body.funding || 0,
             teamname: req.body.team || '',
-          }).save().then(() => res.status(200).json({
-            message: 'Successfully registered as speaker.',
-          }));
+          })
+            .save()
+            .then(() =>
+              res.status(200).json({
+                message: 'Successfully registered as speaker.',
+              }),
+            );
         }
       } else {
         // if none of the reg roles apply return error
@@ -239,7 +280,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding put /registration/:id route...');
   router.route('/registration/:id').put(async (req, res) => {
     try {
-      const registration = await Models.Registration.forge({ id: req.params.id }).fetch({ require: true });
+      const registration = await Models.Registration.forge({ id: req.params.id }).fetch({
+        require: true,
+      });
       if (!registration) {
         console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
         return res.status(404).json({
@@ -249,19 +292,21 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       if (registration.toJSON().user_id !== req.user.id && !isAdmin(req)) {
         return handleUnauthorized(res, 'User is not authorized to update registration.');
       }
-      registration.save({
-        role: req.body.role,
-        is_independent: req.body.is_independent,
-        teamname: req.body.teamname,
-        comment: req.body.comment,
-        funding: req.body.funding,
-        price_paid: req.body.price_paid,
-        price_owed: req.body.price_owed,
-        transaction_date: req.body.transaction_date,
-        transaction_from: req.body.transaction_from,
-      }).then(() => {
-        res.status(200).json({ message: 'Update registration successful.' });
-      });
+      registration
+        .save({
+          role: req.body.role,
+          is_independent: req.body.is_independent,
+          teamname: req.body.teamname,
+          comment: req.body.comment,
+          funding: req.body.funding,
+          price_paid: req.body.price_paid,
+          price_owed: req.body.price_owed,
+          transaction_date: req.body.transaction_date,
+          transaction_from: req.body.transaction_from,
+        })
+        .then(() => {
+          res.status(200).json({ message: 'Update registration successful.' });
+        });
     } catch (err) {
       console.error(`Error while updating registration. Error message:\n ${err.message}`);
       res.status(500).json({ message: 'Error while updating registration.' });
@@ -271,7 +316,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding delete /registration/:id route...');
   router.route('/registration/:id').delete(async (req, res) => {
     try {
-      const registration = await Models.Registration.forge({ id: req.params.id }).fetch({ require: true });
+      const registration = await Models.Registration.forge({ id: req.params.id }).fetch({
+        require: true,
+      });
       if (!registration) {
         console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
         return res.status(404).json({

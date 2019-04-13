@@ -24,12 +24,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
       }
     };
 
-    fetchOldestTournament().then((oldestTournament) => {
+    fetchOldestTournament().then(oldestTournament => {
       // build ranking data
       try {
         Models.Users.forge()
           .fetch({ withRelated: ['tournaments'] })
-          .then((users) => {
+          .then(users => {
             users = users.toJSON();
 
             users.forEach((user, index) => {
@@ -43,7 +43,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
               const b = moment();
               for (let m = b; m.isAfter(a); m.subtract(10, 'days')) {
                 let tmpPoints = 0;
-                user.tournaments.forEach((tournament) => {
+                user.tournaments.forEach(tournament => {
                   if (tournament._pivot_points) {
                     const start = moment(tournament.startdate);
                     if (m.isAfter(start) && m.isBefore(start.clone().add(1, 'year'))) {
@@ -56,14 +56,16 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
             });
           })
           .then(() => {
-            const nowData = result.map((obj) => {
+            const nowData = result.map(obj => {
               if (obj.type === 'flags') return obj;
               return {
                 name: obj.name,
                 currentPoints: obj.data[0][1],
               };
             });
-            let topNames = _.orderBy(nowData, ['currentPoints'], ['desc']).slice(0, 10).map(obj => obj.name);
+            let topNames = _.orderBy(nowData, ['currentPoints'], ['desc'])
+              .slice(0, 10)
+              .map(obj => obj.name);
             if (req.user) topNames = _.union([req.user.vorname], topNames);
 
             result = result.filter(obj => topNames.includes(obj.name));
@@ -78,7 +80,8 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
               shape: 'flag', // Defines the shape of the flags.)
               color: '#f36c25', // same as onSeries
               fillColor: '#f36c25',
-              style: { // text style
+              style: {
+                // text style
                 color: 'white',
               },
               stackDistance: 24,
@@ -87,9 +90,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
               oldestTournament = Models.Tournaments.forge()
                 .orderBy('startdate', 'ASC')
                 .fetch()
-                .then((tournaments) => {
+                .then(tournaments => {
                   tournaments = tournaments.toJSON();
-                  tournaments.forEach((obj) => {
+                  tournaments.forEach(obj => {
                     if (moment(obj.startdate).isAfter(moment())) return;
                     const startdate = moment(obj.startdate);
                     if (startdate.day() === 5) startdate.add(1, 'days');

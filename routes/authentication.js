@@ -16,25 +16,31 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // process the login form
   console.info('> > adding login route...');
-  router.route('/login').post(passport.authenticate('login', {
-    failureRedirect: '/failure', // redirect back to the signup page if there is an error
-    failureFlash: true, // allow flash messages
-  }), (req, res) => {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    res.status(200).json(req.user);
-  });
+  router.route('/login').post(
+    passport.authenticate('login', {
+      failureRedirect: '/failure', // redirect back to the signup page if there is an error
+      failureFlash: true, // allow flash messages
+    }),
+    (req, res) => {
+      // If this function gets called, authentication was successful.
+      // `req.user` contains the authenticated user.
+      res.status(200).json(req.user);
+    },
+  );
 
   // process the signup form
   console.info('> > adding signup route...');
-  router.route('/signup').post(passport.authenticate('signup', {
-    failureRedirect: '/failure', // redirect back to the signup page if there is an error
-    failureFlash: true, // allow flash messages
-  }), (req, res) => {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    res.status(200).json(req.user);
-  });
+  router.route('/signup').post(
+    passport.authenticate('signup', {
+      failureRedirect: '/failure', // redirect back to the signup page if there is an error
+      failureFlash: true, // allow flash messages
+    }),
+    (req, res) => {
+      // If this function gets called, authentication was successful.
+      // `req.user` contains the authenticated user.
+      res.status(200).json(req.user);
+    },
+  );
 
   // process the logout
   console.info('> > adding logout route...');
@@ -47,7 +53,9 @@ module.exports = ({ router, Bookshelf, passport }) => {
   router.route('/currentUser').get(async (req, res) => {
     if (req.isAuthenticated()) {
       try {
-        const currentUser = await Models.User.forge({ id: req.user.id }).fetch({ withRelated: ['tournaments'] });
+        const currentUser = await Models.User.forge({ id: req.user.id }).fetch({
+          withRelated: ['tournaments'],
+        });
         return res.status(200).json(await currentUser.toJSON());
       } catch (err) {
         console.error(err.message);
@@ -64,7 +72,6 @@ module.exports = ({ router, Bookshelf, passport }) => {
   // FIRST: SEND FORGOT PASSWORD EMAIL
   // THIS SETS THE resetPasswordToken AND resetPasswordExpires AND SENDS LINK WITH TOKEN TO USEREMAIL
 
-
   // User model
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
 
@@ -76,7 +83,7 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
     await Models.User.forge({ email: req.body.email })
       .fetch({ require: true })
-      .then((user) => {
+      .then(user => {
         user.save({
           resetPasswordToken: token,
           resetPasswordExpires: Date.now() + 1800000, // set the time to 30 minutes from now
@@ -86,11 +93,12 @@ module.exports = ({ router, Bookshelf, passport }) => {
     const from_email = new helper.Email('bdudb_password_reset@debating.de');
     const to_email = new helper.Email(req.body.email);
     const subject = 'BDUDB Password Reset';
-    const text = `${'You are receiving this because you (or someone else) have '
-      + 'requested the reset of the password for your BDUDB account.\n\n'
-      + 'Please click on the following link, or paste this into your browser to complete the process:\n\n'
-      + 'http://'}${req.headers.host}/reset/${token}\n\n`
-      + 'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+    const text =
+      `${'You are receiving this because you (or someone else) have ' +
+        'requested the reset of the password for your BDUDB account.\n\n' +
+        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        'http://'}${req.headers.host}/reset/${token}\n\n` +
+      'If you did not request this, please ignore this email and your password will remain unchanged.\n';
     const content = new helper.Content('text/plain', text);
     const mail = new helper.Mail(from_email, subject, to_email, content);
 
@@ -112,29 +120,29 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // SECOND: RENDER THE RESET PASSWORD PAGE
   router.route('/reset/:token').get((req, res) => {
-    new Models.User({ resetPasswordToken: req.params.token })
-      .fetch()
-      .then((user) => {
-        if (!user) {
-          console.log('Password reset token is invalid.');
-          // res.status(500).json({error: true, data: {}, message: 'Password reset token is invalid.'});
-          req.flash('error', 'Password reset token is invalid.');
-          // return res.redirect('/forgot');
-        } else if (Date.now() > user.get('resetPasswordExpires')) {
-          // res.status(500).json({error: true, data: {}, message: 'Password reset token has expired.'});
-          req.flash('error', 'Password reset token has expired.');
-        }// else {
-        res.render('reset.ejs', { message: req.flash('error'), user: user || null });
-        // }
-      });
+    new Models.User({ resetPasswordToken: req.params.token }).fetch().then(user => {
+      if (!user) {
+        console.log('Password reset token is invalid.');
+        // res.status(500).json({error: true, data: {}, message: 'Password reset token is invalid.'});
+        req.flash('error', 'Password reset token is invalid.');
+        // return res.redirect('/forgot');
+      } else if (Date.now() > user.get('resetPasswordExpires')) {
+        // res.status(500).json({error: true, data: {}, message: 'Password reset token has expired.'});
+        req.flash('error', 'Password reset token has expired.');
+      } // else {
+      res.render('reset.ejs', { message: req.flash('error'), user: user || null });
+      // }
+    });
   });
 
   // THIRD: RESET PASSWORD METHOD
-  router.route('/reset').post(passport.authenticate('reset', {
-    successRedirect: '/', // redirect to the login section
-    failureRedirect: '/resetFailure', // redirect back to the signup page if there is an error
-    failureFlash: true, // allow flash messages
-  }));
+  router.route('/reset').post(
+    passport.authenticate('reset', {
+      successRedirect: '/', // redirect to the login section
+      failureRedirect: '/resetFailure', // redirect back to the signup page if there is an error
+      failureFlash: true, // allow flash messages
+    }),
+  );
 
   // sends failure login state back to angular
   router.route('/resetFailure').get((req, res) => {
@@ -145,12 +153,14 @@ module.exports = ({ router, Bookshelf, passport }) => {
   // ========================== CHANGE PASSWORD FUNCTION =========================
   // =============================================================================
 
-  router.route('/changePassword').post(passport.authenticate('change', {
-    successRedirect: '/changeSuccess', // redirect to the secure profile section
-    failureRedirect: '/changeFailure', // redirect back to the signup page if there is an error
-    successFlash: true, // allow flash messages
-    failureFlash: true, // allow flash messages
-  }));
+  router.route('/changePassword').post(
+    passport.authenticate('change', {
+      successRedirect: '/changeSuccess', // redirect to the secure profile section
+      failureRedirect: '/changeFailure', // redirect back to the signup page if there is an error
+      successFlash: true, // allow flash messages
+      failureFlash: true, // allow flash messages
+    }),
+  );
 
   // sends failure password change state back to angular
   router.route('/changeSuccess').get((req, res) => {

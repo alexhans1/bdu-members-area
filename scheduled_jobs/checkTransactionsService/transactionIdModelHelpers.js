@@ -1,9 +1,7 @@
-let conn,
-  knex,
-  Bookshelf;
+let Bookshelf;
 try {
-  conn = require('../../knexfile.js'); // read out the DB Conn Data
-  knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
+  const conn = require('../../knexfile.js'); // read out the DB Conn Data
+  const knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
   Bookshelf = require('bookshelf')(knex); // require Bookshelf ORM Framework
 } catch (ex) {
   console.log(ex);
@@ -13,7 +11,6 @@ try {
 const Models = require('../../models/bookshelfModels.js')(Bookshelf);
 
 module.exports = {
-
   saveTransactionIds(transactions) {
     // Step 1:
     // extract Transaction Ids
@@ -23,9 +20,7 @@ module.exports = {
     // save transactionIds into db
     try {
       const model = Models.Transaction_Ids_Col.forge(transactionIds);
-      model.invokeThen('save').then((response) => {
-        // console.log(response);
-      });
+      model.invokeThen('save');
     } catch (err) {
       console.error(err.message);
     }
