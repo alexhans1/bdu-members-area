@@ -10,7 +10,9 @@ import profileImageDefault from '../../../../images/bdu_quad.png';
 import { deleteTournament } from '../../../../actions/TournamentActions';
 
 const mapStateToProps = ({ user }) => ({
-  authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
+  isAdmin: user.authenticatedUserId
+    ? user.users.find(({ id }) => user.authenticatedUserId === id).position === 1
+    : false,
   users: user.users,
 });
 
@@ -28,6 +30,10 @@ class TournamentRowCollapse extends Component {
 
     this.forwardToRegistration = this.forwardToRegistration.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+  }
+
+  forwardToEditTournament(tournamentId) {
+    this.props.history.push(`/tournament/${tournamentId}`);
   }
 
   forwardToRegistration(rowIndex) {
@@ -54,9 +60,7 @@ class TournamentRowCollapse extends Component {
   }
 
   render() {
-    const { users, authenticatedUser } = this.props;
-    const isAdmin = authenticatedUser.position === 1;
-    const { tournament } = this.props;
+    const { users, tournament, isAdmin } = this.props;
     const startdate = moment(tournament.startdate).format(DATE_FORMAT);
     const enddate = moment(tournament.enddate).format(DATE_FORMAT);
     let { link } = tournament;
@@ -110,9 +114,31 @@ class TournamentRowCollapse extends Component {
       : null;
 
     return (
-      <div className="collapseContainer">
+      <div id={tournament.id} className="collapseContainer">
         <div className="collapseTournamentContainer">
           <h3 className="pr-4 pr-sm-0">{tournament.name}</h3>
+          {isAdmin ? (
+            <div className="d-flex mb-1">
+              <button
+                onClick={() => {
+                  this.forwardToEditTournament(tournament.id);
+                }}
+                type="button"
+                className="btn btn-outline-light"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => {
+                  this.handleDeleteClick(tournament.id);
+                }}
+                type="button"
+                className="btn btn-outline-danger ml-2"
+              >
+                Delete
+              </button>
+            </div>
+          ) : null}
           <FlexTable
             key={`tournamentTable_${tournament.name}`}
             tableName={`tournamentTable_${tournament.name}`}
@@ -142,28 +168,6 @@ class TournamentRowCollapse extends Component {
         <div className="collapseUserContainer">
           <div className="d-flex">
             <h3>Registered Users</h3>
-            {isAdmin ? (
-              <div className="d-flex mb-1">
-                <button
-                  onClick={() => {
-                    this.forwardToEditTournament(tournament.id);
-                  }}
-                  type="button"
-                  className="btn btn-outline-light ml-4"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => {
-                    this.handleDeleteClick(tournament.id);
-                  }}
-                  type="button"
-                  className="btn btn-outline-danger ml-2"
-                >
-                  Delete
-                </button>
-              </div>
-            ) : null}
           </div>
           {tournament.users.length ? (
             <FlexTable

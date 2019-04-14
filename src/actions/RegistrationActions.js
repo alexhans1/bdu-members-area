@@ -42,23 +42,22 @@ export const register = ({
   });
 };
 
-export const deleteRegistration = registrationId => dispatch =>
-  fetch(`${BASE_URL}/registration/${registrationId}`, {
+export const deleteRegistration = registrationId => async dispatch => {
+  const response = await fetch(`${BASE_URL}/registration/${registrationId}`, {
     method: 'DELETE',
     credentials: 'include',
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        triggerAlert(body.message, alertTypes.SUCCESS);
-        dispatch({
-          type: DELETE_REGISTRATION,
-          payload: {
-            registrationId,
-          },
-        });
-      } else triggerAlert(body.message, alertTypes.WARNING);
-    });
   });
+  const body = await response.json();
+  if (response.status === 200) {
+    triggerAlert(body.message, alertTypes.SUCCESS);
+    dispatch({
+      type: DELETE_REGISTRATION,
+      payload: {
+        registrationId,
+      },
+    });
+  } else triggerAlert(body.message, alertTypes.WARNING);
+};
 
 export const patchRegistration = (registrationId, patchedRegistration) => dispatch =>
   fetch(`${BASE_URL}/registration/${registrationId}`, {

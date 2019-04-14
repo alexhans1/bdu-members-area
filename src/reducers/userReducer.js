@@ -1,14 +1,13 @@
 /* eslint-disable no-case-declarations,camelcase */
 import {
   CHECK_AUTHENTICATION,
-  LOGIN,
-  SIGNUP,
   LOGOUT,
   DELETE_REGISTRATION,
   SET_USER_LIST,
   UPDATE_USER,
   ADD_TO_USER_ARRAY,
   PATCH_REGISTRATION,
+  SET_EXPANDED_USER_ID,
 } from '../constants/action-types';
 
 const initialState = {
@@ -16,6 +15,7 @@ const initialState = {
   authenticatedUserId: null,
   authCheckHasFinished: false,
   users: [],
+  expandedUserId: null,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -27,33 +27,18 @@ const userReducer = (state = initialState, action) => {
         authenticatedUserId: action.payload.authenticatedUserId,
         authCheckHasFinished: action.payload.authCheckHasFinished,
       };
-    case LOGIN:
-      return {
-        ...state,
-        isAuthenticated: action.payload.isAuthenticated,
-        authenticatedUser: action.payload.authenticatedUser,
-      };
-    case SIGNUP:
-      return {
-        ...state,
-        isAuthenticated: action.payload.isAuthenticated,
-        authenticatedUser: action.payload.authenticatedUser,
-      };
     case LOGOUT:
       return { ...state, isAuthenticated: false, authenticatedUser: {} };
     case UPDATE_USER:
-      const { email, firstName, lastName, gender, food, newTournamentCount } = action.payload;
       return {
         ...state,
-        authenticatedUser: {
-          ...state.authenticatedUser,
-          email: email || state.authenticatedUser.email,
-          vorname: firstName || state.authenticatedUser.vorname,
-          name: lastName || state.authenticatedUser.name,
-          gender: gender || state.authenticatedUser.gender,
-          food: food || state.authenticatedUser.food,
-          new_tournament_count: newTournamentCount || state.authenticatedUser.new_tournament_count,
-        },
+        users: state.users.map(user => {
+          if (user.id !== action.payload.user.id) return user;
+          return {
+            ...action.payload.user,
+            tournaments: user.tournaments,
+          };
+        }),
       };
     case SET_USER_LIST:
       return {
@@ -63,12 +48,14 @@ const userReducer = (state = initialState, action) => {
     case DELETE_REGISTRATION:
       return {
         ...state,
-        authenticatedUser: {
-          ...state.authenticatedUser,
-          tournaments: state.authenticatedUser.tournaments.filter(
-            ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
-          ),
-        },
+        users: state.users.map(user => {
+          return {
+            ...user,
+            tournaments: user.tournaments.filter(
+              ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
+            ),
+          };
+        }),
       };
     case PATCH_REGISTRATION:
       return {
@@ -87,6 +74,12 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         users: [...state.users, action.payload.user],
+      };
+    case SET_EXPANDED_USER_ID:
+      return {
+        ...state,
+        expandedUserId:
+          action.payload.userId === state.expandedUserId ? null : action.payload.userId,
       };
     default:
       return state;

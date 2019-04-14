@@ -1,23 +1,27 @@
-import { GET_TOURNAMENT, DELETE_TOURNAMENT } from '../constants/action-types';
+import {
+  GET_TOURNAMENT,
+  DELETE_TOURNAMENT,
+  ADD_TOURNAMENT,
+  UPDATE_TOURNAMENT,
+} from '../constants/action-types';
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
 
-export const getTournament = tournamentId => dispatch =>
-  fetch(`${BASE_URL}/tournament/${tournamentId}`, {
+export const getTournament = tournamentId => async dispatch => {
+  const response = await fetch(`${BASE_URL}/tournament/${tournamentId}`, {
     method: 'GET',
     credentials: 'include',
-  }).then(response => {
-    if (response.status === 200) {
-      response.json().then(body => {
-        dispatch({
-          type: GET_TOURNAMENT,
-          payload: {
-            tournament: body,
-          },
-        });
-      });
-    }
   });
+  if (response.status === 200) {
+    const tournament = response.json();
+    dispatch({
+      type: GET_TOURNAMENT,
+      payload: {
+        tournament,
+      },
+    });
+  }
+};
 
 export const createTournament = ({
   name,
@@ -36,8 +40,8 @@ export const createTournament = ({
   judgeSpots,
   link,
   comment,
-}) => dispatch =>
-  fetch(`${BASE_URL}/tournament`, {
+}) => async dispatch => {
+  const response = await fetch(`${BASE_URL}/tournament`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -62,13 +66,18 @@ export const createTournament = ({
       link,
       comments: comment,
     }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        triggerAlert(body.message, alertTypes.SUCCESS);
-      } else triggerAlert(body.message, alertTypes.WARNING);
-    });
   });
+  const { message, tournament } = await response.json();
+  if (response.status === 200) {
+    triggerAlert(message, alertTypes.SUCCESS);
+    dispatch({
+      type: ADD_TOURNAMENT,
+      payload: {
+        tournament: { ...tournament, users: [] },
+      },
+    });
+  } else triggerAlert(message, alertTypes.WARNING);
+};
 
 export const updateTournament = (
   tournamentId,
@@ -90,8 +99,8 @@ export const updateTournament = (
     link,
     comment,
   },
-) => dispatch =>
-  fetch(`${BASE_URL}/tournament/${tournamentId}`, {
+) => async dispatch => {
+  const response = await fetch(`${BASE_URL}/tournament/${tournamentId}`, {
     method: 'PUT',
     credentials: 'include',
     headers: {
@@ -116,24 +125,28 @@ export const updateTournament = (
       link,
       comments: comment,
     }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        triggerAlert(body.message, alertTypes.SUCCESS);
-      } else triggerAlert(body.message, alertTypes.WARNING);
-    });
   });
+  const { message, tournament } = await response.json();
+  if (response.status === 200) {
+    dispatch({
+      type: UPDATE_TOURNAMENT,
+      payload: { tournament },
+    });
+    triggerAlert(message, alertTypes.SUCCESS);
+  } else triggerAlert(message, alertTypes.WARNING);
+};
 
 export const deleteTournament = tournamentId => async dispatch => {
-  const response = fetch(`${BASE_URL}/tournament/${tournamentId}`, {
+  const response = await fetch(`${BASE_URL}/tournament/${tournamentId}`, {
     method: 'DELETE',
     credentials: 'include',
   });
-  const body = response.json();
+  const body = await response.json();
   if (response.status === 200) {
     triggerAlert(body.message, alertTypes.SUCCESS);
     dispatch({
       type: DELETE_TOURNAMENT,
+      payload: { tournamentId },
     });
   } else triggerAlert(body.message, alertTypes.WARNING);
 };

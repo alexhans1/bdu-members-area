@@ -6,7 +6,7 @@ class Footer extends Component {
   render() {
     return (
       <div id="footer" className="d-flex justify-content-around align-items-center py-2">
-        <span>© Berlin Debating Union e.V., 2018</span>
+        <span>© Berlin Debating Union e.V., {new Date().getFullYear()}</span>
         <Link to="/bug">Feedback / Bugs</Link>
       </div>
     );

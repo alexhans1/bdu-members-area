@@ -1,12 +1,19 @@
+/* eslint-disable camelcase */
 import {
-  SET_TOURNAMENTS_ARE_LOADING,
+  ADD_TOURNAMENT,
+  DELETE_REGISTRATION,
+  DELETE_TOURNAMENT,
   GET_TOURNAMENT,
+  SET_EXPANDED_TOURNAMENT_ID,
   SET_TOURNAMENT_LIST,
+  TOGGLE_SHOW_PREV_TOURNAMENTS,
+  UPDATE_TOURNAMENT,
 } from '../constants/action-types';
 
 const initialState = {
   tournamentList: [],
-  isLoading: false,
+  showPreviousTournaments: false,
+  expandedTournamentId: null,
 };
 
 const tournamentReducer = (state = initialState, action) => {
@@ -31,12 +38,52 @@ const tournamentReducer = (state = initialState, action) => {
       return {
         ...state,
         tournamentList: action.payload.tournaments,
-        isLoading: false,
       };
-    case SET_TOURNAMENTS_ARE_LOADING:
+    case ADD_TOURNAMENT:
       return {
         ...state,
-        isLoading: action.payload.isLoading,
+        tournamentList: [...state.tournamentList, action.payload.tournament],
+      };
+    case UPDATE_TOURNAMENT:
+      return {
+        ...state,
+        tournamentList: state.tournamentList.map(tournament => {
+          if (tournament.id !== action.payload.tournament.id) return tournament;
+          return {
+            ...action.payload.tournament,
+            users: tournament.users,
+          };
+        }),
+      };
+    case DELETE_TOURNAMENT:
+      return {
+        ...state,
+        tournamentList: state.tournamentList.filter(({ id }) => id !== action.payload.tournamentId),
+      };
+    case TOGGLE_SHOW_PREV_TOURNAMENTS:
+      return {
+        ...state,
+        showPreviousTournaments: !state.showPreviousTournaments,
+      };
+    case DELETE_REGISTRATION:
+      return {
+        ...state,
+        tournamentList: state.tournamentList.map(tournament => {
+          return {
+            ...tournament,
+            users: tournament.users.filter(
+              ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
+            ),
+          };
+        }),
+      };
+    case SET_EXPANDED_TOURNAMENT_ID:
+      return {
+        ...state,
+        expandedTournamentId:
+          action.payload.tournamentId === state.expandedTournamentId
+            ? null
+            : action.payload.tournamentId,
       };
     default:
       return state;

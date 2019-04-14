@@ -11,7 +11,7 @@ class MemberRowCollapse extends Component {
   render() {
     const { user } = this.props;
     const userTableRows = [
-      ['ID', user.id],
+      ['User ID', user.id],
       ['Email', user.email],
       ['Last Debt Mail', moment(user.last_mail).format(DATE_FORMAT)],
       [

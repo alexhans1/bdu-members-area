@@ -4,25 +4,85 @@ import { connect } from 'react-redux';
 import moment from 'moment/moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Currency from 'react-currency-formatter';
-import Spinner from '../../Spinner/Spinner';
 import { DATE_TIME_FORMAT, registrationRoles } from '../../../constants/applicationConstants';
 import MemberRowCollapse from './MemberRowCollapse';
+import { SET_EXPANDED_USER_ID } from '../../../constants/action-types';
 
 const mapStateToProps = ({ user }) => ({
   users: user.users,
+  expandedUserId: user.expandedUserId,
 });
 
-class MembersList extends Component {
-  render() {
-    const { users, history } = this.props;
+const mapDispatchToProps = dispatch => {
+  return {
+    setExpandedUserId: userId => dispatch({ type: SET_EXPANDED_USER_ID, payload: { userId } }),
+  };
+};
 
-    if (!users.length) {
-      return (
-        <div className="mainContent d-flex justify-content-center align-items-center">
-          <Spinner xl />
-        </div>
-      );
+const membersTableColumns = [
+  {
+    dataField: 'id',
+    text: 'ID',
+    hidden: true,
+  },
+  {
+    dataField: 'vorname',
+    isDummyField: true,
+    text: 'Name',
+    sort: true,
+    formatter: (cellContent, row) => `${row.vorname} ${row.name}`,
+  },
+  {
+    dataField: 'totalDebt',
+    text: 'Debt',
+    sort: true,
+    formatter: cellContent => (
+      <span className={cellContent > 0 ? 'text-danger' : null}>
+        <Currency quantity={cellContent || 0} currency="EUR" />
+      </span>
+    ),
+  },
+  {
+    dataField: 'totalTournaments',
+    text: 'Tournaments',
+    classes: 'd-none d-lg-table-cell',
+    headerClasses: 'd-none d-lg-table-cell',
+    sort: true,
+  },
+  {
+    dataField: 'judgingRatio',
+    text: 'Judging Ratio',
+    sort: true,
+  },
+  {
+    dataField: 'totalPoints',
+    text: 'Points',
+    sort: true,
+    classes: 'd-none d-lg-table-cell',
+    headerClasses: 'd-none d-lg-table-cell',
+  },
+  {
+    dataField: 'last_login',
+    text: 'Last Login',
+    classes: 'd-none d-lg-table-cell',
+    headerClasses: 'd-none d-lg-table-cell',
+    sort: true,
+    formatter: cellContent => moment(cellContent).format(DATE_TIME_FORMAT),
+  },
+];
+
+class MembersList extends Component {
+  componentDidUpdate() {
+    const { expandedUserId } = this.props;
+    if (expandedUserId) {
+      const el = document.getElementById(expandedUserId).parentElement.parentElement
+        .previousSibling;
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  render() {
+    const { users, expandedUserId, setExpandedUserId, history } = this.props;
 
     const enrichedUserList = users.map(user => {
       const totalPoints = user.tournaments.reduce((total, tournament) => {
@@ -48,61 +108,10 @@ class MembersList extends Component {
       return user;
     });
 
-    const membersTableColumns = [
-      {
-        dataField: 'id',
-        text: 'ID',
-        hidden: true,
-      },
-      {
-        dataField: 'vorname',
-        isDummyField: true,
-        text: 'Name',
-        sort: true,
-        formatter: (cellContent, row) => `${row.vorname} ${row.name}`,
-      },
-      {
-        dataField: 'totalDebt',
-        text: 'Debt',
-        sort: true,
-        formatter: cellContent => (
-          <span className={cellContent > 0 ? 'text-danger' : null}>
-            <Currency quantity={cellContent || 0} currency="EUR" />
-          </span>
-        ),
-      },
-      {
-        dataField: 'totalTournaments',
-        text: 'Tournaments',
-        classes: 'd-none d-lg-table-cell',
-        headerClasses: 'd-none d-lg-table-cell',
-        sort: true,
-      },
-      {
-        dataField: 'judgingRatio',
-        text: 'Judging Ratio',
-        sort: true,
-      },
-      {
-        dataField: 'totalPoints',
-        text: 'Points',
-        sort: true,
-        classes: 'd-none d-lg-table-cell',
-        headerClasses: 'd-none d-lg-table-cell',
-      },
-      {
-        dataField: 'last_login',
-        text: 'Last Login',
-        classes: 'd-none d-lg-table-cell',
-        headerClasses: 'd-none d-lg-table-cell',
-        sort: true,
-        formatter: cellContent => moment(cellContent).format(DATE_TIME_FORMAT),
-      },
-    ];
-
     const expandRow = {
-      renderer: row => <MemberRowCollapse user={row} history={history} />,
+      renderer: row => <MemberRowCollapse key={row.id} user={row} history={history} />,
       onlyOneExpanding: true,
+      expanded: [expandedUserId],
     };
 
     return (
@@ -121,13 +130,7 @@ class MembersList extends Component {
             },
           ]}
           rowEvents={{
-            onClick: (e, row) => {
-              setTimeout(() => {
-                document
-                  .getElementById(row.id)
-                  .scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 1);
-            },
+            onClick: (e, row) => setExpandedUserId(row.id),
           }}
           rowClasses="cursorPointer"
           expandRow={expandRow}
@@ -138,4 +141,7 @@ class MembersList extends Component {
   }
 }
 
-export default connect(mapStateToProps)(MembersList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MembersList);

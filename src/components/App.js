@@ -12,7 +12,6 @@ import Signup from './Pages/profilePages/Signup/Signup';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/profilePages/Profile/Profile';
 import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
-import Tournament from './Pages/tournamentPages/Tournament/Tournament';
 import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
 import EditTournament from './Pages/tournamentPages/EditTournament/EditTournament';
 import MemberList from './Pages/MemberList/MemberList';
@@ -90,13 +89,12 @@ class App extends Component {
             <Route path="/bug" component={BugList} />
 
             <PrivateRoute exact path="/tournament" component={TournamentList} />
-            <PrivateRoute path="/tournament/:id" component={Tournament} />
+            <AdminRoute path="/tournament/:id" component={EditTournament} />
 
             <PrivateRoute path="/registration/:id" component={Registration} />
             <PrivateRoute path="/dashboard" component={Dashboard} />
 
             <AdminRoute path="/createTournament" component={CreateTournament} />
-            <AdminRoute path="/editTournament/:id" component={EditTournament} />
 
             <AdminRoute path="/member" component={MemberList} />
 

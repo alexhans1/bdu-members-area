@@ -7,25 +7,23 @@ import { logout } from '../../actions/AuthActions';
 import logo from './bdu_white_logo.png';
 import profileImageDefault from '../../images/bdu_quad.png';
 
+const mapStateToProps = ({ user }) => ({
+  isAuthenticated: user.isAuthenticated,
+  authenticatedUser: user.authenticatedUserId
+    ? user.users.find(({ id }) => user.authenticatedUserId === id)
+    : {},
+  isAdmin: user.authenticatedUserId
+    ? user.users.find(({ id }) => user.authenticatedUserId === id).position === 1
+    : false,
+});
+
 const mapDispatchToProps = { logout };
 
 class Navbar extends Component {
-  constructor() {
-    super();
-
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-
-  handleLogout() {
-    this.props.logout();
-  }
-
   render() {
-    const { isAuthenticated, authenticatedUser } = this.props;
-    let isAdmin = false;
+    const { isAuthenticated, authenticatedUser, isAdmin, logout: handleLogout } = this.props;
     let profileImage = null;
     if (isAuthenticated) {
-      isAdmin = authenticatedUser.position === 1;
       profileImage = authenticatedUser.image
         ? `http://root.debating.de/members_area/userpics/${authenticatedUser.image}`
         : profileImageDefault;
@@ -48,11 +46,6 @@ class Navbar extends Component {
       <ul className="navbar-nav d-flex w-100">
         <li className="nav-item">
           <Link to="/" className="nav-link">
-            Profile
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/tournament" className="nav-link">
             Tournaments
           </Link>
         </li>
@@ -105,7 +98,7 @@ class Navbar extends Component {
               className="dropdown-item text-white"
               role="button"
               tabIndex="0"
-              onClick={this.handleLogout}
+              onClick={handleLogout}
             >
               <i className="fas fa-sign-out-alt" /> Logout
             </a>
@@ -140,6 +133,6 @@ class Navbar extends Component {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(Navbar);

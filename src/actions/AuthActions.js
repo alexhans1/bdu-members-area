@@ -2,37 +2,44 @@ import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import {
   ADD_TO_USER_ARRAY,
   CHECK_AUTHENTICATION,
-  LOGIN,
   LOGOUT,
   SET_TOURNAMENT_LIST,
   SET_USER_LIST,
-  SIGNUP,
 } from '../constants/action-types';
 import triggerAlert from './actionHelpers';
 
 export const getAppData = () => async dispatch => {
-  const responses = await Promise.all([
-    fetch(`${BASE_URL}/currentUser`, {
-      method: 'GET',
-      credentials: 'include',
-    }),
-    fetch(`${BASE_URL}/user`, {
-      method: 'GET',
-      credentials: 'include',
-    }),
-    fetch(`${BASE_URL}/tournament`, {
-      method: 'GET',
-      credentials: 'include',
-    }),
-  ]);
-  if (responses.reduce((success, { status }) => success || status === 200, true)) {
-    const [currentUser, users, tournaments] = await Promise.all(
-      responses.map(response => response.json()),
-    );
-    dispatch({
-      type: SET_USER_LIST,
-      payload: { users },
-    });
+  const response = await fetch(`${BASE_URL}/currentUser`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  if (response.status === 200) {
+    const currentUser = await response.json();
+    const requests = [
+      fetch(`${BASE_URL}/tournament`, {
+        method: 'GET',
+        credentials: 'include',
+      }),
+    ];
+    if (currentUser.position === 1)
+      requests.push(
+        fetch(`${BASE_URL}/user`, {
+          method: 'GET',
+          credentials: 'include',
+        }),
+      );
+    const responses = await Promise.all(requests);
+    const [tournaments, users] = await Promise.all(responses.map(res => res.json()));
+    if (users)
+      dispatch({
+        type: SET_USER_LIST,
+        payload: { users },
+      });
+    else
+      dispatch({
+        type: ADD_TO_USER_ARRAY,
+        payload: { user: currentUser },
+      });
     dispatch({
       type: SET_TOURNAMENT_LIST,
       payload: { tournaments },
@@ -57,8 +64,8 @@ export const getAppData = () => async dispatch => {
   }
 };
 
-export const login = (email, password) => dispatch =>
-  fetch(`${BASE_URL}/login`, {
+export const login = (email, password) => async dispatch => {
+  const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -66,26 +73,13 @@ export const login = (email, password) => dispatch =>
       'Access-Control-Request-Method': 'POST',
     },
     body: JSON.stringify({ email, password }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        dispatch({
-          type: LOGIN,
-          payload: {
-            isAuthenticated: true,
-            authenticatedUser: body,
-          },
-        });
-        dispatch({
-          type: ADD_TO_USER_ARRAY,
-          payload: {
-            user: body,
-          },
-        });
-      } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
-      else triggerAlert('Error during login.', alertTypes.WARNING);
-    });
   });
+  const body = response.json();
+  if (response.status === 200) {
+    dispatch(getAppData());
+  } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
+  else triggerAlert('Error during login.', alertTypes.WARNING);
+};
 
 export const signup = ({
   email,
@@ -95,8 +89,8 @@ export const signup = ({
   gender,
   food,
   signupPassword,
-}) => dispatch =>
-  fetch(`${BASE_URL}/signup`, {
+}) => async dispatch => {
+  const response = await fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -112,26 +106,13 @@ export const signup = ({
       food,
       signup_password: signupPassword,
     }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        dispatch({
-          type: SIGNUP,
-          payload: {
-            isAuthenticated: true,
-            authenticatedUser: body,
-          },
-        });
-        dispatch({
-          type: ADD_TO_USER_ARRAY,
-          payload: {
-            user: body,
-          },
-        });
-      } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
-      else triggerAlert('Error during signup.', alertTypes.WARNING);
-    });
   });
+  const body = response.json();
+  if (response.status === 200) {
+    dispatch(getAppData());
+  } else if (body.message) triggerAlert(body.message, alertTypes.WARNING);
+  else triggerAlert('Error during signup.', alertTypes.WARNING);
+};
 
 export const logout = () => dispatch =>
   fetch(`${BASE_URL}/logout`, {
