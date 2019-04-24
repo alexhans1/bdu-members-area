@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './FlexTable.css';
+import './FlexTable.scss';
 
 class FlexTable extends Component {
   handleToggleCollapse(rowIndex) {

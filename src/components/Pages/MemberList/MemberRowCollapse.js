@@ -66,8 +66,9 @@ class MemberRowCollapse extends Component {
               <button
                 type="button"
                 className="btn btn-outline-light btn-sm ml-2 px-2"
-                onClick={() => {
+                onClick={(e) => {
                   console.log(123);
+                  e.stopPropagation();
                 }}
               >
                 <i className="fas fa-euro-sign" />
@@ -119,7 +120,6 @@ class MemberRowCollapse extends Component {
           {user.tournaments.length ? (
             <BootstrapTable
               bootstrap4
-              hover
               keyField="id"
               data={user.tournaments}
               columns={registrationTableColumns}

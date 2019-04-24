@@ -5,45 +5,45 @@ import { connect } from 'react-redux';
 import Currency from 'react-currency-formatter';
 import FlexTable from '../../FlexTable/FlexTable';
 import { attendanceStatuses } from '../../../constants/applicationConstants';
-import { getUserByRegistrationId } from '../../../actions/UserActions';
+import './Registration.scss';
 
-const mapStateToProps = ({ user }) => ({
-  users: user.users,
-});
-
-const mapDispatchToProps = { getUserByRegistrationId };
+const mapStateToProps = (
+  { user },
+  {
+    match: {
+      params: { id: registrationId },
+    },
+  },
+) => {
+  const regUser = user.users.find(({ tournaments }) =>
+    tournaments.find(({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10)),
+  );
+  return {
+    user: regUser,
+    tournament: regUser
+      ? regUser.tournaments.find(({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10))
+      : null,
+  };
+};
 
 class Registration extends Component {
-  componentWillMount() {
-    const { users } = this.props;
-    const registrationId = parseInt(this.props.match.params.id, 10);
-    const user = users.find(({ tournaments }) =>
-      tournaments.find(({ _pivot_id }) => _pivot_id === registrationId),
-    );
-    if (!user) {
-      this.props.getUserByRegistrationId(registrationId);
-    }
-  }
-
   render() {
-    const { users } = this.props;
-    const registrationId = parseInt(this.props.match.params.id, 10);
-    const notFound = (
-      <div className="container">
-        <h2 className="py-4">
-          Registration not found. You might not have permission to see this registration.
-        </h2>
-      </div>
-    );
-    if (!users || !users.length) return notFound;
-    const user = users.find(({ tournaments }) =>
-      tournaments.find(({ _pivot_id }) => _pivot_id === registrationId),
-    );
-    if (!user) return notFound;
-    const tournament = user.tournaments.find(
-      tournamentObj => tournamentObj._pivot_id === parseInt(this.props.match.params.id, 10),
-    );
-    if (!tournament) return notFound;
+    const {
+      user,
+      tournament,
+      history,
+      match: {
+        params: { id: regId },
+      },
+    } = this.props;
+    if (!user || !tournament)
+      return (
+        <div className="container">
+          <h2 className="py-4">
+            Registration not found. You might not have permission to see this registration.
+          </h2>
+        </div>
+      );
 
     const attendanceStatusObj = attendanceStatuses.find(
       statusObj => statusObj.id === tournament._pivot_attended,
@@ -95,11 +95,18 @@ class Registration extends Component {
     ].filter(row => row);
 
     return (
-      <div className="container">
+      <div id="registration" className="container">
+        <i
+          role="button"
+          className="mt-1 py-4 cursorPointer fas fa-arrow-left"
+          onClick={() => {
+            history.goBack();
+          }}
+        />
         {user && user.tournaments ? (
           <div className="row">
             <div className="col-12 col-md-6 col-lg-5 col-xl-4 offset-md-1">
-              <h1 className="py-4">Registration {this.props.match.params.id}</h1>
+              <h1 className="py-4">Registration {regId}</h1>
               <FlexTable
                 key={`registrationTable_${tournament._pivot_id}`}
                 tableName={`registrationTable_${tournament._pivot_id}`}
@@ -113,7 +120,4 @@ class Registration extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Registration);
+export default connect(mapStateToProps)(Registration);

@@ -5,7 +5,6 @@ import { confirmAlert } from 'react-confirm-alert';
 import Currency from 'react-currency-formatter';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { attendanceStatuses, DATE_FORMAT } from '../../../constants/applicationConstants';
 import { deleteRegistration } from '../../../actions/RegistrationActions';
 
@@ -15,6 +14,7 @@ class TournamentList extends Component {
   constructor() {
     super();
 
+    this.actionRefs = React.createRef();
     this.deleteRegistration = this.deleteRegistration.bind(this);
   }
 
@@ -105,29 +105,26 @@ class TournamentList extends Component {
       },
       {
         dataField: 'actions',
+        text: '',
         isDummyField: true,
         formatter: (cellContent, row) => (
-          <div className="d-flex flex-wrap justify-content-center align-items-center">
-            <Link to="/edit" className="m-1">
-              <i className="far fa-edit text-info" />
-            </Link>
+          <div
+            ref={this.actionRefs}
+            className="d-flex flex-wrap justify-content-center align-items-center"
+          >
+            <i className="far fa-edit text-info" />
             <i
               className="far fa-trash-alt text-danger m-1 cursorPointer"
               role="button"
-              onClick={() => {
+              onClick={e => {
                 this.deleteRegistration(row._pivot_id);
+                e.stopPropagation();
               }}
             />
           </div>
         ),
       },
     ];
-
-    const forwardToRegistration = {
-      onClick: (e, { _pivot_id }) => {
-        this.props.history.push(`registration/${_pivot_id}`);
-      },
-    };
 
     return (
       <BootstrapTable
@@ -142,7 +139,13 @@ class TournamentList extends Component {
             order: 'desc',
           },
         ]}
-        rowEvents={forwardToRegistration}
+        rowEvents={{
+          onClick: (e, { _pivot_id }) => {
+            console.log('e:', e);
+            console.log('this.actionRefs:', this.actionRefs);
+            this.props.history.push(`registration/${_pivot_id}`);
+          },
+        }}
         rowClasses="cursorPointer"
         bordered={false}
       />

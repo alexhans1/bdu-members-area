@@ -1,0 +1,28 @@
+@import './custom-variables';
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/bootstrap-grid';
+@import '~bootstrap/scss/nav';
+@import '~bootstrap/scss/navbar';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/dropdown';
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/transitions';
+@import '~bootstrap/scss/root';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/reboot';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}

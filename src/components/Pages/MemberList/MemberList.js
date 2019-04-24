@@ -72,15 +72,6 @@ const membersTableColumns = [
 ];
 
 class MembersList extends Component {
-  componentDidUpdate() {
-    const { expandedUserId } = this.props;
-    if (expandedUserId) {
-      const el = document.getElementById(expandedUserId).parentElement.parentElement
-        .previousSibling;
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
   render() {
     const { users, expandedUserId, setExpandedUserId, history } = this.props;
 
@@ -112,6 +103,16 @@ class MembersList extends Component {
       renderer: row => <MemberRowCollapse key={row.id} user={row} history={history} />,
       onlyOneExpanding: true,
       expanded: [expandedUserId],
+      onExpand: (row, isExpand, rowIndex, e) => {
+        setExpandedUserId(isExpand ? row.id : null);
+        if (isExpand) {
+          const el = e.target;
+          if (!el) return;
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 1);
+        }
+      },
     };
 
     return (
@@ -129,9 +130,6 @@ class MembersList extends Component {
               order: 'desc',
             },
           ]}
-          rowEvents={{
-            onClick: (e, row) => setExpandedUserId(row.id),
-          }}
           rowClasses="cursorPointer"
           expandRow={expandRow}
           bordered={false}

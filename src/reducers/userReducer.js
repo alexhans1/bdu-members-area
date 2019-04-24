@@ -78,8 +78,7 @@ const userReducer = (state = initialState, action) => {
     case SET_EXPANDED_USER_ID:
       return {
         ...state,
-        expandedUserId:
-          action.payload.userId === state.expandedUserId ? null : action.payload.userId,
+        expandedUserId: action.payload.userId,
       };
     default:
       return state;

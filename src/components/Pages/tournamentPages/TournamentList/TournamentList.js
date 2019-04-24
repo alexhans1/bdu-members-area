@@ -80,15 +80,6 @@ const tableColumns = [
 ];
 
 class TournamentList extends Component {
-  componentDidUpdate() {
-    const { expandedTournamentId } = this.props;
-    if (expandedTournamentId) {
-      const el = document.getElementById(expandedTournamentId).parentElement.parentElement
-        .previousSibling;
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
   render() {
     const {
       tournaments,
@@ -101,6 +92,16 @@ class TournamentList extends Component {
     const expandRow = {
       renderer: row => <TournamentRowCollapse tournament={row} history={history} />,
       onlyOneExpanding: true,
+      onExpand: (row, isExpand, rowIndex, e) => {
+        setExpandedTournamentId(isExpand ? row.id : null);
+        if (isExpand) {
+          const el = e.target;
+          if (!el) return;
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 1);
+        }
+      },
       expanded: [expandedTournamentId],
     };
 
@@ -119,9 +120,6 @@ class TournamentList extends Component {
               order: 'desc',
             },
           ]}
-          rowEvents={{
-            onClick: (e, row) => setExpandedTournamentId(row.id),
-          }}
           rowClasses="cursorPointer"
           expandRow={expandRow}
           bordered={false}
@@ -129,8 +127,8 @@ class TournamentList extends Component {
         <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
           <button type="button" className="btn btn-outline-info" onClick={handleToggle}>
             {tournaments.find(({ enddate }) => moment(enddate).isBefore(moment()))
-              ? 'Hide'
-              : 'Show'}{' '}
+              ? 'Hide '
+              : 'Show '}
             previous tournaments
           </button>
         </div>

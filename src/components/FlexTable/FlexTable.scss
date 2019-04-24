@@ -1,0 +1,125 @@
+$color_1: #f3f3f3;
+$background_color_1: #eaeaea;
+$background_color_2: var(--gray-dark);
+$background_color_3: #3b4248;
+$border_color_1: #676869;
+
+.flex-table {
+  width: 100%;
+  overflow-x: auto;
+}
+.flex-table-row {
+  display: flex;
+  flex-flow: row wrap;
+  flex-grow: 0;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #eceeef;
+}
+.flex-table-cell {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 150px;
+  flex-grow: 1;
+  overflow: auto;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+}
+.flex-table-striped {
+  &:nth-child(even) {
+    background-color: $background_color_1;
+  }
+}
+.flex-table-hover {
+  &:hover {
+    background-color: $background_color_3;
+  }
+}
+.flex-table-columnHead {
+  > .flex-table-row {
+    > .flex-table-cell {
+      &:first-child {
+        font-weight: bold;
+      }
+    }
+  }
+}
+.flex-table-head {
+  > .flex-table-cell {
+    font-weight: bold;
+  }
+}
+.collapse.show {
+  background-color: $background_color_2 !important;
+  color: $color_1 !important;
+  .flex-table-striped {
+    &:nth-child(even) {
+      background-color: $background_color_3;
+    }
+  }
+  .flex-table-row {
+    border-color: $border_color_1;
+  }
+}
+.collapsing {
+  //background-color: $background_color_2 !important;
+  color: $color_1 !important;
+  .flex-table-striped {
+    &:nth-child(even) {
+      background-color: $background_color_3;
+    }
+  }
+  .flex-table-row {
+    border-color: $border_color_1;
+  }
+}
+
+.react-bootstrap-table .row-expand-slide-appear-active,
+.react-bootstrap-table .row-expand-slide-exit-active {
+  transition: none;
+}
+.row-expansion-style {
+  color: $color_1;
+  background-color: $background_color_2;
+  .table tr,
+  th {
+    color: $color_1;
+    &:hover {
+      color: $color_1;
+      background-color: unset;
+    }
+  }
+  .table tr {
+    &:nth-child(even) {
+      background-color: $background_color_3;
+    }
+  }
+  .flex-table-striped {
+    &:nth-child(even) {
+      background-color: $background_color_3;
+    }
+  }
+  .table {
+    background-color: $background_color_2;
+  }
+}
+.flex-table-collapse-close {
+  cursor: pointer;
+  position: absolute;
+  font-size: 2rem;
+  top: 12px;
+  right: 15px;
+}
+.collapseContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+@media (min-width: 768px) {
+  .collapseContainer {
+    flex-direction: row;
+    padding: 1.5rem;
+  }
+}
