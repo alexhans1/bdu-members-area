@@ -138,25 +138,29 @@ class Registration extends Component {
       {
         header: 'Costs',
         field:
-          tournament._pivot_price_owed || tournament._pivot_price_paid ? (
+          tournament._pivot_attended === 1 ? (
             <Currency quantity={parseFloat(tournament._pivot_price_owed, 10) || 0} currency="EUR" />
           ) : null,
+        fieldValue: tournament._pivot_price_owed || 0,
         editType: Type.TEXT,
         fieldName: 'price_owed',
+        adminOnlyEdit: true,
       },
       {
         header: 'Price paid',
         field:
-          tournament._pivot_price_owed || tournament._pivot_price_paid ? (
+          tournament._pivot_attended === 1 ? (
             <Currency quantity={parseFloat(tournament._pivot_price_paid, 10) || 0} currency="EUR" />
           ) : null,
+        fieldValue: tournament._pivot_price_paid || 0,
         editType: Type.TEXT,
         fieldName: 'price_paid',
+        adminOnlyEdit: true,
       },
       {
         header: 'Debt',
         field:
-          tournament._pivot_price_owed || tournament._pivot_price_paid ? (
+          tournament._pivot_attended === 1 ? (
             <span
               className={
                 tournament._pivot_price_owed - tournament._pivot_price_paid > 0
@@ -180,6 +184,7 @@ class Registration extends Component {
         fieldValue: tournament._pivot_attended,
         fieldName: 'attended',
         options: attendanceStatuses,
+        adminOnlyEdit: true,
       },
       {
         header: 'Success',
@@ -233,7 +238,25 @@ class Registration extends Component {
           ...userList.map(({ vorname, name, id }) => ({ id, label: `${vorname} ${name}` })),
         ],
       },
-    ].filter(({ field }) => field !== null);
+      {
+        header: 'Transaction from',
+        field: tournament._pivot_attended === 1 ? tournament._pivot_transaction_from || '' : null,
+        fieldName: 'transaction_from',
+        fieldValue: tournament.transaction_from,
+        editType: Type.TEXT,
+        adminOnly: true,
+        adminOnlyEdit: true,
+      },
+      {
+        header: 'Transaction date',
+        field: tournament._pivot_attended === 1 ? tournament._pivot_transaction_date || '' : null,
+        fieldName: 'transaction_date',
+        fieldValue: tournament.transaction_date,
+        editType: Type.TEXT,
+        adminOnly: true,
+        adminOnlyEdit: true,
+      },
+    ].filter(({ field, adminOnly }) => field !== null && (!adminOnly || isAdmin));
 
     return (
       <div id="registration" className="container">
@@ -289,12 +312,17 @@ class Registration extends Component {
                   mode: 'click',
                   blurToSave: true,
                   nonEditableRows: () =>
-                    registrationTableRows.reduce((nonEditRowIds, { editType }, i) => {
-                      // check if the current user can edit this registration at all
-                      if (!isAdmin && authenticatedUserId !== user.id) return [...nonEditRowIds, i];
-                      if (!editType) nonEditRowIds.push(i);
-                      return nonEditRowIds;
-                    }, []),
+                    registrationTableRows.reduce(
+                      (nonEditRowIds, { adminOnlyEdit, editType }, i) => {
+                        // check if the current user can edit this registration at all
+                        if (!isAdmin && authenticatedUserId !== user.id)
+                          return [...nonEditRowIds, i];
+                        if (!isAdmin && adminOnlyEdit) return [...nonEditRowIds, i];
+                        if (!editType) return [...nonEditRowIds, i];
+                        return nonEditRowIds;
+                      },
+                      [],
+                    ),
                 })}
                 bordered={false}
               />
