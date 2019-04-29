@@ -4,6 +4,7 @@ import {
   DELETE_REGISTRATION,
   DELETE_TOURNAMENT,
   GET_TOURNAMENT,
+  PATCH_REGISTRATION,
   SET_EXPANDED_TOURNAMENT_ID,
   SET_TOURNAMENT_LIST,
   TOGGLE_SHOW_PREV_TOURNAMENTS,
@@ -74,6 +75,23 @@ const tournamentReducer = (state = initialState, action) => {
             users: tournament.users.filter(
               ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
             ),
+          };
+        }),
+      };
+    case PATCH_REGISTRATION:
+      return {
+        ...state,
+        tournamentList: state.tournamentList.map(tournament => {
+          return {
+            ...tournament,
+            users: tournament.users.map(user => {
+              if (user._pivot_id && user._pivot_id === action.payload.registrationId)
+                return {
+                  ...user,
+                  ...action.payload.registration,
+                };
+              return user;
+            }),
           };
         }),
       };

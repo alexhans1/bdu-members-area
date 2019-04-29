@@ -60,12 +60,20 @@ const userReducer = (state = initialState, action) => {
     case PATCH_REGISTRATION:
       return {
         ...state,
-        authenticatedUser: {
-          ...state.authenticatedUser,
-          tournaments: state.authenticatedUser.tournaments.filter(
-            ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
-          ),
-        },
+        users: state.users.map(user => {
+          if (!user.tournaments) return user;
+          return {
+            ...user,
+            tournaments: user.tournaments.map(tournament => {
+              if (tournament._pivot_id && tournament._pivot_id === action.payload.registrationId)
+                return {
+                  ...tournament,
+                  ...action.payload.registration,
+                };
+              return tournament;
+            }),
+          };
+        }),
       };
     case ADD_TO_USER_ARRAY:
       const userAlreadyExists =

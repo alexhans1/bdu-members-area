@@ -15,31 +15,25 @@ export const getAppData = () => async dispatch => {
   });
   if (response.status === 200) {
     const currentUser = await response.json();
-    const requests = [
+    const responses = await Promise.all([
       fetch(`${BASE_URL}/tournament`, {
         method: 'GET',
         credentials: 'include',
       }),
-    ];
-    if (currentUser.position === 1)
-      requests.push(
-        fetch(`${BASE_URL}/user`, {
-          method: 'GET',
-          credentials: 'include',
-        }),
-      );
-    const responses = await Promise.all(requests);
+      fetch(`${BASE_URL}/user`, {
+        method: 'GET',
+        credentials: 'include',
+      }),
+    ]);
     const [tournaments, users] = await Promise.all(responses.map(res => res.json()));
-    if (users)
-      dispatch({
-        type: SET_USER_LIST,
-        payload: { users },
-      });
-    else
-      dispatch({
-        type: ADD_TO_USER_ARRAY,
-        payload: { user: currentUser },
-      });
+    dispatch({
+      type: SET_USER_LIST,
+      payload: { users },
+    });
+    dispatch({
+      type: ADD_TO_USER_ARRAY,
+      payload: { user: currentUser },
+    });
     dispatch({
       type: SET_TOURNAMENT_LIST,
       payload: { tournaments },

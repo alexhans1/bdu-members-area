@@ -1,9 +1,19 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
 #registration {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 1fr;
 
+  @include media-breakpoint-up(md) {
+    grid-template-columns: max-content 1fr;
+  }
+
+  thead {
+    display: none;
+  }
   i {
     font-size: 2rem;
   }
 }
-

@@ -29,6 +29,69 @@ export const attendanceStatuses = [
   },
 ];
 
+export const successTypes = [
+  {
+    id: 'none',
+    label: 'none',
+  },
+  {
+    id: 'judge',
+    label: 'judge',
+  },
+  {
+    id: 'break',
+    label: 'break',
+  },
+  {
+    id: 'final',
+    label: 'final',
+  },
+  {
+    id: 'win',
+    label: 'win',
+  },
+  {
+    id: 'judge2',
+    label: 'judge for different institution',
+  },
+  {
+    id: 'break2',
+    label: 'break for different institution',
+  },
+  {
+    id: 'final2',
+    label: 'final for different institution',
+  },
+  {
+    id: 'win2',
+    label: 'win for different institution',
+  },
+  {
+    id: 'breakESL',
+    label: 'break ESL',
+  },
+  {
+    id: 'finalESL',
+    label: 'final ESL',
+  },
+  {
+    id: 'winESL',
+    label: 'win ESL',
+  },
+  {
+    id: 'break2ESL',
+    label: 'break ESL for different institution',
+  },
+  {
+    id: 'final2ESL',
+    label: 'final ESL for different institution',
+  },
+  {
+    id: 'win2ESL',
+    label: 'win ESL for different institution',
+  },
+];
+
 export const registrationRoles = {
   SPEAKER: 'speaker',
   JUDGE: 'judge',

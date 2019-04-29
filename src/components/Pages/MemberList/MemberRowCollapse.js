@@ -66,8 +66,7 @@ class MemberRowCollapse extends Component {
               <button
                 type="button"
                 className="btn btn-outline-light btn-sm ml-2 px-2"
-                onClick={(e) => {
-                  console.log(123);
+                onClick={e => {
                   e.stopPropagation();
                 }}
               >

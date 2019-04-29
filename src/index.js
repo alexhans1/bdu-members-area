@@ -9,8 +9,8 @@ import './css/scrollbar.scss';
 import store from './store';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/js/src/dropdown'
-import 'bootstrap/js/src/modal'
+import 'bootstrap/js/src/dropdown';
+import 'bootstrap/js/src/modal';
 
 ReactDOM.render(
   <div>

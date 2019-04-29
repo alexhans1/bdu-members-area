@@ -1,6 +1,6 @@
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
-import { DELETE_REGISTRATION } from '../constants/action-types';
+import { DELETE_REGISTRATION, PATCH_REGISTRATION } from '../constants/action-types';
 import { getAppData } from './AuthActions';
 
 export const register = ({
@@ -59,35 +59,31 @@ export const deleteRegistration = registrationId => async dispatch => {
   } else triggerAlert(body.message, alertTypes.WARNING);
 };
 
-export const patchRegistration = (registrationId, patchedRegistration) => dispatch =>
-  fetch(`${BASE_URL}/registration/${registrationId}`, {
-    method: 'PATCH',
+export const patchRegistration = (registrationId, patchedRegistration) => async dispatch => {
+  const response = await fetch(`${BASE_URL}/registration/${registrationId}`, {
+    method: 'PUT',
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Request-Method': 'POST',
     },
-    body: JSON.stringify({
-      role: patchedRegistration.role || null,
-      is_independent: patchedRegistration.is_independent || null,
-      teamname: patchedRegistration.teamname || null,
-      comment: patchedRegistration.comment || null,
-      funding: patchedRegistration.funding || null,
-      price_paid: patchedRegistration.price_paid || null,
-      price_owed: patchedRegistration.price_owed || null,
-      transaction_date: patchedRegistration.transaction_date || null,
-      transaction_from: patchedRegistration.transaction_from || null,
-    }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        triggerAlert(body.message, alertTypes.SUCCESS);
-        dispatch({
-          type: DELETE_REGISTRATION,
-          payload: {
-            registrationId,
-          },
-        });
-      } else triggerAlert(body.message, alertTypes.WARNING);
-    });
+    body: JSON.stringify(patchedRegistration),
   });
+  const body = await response.json();
+  if (response.status === 200) {
+    triggerAlert(body.message, alertTypes.SUCCESS);
+    dispatch({
+      type: PATCH_REGISTRATION,
+      payload: {
+        registrationId,
+        registration: Object.keys(body.registration).reduce(
+          (newFields, key) => ({
+            ...newFields,
+            [`_pivot_${key}`]: body.registration[key],
+          }),
+          {},
+        ),
+      },
+    });
+  } else triggerAlert(body.message, alertTypes.WARNING);
+};
