@@ -194,14 +194,44 @@ class Registration extends Component {
         field: tournament._pivot_attended === 1 ? tournament._pivot_points : null,
       },
       {
-        header: tournament._pivot_partner2 ? 'Partner 1' : 'Partner',
-        field: partner1 ? `${partner1.vorname} ${partner1.name}` : null,
+        header: tournament.format.toLowerCase() === 'opd' ? 'Partner 1' : 'Partner',
+        field: partner1
+          ? `${partner1.vorname} ${partner1.name}`
+          : successTypes
+              .reduce((acc, { canHavePartner, id }) => (canHavePartner ? [...acc, id] : acc), [])
+              .includes(tournament._pivot_success)
+          ? ''
+          : null,
+        fieldName: 'partner1',
         fieldValue: tournament._pivot_partner1,
+        editType: Type.SELECT,
+        options: [
+          { id: null, label: '' },
+          ...userList.map(({ vorname, name, id }) => ({ id, label: `${vorname} ${name}` })),
+        ],
       },
       {
         header: 'Partner 2',
-        field: partner2 ? `${partner2.vorname} ${partner2.name}` : null,
+        field:
+          tournament.format.toLowerCase() === 'opd'
+            ? partner2
+              ? `${partner2.vorname} ${partner2.name}`
+              : successTypes
+                  .reduce(
+                    (acc, { canHavePartner, id }) => (canHavePartner ? [...acc, id] : acc),
+                    [],
+                  )
+                  .includes(tournament._pivot_success)
+              ? ''
+              : null
+            : null,
+        fieldName: 'partner2',
         fieldValue: tournament._pivot_partner2,
+        editType: Type.SELECT,
+        options: [
+          { id: null, bel: '' },
+          ...userList.map(({ vorname, name, id }) => ({ id, label: `${vorname} ${name}` })),
+        ],
       },
     ].filter(({ field }) => field !== null);
 

@@ -18,7 +18,7 @@ class FieldEditor extends Component {
     changeTimeOut = setTimeout(
       () => {
         handleChange(
-          ['attended'].includes(fieldName)
+          ['attended', 'partner1', 'partner2'].includes(fieldName)
             ? parseInt(event.target.value, 10)
             : type === Type.CHECKBOX
             ? event.target.checked
