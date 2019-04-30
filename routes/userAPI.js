@@ -35,47 +35,51 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     }
   });
 
-  console.info('> > adding get /user?filterByRegistrationId route...');
+  console.info('> > adding get /user route...');
   router.route('/user').get((req, res) => {
-    if (!isAdmin(req)) return handleUnauthorized(res, 'User is not authorized to get all users.');
-    const registrationId = parseInt(req.query.filterByRegistrationId, 10) || null;
-    if (registrationId) {
-      Models.Registration.forge({ id: registrationId })
-        .fetch()
-        .then(registration => {
-          if (registration.toJSON()) {
-            Models.User.forge({ id: registration.toJSON().user_id })
-              .fetch({ withRelated: ['tournaments'] })
-              .then(user => res.status(200).send(user.toJSON()))
-              .catch(err => {
-                console.error(
-                  `Error while getting user by registration id. Error message:\n${err}`,
-                );
-                res.status(500).json({ message: 'Error while getting user by registration id.' });
-              });
-          }
-        })
-        .catch(err => {
-          console.error(`Error while getting user by registration id. Error message:\n${err}`);
-          res.status(500).json({ message: 'Error while getting user by registration id.' });
-        });
-    } else {
-      Models.Users.forge()
-        .fetch({ withRelated: ['tournaments'] })
-        .then(collection => {
-          res.status(200).send(collection.toJSON());
-        })
-        .catch(err => {
-          console.error(`Error while getting all users. Error message:\n${err}`);
-          res.status(500).json({ message: 'Error while getting all users.' });
-        });
-    }
+    Models.Users.query('where', 'id', '!=', req.user.id)
+      .fetch({ withRelated: ['tournaments'] })
+      .then(collection => {
+        const users = collection
+          .toJSON()
+          .map(
+            ({
+              password,
+              resetPasswordToken,
+              resetPasswordExpires,
+              created_at,
+              updated_at,
+              ...user
+            }) => user,
+          );
+        if (isAdmin(req)) res.status(200).send(users);
+        else {
+          const limitedUsers = users.map(
+            ({
+              email,
+              food,
+              last_login,
+              tournaments,
+              position,
+              gender,
+              last_mail,
+              new_tournament_count,
+              ...user
+            }) => user,
+          );
+          res.status(200).send(limitedUsers);
+        }
+      })
+      .catch(err => {
+        console.error(`Error while getting all users. Error message:\n${err}`);
+        res.status(500).json({ message: 'Error while getting all users.' });
+      });
   });
 
   console.info('> > adding put /user/:id route...');
   router.route('/user/:id').put((req, res) => {
     // check if session user is the requested user
-    if (req.user.id !== req.params.id && !isAdmin(req)) {
+    if (req.user.id !== parseInt(req.params.id, 10) && !isAdmin(req)) {
       return handleUnauthorized(
         res,
         `User is not authorized to edit user information of user with the ID: "${req.params.id}"`,
@@ -101,8 +105,8 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               food: req.body.food,
               new_tournament_count: req.body.new_tournament_count,
             })
-            .then(() => {
-              res.status(200).json({ message: 'Update user successful.' });
+            .then(updatedUser => {
+              res.status(200).json({ user: updatedUser, message: 'Update user successful.' });
             });
         })
         .catch(err => {

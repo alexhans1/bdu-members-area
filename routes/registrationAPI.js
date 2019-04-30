@@ -1,3 +1,47 @@
+/* eslint-disable no-nested-ternary */
+const attendanceStatuses = {
+  Registered: 0,
+  Went: 1,
+  CanGo: 2,
+  DidNotGo: 3,
+};
+
+const getPointsForSuccess = (successType, rankingFactor) => {
+  switch (successType) {
+    case 'none':
+      return 0;
+    case 'judge':
+      return 5;
+    case 'break':
+      return rankingFactor * 2 + 1;
+    case 'final':
+      return rankingFactor * 3 + 2;
+    case 'win':
+      return rankingFactor * 4 + 3;
+    case 'judge2':
+      return 2.5;
+    case 'break2':
+      return (rankingFactor * 2 + 1) / 2;
+    case 'final2':
+      return (rankingFactor * 3 + 2) / 2;
+    case 'win2':
+      return (rankingFactor * 4 + 3) / 2;
+    case 'breakESL':
+      return (rankingFactor - 2) * 2 + 1;
+    case 'finalESL':
+      return (rankingFactor - 2) * 3 + 2;
+    case 'winESL':
+      return (rankingFactor - 2) * 4 + 3;
+    case 'break2ESL':
+      return ((rankingFactor - 2) * 2 + 1) / 2;
+    case 'final2ESL':
+      return ((rankingFactor - 2) * 3 + 2) / 2;
+    case 'win2ESL':
+      return ((rankingFactor - 2) * 4 + 3) / 2;
+    default:
+      return 0;
+  }
+};
 module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized }) => {
   console.info('> adding registration routes...');
   // Register the authentication middleware
@@ -152,12 +196,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
                 .json({ message: 'Your first named partner does not exist in the database.' });
             }
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner1)) {
-              return res
-                .status(409)
-                .json({
-                  message:
-                    'Your first named partner is ' + 'already registered for this tournament.',
-                });
+              return res.status(409).json({
+                message: 'Your first named partner is already registered for this tournament.',
+              });
             }
             if (!(await doesUserExist(req.body.partner2))) {
               return res
@@ -165,12 +206,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
                 .json({ message: 'Your second named partner does not exist in the database.' });
             }
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner2)) {
-              return res
-                .status(409)
-                .json({
-                  message:
-                    'Your second named partner is ' + 'already registered for this tournament.',
-                });
+              return res.status(409).json({
+                message: 'Your second named partner is already registered for this tournament.',
+              });
             }
             // register all three for the tournament
             Models.Registrations.forge([
@@ -219,7 +257,7 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
             if (await isUserRegisteredForTournament(req.body.tournament_id, req.body.partner1)) {
               return res
                 .status(409)
-                .json({ message: 'Your partner is already' + ' registered for this tournament.' });
+                .json({ message: 'Your partner is already registered for this tournament.' });
             }
             // if no user was found,
             // register both
@@ -283,32 +321,140 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       const registration = await Models.Registration.forge({ id: req.params.id }).fetch({
         require: true,
       });
+      const reg = registration.toJSON();
+      let tournament;
+      if (req.body.attended === attendanceStatuses.Went || req.body.success !== null) {
+        tournament = await Models.Tournament.forge({ id: reg.tournament_id }).fetch({
+          require: true,
+        });
+        tournament = tournament.toJSON();
+      }
       if (!registration) {
         console.error(`The registration with the ID "${req.params.id}" is not in the database.`);
         return res.status(404).json({
           message: `The registration with the ID "${req.params.id}" is not in the database.`,
         });
       }
-      if (registration.toJSON().user_id !== req.user.id && !isAdmin(req)) {
+      if (reg.user_id !== req.user.id && !isAdmin(req)) {
         return handleUnauthorized(res, 'User is not authorized to update registration.');
       }
+      if (
+        !isAdmin(req) &&
+        (req.body.attended !== undefined ||
+          req.body.price_paid !== undefined ||
+          req.body.price_owed !== undefined ||
+          req.body.transaction_date !== undefined ||
+          req.body.transaction_from !== undefined)
+      )
+        return handleUnauthorized(
+          res,
+          'User is not authorized to update this field for this registrations.',
+        );
+
+      let extraFields = {};
+      // adding extra logic when the attendance status is updated to automatically set success and debt values
+      if (req.body.attended === attendanceStatuses.Went) {
+        extraFields = {
+          ...extraFields,
+          attended: attendanceStatuses.Went,
+          price_owed: reg.is_independent
+            ? 0
+            : reg.role === 'judge'
+            ? tournament.judgeprice || 0
+            : tournament.speakerprice || 0,
+          points: reg.role === 'judge' ? 5 : 0,
+          success: reg.role === 'judge' ? 'judge' : null,
+        };
+      } else if (
+        [
+          attendanceStatuses.CanGo,
+          attendanceStatuses.DidNotGo,
+          attendanceStatuses.Registered,
+        ].includes(req.body.attended)
+      ) {
+        extraFields = {
+          ...extraFields,
+          attended: req.body.attended,
+          price_owed: 0,
+          points: 0,
+          success: null,
+        };
+      } else if (req.body.success !== null) {
+        extraFields = {
+          ...extraFields,
+          success: req.body.success,
+          points: getPointsForSuccess(req.body.success, tournament.rankingvalue),
+        };
+        if (['none',
+          'judge',
+          'judge2',].includes(req.body.success)) extraFields = {
+          ...extraFields,
+          partner1: null,
+          partner2: null,
+        }
+          }
+      // adding extra logic when the success field is updated to automatically set points
+
       registration
         .save({
-          role: req.body.role,
-          is_independent: req.body.is_independent,
-          teamname: req.body.teamname,
-          comment: req.body.comment,
-          funding: req.body.funding,
-          price_paid: req.body.price_paid,
-          price_owed: req.body.price_owed,
-          transaction_date: req.body.transaction_date,
-          transaction_from: req.body.transaction_from,
+          role: req.body.role === null || req.body.role === undefined ? reg.role : req.body.role,
+          is_independent:
+            req.body.is_independent === null || req.body.is_independent === undefined
+              ? reg.is_independent
+              : req.body.is_independent,
+          teamname:
+            req.body.teamname === null || req.body.teamname === undefined
+              ? reg.teamname
+              : req.body.teamname,
+          comment:
+            req.body.comment === null || req.body.comment === undefined
+              ? reg.comment
+              : req.body.comment,
+          funding:
+            req.body.funding === null || req.body.funding === undefined
+              ? reg.funding
+              : req.body.funding,
+          id_independent:
+            req.body.id_independent === null || req.body.id_independent === undefined
+              ? reg.id_independent
+              : req.body.id_independent,
+          price_paid:
+            req.body.price_paid === null || req.body.price_paid === undefined
+              ? reg.price_paid
+              : req.body.price_paid,
+          price_owed:
+            req.body.price_owed === null || req.body.price_owed === undefined
+              ? reg.price_owed
+              : req.body.price_owed,
+          transaction_date:
+            req.body.transaction_date === null || req.body.transaction_date === undefined
+              ? reg.transaction_date
+              : req.body.transaction_date,
+          transaction_from:
+            req.body.transaction_from === null || req.body.transaction_from === undefined
+              ? reg.transaction_from
+              : req.body.transaction_from,
+          partner1:
+            req.body.partner1 === null || req.body.partner1 === undefined
+              ? reg.partner1
+              : req.body.partner1,
+          partner2:
+            req.body.partner2 === null || req.body.partner2 === undefined
+              ? reg.partner2
+              : req.body.partner2,
+          ...extraFields,
         })
-        .then(() => {
-          res.status(200).json({ message: 'Update registration successful.' });
+        .then(async () => {
+          let newRegistration = await Models.Registration.forge({ id: req.params.id }).fetch({
+            require: true,
+          });
+          newRegistration = newRegistration.toJSON();
+          res
+            .status(200)
+            .json({ message: 'Update registration successful.', registration: newRegistration });
         });
     } catch (err) {
-      console.error(`Error while updating registration. Error message:\n ${err.message}`);
+      console.error(`Error while updating registration. Error message:\n ${err}`);
       res.status(500).json({ message: 'Error while updating registration.' });
     }
   });
@@ -325,9 +471,15 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           message: `The registration with the ID "${req.params.id}" is not in the database.`,
         });
       }
-      if (registration.toJSON().user_id !== req.user.id && !isAdmin(req)) {
+      const { user_id, attended } = await registration.toJSON();
+      console.log('attended:', attended);
+      if (user_id !== req.user.id && !isAdmin(req)) {
         return handleUnauthorized(res, 'User is not authorized to delete registration.');
       }
+      if (attended === 1)
+        return res
+          .status(409)
+          .send({ message: 'Cannot delete the registration after you attended the tournament.' });
       registration.destroy().then(() => {
         res.status(200).json({ message: 'Delete registration successful.' });
       });
