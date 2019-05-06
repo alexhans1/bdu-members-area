@@ -5,6 +5,7 @@
   "rules": {
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "no-param-reassign": 0,
+    "camelcase": 0,
     "no-console": 0,
     "no-undef": 0,
     "no-case-declarations": 0,
