@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
 class BugReportForm extends Component {
   render() {
     return (
-      <div className="col-12 col-md-8 col-lg-6 pl-0 pb-4">
+      <div className="col-12 col-md-8 col-lg-7 col-xl-5 px-0 pb-4">
         <h2>Report an issue</h2>
         <form onSubmit={this.props.postBug}>
           <textarea

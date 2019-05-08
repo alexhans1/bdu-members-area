@@ -8,6 +8,7 @@ import {
   ADD_TO_USER_ARRAY,
   PATCH_REGISTRATION,
   SET_EXPANDED_USER_ID,
+  ADD_REGISTRATION,
 } from '../constants/action-types';
 
 const initialState = {
@@ -54,6 +55,20 @@ const userReducer = (state = initialState, action) => {
             tournaments: user.tournaments.filter(
               ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
             ),
+          };
+        }),
+      };
+    case ADD_REGISTRATION:
+      return {
+        ...state,
+        users: state.users.map(user => {
+          if (user.id !== action.payload.registration._pivot_user_id) return user;
+          return {
+            ...user,
+            tournaments: [
+              ...user.tournaments,
+              { ...action.payload.tournament, ...action.payload.registration },
+            ],
           };
         }),
       };

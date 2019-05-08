@@ -6,10 +6,15 @@ import Currency from 'react-currency-formatter';
 import moment from 'moment/moment';
 import FlexTable from '../../FlexTable/FlexTable';
 import { DATE_FORMAT } from '../../../constants/applicationConstants';
+import { patchRegistration } from '../../../actions/RegistrationActions';
+
+const mapDispatchToProps = {
+  patchRegistration,
+};
 
 class MemberRowCollapse extends Component {
   render() {
-    const { user } = this.props;
+    const { user, patchRegistration: handleSetDebt } = this.props;
     const userTableRows = [
       ['User ID', user.id],
       ['Email', user.email],
@@ -68,6 +73,7 @@ class MemberRowCollapse extends Component {
                 className="btn btn-outline-light btn-sm ml-2 px-2"
                 onClick={e => {
                   e.stopPropagation();
+                  handleSetDebt(row._pivot_id, { price_paid: row._pivot_price_owed });
                 }}
               >
                 <i className="fas fa-euro-sign" />
@@ -137,5 +143,5 @@ class MemberRowCollapse extends Component {
 }
 export default connect(
   null,
-  null,
+  mapDispatchToProps,
 )(MemberRowCollapse);

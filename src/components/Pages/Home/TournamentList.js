@@ -93,8 +93,10 @@ class TournamentList extends Component {
         sort: true,
         classes: 'd-none d-lg-table-cell',
         headerClasses: 'd-none d-lg-table-cell',
-        formatter: cellContent =>
-          attendanceStatuses.find(statusObj => statusObj.id === cellContent).label,
+        formatter: cellContent => {
+          const status = attendanceStatuses.find(statusObj => statusObj.id === cellContent);
+          return status ? status.label : '';
+        },
       },
       {
         dataField: '_pivot_points',

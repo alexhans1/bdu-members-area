@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import $ from 'jquery';
 import { register } from '../../../../../actions/RegistrationActions';
 
 const mapStateToProps = ({ user }) => ({
@@ -30,7 +31,7 @@ class RegistrationModal extends Component {
 
   handlePostRegister(e) {
     e.preventDefault();
-    window.$(`#registrationModal_${this.props.tournament.id}`).modal('hide');
+    $(`#registrationModal_${this.props.tournament.id}`).modal('hide');
     const { role, partner1, partner2, teamName, comment } = this.state;
     const { tournament } = this.props;
     const userId = this.props.user.id;

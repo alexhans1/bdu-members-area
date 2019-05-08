@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import {
+  ADD_REGISTRATION,
   ADD_TOURNAMENT,
   DELETE_REGISTRATION,
   DELETE_TOURNAMENT,
@@ -75,6 +76,20 @@ const tournamentReducer = (state = initialState, action) => {
             users: tournament.users.filter(
               ({ _pivot_id }) => _pivot_id !== action.payload.registrationId,
             ),
+          };
+        }),
+      };
+    case ADD_REGISTRATION:
+      return {
+        ...state,
+        tournamentList: state.tournamentList.map(tournament => {
+          if (tournament.id !== action.payload.registration._pivot_tournament_id) return tournament;
+          return {
+            ...tournament,
+            users: [
+              ...tournament.users,
+              { ...action.payload.user, ...action.payload.registration },
+            ],
           };
         }),
       };

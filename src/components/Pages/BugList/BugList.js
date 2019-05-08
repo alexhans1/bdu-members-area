@@ -108,7 +108,7 @@ class BugList extends Component {
                   dataField: 'created_at',
                   text: 'Created at',
                   sort: true,
-                  headerStyle: () => ({ width: '160px' }),
+                  headerStyle: () => ({ maxWidth: '160px' }),
                   formatter: cell => moment(cell).format(DATE_FORMAT),
                 },
                 {
@@ -116,7 +116,7 @@ class BugList extends Component {
                   text: 'Reported by',
                   isDummyField: true,
                   sort: true,
-                  headerStyle: () => ({ width: '160px' }),
+                  headerStyle: () => ({ maxWidth: '160px' }),
                   formatter: (a, { user_id }) => {
                     const user = users.find(({ id }) => id === user_id);
                     if (user && user.name && user.vorname) return `${user.vorname} ${user.name}`;
@@ -128,7 +128,7 @@ class BugList extends Component {
                   text: 'Status',
                   isDummyField: true,
                   sort: true,
-                  headerStyle: () => ({ width: '100px' }),
+                  headerStyle: () => ({ maxWidth: '100px' }),
                   formatter: (cell, { id, status }) => {
                     return (
                       <i
@@ -146,7 +146,7 @@ class BugList extends Component {
                   text: '',
                   isDummyField: true,
                   sort: false,
-                  headerStyle: () => ({ width: '80px' }),
+                  headerStyle: () => ({ maxWidth: '80px' }),
                   formatter: (cell, { id }) => (
                     <button
                       type="button"

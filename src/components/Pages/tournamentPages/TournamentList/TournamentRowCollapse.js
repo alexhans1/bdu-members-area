@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Currency from 'react-currency-formatter';
 import moment from 'moment/moment';
 import { connect } from 'react-redux';
+import $ from 'jquery';
 import { confirmAlert } from 'react-confirm-alert';
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
@@ -22,7 +23,7 @@ const mapDispatchToProps = {
 
 class TournamentRowCollapse extends Component {
   static handleClickRegister(tournamentId) {
-    window.$(`#registrationModal_${tournamentId}`).modal('toggle');
+    $(`#registrationModal_${tournamentId}`).modal('toggle');
   }
 
   constructor() {

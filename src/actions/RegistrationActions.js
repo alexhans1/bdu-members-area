@@ -1,7 +1,10 @@
 import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
-import { DELETE_REGISTRATION, PATCH_REGISTRATION } from '../constants/action-types';
-import { getAppData } from './AuthActions';
+import {
+  ADD_REGISTRATION,
+  DELETE_REGISTRATION,
+  PATCH_REGISTRATION,
+} from '../constants/action-types';
 
 export const register = ({
   tournament,
@@ -13,8 +16,8 @@ export const register = ({
   partner1,
   partner2,
   teamName,
-}) => dispatch => {
-  fetch(`${BASE_URL}/registration`, {
+}) => async (dispatch, getState) => {
+  const response = await fetch(`${BASE_URL}/registration`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -32,14 +35,27 @@ export const register = ({
       partner2,
       teamname: teamName,
     }),
-  }).then(response => {
-    response.json().then(body => {
-      if (response.status === 200) {
-        triggerAlert(body.message, alertTypes.SUCCESS);
-        dispatch(getAppData());
-      } else triggerAlert(body.message, alertTypes.WARNING);
-    });
   });
+  const body = await response.json();
+  if (response.status === 200) {
+    dispatch({
+      type: ADD_REGISTRATION,
+      payload: {
+        registration: Object.keys(body.registration).reduce(
+          (newFields, key) => ({
+            ...newFields,
+            [`_pivot_${key}`]: body.registration[key],
+          }),
+          {},
+        ),
+        user: getState().user.users.find(({ id }) => id === body.registration.user_id),
+        tournament: getState().tournament.tournamentList.find(
+          ({ id }) => id === body.registration.tournament_id,
+        ),
+      },
+    });
+    triggerAlert(body.message, alertTypes.SUCCESS);
+  } else triggerAlert(body.message, alertTypes.WARNING);
 };
 
 export const deleteRegistration = registrationId => async dispatch => {
