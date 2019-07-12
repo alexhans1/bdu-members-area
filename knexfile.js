@@ -1,14 +1,13 @@
 // Update with your config settings.
 
 module.exports = {
-
   local: {
     client: 'mysql',
     connection: {
       host: 'localhost',
       user: 'root',
       password: process.env.localDBPassword,
-      database: 'bdudb',
+      database: 'heroku_9b6f95eb7a9adf8',
       charset: 'utf8',
     },
     pool: {
@@ -37,5 +36,4 @@ module.exports = {
       tableName: 'knex_migrations',
     },
   },
-
 };

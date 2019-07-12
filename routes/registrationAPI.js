@@ -67,6 +67,22 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       throw err;
     }
   };
+  const fetchRegistrationAndReturn = async ({ message, tournamentId, userId, res }) => {
+    try {
+      const registration = await Models.Registration.forge({
+        tournament_id: tournamentId,
+        user_id: userId,
+      }).fetch();
+
+      return res.status(200).json({
+        registration,
+        message,
+      });
+    } catch (err) {
+      console.error(`Error while posting registration. Error message:\n${err.message}`);
+      return res.status(500).json({ message: 'Error while posting registration.' });
+    }
+  };
 
   console.info('> > adding get /registration/:id route...');
   router.route('/registration/:id').get((req, res) => {
@@ -158,20 +174,20 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     // register user(s)
     try {
       if (req.body.role === 'judge') {
-        return Models.Registration.forge({
+        await Models.Registration.forge({
           tournament_id: req.body.tournament_id,
           user_id: req.body.user_id,
           role: 'judge',
           comment: req.body.comment,
           is_independent: req.body.is_independent || 0,
           funding: req.body.funding || 0,
-        })
-          .save()
-          .then(() =>
-            res.status(200).json({
-              message: 'Successfully registered as judge.',
-            }),
-          );
+        }).save();
+        return fetchRegistrationAndReturn({
+          message: 'Successfully registered as judge.',
+          tournamentId: req.body.tournament_id,
+          userId: req.body.user_id,
+          res,
+        });
       }
 
       if (req.body.role === 'speaker') {
@@ -236,9 +252,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
             ])
               .invokeThen('save')
               .then(() => {
-                res
-                  .status(200)
-                  .json({ message: 'Successfully registered you and your partners as speakers.' });
+                return fetchRegistrationAndReturn({
+                  message: 'Successfully registered you and your partners as speakers.',
+                  userId: req.body.user_id,
+                  tournamentId: req.body.tournament_id,
+                  res,
+                });
               });
           } else {
             // if only first partner is named,
@@ -279,11 +298,14 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               },
             ])
               .invokeThen('save')
-              .then(() => {
-                res
-                  .status(200)
-                  .json({ message: 'Successfully registered you and your partner as speakers.' });
-              });
+              .then(() =>
+                fetchRegistrationAndReturn({
+                  message: 'Successfully registered you and your partner as speakers.',
+                  userId: req.body.user_id,
+                  tournamentId: req.body.tournament_id,
+                  res,
+                }),
+              );
           }
         } else {
           // if no partner is named, register user alone
@@ -298,8 +320,11 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           })
             .save()
             .then(() =>
-              res.status(200).json({
+              fetchRegistrationAndReturn({
                 message: 'Successfully registered as speaker.',
+                userId: req.body.user_id,
+                tournamentId: req.body.tournament_id,
+                res,
               }),
             );
         }
@@ -385,14 +410,13 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           success: req.body.success,
           points: getPointsForSuccess(req.body.success, tournament.rankingvalue),
         };
-        if (['none',
-          'judge',
-          'judge2',].includes(req.body.success)) extraFields = {
-          ...extraFields,
-          partner1: null,
-          partner2: null,
-        }
-          }
+        if (['none', 'judge', 'judge2'].includes(req.body.success))
+          extraFields = {
+            ...extraFields,
+            partner1: null,
+            partner2: null,
+          };
+      }
       // adding extra logic when the success field is updated to automatically set points
 
       registration

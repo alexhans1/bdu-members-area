@@ -80,7 +80,7 @@ const dbConnectionInfo = {
   port: 3306,
   user: process.env.NODE_ENV !== 'production' ? 'root' : 'bb41eedfd379a8',
   password: process.env.NODE_ENV !== 'production' ? process.env.localDBPassword : process.env.clearDB_password,
-  database: process.env.NODE_ENV !== 'production' ? 'bdudb' : 'heroku_9b6f95eb7a9adf8',
+  database: 'heroku_9b6f95eb7a9adf8',
   connectionLimit: 10, // if you use a pool like I did
 };
 

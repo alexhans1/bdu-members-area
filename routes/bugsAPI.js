@@ -37,15 +37,14 @@ module.exports = ({ router, Bookshelf }) => {
       user_id,
     })
       .save()
-      .then(() => {
+      .then((bug) => {
         console.log('Post bug successful.');
-        res.json({ error: false, message: 'Report bug successful.' });
+        res.status(200).json({ bug, message: 'Report bug successful.' });
       })
       .catch(err => {
         console.log(`Error while reporting new bug. Error: \n${err}`);
-        res.json({
-          error: true,
-          message: `Error while reporting new bug. Error: \n${err.message}`,
+        res.status(500).json({
+          message: 'Error while reporting new bug.',
         });
       });
   });

@@ -56,7 +56,15 @@ module.exports = ({ router, Bookshelf, passport }) => {
         const currentUser = await Models.User.forge({ id: req.user.id }).fetch({
           withRelated: ['tournaments'],
         });
-        return res.status(200).json(await currentUser.toJSON());
+        const {
+          password,
+          resetPasswordToken,
+          resetPasswordExpires,
+          created_at,
+          updated_at,
+          ...user
+        } = await currentUser.toJSON();
+        return res.status(200).json(user);
       } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: 'Could not fetch user.' });
@@ -72,7 +80,6 @@ module.exports = ({ router, Bookshelf, passport }) => {
   // FIRST: SEND FORGOT PASSWORD EMAIL
   // THIS SETS THE resetPasswordToken AND resetPasswordExpires AND SENDS LINK WITH TOKEN TO USEREMAIL
 
-  // User model
   const Models = require('../models/bookshelfModels.js')(Bookshelf);
 
   router.route('/forgot').post(async (req, res) => {
@@ -164,11 +171,11 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // sends failure password change state back to angular
   router.route('/changeSuccess').get((req, res) => {
-    res.send({ state: 'success', error: false, message: req.flash('changeMsg') || null });
+    res.send({ state: 'success', message: req.flash('changeMsg') || null });
   });
 
   // sends failure password change state back to angular
   router.route('/changeFailure').get((req, res) => {
-    res.send({ state: 'failure', error: true, message: req.flash('changeMsg') || null });
+    res.send({ state: 'failure', message: req.flash('changeMsg') || null });
   });
 };
