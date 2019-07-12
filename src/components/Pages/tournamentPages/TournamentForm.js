@@ -54,7 +54,8 @@ class TournamentForm extends Component {
       !!(e.target.name === 'password' && this.state.confirmPassword)
     ) {
       change.passwordsMatch =
-        this.state.password === e.target.value || this.state.confirmPassword === e.target.value;
+        this.state.password === e.target.value ||
+        this.state.confirmPassword === e.target.value;
     }
     this.setState(change);
   }
@@ -124,7 +125,7 @@ class TournamentForm extends Component {
     return (
       <form onSubmit={this.handleSubmit} id="tournamentForm">
         <div className="row">
-          <div className="col-12 col-md-10 offset-md-1 d-flex flex-wrap">
+          <div className="col-12 col-md-10 d-flex flex-wrap">
             <div className="form-group px-lg-3">
               <label htmlFor="name">Name</label>
               <input
@@ -340,7 +341,7 @@ class TournamentForm extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 col-md-10 offset-md-1">
+          <div className="col-12 col-md-10">
             <button
               type="submit"
               className="btn btn-lg btn-outline-info ml-3"

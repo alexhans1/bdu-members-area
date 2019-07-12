@@ -6,7 +6,9 @@ import profileImageDefault from '../../../../images/bdu_quad.png';
 import { updateUser } from '../../../../actions/UserActions';
 
 const mapStateToProps = ({ user }) => ({
-  authenticatedUser: user.users.find(({ id }) => user.authenticatedUserId === id),
+  authenticatedUser: user.users.find(
+    ({ id }) => user.authenticatedUserId === id,
+  ),
 });
 const mapDispatchToProps = { updateUser };
 
@@ -29,10 +31,17 @@ class Profile extends Component {
   }
 
   render() {
-    const { email, vorname, name, gender, food, image } = this.props.authenticatedUser;
+    const {
+      email,
+      vorname,
+      name,
+      gender,
+      food,
+      image,
+    } = this.props.authenticatedUser;
 
     return (
-      <div className="container px-5">
+      <div className="container page-content px-5">
         <div className="d-flex align-items-center py-4">
           <img
             id="profileImage"

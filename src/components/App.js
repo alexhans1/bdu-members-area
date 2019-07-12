@@ -38,7 +38,11 @@ class App extends Component {
   }
 
   render() {
-    const { isAuthenticated, authenticatedUser, authCheckHasFinished } = this.props;
+    const {
+      isAuthenticated,
+      authenticatedUser,
+      authCheckHasFinished,
+    } = this.props;
     if (!authCheckHasFinished) {
       return (
         <div>
@@ -54,14 +58,24 @@ class App extends Component {
     const AuthenticationRoute = ({ component: ComponentToRender, ...rest }) => (
       <Route
         {...rest}
-        render={props => (isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />)}
+        render={props =>
+          isAuthenticated ? (
+            <Redirect to="/" />
+          ) : (
+            <ComponentToRender {...props} />
+          )
+        }
       />
     );
     const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
       <Route
         {...rest}
         render={props =>
-          isAuthenticated ? <ComponentToRender {...props} /> : <Redirect to="/login" />
+          isAuthenticated ? (
+            <ComponentToRender {...props} />
+          ) : (
+            <Redirect to="/login" />
+          )
         }
       />
     );
@@ -80,7 +94,10 @@ class App extends Component {
 
     return (
       <div>
-        <Navbar isAuthenticated={isAuthenticated} authenticatedUser={authenticatedUser} />
+        <Navbar
+          isAuthenticated={isAuthenticated}
+          authenticatedUser={authenticatedUser}
+        />
         <div className="mainContent">
           <Switch>
             <AuthenticationRoute path="/login" component={Login} />

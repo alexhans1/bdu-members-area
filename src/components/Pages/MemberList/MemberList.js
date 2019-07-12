@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import moment from 'moment/moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 import Currency from 'react-currency-formatter';
-import { DATE_TIME_FORMAT, registrationRoles } from '../../../constants/applicationConstants';
+import {
+  DATE_TIME_FORMAT,
+  registrationRoles,
+} from '../../../constants/applicationConstants';
 import MemberRowCollapse from './MemberRowCollapse';
 import { SET_EXPANDED_USER_ID } from '../../../constants/action-types';
 
@@ -15,7 +18,8 @@ const mapStateToProps = ({ user }) => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    setExpandedUserId: userId => dispatch({ type: SET_EXPANDED_USER_ID, payload: { userId } }),
+    setExpandedUserId: userId =>
+      dispatch({ type: SET_EXPANDED_USER_ID, payload: { userId } }),
   };
 };
 
@@ -77,18 +81,23 @@ class MembersList extends Component {
 
     const enrichedUserList = users.map(user => {
       const totalPoints = user.tournaments.reduce((total, tournament) => {
-        const addedPoints = moment(tournament.startdate).isBefore(moment().subtract(1, 'years'))
+        const addedPoints = moment(tournament.startdate).isBefore(
+          moment().subtract(1, 'years'),
+        )
           ? 0
           : tournament._pivot_points;
         return total + addedPoints;
       }, 0);
       const totalTournaments = user.tournaments.length || 0;
       const totalTournamentsAsJudge =
-        user.tournaments.filter(({ _pivot_role }) => _pivot_role === registrationRoles.JUDGE)
-          .length || 0;
-      const judgingRatio = Math.round((totalTournamentsAsJudge * 100) / totalTournaments) || -1;
+        user.tournaments.filter(
+          ({ _pivot_role }) => _pivot_role === registrationRoles.JUDGE,
+        ).length || 0;
+      const judgingRatio =
+        Math.round((totalTournamentsAsJudge * 100) / totalTournaments) || -1;
       const totalDebt = user.tournaments.reduce((total, tournament) => {
-        const debt = tournament._pivot_price_paid - tournament._pivot_price_owed;
+        const debt =
+          tournament._pivot_price_paid - tournament._pivot_price_owed;
         return total - debt;
       }, 0);
       user.totalPoints = totalPoints;
@@ -100,7 +109,9 @@ class MembersList extends Component {
     });
 
     const expandRow = {
-      renderer: row => <MemberRowCollapse key={row.id} user={row} history={history} />,
+      renderer: row => (
+        <MemberRowCollapse key={row.id} user={row} history={history} />
+      ),
       onlyOneExpanding: true,
       expanded: [expandedUserId],
       onExpand: (row, isExpand, rowIndex, e) => {
@@ -116,7 +127,7 @@ class MembersList extends Component {
     };
 
     return (
-      <div className="container-fluid py-4">
+      <div className="container-fluid page-content">
         <h2 className="mb-4">MembersList</h2>
         <BootstrapTable
           bootstrap4

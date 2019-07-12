@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TournamentForm from '../TournamentForm';
-import { getTournament, updateTournament } from '../../../../actions/TournamentActions';
+import {
+  getTournament,
+  updateTournament,
+} from '../../../../actions/TournamentActions';
 import Spinner from '../../../Spinner/Spinner';
 
 const mapStateToProps = ({ tournament }) => ({
@@ -19,7 +22,9 @@ class EditTournament extends Component {
   componentWillMount() {
     const { tournamentList, match } = this.props;
     const tournamentId = parseInt(match.params.id, 10);
-    const tournamentIndex = tournamentList.findIndex(({ id }) => id === tournamentId);
+    const tournamentIndex = tournamentList.findIndex(
+      ({ id }) => id === tournamentId,
+    );
     if (tournamentIndex < 0) this.props.getTournament(tournamentId);
   }
 
@@ -88,16 +93,24 @@ class EditTournament extends Component {
       comments,
     } = tournament;
     return (
-      <div className="container-fluid py-4">
+      <div className="container-fluid">
         <h2 className="mb-4">Edit Tournament</h2>
         <TournamentForm
           handleSubmit={this.editTournament}
           name={name}
           location={ort}
           accommodation={accommodation}
-          startDate={startdate ? new Date(startdate).toISOString().substr(0, 10) : startdate}
-          endDate={enddate ? new Date(enddate).toISOString().substr(0, 10) : enddate}
-          deadline={deadline ? new Date(deadline).toISOString().substr(0, 10) : deadline}
+          startDate={
+            startdate
+              ? new Date(startdate).toISOString().substr(0, 10)
+              : startdate
+          }
+          endDate={
+            enddate ? new Date(enddate).toISOString().substr(0, 10) : enddate
+          }
+          deadline={
+            deadline ? new Date(deadline).toISOString().substr(0, 10) : deadline
+          }
           format={format}
           language={language}
           league={league}

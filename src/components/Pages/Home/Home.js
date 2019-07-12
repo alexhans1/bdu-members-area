@@ -34,7 +34,7 @@ class Home extends Component {
               Edit Profile
             </Link>
           </div>
-          <div className="col-12 col-sm-7 col-md-8 col-lg-9">
+          <div className="col-12 col-sm-7 col-md-8 col-lg-9 bg-white">
             <h1 className="py-3">Your Tournaments</h1>
             {tournaments.length ? (
               <TournamentList tournaments={tournaments} history={history} />

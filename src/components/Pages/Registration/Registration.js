@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import Currency from 'react-currency-formatter';
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
-import { attendanceStatuses, successTypes } from '../../../constants/applicationConstants';
+import {
+  attendanceStatuses,
+  successTypes,
+} from '../../../constants/applicationConstants';
 import './Registration.scss';
 import FieldEditor from './FieldEditor';
 import { patchRegistration } from '../../../actions/RegistrationActions';
@@ -21,17 +24,22 @@ const mapStateToProps = (
   const regUser = user.users.find(
     ({ tournaments }) =>
       tournaments &&
-      tournaments.find(({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10)),
+      tournaments.find(
+        ({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10),
+      ),
   );
   return {
     isAdmin: user.authenticatedUserId
-      ? user.users.find(({ id }) => user.authenticatedUserId === id).position === 1
+      ? user.users.find(({ id }) => user.authenticatedUserId === id)
+          .position === 1
       : false,
     authenticatedUserId: user.authenticatedUserId,
     user: regUser,
     userList: user.users,
     tournament: regUser
-      ? regUser.tournaments.find(({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10))
+      ? regUser.tournaments.find(
+          ({ _pivot_id }) => _pivot_id === parseInt(registrationId, 10),
+        )
       : null,
   };
 };
@@ -71,7 +79,8 @@ class Registration extends Component {
       return (
         <div className="container">
           <h2 className="py-4">
-            Registration not found. You might not have permission to see this registration.
+            Registration not found. You might not have permission to see this
+            registration.
           </h2>
         </div>
       );
@@ -79,20 +88,33 @@ class Registration extends Component {
     const attendanceStatusObj = attendanceStatuses.find(
       statusObj => statusObj.id === tournament._pivot_attended,
     );
-    const attendanceStatus = attendanceStatusObj ? attendanceStatusObj.label : '';
+    const attendanceStatus = attendanceStatusObj
+      ? attendanceStatusObj.label
+      : '';
     const dateFormat = 'DD.MM.YYYY';
-    const startdate = tournament.startdate ? moment(tournament.startdate).format(dateFormat) : '';
-    const enddate = tournament.enddate ? moment(tournament.enddate).format(dateFormat) : '';
-    const partner1 = userList.find(({ id }) => id === tournament._pivot_partner1);
-    const partner2 = userList.find(({ id }) => id === tournament._pivot_partner2);
+    const startdate = tournament.startdate
+      ? moment(tournament.startdate).format(dateFormat)
+      : '';
+    const enddate = tournament.enddate
+      ? moment(tournament.enddate).format(dateFormat)
+      : '';
+    const partner1 = userList.find(
+      ({ id }) => id === tournament._pivot_partner1,
+    );
+    const partner2 = userList.find(
+      ({ id }) => id === tournament._pivot_partner2,
+    );
     let success = tournament._pivot_attended === 1 ? 'none' : null;
-    const successObj = successTypes.find(({ id }) => id === tournament._pivot_success);
+    const successObj = successTypes.find(
+      ({ id }) => id === tournament._pivot_success,
+    );
     if (successObj) success = successObj.label;
 
     const registrationTableRows = [
       {
         header: 'User',
-        field: user.vorname && user.name ? `${user.vorname} ${user.name}` : null,
+        field:
+          user.vorname && user.name ? `${user.vorname} ${user.name}` : null,
       },
       {
         header: 'Tournament',
@@ -100,14 +122,20 @@ class Registration extends Component {
       },
       {
         header: 'Date',
-        field: tournament.startdate && tournament.startdate ? `${startdate} - ${enddate}` : null,
+        field:
+          tournament.startdate && tournament.startdate
+            ? `${startdate} - ${enddate}`
+            : null,
       },
       {
         header: 'Role',
         field: tournament._pivot_role,
         editType: Type.SELECT,
         fieldName: 'role',
-        options: [{ id: 'judge', label: 'judge' }, { id: 'speaker', label: 'speaker' }],
+        options: [
+          { id: 'judge', label: 'judge' },
+          { id: 'speaker', label: 'speaker' },
+        ],
       },
       {
         header: 'Team Name',
@@ -139,7 +167,10 @@ class Registration extends Component {
         header: 'Costs',
         field:
           tournament._pivot_attended === 1 ? (
-            <Currency quantity={parseFloat(tournament._pivot_price_owed, 10) || 0} currency="EUR" />
+            <Currency
+              quantity={parseFloat(tournament._pivot_price_owed, 10) || 0}
+              currency="EUR"
+            />
           ) : null,
         fieldValue: tournament._pivot_price_owed || 0,
         editType: Type.TEXT,
@@ -150,7 +181,10 @@ class Registration extends Component {
         header: 'Price paid',
         field:
           tournament._pivot_attended === 1 ? (
-            <Currency quantity={parseFloat(tournament._pivot_price_paid, 10) || 0} currency="EUR" />
+            <Currency
+              quantity={parseFloat(tournament._pivot_price_paid, 10) || 0}
+              currency="EUR"
+            />
           ) : null,
         fieldValue: tournament._pivot_price_paid || 0,
         editType: Type.TEXT,
@@ -170,7 +204,10 @@ class Registration extends Component {
             >
               <Currency
                 quantity={
-                  parseFloat(tournament._pivot_price_owed - tournament._pivot_price_paid, 10) || 0
+                  parseFloat(
+                    tournament._pivot_price_owed - tournament._pivot_price_paid,
+                    10,
+                  ) || 0
                 }
                 currency="EUR"
               />
@@ -196,14 +233,20 @@ class Registration extends Component {
       },
       {
         header: 'Points',
-        field: tournament._pivot_attended === 1 ? tournament._pivot_points : null,
+        field:
+          tournament._pivot_attended === 1 ? tournament._pivot_points : null,
       },
       {
-        header: tournament.format.toLowerCase() === 'opd' ? 'Partner 1' : 'Partner',
+        header:
+          tournament.format.toLowerCase() === 'opd' ? 'Partner 1' : 'Partner',
         field: partner1
           ? `${partner1.vorname} ${partner1.name}`
           : successTypes
-              .reduce((acc, { canHavePartner, id }) => (canHavePartner ? [...acc, id] : acc), [])
+              .reduce(
+                (acc, { canHavePartner, id }) =>
+                  canHavePartner ? [...acc, id] : acc,
+                [],
+              )
               .includes(tournament._pivot_success)
           ? ''
           : null,
@@ -212,7 +255,10 @@ class Registration extends Component {
         editType: Type.SELECT,
         options: [
           { id: null, label: '' },
-          ...userList.map(({ vorname, name, id }) => ({ id, label: `${vorname} ${name}` })),
+          ...userList.map(({ vorname, name, id }) => ({
+            id,
+            label: `${vorname} ${name}`,
+          })),
         ],
       },
       {
@@ -223,7 +269,8 @@ class Registration extends Component {
               ? `${partner2.vorname} ${partner2.name}`
               : successTypes
                   .reduce(
-                    (acc, { canHavePartner, id }) => (canHavePartner ? [...acc, id] : acc),
+                    (acc, { canHavePartner, id }) =>
+                      canHavePartner ? [...acc, id] : acc,
                     [],
                   )
                   .includes(tournament._pivot_success)
@@ -235,12 +282,18 @@ class Registration extends Component {
         editType: Type.SELECT,
         options: [
           { id: null, bel: '' },
-          ...userList.map(({ vorname, name, id }) => ({ id, label: `${vorname} ${name}` })),
+          ...userList.map(({ vorname, name, id }) => ({
+            id,
+            label: `${vorname} ${name}`,
+          })),
         ],
       },
       {
         header: 'Transaction from',
-        field: tournament._pivot_attended === 1 ? tournament._pivot_transaction_from || '' : null,
+        field:
+          tournament._pivot_attended === 1
+            ? tournament._pivot_transaction_from || ''
+            : null,
         fieldName: 'transaction_from',
         fieldValue: tournament.transaction_from,
         editType: Type.TEXT,
@@ -249,17 +302,22 @@ class Registration extends Component {
       },
       {
         header: 'Transaction date',
-        field: tournament._pivot_attended === 1 ? tournament._pivot_transaction_date || '' : null,
+        field:
+          tournament._pivot_attended === 1
+            ? tournament._pivot_transaction_date || ''
+            : null,
         fieldName: 'transaction_date',
         fieldValue: tournament.transaction_date,
         editType: Type.TEXT,
         adminOnly: true,
         adminOnlyEdit: true,
       },
-    ].filter(({ field, adminOnly }) => field !== null && (!adminOnly || isAdmin));
+    ].filter(
+      ({ field, adminOnly }) => field !== null && (!adminOnly || isAdmin),
+    );
 
     return (
-      <div id="registration" className="container">
+      <div id="registration" className="container page-content">
         <i
           role="button"
           className="mt-1 py-4 cursorPointer fas fa-arrow-left d-none d-md-block"
@@ -294,7 +352,8 @@ class Registration extends Component {
                       { editType, options, fieldName, fieldValue },
                     ) => {
                       if (!editType) return null;
-                      if (value.props && value.props.quantity) value = value.props.quantity;
+                      if (value.props && value.props.quantity)
+                        value = value.props.quantity;
                       return (
                         <FieldEditor
                           fieldName={fieldName}
@@ -317,7 +376,8 @@ class Registration extends Component {
                         // check if the current user can edit this registration at all
                         if (!isAdmin && authenticatedUserId !== user.id)
                           return [...nonEditRowIds, i];
-                        if (!isAdmin && adminOnlyEdit) return [...nonEditRowIds, i];
+                        if (!isAdmin && adminOnlyEdit)
+                          return [...nonEditRowIds, i];
                         if (!editType) return [...nonEditRowIds, i];
                         return nonEditRowIds;
                       },

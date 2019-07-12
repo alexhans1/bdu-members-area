@@ -52,7 +52,7 @@ class CreateTournamentForm extends Component {
 
   render() {
     return (
-      <div className="container-fluid py-4">
+      <div className="container-fluid page-content">
         <h2 className="mb-4">Create New Tournament</h2>
         <TournamentForm handleSubmit={this.createTournament} />
       </div>

@@ -13,7 +13,8 @@ const mapStateToProps = ({ user }) => ({
     ? user.users.find(({ id }) => user.authenticatedUserId === id)
     : {},
   isAdmin: user.authenticatedUserId
-    ? user.users.find(({ id }) => user.authenticatedUserId === id).position === 1
+    ? user.users.find(({ id }) => user.authenticatedUserId === id).position ===
+      1
     : false,
 });
 
@@ -21,11 +22,18 @@ const mapDispatchToProps = { logout };
 
 class Navbar extends Component {
   render() {
-    const { isAuthenticated, authenticatedUser, isAdmin, logout: handleLogout } = this.props;
+    const {
+      isAuthenticated,
+      authenticatedUser,
+      isAdmin,
+      logout: handleLogout,
+    } = this.props;
     let profileImage = null;
     if (isAuthenticated) {
       profileImage = authenticatedUser.image
-        ? `http://root.debating.de/members_area/userpics/${authenticatedUser.image}`
+        ? `http://root.debating.de/members_area/userpics/${
+            authenticatedUser.image
+          }`
         : profileImageDefault;
     }
 
@@ -49,6 +57,11 @@ class Navbar extends Component {
             Tournaments
           </Link>
         </li>
+        <li className="nav-item">
+          <Link to="/dashboard" className="nav-link">
+            Dashboard
+          </Link>
+        </li>
         {isAdmin ? (
           <li className="nav-item dropdown cursorPointer">
             <a
@@ -61,7 +74,10 @@ class Navbar extends Component {
             >
               Admin
             </a>
-            <div className="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+            <div
+              className="dropdown-menu bg-dark"
+              aria-labelledby="navbarDropdown"
+            >
               <Link to="/createTournament" className="dropdown-item text-white">
                 Create Tournament
               </Link>
@@ -71,7 +87,10 @@ class Navbar extends Component {
             </div>
           </li>
         ) : null}
-        <li id="profileDropdown" className="nav-item dropdown cursorPointer">
+        <li
+          id="profileDropdown"
+          className="nav-item dropdown cursorPointer ml-auto"
+        >
           <a
             className="nav-link dropdown-toggle"
             id="navbarDropdown"
@@ -80,7 +99,12 @@ class Navbar extends Component {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <img id="navbarProfileImage" src={profileImage} className="mr-2" alt="" />
+            <img
+              id="navbarProfileImage"
+              src={profileImage}
+              className="mr-2"
+              alt=""
+            />
             <span>{authenticatedUser.vorname}</span>
           </a>
           <div
@@ -108,7 +132,7 @@ class Navbar extends Component {
     );
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
         <Link className="navbar-brand" to="/">
           <img src={logo} width="80" height="35" alt="logo" />
         </Link>

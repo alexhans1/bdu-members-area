@@ -16,13 +16,16 @@ const mapStateToProps = ({ tournament, user }) => ({
     : {},
   tournaments: tournament.showPreviousTournaments
     ? tournament.tournamentList
-    : tournament.tournamentList.filter(({ enddate }) => moment(enddate).isAfter(moment())),
+    : tournament.tournamentList.filter(({ enddate }) =>
+        moment(enddate).isAfter(moment()),
+      ),
   expandedTournamentId: tournament.expandedTournamentId,
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleShowPrevTournaments: () => dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
+    toggleShowPrevTournaments: () =>
+      dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
     setExpandedTournamentId: tournamentId =>
       dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } }),
   };
@@ -47,12 +50,22 @@ const tableColumns = [
     sort: true,
     sortFunc: (a, b, order) => {
       if (order === 'asc') {
-        return moment(a).isAfter(moment(b)) ? 1 : moment(a).isBefore(moment(b)) ? -1 : 0;
+        return moment(a).isAfter(moment(b))
+          ? 1
+          : moment(a).isBefore(moment(b))
+          ? -1
+          : 0;
       }
-      return moment(a).isAfter(moment(b)) ? -1 : moment(a).isBefore(moment(b)) ? 1 : 0;
+      return moment(a).isAfter(moment(b))
+        ? -1
+        : moment(a).isBefore(moment(b))
+        ? 1
+        : 0;
     },
     formatter: (cellContent, row) =>
-      `${moment(row.startdate).format(DATE_FORMAT)} - ${moment(row.enddate).format(DATE_FORMAT)}`,
+      `${moment(row.startdate).format(DATE_FORMAT)} - ${moment(
+        row.enddate,
+      ).format(DATE_FORMAT)}`,
   },
   {
     dataField: 'ort',
@@ -72,7 +85,8 @@ const tableColumns = [
     dataField: 'users',
     text: 'Users',
     sort: true,
-    sortFunc: (a, b, order) => (order === 'asc' ? a.length - b.length : b.length - a.length),
+    sortFunc: (a, b, order) =>
+      order === 'asc' ? a.length - b.length : b.length - a.length,
     classes: 'd-none d-lg-table-cell',
     headerClasses: 'd-none d-lg-table-cell',
     formatter: cellContent => cellContent.length,
@@ -90,7 +104,9 @@ class TournamentList extends Component {
     } = this.props;
 
     const expandRow = {
-      renderer: row => <TournamentRowCollapse tournament={row} history={history} />,
+      renderer: row => (
+        <TournamentRowCollapse tournament={row} history={history} />
+      ),
       onlyOneExpanding: true,
       onExpand: (row, isExpand, rowIndex, e) => {
         setExpandedTournamentId(isExpand ? row.id : null);
@@ -106,7 +122,7 @@ class TournamentList extends Component {
     };
 
     return (
-      <div className="container-fluid py-4">
+      <div className="container-fluid page-content">
         <h2 className="mb-4">BDU Tournaments</h2>
         <BootstrapTable
           bootstrap4
@@ -125,8 +141,14 @@ class TournamentList extends Component {
           bordered={false}
         />
         <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
-          <button type="button" className="btn btn-outline-info" onClick={handleToggle}>
-            {tournaments.find(({ enddate }) => moment(enddate).isBefore(moment()))
+          <button
+            type="button"
+            className="btn btn-outline-info"
+            onClick={handleToggle}
+          >
+            {tournaments.find(({ enddate }) =>
+              moment(enddate).isBefore(moment()),
+            )
               ? 'Hide '
               : 'Show '}
             previous tournaments

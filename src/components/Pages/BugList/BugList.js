@@ -3,13 +3,18 @@ import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
 import moment from 'moment';
 import { BASE_URL, DATE_FORMAT } from '../../../constants/applicationConstants';
-import { GET_ALL_BUGS, REMOVE_BUG, SET_BUG_STATUS } from '../../../constants/action-types';
+import {
+  GET_ALL_BUGS,
+  REMOVE_BUG,
+  SET_BUG_STATUS,
+} from '../../../constants/action-types';
 import BugReportForm from './BugReportForm';
 
 function mapStateToProps({ user, bug }) {
   return {
     isAdmin: user.authenticatedUserId
-      ? user.users.find(({ id }) => user.authenticatedUserId === id).position === 1
+      ? user.users.find(({ id }) => user.authenticatedUserId === id)
+          .position === 1
       : false,
     users: user.users,
     bugList: bug.bugList,
@@ -88,7 +93,7 @@ class BugList extends Component {
       deleteBug: handleDelete,
     } = this.props;
     return (
-      <div className="container-fluid py-4">
+      <div className="container-fluid page-content">
         <BugReportForm />
 
         {isAdmin && bugList.length ? (
@@ -119,7 +124,8 @@ class BugList extends Component {
                   headerStyle: () => ({ maxWidth: '160px' }),
                   formatter: (a, { user_id }) => {
                     const user = users.find(({ id }) => id === user_id);
-                    if (user && user.name && user.vorname) return `${user.vorname} ${user.name}`;
+                    if (user && user.name && user.vorname)
+                      return `${user.vorname} ${user.name}`;
                     return null;
                   },
                 },
@@ -133,7 +139,9 @@ class BugList extends Component {
                     return (
                       <i
                         role="button"
-                        className={`cursorPointer fas ${status ? 'fa-check' : 'fa-times'}`}
+                        className={`cursorPointer fas ${
+                          status ? 'fa-check' : 'fa-times'
+                        }`}
                         onClick={() => {
                           handleUpdate(id, status ? 0 : 1);
                         }}
@@ -171,7 +179,9 @@ class BugList extends Component {
                 type="button"
                 className="btn btn-outline-info"
                 onClick={() => {
-                  this.setState(({ showAll: prevShowAll }) => ({ showAll: !prevShowAll }));
+                  this.setState(({ showAll: prevShowAll }) => ({
+                    showAll: !prevShowAll,
+                  }));
                 }}
               >
                 {showAll ? 'Hide ' : 'Show '}
