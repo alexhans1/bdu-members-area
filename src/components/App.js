@@ -16,8 +16,6 @@ import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTou
 import EditTournament from './Pages/tournamentPages/EditTournament/EditTournament';
 import MemberList from './Pages/MemberList/MemberList';
 import Registration from './Pages/Registration/Registration';
-import TransactionList from './Pages/transactionPages/TransactionList/TransactionList';
-import Transaction from './Pages/transactionPages/Transaction/Transaction';
 import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Spinner from './Spinner/Spinner';
@@ -114,9 +112,6 @@ class App extends Component {
             <AdminRoute path="/createTournament" component={CreateTournament} />
 
             <AdminRoute path="/member" component={MemberList} />
-
-            <AdminRoute exact path="/transaction" component={TransactionList} />
-            <AdminRoute path="/transaction/:id" component={Transaction} />
 
             <PrivateRoute path="/edit" component={Profile} />
             <PrivateRoute path="/home" component={Home} />
