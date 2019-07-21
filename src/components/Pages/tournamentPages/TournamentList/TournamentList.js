@@ -1,35 +1,14 @@
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
 import moment from 'moment';
 import BootstrapTable from 'react-bootstrap-table-next';
-import { connect } from 'react-redux';
-import './TournamentList.css';
+import { useDispatch, useSelector } from 'react-redux';
+import './TournamentList.scss';
 import { DATE_FORMAT } from '../../../../constants/applicationConstants';
 import TournamentRowCollapse from './TournamentRowCollapse';
 import {
   SET_EXPANDED_TOURNAMENT_ID,
   TOGGLE_SHOW_PREV_TOURNAMENTS,
 } from '../../../../constants/action-types';
-
-const mapStateToProps = ({ tournament, user }) => ({
-  authenticatedUser: user.authenticatedUserId
-    ? user.users.find(({ id }) => user.authenticatedUserId === id)
-    : {},
-  tournaments: tournament.showPreviousTournaments
-    ? tournament.tournamentList
-    : tournament.tournamentList.filter(({ enddate }) =>
-        moment(enddate).isAfter(moment()),
-      ),
-  expandedTournamentId: tournament.expandedTournamentId,
-});
-
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleShowPrevTournaments: () =>
-      dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
-    setExpandedTournamentId: tournamentId =>
-      dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } }),
-  };
-};
 
 const tableColumns = [
   {
@@ -93,73 +72,82 @@ const tableColumns = [
   },
 ];
 
-class TournamentList extends Component {
-  render() {
-    const {
-      tournaments,
-      setExpandedTournamentId,
-      expandedTournamentId,
-      toggleShowPrevTournaments: handleToggle,
-      history,
-    } = this.props;
-
-    const expandRow = {
-      renderer: row => (
-        <TournamentRowCollapse tournament={row} history={history} />
-      ),
-      onlyOneExpanding: true,
-      onExpand: (row, isExpand, rowIndex, e) => {
-        setExpandedTournamentId(isExpand ? row.id : null);
-        if (isExpand) {
-          const el = e.target;
-          if (!el) return;
-          setTimeout(() => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 1);
-        }
+const TournamentList = ({ history }) => {
+  const { expandedTournamentId, tournaments } = useSelector(
+    ({
+      tournament: {
+        tournamentList,
+        showPreviousTournaments,
+        expandedTournamentId: tId,
       },
-      expanded: [expandedTournamentId],
-    };
+    }) => ({
+      tournaments: showPreviousTournaments
+        ? tournamentList
+        : tournamentList.filter(({ enddate }) =>
+            moment(enddate).isAfter(moment()),
+          ),
+      expandedTournamentId: tId,
+    }),
+  );
 
-    return (
-      <div className="container-fluid page-content">
-        <h2 className="mb-4">BDU Tournaments</h2>
-        <BootstrapTable
-          bootstrap4
-          hover
-          keyField="id"
-          data={tournaments}
-          columns={tableColumns}
-          defaultSorted={[
-            {
-              dataField: 'startdate',
-              order: 'desc',
-            },
-          ]}
-          rowClasses="cursorPointer"
-          expandRow={expandRow}
-          bordered={false}
-        />
-        <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
-          <button
-            type="button"
-            className="btn btn-outline-info"
-            onClick={handleToggle}
-          >
-            {tournaments.find(({ enddate }) =>
-              moment(enddate).isBefore(moment()),
-            )
-              ? 'Hide '
-              : 'Show '}
-            previous tournaments
-          </button>
-        </div>
+  const dispatch = useDispatch();
+  const handleToggle = useCallback(() =>
+    dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
+  );
+  const setExpandedTournamentId = tournamentId =>
+    dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } });
+
+  const expandRow = {
+    renderer: row => (
+      <TournamentRowCollapse tournament={row} history={history} />
+    ),
+    onlyOneExpanding: true,
+    onExpand: (row, isExpand, rowIndex, e) => {
+      setExpandedTournamentId(isExpand ? row.id : null);
+      if (isExpand) {
+        const el = e.target;
+        if (!el) return;
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 1);
+      }
+    },
+    expanded: [expandedTournamentId],
+  };
+
+  return (
+    <div className="container-fluid page-content">
+      <h2 className="mb-4">BDU Tournaments</h2>
+      <BootstrapTable
+        bootstrap4
+        hover
+        keyField="id"
+        data={tournaments}
+        columns={tableColumns}
+        defaultSorted={[
+          {
+            dataField: 'startdate',
+            order: 'desc',
+          },
+        ]}
+        rowClasses="cursorPointer"
+        expandRow={expandRow}
+        bordered={false}
+      />
+      <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
+        <button
+          type="button"
+          className="btn btn-outline-info"
+          onClick={handleToggle}
+        >
+          {tournaments.find(({ enddate }) => moment(enddate).isBefore(moment()))
+            ? 'Hide '
+            : 'Show '}
+          previous tournaments
+        </button>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TournamentList);
+export default TournamentList;

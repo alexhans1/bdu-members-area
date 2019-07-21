@@ -1,6 +1,6 @@
 /* eslint-disable no-return-assign */
 import React, { Component } from 'react';
-import './Signup.css';
+import './Signup.scss';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import UserForm from '../UserForm';
@@ -15,8 +15,24 @@ class Signup extends Component {
     this.handleSignup = this.handleSignup.bind(this);
   }
 
-  handleSignup({ email, password, firstName, lastName, gender, food, signupPassword }) {
-    this.props.signup({ email, password, firstName, lastName, gender, food, signupPassword });
+  handleSignup({
+    email,
+    password,
+    firstName,
+    lastName,
+    gender,
+    food,
+    signupPassword,
+  }) {
+    this.props.signup({
+      email,
+      password,
+      firstName,
+      lastName,
+      gender,
+      food,
+      signupPassword,
+    });
   }
 
   render() {

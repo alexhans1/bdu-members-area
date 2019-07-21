@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
 import moment from 'moment';
@@ -9,6 +9,122 @@ import {
   SET_BUG_STATUS,
 } from '../../../constants/action-types';
 import BugReportForm from './BugReportForm';
+
+const BugList = ({
+  bugList,
+  isAdmin,
+  users,
+  setBugStatus: handleUpdate,
+  deleteBug: handleDelete,
+  getBugList,
+}) => {
+  const [showAll, setShowAll] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isAdmin) {
+      getBugList();
+    }
+  }, []);
+
+  return (
+    <div className="container-fluid page-content">
+      <BugReportForm />
+
+      {isAdmin && bugList.length ? (
+        <>
+          <h2 className="pb-4">Bug List</h2>
+          <BootstrapTable
+            bootstrap4
+            keyField="id"
+            data={showAll ? bugList : bugList.filter(({ status }) => !status)}
+            columns={[
+              {
+                dataField: 'description',
+                text: 'Description',
+                sort: true,
+              },
+              {
+                dataField: 'created_at',
+                text: 'Created at',
+                sort: true,
+                headerStyle: () => ({ maxWidth: '160px' }),
+                formatter: cell => moment(cell).format(DATE_FORMAT),
+              },
+              {
+                dataField: 'user_id',
+                text: 'Reported by',
+                isDummyField: true,
+                sort: true,
+                headerStyle: () => ({ maxWidth: '160px' }),
+                formatter: (a, { user_id }) => {
+                  const user = users.find(({ id }) => id === user_id);
+                  if (user && user.name && user.vorname)
+                    return `${user.vorname} ${user.name}`;
+                  return null;
+                },
+              },
+              {
+                dataField: 'status',
+                text: 'Status',
+                isDummyField: true,
+                sort: true,
+                headerStyle: () => ({ maxWidth: '100px' }),
+                formatter: (cell, { id, status }) => {
+                  return (
+                    <i
+                      role="button"
+                      className={`cursorPointer fas ${
+                        status ? 'fa-check' : 'fa-times'
+                      }`}
+                      onClick={() => {
+                        handleUpdate(id, status ? 0 : 1);
+                      }}
+                    />
+                  );
+                },
+              },
+              {
+                dataField: '',
+                text: '',
+                isDummyField: true,
+                sort: false,
+                headerStyle: () => ({ maxWidth: '80px' }),
+                formatter: (cell, { id }) => (
+                  <button
+                    type="button"
+                    className="btn btn-outline-danger"
+                    onClick={() => handleDelete(id)}
+                  >
+                    <i className="fas fa-trash" />
+                  </button>
+                ),
+              },
+            ]}
+            defaultSorted={[
+              {
+                dataField: 'created_at',
+                order: 'desc',
+              },
+            ]}
+            bordered={false}
+          />
+          <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
+            <button
+              type="button"
+              className="btn btn-outline-info"
+              onClick={() => {
+                setShowAll(!showAll);
+              }}
+            >
+              {showAll ? 'Hide ' : 'Show '}
+              resolved issues
+            </button>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+};
 
 function mapStateToProps({ user, bug }) {
   return {
@@ -68,132 +184,6 @@ const mapDispatchToProps = dispatch => ({
     }
   },
 });
-
-class BugList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showAll: false,
-    };
-  }
-
-  async componentDidMount() {
-    if (this.props.isAdmin) {
-      this.props.getBugList();
-    }
-  }
-
-  render() {
-    const { showAll } = this.state;
-    const {
-      bugList,
-      isAdmin,
-      users,
-      setBugStatus: handleUpdate,
-      deleteBug: handleDelete,
-    } = this.props;
-    return (
-      <div className="container-fluid page-content">
-        <BugReportForm />
-
-        {isAdmin && bugList.length ? (
-          <>
-            <h2 className="pb-4">Bug List</h2>
-            <BootstrapTable
-              bootstrap4
-              keyField="id"
-              data={showAll ? bugList : bugList.filter(({ status }) => !status)}
-              columns={[
-                {
-                  dataField: 'description',
-                  text: 'Description',
-                  sort: true,
-                },
-                {
-                  dataField: 'created_at',
-                  text: 'Created at',
-                  sort: true,
-                  headerStyle: () => ({ maxWidth: '160px' }),
-                  formatter: cell => moment(cell).format(DATE_FORMAT),
-                },
-                {
-                  dataField: 'user_id',
-                  text: 'Reported by',
-                  isDummyField: true,
-                  sort: true,
-                  headerStyle: () => ({ maxWidth: '160px' }),
-                  formatter: (a, { user_id }) => {
-                    const user = users.find(({ id }) => id === user_id);
-                    if (user && user.name && user.vorname)
-                      return `${user.vorname} ${user.name}`;
-                    return null;
-                  },
-                },
-                {
-                  dataField: 'status',
-                  text: 'Status',
-                  isDummyField: true,
-                  sort: true,
-                  headerStyle: () => ({ maxWidth: '100px' }),
-                  formatter: (cell, { id, status }) => {
-                    return (
-                      <i
-                        role="button"
-                        className={`cursorPointer fas ${
-                          status ? 'fa-check' : 'fa-times'
-                        }`}
-                        onClick={() => {
-                          handleUpdate(id, status ? 0 : 1);
-                        }}
-                      />
-                    );
-                  },
-                },
-                {
-                  dataField: '',
-                  text: '',
-                  isDummyField: true,
-                  sort: false,
-                  headerStyle: () => ({ maxWidth: '80px' }),
-                  formatter: (cell, { id }) => (
-                    <button
-                      type="button"
-                      className="btn btn-outline-danger"
-                      onClick={() => handleDelete(id)}
-                    >
-                      <i className="fas fa-trash" />
-                    </button>
-                  ),
-                },
-              ]}
-              defaultSorted={[
-                {
-                  dataField: 'created_at',
-                  order: 'desc',
-                },
-              ]}
-              bordered={false}
-            />
-            <div className="d-flex align-items-center flex-column flex-sm-row mt-4">
-              <button
-                type="button"
-                className="btn btn-outline-info"
-                onClick={() => {
-                  this.setState(({ showAll: prevShowAll }) => ({
-                    showAll: !prevShowAll,
-                  }));
-                }}
-              >
-                {showAll ? 'Hide ' : 'Show '}
-                resolved issues
-              </button>
-            </div>
-          </>
-        ) : null}
-      </div>
-    );
-  }
-}
 
 export default connect(
   mapStateToProps,

@@ -31,7 +31,8 @@ class UserForm extends Component {
       !!(e.target.name === 'password' && this.state.confirmPassword)
     ) {
       change.passwordsMatch =
-        this.state.password === e.target.value || this.state.confirmPassword === e.target.value;
+        this.state.password === e.target.value ||
+        this.state.confirmPassword === e.target.value;
     }
     this.setState(change);
   }

@@ -1,71 +1,58 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import UserForm from '../UserForm';
-import './Profile.css';
+import './Profile.scss';
 import profileImageDefault from '../../../../images/bdu_quad.png';
 import { updateUser } from '../../../../actions/UserActions';
 
-const mapStateToProps = ({ user }) => ({
-  authenticatedUser: user.users.find(
-    ({ id }) => user.authenticatedUserId === id,
-  ),
-});
-const mapDispatchToProps = { updateUser };
+const Profile = () => {
+  const { id, email, vorname, name, gender, food, image } = useSelector(
+    ({ user }) =>
+      user.users.find(({ id: _id }) => user.authenticatedUserId === _id),
+  );
 
-class Profile extends Component {
-  constructor() {
-    super();
-
-    this.handleUserUpdate = this.handleUserUpdate.bind(this);
-  }
-
-  handleUserUpdate({ email, firstName, lastName, gender, food }) {
-    this.props.updateUser({
-      userId: this.props.authenticatedUser.id,
-      email,
-      firstName,
-      lastName,
-      gender,
-      food,
-    });
-  }
-
-  render() {
-    const {
-      email,
-      vorname,
-      name,
-      gender,
-      food,
-      image,
-    } = this.props.authenticatedUser;
-
-    return (
-      <div className="container page-content px-5">
-        <div className="d-flex align-items-center py-4">
-          <img
-            id="profileImage"
-            src={image || profileImageDefault}
-            alt=""
-            className="mr-3 cursorPointer"
-          />
-          <h2>Edit your profile information</h2>
-        </div>
-        <UserForm
-          context="edit"
-          handleSubmit={this.handleUserUpdate}
-          email={email}
-          firstName={vorname}
-          lastName={name}
-          gender={gender}
-          food={food}
-        />
-      </div>
+  const dispatch = useDispatch();
+  const handleUserUpdate = ({
+    email: _email,
+    firstName,
+    lastName,
+    _gender,
+    _food,
+  }) => {
+    dispatch(
+      updateUser({
+        userId: id,
+        email: _email,
+        firstName,
+        lastName,
+        gender: _gender,
+        food: _food,
+      }),
     );
-  }
-}
+  };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Profile);
+  return (
+    <div className="container page-content px-5">
+      <div className="d-flex align-items-center py-4">
+        <img
+          id="profileImage"
+          src={image || profileImageDefault}
+          alt=""
+          className="mr-3 cursorPointer"
+        />
+        <h2>Edit your profile information</h2>
+      </div>
+      <UserForm
+        context="edit"
+        handleSubmit={handleUserUpdate}
+        email={email}
+        firstName={vorname}
+        lastName={name}
+        gender={gender}
+        food={food}
+      />
+    </div>
+  );
+};
+
+export default Profile;

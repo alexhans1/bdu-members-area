@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './Login.css';
+import './Login.scss';
 import { connect } from 'react-redux';
 import membersAreaImage from './BDU_memberArea_512.png';
 import { login } from '../../../actions/AuthActions';
@@ -85,7 +85,10 @@ class Login extends Component {
             </p>
           </div>
         </div>
-        <div id="photoCredit" className="d-flex justify-content-end flex-wrap mt-auto">
+        <div
+          id="photoCredit"
+          className="d-flex justify-content-end flex-wrap mt-auto"
+        >
           photo credit:&nbsp;
           <a
             target="_blank"

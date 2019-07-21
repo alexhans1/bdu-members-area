@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './TournamentForm.css';
+import './TournamentForm.scss';
 
 class TournamentForm extends Component {
   constructor(props) {
