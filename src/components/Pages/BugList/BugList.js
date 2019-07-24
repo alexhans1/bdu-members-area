@@ -10,6 +10,8 @@ import {
 } from '../../../constants/action-types';
 import BugReportForm from './BugReportForm';
 
+let haveBugsLoaded;
+
 const BugList = ({
   bugList,
   isAdmin,
@@ -21,10 +23,11 @@ const BugList = ({
   const [showAll, setShowAll] = React.useState(false);
 
   React.useEffect(() => {
-    if (isAdmin) {
+    if (isAdmin && !haveBugsLoaded) {
       getBugList();
+      haveBugsLoaded = true;
     }
-  }, []);
+  }, [isAdmin, getBugList]);
 
   return (
     <div className="container-fluid page-content">
