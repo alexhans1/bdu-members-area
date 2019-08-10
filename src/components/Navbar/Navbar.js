@@ -57,11 +57,6 @@ class Navbar extends Component {
             Tournaments
           </Link>
         </li>
-        <li className="nav-item">
-          <Link to="/dashboard" className="nav-link">
-            Dashboard
-          </Link>
-        </li>
         {isAdmin ? (
           <li className="nav-item dropdown cursorPointer">
             <a
