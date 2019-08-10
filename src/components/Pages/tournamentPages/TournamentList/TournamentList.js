@@ -99,9 +99,10 @@ const TournamentList = ({ history }) => {
     dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } });
 
   const expandRow = {
-    renderer: row => (
-      <TournamentRowCollapse tournament={row} history={history} />
-    ),
+    renderer: row =>
+      expandedTournamentId ? (
+        <TournamentRowCollapse tournament={row} history={history} />
+      ) : null,
     onlyOneExpanding: true,
     onExpand: (row, isExpand, rowIndex, e) => {
       setExpandedTournamentId(isExpand ? row.id : null);
