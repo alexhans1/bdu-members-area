@@ -112,15 +112,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
   const userTableRows = tournament.users.length
     ? tournament.users
         .map(user => {
-          const profileImage = user.image
-            ? `http://root.debating.de/members_area/userpics/${user.image}`
-            : profileImageDefault;
           return [
-            <img
-              className="tournamentsProfileImage"
-              src={profileImage}
-              alt=""
-            />,
             `${user.vorname} ${user.name}`,
             user._pivot_role,
             user._pivot_teamname,
@@ -199,14 +191,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
           <FlexTable
             key={`userTable_${tournament.name}`}
             tableName={`userTable_${tournament.name}`}
-            headColumns={[
-              'Image',
-              'Name',
-              'Role',
-              'Team',
-              'Comment',
-              'Registered at',
-            ]}
+            headColumns={['Name', 'Role', 'Team', 'Comment', 'Registered at']}
             actionOnRowClick={forwardToRegistration}
             bodyRows={userTableRows}
             striped

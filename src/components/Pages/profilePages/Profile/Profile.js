@@ -33,15 +33,7 @@ const Profile = () => {
 
   return (
     <div className="container page-content px-5">
-      <div className="d-flex align-items-center py-4">
-        <img
-          id="profileImage"
-          src={image || profileImageDefault}
-          alt=""
-          className="mr-3 cursorPointer"
-        />
-        <h2>Edit your profile information</h2>
-      </div>
+      <h2>Edit your profile information</h2>
       <UserForm
         context="edit"
         handleSubmit={handleUserUpdate}

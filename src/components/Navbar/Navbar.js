@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logout } from '../../actions/AuthActions';
 import logo from './bdu_white_logo.png';
-import profileImageDefault from '../../images/bdu_quad.png';
 
 const mapStateToProps = ({ user }) => ({
   isAuthenticated: user.isAuthenticated,
@@ -28,14 +27,6 @@ class Navbar extends Component {
       isAdmin,
       logout: handleLogout,
     } = this.props;
-    let profileImage = null;
-    if (isAuthenticated) {
-      profileImage = authenticatedUser.image
-        ? `http://root.debating.de/members_area/userpics/${
-            authenticatedUser.image
-          }`
-        : profileImageDefault;
-    }
 
     const navbarLinks = !isAuthenticated ? (
       <ul className="navbar-nav ml-auto">
@@ -94,12 +85,6 @@ class Navbar extends Component {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <img
-              id="navbarProfileImage"
-              src={profileImage}
-              className="mr-2"
-              alt=""
-            />
             <span>{authenticatedUser.vorname}</span>
           </a>
           <div

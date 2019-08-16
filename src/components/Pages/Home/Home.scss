@@ -17,11 +17,6 @@
   overflow: hidden;
 }
 
-#profileImageContainer img {
-  width: 200px;
-  height: 200px;
-}
-
 @media screen and (min-width: 576px) {
   #profileContainer {
     min-height: calc(100vh - 62px - 36px);
