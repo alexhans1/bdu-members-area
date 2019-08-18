@@ -10,7 +10,6 @@ import {
   DATE_FORMAT,
   DATE_TIME_FORMAT,
 } from '../../../../constants/applicationConstants';
-import profileImageDefault from '../../../../images/bdu_quad.png';
 import { deleteTournament } from '../../../../actions/TournamentActions';
 
 const handleClickRegister = tournamentId => {
