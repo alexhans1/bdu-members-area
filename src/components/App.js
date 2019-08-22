@@ -39,11 +39,11 @@ const App = () => {
 
   if (!authCheckHasFinished) {
     return (
-      <div>
+      <div className="app">
         <Navbar />
-        <div className="mainContent d-flex justify-content-center align-items-center">
+        <main className="mainContent d-flex justify-content-center align-items-center">
           <Spinner xl />
-        </div>
+        </main>
         <Footer />
       </div>
     );

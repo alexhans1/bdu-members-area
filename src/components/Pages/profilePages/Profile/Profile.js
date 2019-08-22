@@ -30,7 +30,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="container page-content px-5">
+    <div className="container-fluid page-content px-5">
       <h2>Edit your profile information</h2>
       <UserForm
         context="edit"

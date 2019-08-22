@@ -1,7 +1,63 @@
-#home tbody tr td {
-  cursor: pointer;
-}
+@import '../../../css/colors.scss';
+@import '../../../css/breakpoints.scss';
+#home {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-column-gap: 1.4rem;
 
-#home tbody tr td:last-child {
-  cursor: unset;
+  .side-bar {
+    display: none;
+    grid-template-rows: 12rem repeat(2, 4rem) 5.5rem;
+    grid-row-gap: 0.4rem;
+
+    .page-content {
+      padding: 1rem 2rem;
+    }
+
+    a {
+      width: 100%;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .name-circle {
+      color: white;
+      height: 78px;
+      width: 78px;
+      background-color: $background_color_4;
+      border-radius: 50%;
+      padding: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 1.5rem 0 -45px;
+    }
+
+    .welcome-message {
+      font-size: 1.2rem;
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding: 0 1rem;
+    grid-template-columns: 2fr 5fr;
+
+    .side-bar {
+      display: grid;
+    }
+  }
+
+  tbody tr td {
+    cursor: pointer;
+  }
+
+  tbody tr td:last-child {
+    cursor: unset;
+  }
 }

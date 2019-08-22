@@ -78,7 +78,7 @@ class Registration extends Component {
     console.log('tournament', tournament);
     if (!user || !tournament)
       return (
-        <div className="container">
+        <div className="container-fluid">
           <h2 className="py-4">
             Registration not found. You might not have permission to see this
             registration.
