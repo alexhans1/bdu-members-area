@@ -1,16 +1,12 @@
+@import '../../css/breakpoints.scss';
+
 .dropdown-item {
   font-size: 1.1rem;
 }
 .text-white.dropdown-item:hover {
   background-color: #1c1f2396;
 }
-#navbarProfileImage {
-  height: 30px;
-  width: 30px;
-  border: 0.1px solid gainsboro;
-  border-radius: 50%;
-}
-@media screen and (min-width: 992px) {
+@include media-breakpoint-up(lg) {
   #profileDropdown {
     margin-left: auto;
   }

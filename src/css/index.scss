@@ -17,21 +17,4 @@
 @import '~bootstrap/scss/forms';
 @import '~bootstrap/scss/reboot';
 
-@import "./grid-utilities";
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-.cursorPointer {
-  cursor: pointer;
-}
-
-.page-content {
-  padding: 3rem;
-  border-radius: 0.5rem;
-  background: white;
-  box-shadow: 3px 4px 5px rgba(0, 0, 0, 0.19), 0 2px 2px rgba(0, 0, 0, 0.23);
-}
+@import './grid-utilities';

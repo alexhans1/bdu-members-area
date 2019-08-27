@@ -1,5 +1,7 @@
+@import '../../../css/colors.scss';
+
 body {
-  background: #e4e4e4
+  background: #e4e4e4;
 }
 
 #dashboard {
@@ -9,6 +11,7 @@ body {
   grid-auto-flow: dense;
 
   .box {
+    position: relative;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -18,9 +21,26 @@ body {
     padding: 1rem 2rem;
     border-radius: 3px;
     box-shadow: 3px 4px 5px rgba(0, 0, 0, 0.19), 0 2px 2px rgba(0, 0, 0, 0.23);
+    min-height: 110px;
 
-    b {
+    .number {
       font-size: x-large;
+    }
+
+    .number-card-title {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      margin-bottom: 10px;
+      color: $bdu-primary;
+    }
+
+    .changePositive {
+      color: $bdu-positive;
+    }
+
+    .changeNegative {
+      color: $bdu-negative;
     }
   }
 }

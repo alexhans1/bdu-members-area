@@ -14,13 +14,11 @@ import 'bootstrap/js/src/modal';
 import 'bootstrap/js/src/collapse';
 
 ReactDOM.render(
-  <div>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </div>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root'),
 );
 serviceWorker.register();

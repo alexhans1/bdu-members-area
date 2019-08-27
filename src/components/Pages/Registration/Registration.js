@@ -75,9 +75,10 @@ class Registration extends Component {
         params: { id: regId },
       },
     } = this.props;
+    console.log('tournament', tournament);
     if (!user || !tournament)
       return (
-        <div className="container">
+        <div className="container-fluid">
           <h2 className="py-4">
             Registration not found. You might not have permission to see this
             registration.
@@ -85,12 +86,11 @@ class Registration extends Component {
         </div>
       );
 
-    const attendanceStatusObj = attendanceStatuses.find(
-      statusObj => statusObj.id === tournament._pivot_attended,
-    );
-    const attendanceStatus = attendanceStatusObj
-      ? attendanceStatusObj.label
-      : '';
+    const attendanceStatus =
+      Object.keys(attendanceStatuses).find(
+        statusName =>
+          attendanceStatuses[statusName] === tournament._pivot_attended,
+      ) || '';
     const dateFormat = 'DD.MM.YYYY';
     const startdate = tournament.startdate
       ? moment(tournament.startdate).format(dateFormat)
@@ -220,7 +220,10 @@ class Registration extends Component {
         editType: Type.SELECT,
         fieldValue: tournament._pivot_attended,
         fieldName: 'attended',
-        options: attendanceStatuses,
+        options: Object.keys(attendanceStatuses).map(label => ({
+          id: attendanceStatuses[label],
+          label,
+        })),
         adminOnlyEdit: true,
       },
       {
@@ -327,8 +330,22 @@ class Registration extends Component {
         />
         {user && user.tournaments ? (
           <div className="row">
-            <div className="col-12 col-md-8 col-lg-6 col-xl-5 offset-md-1">
-              <h1 className="py-4">Registration {regId}</h1>
+            <div className="col-12 col-md-9 col-lg-7 col-xl-6 offset-md-1">
+              <div className="d-flex align-items-center">
+                <h1 className="py-4 mr-4">Registration {regId}</h1>
+                {(isAdmin ||
+                  authenticatedUserId === tournament._pivot_user_id) && (
+                  <button
+                    className="btn btn-outline-danger"
+                    type="button"
+                    disabled={
+                      tournament._pivot_attended === attendanceStatuses.Went
+                    }
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
               <BootstrapTable
                 bootstrap4
                 keyField="id"

@@ -92,10 +92,10 @@ const UserTournamentList = ({ tournaments, history }) => {
       classes: 'd-none d-lg-table-cell',
       headerClasses: 'd-none d-lg-table-cell',
       formatter: cellContent => {
-        const status = attendanceStatuses.find(
-          statusObj => statusObj.id === cellContent,
+        const status = Object.keys(attendanceStatuses).find(
+          statusName => attendanceStatuses[statusName] === cellContent,
         );
-        return status ? status.label : '';
+        return status || '';
       },
     },
     {

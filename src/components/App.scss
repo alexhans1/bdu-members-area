@@ -1,11 +1,55 @@
-.mainContent {
-  min-height: calc(100vh - 62px - 36px);
-  padding: 1.5rem;
+@import '../css/breakpoints.scss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+nav {
+  grid-area: nav;
+}
+main {
+  grid-area: main;
+}
+footer {
+  grid-area: footer;
 }
 
-@media (min-width: 992px) {
+.container-fluid {
+  padding: unset;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.page-content {
+  padding: 1rem 0.4rem;
+  background: white;
+}
+
+.app {
+  display: grid;
+  grid-template-areas:
+    'nav'
+    'main'
+    'footer';
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+
+@include media-breakpoint-up(lg) {
   .mainContent {
     max-width: 2000px;
-    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .page-content {
+    padding: 3rem;
   }
 }

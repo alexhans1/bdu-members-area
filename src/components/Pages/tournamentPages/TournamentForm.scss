@@ -1,9 +1,11 @@
+@import '../../../css/breakpoints.scss';
+
 #tournamentForm > .form-group {
   min-width: 300px;
   padding: 0 1em;
 }
 
-@media (min-width: 992px) {
+@include media-breakpoint-up(lg) {
   #tournamentForm > .form-group {
     padding: 0 1.5em;
   }

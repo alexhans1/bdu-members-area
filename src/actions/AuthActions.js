@@ -25,7 +25,9 @@ export const getAppData = () => async dispatch => {
         credentials: 'include',
       }),
     ]);
-    const [tournaments, users] = await Promise.all(responses.map(res => res.json()));
+    const [tournaments, users] = await Promise.all(
+      responses.map(res => res.json()),
+    );
     dispatch({
       type: SET_USER_LIST,
       payload: { users },

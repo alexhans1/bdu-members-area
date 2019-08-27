@@ -10,24 +10,12 @@ export const alertTypes = {
   DANGER: 'DANGER',
 };
 
-export const attendanceStatuses = [
-  {
-    id: 0,
-    label: 'Registered',
-  },
-  {
-    id: 1,
-    label: 'Went',
-  },
-  {
-    id: 2,
-    label: 'Can Go',
-  },
-  {
-    id: 3,
-    label: 'Didn´t Go',
-  },
-];
+export const attendanceStatuses = {
+  Registered: 0,
+  Went: 1,
+  'Can Go': 2,
+  'Didn´t Go': 3,
+};
 
 export const successTypes = [
   {

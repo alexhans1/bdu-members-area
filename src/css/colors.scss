@@ -1,4 +1,11 @@
-:root {
-  --bright-red: #dc3545;
-  --light-olive: #3fac81;
-}
+$color_1: #f3f3f3;
+$background_color_1: #eaeaea;
+$background_color_2: var(--gray-dark);
+$background_color_3: #3b4248;
+$background_color_4: #2d2d2d;
+$border_color_1: #676869;
+
+$bdu-positive: #84e8a7;
+$bdu-negative: #eb4741;
+
+$bdu-primary: var(--info);

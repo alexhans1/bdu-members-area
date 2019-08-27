@@ -91,16 +91,18 @@ const TournamentList = ({ history }) => {
   );
 
   const dispatch = useDispatch();
-  const handleToggle = useCallback(() =>
-    dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
+  const handleToggle = useCallback(
+    () => dispatch({ type: TOGGLE_SHOW_PREV_TOURNAMENTS }),
+    [dispatch],
   );
   const setExpandedTournamentId = tournamentId =>
     dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } });
 
   const expandRow = {
-    renderer: row => (
-      <TournamentRowCollapse tournament={row} history={history} />
-    ),
+    renderer: row =>
+      expandedTournamentId ? (
+        <TournamentRowCollapse tournament={row} history={history} />
+      ) : null,
     onlyOneExpanding: true,
     onExpand: (row, isExpand, rowIndex, e) => {
       setExpandedTournamentId(isExpand ? row.id : null);
