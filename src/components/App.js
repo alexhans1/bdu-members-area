@@ -19,6 +19,7 @@ import Registration from './Pages/Registration/Registration';
 import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Spinner from './Spinner/Spinner';
+import HowToList from './Pages/HowToCollection/HowToList';
 
 const mapStateToProps = ({ user }) => ({
   isAuthenticated: user.isAuthenticated,
@@ -108,6 +109,7 @@ class App extends Component {
 
             <PrivateRoute path="/registration/:id" component={Registration} />
             <PrivateRoute path="/dashboard" component={Dashboard} />
+            <PrivateRoute path="/howToCollection" component={HowToList} />
 
             <AdminRoute path="/createTournament" component={CreateTournament} />
 

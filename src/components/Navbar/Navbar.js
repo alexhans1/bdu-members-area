@@ -62,6 +62,11 @@ class Navbar extends Component {
             Dashboard
           </Link>
         </li>
+        <li className="nav-item">
+          <Link to="/howToCollection" className="nav-link">
+            HowTo Collection
+          </Link>
+        </li>
         {isAdmin ? (
           <li className="nav-item dropdown cursorPointer">
             <a
