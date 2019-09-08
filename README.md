@@ -1,3 +1,6 @@
-# bdudb
+# bdu members area API
 
-database web app for the berlin debating union e.v.
+- Start API:
+  npm start
+- deploy to heroku:
+  npm run deploy

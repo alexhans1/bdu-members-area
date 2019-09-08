@@ -39,14 +39,20 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
                 showInNavigator: true,
               });
               user.totalPoints = 0;
-              const a = moment(oldestTournament.toJSON().startdate).subtract(10, 'days');
+              const a = moment(oldestTournament.toJSON().startdate).subtract(
+                10,
+                'days',
+              );
               const b = moment();
               for (let m = b; m.isAfter(a); m.subtract(10, 'days')) {
                 let tmpPoints = 0;
                 user.tournaments.forEach(tournament => {
                   if (tournament._pivot_points) {
                     const start = moment(tournament.startdate);
-                    if (m.isAfter(start) && m.isBefore(start.clone().add(1, 'year'))) {
+                    if (
+                      m.isAfter(start) &&
+                      m.isBefore(start.clone().add(1, 'year'))
+                    ) {
                       tmpPoints += tournament._pivot_points;
                     }
                   }
@@ -112,7 +118,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated }) => {
             }
           });
       } catch (err) {
-        console.error(`Error while generating ranking data. Error message:\n${err.message}`);
+        console.error(
+          `Error while generating ranking data. Error message:\n${err.message}`,
+        );
         res.status(500).json({ error: true, message: err.message });
       }
     });

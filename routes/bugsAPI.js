@@ -37,7 +37,7 @@ module.exports = ({ router, Bookshelf }) => {
       user_id,
     })
       .save()
-      .then((bug) => {
+      .then(bug => {
         console.log('Post bug successful.');
         res.status(200).json({ bug, message: 'Report bug successful.' });
       })
@@ -64,7 +64,9 @@ module.exports = ({ router, Bookshelf }) => {
         })
         .then(() => {
           console.log('Updating bug successful.');
-          res.status(200).json({ error: false, message: 'Updating bug successful.' });
+          res
+            .status(200)
+            .json({ error: false, message: 'Updating bug successful.' });
         })
         .catch(err => {
           console.error(`Error while updating bug. Error: ${err.message}`);
@@ -87,7 +89,9 @@ module.exports = ({ router, Bookshelf }) => {
         })
         .then(() => {
           console.log('Deleting bug successful');
-          res.status(200).json({ error: false, message: 'Deleting bug successful.' });
+          res
+            .status(200)
+            .json({ error: false, message: 'Deleting bug successful.' });
         })
         .catch(err => {
           console.error(`Error while deleting bug. Error: ${err.message}`);

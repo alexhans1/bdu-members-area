@@ -1,6 +1,12 @@
 const moment = require('moment');
 
-module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized }) => {
+module.exports = ({
+  router,
+  Bookshelf,
+  isAuthenticated,
+  isAdmin,
+  handleUnauthorized,
+}) => {
   console.info('> adding tournament routes...');
   // Register the authentication middleware
   // for all URIs use the isAuthenticated function
@@ -15,18 +21,33 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .fetch({ withRelated: ['users'] })
         .then(tournament => {
           if (!tournament) {
-            console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
-              message: `The tournament with the ID "${req.params.id}" is not in the database.`,
+              message: `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           } else {
             res.status(200).json(tournament.toJSON());
           }
         });
     } catch (ex) {
-      console.error(`Error while getting specific tournament. Error message:\n${ex.message}`);
-      res.status(500).json({ error: true, message: 'Error while getting specific tournament.' });
+      console.error(
+        `Error while getting specific tournament. Error message:\n${
+          ex.message
+        }`,
+      );
+      res
+        .status(500)
+        .json({
+          error: true,
+          message: 'Error while getting specific tournament.',
+        });
     }
   });
 
@@ -48,7 +69,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           res.status(200).json(collection.toJSON());
         });
     } catch (err) {
-      console.error(`Error while getting all tournaments. Error message:\n${err.message}`);
+      console.error(
+        `Error while getting all tournaments. Error message:\n${err.message}`,
+      );
       res.status(500).json({
         error: true,
         message: 'Error while getting all tournaments.',
@@ -60,7 +83,10 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   router.route('/tournament').post((req, res) => {
     // check if session user is an admin
     if (!isAdmin(req))
-      return handleUnauthorized(res, 'User is not authorized to create tournament.');
+      return handleUnauthorized(
+        res,
+        'User is not authorized to create tournament.',
+      );
     try {
       Models.Tournament.forge({
         name: req.body.name,
@@ -84,7 +110,10 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .then(tournament => {
           res
             .status(200)
-            .json({ message: 'Create Tournament successful.', tournament: tournament.attributes });
+            .json({
+              message: 'Create Tournament successful.',
+              tournament: tournament.attributes,
+            });
         })
         .then(() => {
           if (moment(req.body.startdate).unix() > Date.now() / 1000) {
@@ -94,7 +123,8 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
                 .then(users => {
                   users.forEach(user => {
                     user.save({
-                      new_tournament_count: user.toJSON().new_tournament_count + 1,
+                      new_tournament_count:
+                        user.toJSON().new_tournament_count + 1,
                     });
                   });
                 });
@@ -105,8 +135,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           }
         });
     } catch (err) {
-      console.error(`Error while adding new Tournament. Error: \n${err.message}`);
-      res.status(500).json({ error: true, message: 'Error while adding new Tournament.' });
+      console.error(
+        `Error while adding new Tournament. Error: \n${err.message}`,
+      );
+      res
+        .status(500)
+        .json({ error: true, message: 'Error while adding new Tournament.' });
     }
   });
 
@@ -114,16 +148,25 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   router.route('/tournament/:id').put((req, res) => {
     // check if session user is an admin
     if (!isAdmin(req))
-      return handleUnauthorized(res, 'User is not authorized to update tournament.');
+      return handleUnauthorized(
+        res,
+        'User is not authorized to update tournament.',
+      );
     try {
       Models.Tournament.forge({ id: req.params.id })
         .fetch({ require: true })
         .then(tournament => {
           if (!tournament) {
-            console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
-              message: `The tournament with the ID "${req.params.id}" is not in the database.`,
+              message: `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           } else {
             tournament
@@ -154,8 +197,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
           }
         });
     } catch (err) {
-      console.error(`Error while updating user. Error message:\n ${err.message}`);
-      res.status(500).json({ error: true, message: 'Error while updating tournament.' });
+      console.error(
+        `Error while updating user. Error message:\n ${err.message}`,
+      );
+      res
+        .status(500)
+        .json({ error: true, message: 'Error while updating tournament.' });
     }
   });
 
@@ -163,16 +210,25 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   router.route('/tournament/:id').delete((req, res) => {
     // check if session user is an admin
     if (!isAdmin(req))
-      return handleUnauthorized(res, 'User is not authorized to delete tournament.');
+      return handleUnauthorized(
+        res,
+        'User is not authorized to delete tournament.',
+      );
     try {
       Models.Tournament.forge({ id: req.params.id })
         .fetch({ require: true })
         .then(tournament => {
           if (!tournament) {
-            console.error(`The tournament with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
-              message: `The tournament with the ID "${req.params.id}" is not in the database.`,
+              message: `The tournament with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           } else {
             tournament.destroy();
@@ -183,7 +239,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         });
     } catch (err) {
       console.error(`Error while deleting tournament. Error: ${err.message}`);
-      res.status(500).json({ error: true, message: 'Error while deleting user.' });
+      res
+        .status(500)
+        .json({ error: true, message: 'Error while deleting user.' });
     }
   });
 
