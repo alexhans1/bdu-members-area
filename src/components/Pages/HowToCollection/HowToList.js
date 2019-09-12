@@ -10,10 +10,6 @@ import { DATE_FORMAT } from '../../../constants/applicationConstants';
   TOGGLE_SHOW_PREV_TOURNAMENTS,
 } from '../../../../constants/action-types'; */
 
-import { alertTypes, BASE_URL } from '../../../constants/applicationConstants';
-import { async } from "q";
-import { func } from "prop-types";
-// import triggerAlert from './actionHelpers';
 
 const tableColumns = [
   {
@@ -64,15 +60,6 @@ const tableColumns = [
   
 ];
 
-const dummyHowTos = [
-  {
-    id: 0,
-    title: 'A dummy title',
-    topic: 'Tournaments',
-    addedDate: moment(),
-    description: 'A dummy description',
-  }
-]
 
 const HowToList = () => {
   /* const { expandedTournamentId, tournaments } = useSelector(
