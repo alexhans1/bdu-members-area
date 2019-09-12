@@ -1,4 +1,4 @@
-import React/* ,  { useCallback } */ from 'react';
+import React, { useState, useEffect } from "react";
 import moment from 'moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 // import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,11 @@ import { DATE_FORMAT } from '../../../constants/applicationConstants';
   SET_EXPANDED_TOURNAMENT_ID,
   TOGGLE_SHOW_PREV_TOURNAMENTS,
 } from '../../../../constants/action-types'; */
+
+import { alertTypes, BASE_URL } from '../../../constants/applicationConstants';
+import { async } from "q";
+import { func } from "prop-types";
+// import triggerAlert from './actionHelpers';
 
 const tableColumns = [
   {
@@ -23,6 +28,11 @@ const tableColumns = [
     style: { wordBreak: 'break-word' },
   },
   {
+    dataField: 'url',
+    text: 'Link',
+    style: { wordBreak: 'break-word' },
+  },
+  {
     dataField: 'topic',
     text: 'Topic',
     sort: true,
@@ -31,7 +41,7 @@ const tableColumns = [
     formatter: (cellContent, row) => row.topic.toUpperCase(),
   },
   {
-    dataField: 'addedDate',
+    dataField: 'created_at',
     isDummyField: true,
     text: 'Added to Collection',
     sort: true,
@@ -89,11 +99,30 @@ const HowToList = () => {
   const setExpandedTournamentId = tournamentId =>
     dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } }); */
 
+  const [entryList, setEntryList] = useState([]);
+  
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(`${BASE_URL}/wikiLinks`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (response.status === 200) {
+        const { data: links } = await response.json();
+        if (links)
+          setEntryList(links);
+      }
+    }
+    fetchData()
+  }, entryList);
+
+
   const expandRow = {
     renderer: row => (
       <p>{row.description}</p>
     ),
-    onlyOneExpanding: true,
+    onlyOneExpanding: false,
     onExpand: (row, isExpand, rowIndex, e) => {
       // setExpandedTournamentId(isExpand ? row.id : null);
       if (isExpand) {
@@ -114,11 +143,11 @@ const HowToList = () => {
         bootstrap4
         hover
         keyField="id"
-        data={dummyHowTos}
+        data={entryList}
         columns={tableColumns}
         defaultSorted={[
           {
-            dataField: 'addedDate',
+            dataField: 'created_at',
             order: 'desc',
           },
         ]}
