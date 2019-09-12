@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from 'moment';
 import BootstrapTable from 'react-bootstrap-table-next';
 // import { useDispatch, useSelector } from 'react-redux';
-import './HowToList.scss';
+import './WikiLinkList.scss';
 import { DATE_FORMAT } from '../../../constants/applicationConstants';
 // import TournamentRowCollapse from './TournamentRowCollapse';
 /* import {

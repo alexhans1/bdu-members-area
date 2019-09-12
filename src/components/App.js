@@ -19,7 +19,7 @@ import Registration from './Pages/Registration/Registration';
 import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Spinner from './Spinner/Spinner';
-import HowToList from './Pages/HowToCollection/HowToList';
+import WikiLinkList from './Pages/WikiLinkList/WikiLinkList';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -101,7 +101,7 @@ const App = () => {
 
           <PrivateRoute path="/registration/:id" component={Registration} />
           <PrivateRoute path="/dashboard" component={Dashboard} />
-          <PrivateRoute path="/howToCollection" component={HowToList} />
+          <PrivateRoute path="/wikiLinks" component={WikiLinkList} />
 
           <AdminRoute path="/createTournament" component={CreateTournament} />
 
