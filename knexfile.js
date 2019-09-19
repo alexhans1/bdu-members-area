@@ -1,7 +1,7 @@
 // Update with your config settings.
 
 module.exports = {
-  local: {
+  development: {
     client: 'mysql',
     connection: {
       host: 'localhost',

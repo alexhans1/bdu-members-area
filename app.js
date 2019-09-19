@@ -13,6 +13,21 @@ const httpRequestLogger = require('morgan');
 const app = express();
 const port = process.env.PORT || 8080;
 
+// browser sessions for authentication
+const session = require('express-session');
+const mysql = require('mysql');
+const MySQLStore = require('express-mysql-session')(session);
+const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
+
+const _bookshelf = require('bookshelf');
+const _knex = require('knex');
+
+const conn = require('./knexfile.js');
+
+// connect to database
+const knex = _knex(conn[process.env.NODE_ENV || 'development']); // require knex query binder;
+const Bookshelf = _bookshelf(knex); // require Bookshelf ORM Framework;
+
 // https redirect
 app.use(sslRedirect());
 
@@ -42,24 +57,6 @@ app.use(cookieParser());
 
 // add HTTP Request logging
 app.use(httpRequestLogger('tiny'));
-
-// connect to database
-let conn;
-let knex;
-let Bookshelf;
-try {
-  conn = require('./knexfile.js'); // read out the DB Conn Data
-  knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
-  Bookshelf = require('bookshelf')(knex); // require Bookshelf ORM Framework
-} catch (ex) {
-  console.error(ex.message);
-}
-
-// browser sessions for authentication
-const session = require('express-session');
-const mysql = require('mysql');
-const MySQLStore = require('express-mysql-session')(session);
-const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
 
 // sessionStore options
 const options = {
