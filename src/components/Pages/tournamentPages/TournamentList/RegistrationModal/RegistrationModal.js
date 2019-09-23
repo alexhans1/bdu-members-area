@@ -31,11 +31,11 @@ class RegistrationModal extends Component {
 
   handlePostRegister(e) {
     e.preventDefault();
-    $(`#registrationModal_${this.props.tournament.id}`).modal('hide');
+    const { tournament, user, register: _register } = this.props;
+    $(`#registrationModal_${tournament.id}`).modal('hide');
     const { role, partner1, partner2, teamName, comment } = this.state;
-    const { tournament } = this.props;
-    const userId = this.props.user.id;
-    this.props.register({
+    const userId = user.id;
+    _register({
       tournament,
       userId,
       role,
@@ -67,7 +67,12 @@ class RegistrationModal extends Component {
                 <h5 className="modal-title" id="exampleModalCenterTitle">
                   Register for {tournament.name}
                 </h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -157,7 +162,11 @@ class RegistrationModal extends Component {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-outline-secondary" data-dismiss="modal">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  data-dismiss="modal"
+                >
                   Close
                 </button>
                 <button type="submit" className="btn btn-success">

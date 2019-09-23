@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserForm from '../UserForm';
-import './Profile.scss';
 import { updateUser } from '../../../../actions/UserActions';
 
 const Profile = () => {

@@ -103,9 +103,11 @@ const MemberRowCollapse = ({ history, user }) => {
   ];
 
   const forwardToRegistration = {
+    /* eslint-disable camelcase */
     onClick: (e, { _pivot_id }) => {
       history.push(`registration/${_pivot_id}`);
     },
+    /* eslint-enable camelcase */
   };
 
   return (

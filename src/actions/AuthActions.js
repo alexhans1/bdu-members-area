@@ -38,7 +38,20 @@ export const getAppData = () => async dispatch => {
     });
     dispatch({
       type: SET_TOURNAMENT_LIST,
-      payload: { tournaments },
+      payload: {
+        tournaments: tournaments.map(tournament => ({
+          ...tournament,
+          location: tournament.ort,
+          startDate: tournament.startdate,
+          endDate: tournament.enddate,
+          speakerPrice: tournament.speakerprice,
+          judgePrice: tournament.judgeprice,
+          teamSpots: tournament.teamspots,
+          judgeSpots: tournament.judgespots,
+          rankingFactor: tournament.rankingvalue,
+          comment: tournament.comments,
+        })),
+      },
     });
     dispatch({
       type: CHECK_AUTHENTICATION,

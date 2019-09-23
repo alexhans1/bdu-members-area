@@ -13,11 +13,12 @@ const NumberCard = ({ title, number, percentageChange }) => {
         {percentageChange && (
           <b
             className={`ml-2 ${
-              percentageChange > 0 ? 'changePositive' : 'changeNegative'
+              percentageChange > 0 ? 'text-success' : 'text-danger'
             }`}
           >
             {percentageChange > 0 && '+'}
-            {percentageChange}%
+            {percentageChange}
+%
             {percentageChange > 0 ? (
               <i className="fas fa-arrow-up ml-1" />
             ) : (

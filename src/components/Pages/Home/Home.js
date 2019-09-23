@@ -24,7 +24,9 @@ const Home = ({ history }) => {
           <span className="d-flex flex-column welcome-message">
             <span>Hi,</span>
             <b>
-              {user.vorname} {user.name}
+              {user.vorname} 
+              {' '}
+              {user.name}
             </b>
           </span>
         </div>
@@ -53,7 +55,7 @@ const Home = ({ history }) => {
         </div>
       </div>
       <div className="page-content">
-        <h1 className="py-3"> My Tournaments</h1>
+        <h2 className="py-3"> My Tournaments</h2>
         {tournaments.length ? (
           <UserTournamentList tournaments={tournaments} history={history} />
         ) : (

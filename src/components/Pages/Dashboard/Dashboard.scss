@@ -1,9 +1,5 @@
 @import '../../../css/colors.scss';
 
-body {
-  background: #e4e4e4;
-}
-
 #dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -33,14 +29,6 @@ body {
       left: 20px;
       margin-bottom: 10px;
       color: $bdu-primary;
-    }
-
-    .changePositive {
-      color: $bdu-positive;
-    }
-
-    .changeNegative {
-      color: $bdu-negative;
     }
   }
 }

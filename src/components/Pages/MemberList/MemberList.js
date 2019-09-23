@@ -10,6 +10,7 @@ import {
 } from '../../../constants/applicationConstants';
 import MemberRowCollapse from './MemberRowCollapse';
 import { SET_EXPANDED_USER_ID } from '../../../constants/action-types';
+import { calculateTotalUserDebt } from '../../../helpers';
 
 const membersTableColumns = [
   {
@@ -84,16 +85,9 @@ const MemberList = ({ history }) => {
       ).length || 0;
     const judgingRatio =
       Math.round((totalTournamentsAsJudge * 100) / totalTournaments) || -1;
-    const totalDebt = user.tournaments.reduce((total, tournament) => {
-      const debt = tournament._pivot_price_paid - tournament._pivot_price_owed;
-      return total - debt;
-    }, 0);
-    user.totalPoints = totalPoints;
-    user.totalTournaments = totalTournaments;
-    user.judgingRatio = judgingRatio;
-    user.totalDebt = totalDebt;
+    const totalDebt = calculateTotalUserDebt(user);
 
-    return user;
+    return { ...user, totalPoints, totalTournaments, judgingRatio, totalDebt };
   });
 
   const dispatch = useDispatch();

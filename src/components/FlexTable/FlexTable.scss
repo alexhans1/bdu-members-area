@@ -11,7 +11,7 @@
   flex-grow: 0;
   width: 100%;
   padding: 10px 0;
-  border-bottom: 1px solid #eceeef;
+  border-bottom: 1px solid $border_color_1;
 }
 .flex-table-cell {
   display: flex;
@@ -49,27 +49,26 @@
   }
 }
 .collapse.show {
-  background-color: $background_color_2 !important;
-  color: $color_1 !important;
+  background-color: $background_color_3 !important;
+  color: $bdu-color_1 !important;
   .flex-table-striped {
     &:nth-child(even) {
       background-color: $background_color_3;
     }
   }
   .flex-table-row {
-    border-color: $border_color_1;
+    border-color: $border_color_2;
   }
 }
 .collapsing {
-  //background-color: $background_color_2 !important;
-  color: $color_1 !important;
+  color: $bdu-color_1 !important;
   .flex-table-striped {
     &:nth-child(even) {
       background-color: $background_color_3;
     }
   }
   .flex-table-row {
-    border-color: $border_color_1;
+    border-color: $border_color_2;
   }
 }
 
@@ -78,13 +77,13 @@
   transition: none;
 }
 .row-expansion-style {
-  color: $color_1;
-  background-color: $background_color_2;
+  color: $bdu-color_1;
+  background-color: $background_color_3;
   .table tr,
   th {
-    color: $color_1;
+    color: $bdu-color_1;
     &:hover {
-      color: $color_1;
+      color: $bdu-color_1;
       background-color: unset;
     }
   }
@@ -99,7 +98,7 @@
     }
   }
   .table {
-    background-color: $background_color_2;
+    background-color: $background_color_3;
   }
 }
 .table {

@@ -43,7 +43,7 @@ const tableColumns = [
     },
     formatter: (cellContent, row) =>
       `${moment(row.startdate).format(DATE_FORMAT)} - ${moment(
-        row.enddate,
+        row.endDate,
       ).format(DATE_FORMAT)}`,
   },
   {
@@ -83,8 +83,8 @@ const TournamentList = ({ history }) => {
     }) => ({
       tournaments: showPreviousTournaments
         ? tournamentList
-        : tournamentList.filter(({ enddate }) =>
-            moment(enddate).isAfter(moment()),
+        : tournamentList.filter(({ endDate }) =>
+            moment(endDate).isAfter(moment()),
           ),
       expandedTournamentId: tId,
     }),
@@ -142,7 +142,7 @@ const TournamentList = ({ history }) => {
           className="btn btn-outline-info"
           onClick={handleToggle}
         >
-          {tournaments.find(({ enddate }) => moment(enddate).isBefore(moment()))
+          {tournaments.find(({ endDate }) => moment(endDate).isBefore(moment()))
             ? 'Hide '
             : 'Show '}
           previous tournaments

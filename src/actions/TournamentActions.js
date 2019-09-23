@@ -17,29 +17,34 @@ export const getTournament = tournamentId => async dispatch => {
     dispatch({
       type: GET_TOURNAMENT,
       payload: {
-        tournament,
+        tournament: {
+          ...tournament,
+          location: tournament.ort,
+          startDate: tournament.startdate,
+          endDate: tournament.enddate,
+          speakerPrice: tournament.speakerprice,
+          judgePrice: tournament.judgeprice,
+          teamSpots: tournament.teamspots,
+          judgeSpots: tournament.judgespots,
+          rankingFactor: tournament.rankingvalue,
+          comment: tournament.comments,
+        },
       },
     });
   }
 };
 
 export const createTournament = ({
-  name,
   location,
-  accommodation,
   startDate,
   endDate,
-  deadline,
-  format,
-  language,
-  league,
   rankingFactor,
   speakerPrice,
   judgePrice,
   teamSpots,
   judgeSpots,
-  link,
   comment,
+  ...restTournament
 }) => async dispatch => {
   const response = await fetch(`${BASE_URL}/tournament`, {
     method: 'POST',
@@ -49,21 +54,15 @@ export const createTournament = ({
       'Access-Control-Request-Method': 'POST',
     },
     body: JSON.stringify({
-      name,
+      ...restTournament,
       ort: location,
       startdate: startDate,
       enddate: endDate,
-      deadline,
-      language,
-      format,
-      league,
-      accommodation,
       speakerprice: speakerPrice,
       judgeprice: judgePrice,
       teamspots: teamSpots,
       judgespots: judgeSpots,
       rankingvalue: rankingFactor,
-      link,
       comments: comment,
     }),
   });
@@ -82,22 +81,16 @@ export const createTournament = ({
 export const updateTournament = (
   tournamentId,
   {
-    name,
     location,
-    accommodation,
     startDate,
     endDate,
-    deadline,
-    format,
-    language,
-    league,
     rankingFactor,
     speakerPrice,
     judgePrice,
     teamSpots,
     judgeSpots,
-    link,
     comment,
+    ...restTournament
   },
 ) => async dispatch => {
   const response = await fetch(`${BASE_URL}/tournament/${tournamentId}`, {
@@ -108,21 +101,15 @@ export const updateTournament = (
       'Access-Control-Request-Method': 'PUT',
     },
     body: JSON.stringify({
-      name,
+      ...restTournament,
       ort: location,
       startdate: startDate,
       enddate: endDate,
-      deadline,
-      language,
-      format,
-      league,
-      accommodation,
       speakerprice: speakerPrice,
       judgeprice: judgePrice,
       teamspots: teamSpots,
       judgespots: judgeSpots,
       rankingvalue: rankingFactor,
-      link,
       comments: comment,
     }),
   });

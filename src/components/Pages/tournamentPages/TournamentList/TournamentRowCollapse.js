@@ -54,8 +54,8 @@ const TournamentRowCollapse = ({ tournament, history }) => {
     });
   };
 
-  const startdate = moment(tournament.startdate).format(DATE_FORMAT);
-  const enddate = moment(tournament.enddate).format(DATE_FORMAT);
+  const startDate = moment(tournament.startDate).format(DATE_FORMAT);
+  const endDate = moment(tournament.endDate).format(DATE_FORMAT);
   let { link } = tournament;
   if (
     tournament.link.includes('http://') ||
@@ -79,24 +79,37 @@ const TournamentRowCollapse = ({ tournament, history }) => {
     );
   }
   const tournamentTableRows = [
-    tournament.ort ? ['Location', tournament.ort] : null,
-    tournament.startdate ? ['Date', `${startdate} - ${enddate}`] : null,
+    tournament.location ? ['Location', tournament.location] : null,
+    tournament.startDate ? ['Date', `${startDate} - ${endDate}`] : null,
     tournament.format ? ['Format', tournament.format] : null,
     tournament.teamspots ? ['Team Spots', tournament.teamspots] : null,
     tournament.judgespots ? ['Judge Spots', tournament.judgespots] : null,
     tournament.speakerprice
       ? [
           'Price Speaker',
-          <Currency quantity={tournament.speakerprice || 0} currency="EUR" />,
+          <Currency
+            quantity={tournament.speakerprice || 0}
+            currency="EUR"
+            key={tournament.speakerprice}
+          />,
         ]
       : null,
     tournament.judgeprice
       ? [
           'Price Judge',
-          <Currency quantity={tournament.judgeprice || 0} currency="EUR" />,
+          <Currency
+            quantity={tournament.judgeprice || 0}
+            currency="EUR"
+            key={tournament.judgeprice}
+          />,
         ]
       : null,
-    tournament.deadline ? ['Deadline to register', tournament.deadline] : null,
+    tournament.deadline
+      ? [
+          'Deadline to register',
+          moment(tournament.deadline).format(DATE_FORMAT),
+        ]
+      : null,
     tournament.accommodation
       ? ['Accommodation', tournament.accommodation]
       : null,
@@ -105,7 +118,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
       : null,
     tournament.league ? ['League', tournament.league] : null,
     tournament.link ? ['Link', link] : null,
-    tournament.comments ? ['Comments', tournament.comments] : null,
+    tournament.comment ? ['Comments', tournament.comment] : null,
   ].filter(row => row);
 
   const userTableRows = tournament.users.length
@@ -128,7 +141,6 @@ const TournamentRowCollapse = ({ tournament, history }) => {
             : -1;
         })
     : null;
-  console.log('userTableRows', userTableRows);
 
   return (
     <div id={tournament.id} className="collapseContainer">

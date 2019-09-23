@@ -75,7 +75,6 @@ class Registration extends Component {
         params: { id: regId },
       },
     } = this.props;
-    console.log('tournament', tournament);
     if (!user || !tournament)
       return (
         <div className="container-fluid">
@@ -95,8 +94,8 @@ class Registration extends Component {
     const startdate = tournament.startdate
       ? moment(tournament.startdate).format(dateFormat)
       : '';
-    const enddate = tournament.enddate
-      ? moment(tournament.enddate).format(dateFormat)
+    const endDate = tournament.endDate
+      ? moment(tournament.endDate).format(dateFormat)
       : '';
     const partner1 = userList.find(
       ({ id }) => id === tournament._pivot_partner1,
@@ -124,7 +123,7 @@ class Registration extends Component {
         header: 'Date',
         field:
           tournament.startdate && tournament.startdate
-            ? `${startdate} - ${enddate}`
+            ? `${startdate} - ${endDate}`
             : null,
       },
       {
@@ -332,7 +331,10 @@ class Registration extends Component {
           <div className="row">
             <div className="col-12 col-md-9 col-lg-7 col-xl-6 offset-md-1">
               <div className="d-flex align-items-center">
-                <h1 className="py-4 mr-4">Registration {regId}</h1>
+                <h2 className="py-4 mr-4">
+                  Registration
+                  {regId}
+                </h2>
                 {(isAdmin ||
                   authenticatedUserId === tournament._pivot_user_id) && (
                   <button
@@ -369,14 +371,16 @@ class Registration extends Component {
                       { editType, options, fieldName, fieldValue },
                     ) => {
                       if (!editType) return null;
-                      if (value.props && value.props.quantity)
-                        value = value.props.quantity;
                       return (
                         <FieldEditor
                           fieldName={fieldName}
                           fieldValue={fieldValue}
                           type={editType}
-                          value={value}
+                          value={
+                            value.props && value.props.quantity
+                              ? value.props.quantity
+                              : value
+                          }
                           options={options}
                           handleChange={this.handleRegUpdate}
                         />

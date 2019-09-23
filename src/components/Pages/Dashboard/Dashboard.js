@@ -40,29 +40,29 @@ const Dashboard = () => {
   }, []);
 
   const firstTournamentDate = Math.min(
-    ...tournaments.map(({ startdate }) => moment(startdate).valueOf()),
+    ...tournaments.map(({ startDate }) => moment(startDate).valueOf()),
   );
 
   const totalUsers = users.length;
   const activeUsers = users.filter(
     user =>
       user.tournaments.filter(tournament =>
-        moment(tournament.startdate).isAfter(moment().subtract(1, 'years')),
+        moment(tournament.startDate).isAfter(moment().subtract(1, 'years')),
       ).length,
   );
   const activeUsersLastYear = users.filter(
     user =>
       user.tournaments.filter(
         tournament =>
-          moment(tournament.startdate).isAfter(moment().subtract(2, 'years')) &&
-          moment(tournament.startdate).isBefore(moment().subtract(1, 'years')),
+          moment(tournament.startDate).isAfter(moment().subtract(2, 'years')) &&
+          moment(tournament.startDate).isBefore(moment().subtract(1, 'years')),
       ).length,
   );
   console.log('activeUsersLastYear', activeUsersLastYear);
   const registeredUsers = users.filter(
     user =>
       user.tournaments.filter(tournament =>
-        moment(tournament.startdate).isAfter(moment()),
+        moment(tournament.startDate).isAfter(moment()),
       ).length,
   ).length;
 
@@ -79,8 +79,8 @@ const Dashboard = () => {
     return {
       date: date.toISOString(),
       count: tournaments.filter(
-        ({ startdate, users: tournamentUsers }) =>
-          moment(startdate).isBefore(date) &&
+        ({ startDate, users: tournamentUsers }) =>
+          moment(startDate).isBefore(date) &&
           tournamentUsers.some(({ _pivot_success }) =>
             ['win', 'win2', 'winESL', 'win2ESL'].includes(_pivot_success),
           ),

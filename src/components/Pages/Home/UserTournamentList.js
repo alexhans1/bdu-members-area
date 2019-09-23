@@ -54,7 +54,7 @@ const UserTournamentList = ({ tournaments, history }) => {
         <span>
           {moment(row.startdate).format(DATE_FORMAT)}
           <br />
-          {moment(row.enddate).format(DATE_FORMAT)}
+          {moment(row.endDate).format(DATE_FORMAT)}
         </span>
       ),
     },

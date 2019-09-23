@@ -1,4 +1,9 @@
-import { ADD_BUG, GET_ALL_BUGS, REMOVE_BUG, SET_BUG_STATUS } from '../constants/action-types';
+import {
+  ADD_BUG,
+  GET_ALL_BUGS,
+  REMOVE_BUG,
+  SET_BUG_STATUS,
+} from '../constants/action-types';
 
 const initialState = {
   bugList: [],
@@ -15,7 +20,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         bugList: state.bugList.map(bug => {
-          if (bug.id === action.payload.bugId) bug.status = action.payload.status;
+          if (bug.id === action.payload.bugId)
+            return { ...bug, status: action.payload.status };
           return bug;
         }),
       };
