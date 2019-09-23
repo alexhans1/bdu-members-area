@@ -1,16 +1,13 @@
-@import '../../css/breakpoints.scss';
-
-.dropdown-item {
-  font-size: 1.1rem;
-}
-.text-white.dropdown-item:hover {
-  background-color: #1c1f2396;
-}
-@include media-breakpoint-up(lg) {
-  #profileDropdown {
-    margin-left: auto;
+nav {
+  .dropdown-menu {
+    .nav-link {
+      white-space: nowrap;
+    }
   }
-}
-.navbar-nav {
-  align-items: center;
+  .align-collapse-right {
+    .dropdown-menu {
+      right: 0;
+      left: unset;
+    }
+  }
 }
