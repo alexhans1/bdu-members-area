@@ -54,8 +54,8 @@ class Navbar extends Component {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to="/howToCollection" className="nav-link">
-            HowTo Collection
+          <Link to="/wikiLinks" className="nav-link">
+            HowTos & Docs
           </Link>
         </li>
         {isAdmin ? (

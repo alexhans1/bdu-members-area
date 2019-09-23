@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
+import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
-// import { useDispatch, useSelector } from 'react-redux';
 import './WikiLinkList.scss';
-import { DATE_FORMAT } from '../../../constants/applicationConstants';
-// import TournamentRowCollapse from './TournamentRowCollapse';
-/* import {
+import { BASE_URL, DATE_FORMAT } from '../../../constants/applicationConstants';
+
+// feature for expanded rows disabled, keep code fragments for possible later use
+
+/* import TournamentRowCollapse from './TournamentRowCollapse';
+import {
   SET_EXPANDED_TOURNAMENT_ID,
   TOGGLE_SHOW_PREV_TOURNAMENTS,
 } from '../../../../constants/action-types'; */
 
+import CreateWikiLinkForm from './CreateWikiLinkForm';
 
+// define the bootstrap table colums
 const tableColumns = [
   {
     dataField: 'id',
@@ -61,7 +66,9 @@ const tableColumns = [
 ];
 
 
-const HowToList = () => {
+const WikiLinkList = ({isAdmin}) => {
+
+  // code disabled, keep for possible later use
   /* const { expandedTournamentId, tournaments } = useSelector(
     ({
       howto: {
@@ -86,9 +93,10 @@ const HowToList = () => {
   const setExpandedTournamentId = tournamentId =>
     dispatch({ type: SET_EXPANDED_TOURNAMENT_ID, payload: { tournamentId } }); */
 
+  // add the entry list to the state of the component
   const [entryList, setEntryList] = useState([]);
   
-
+  // define behaviour on render of the component
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(`${BASE_URL}/wikiLinks`, {
@@ -102,9 +110,10 @@ const HowToList = () => {
       }
     }
     fetchData()
-  }, entryList);
+  }, entryList); // do not rerender if entryList has not changed. COMMENT: tobi is unsure if the code is correct for inteded behaviour
 
 
+  // definde behaviour of onClick of an entry
   const expandRow = {
     renderer: row => (
       <p>{row.description}</p>
@@ -125,7 +134,12 @@ const HowToList = () => {
 
   return (
     <div className="container-fluid page-content">
-      <h2 className="mb-4">A collection of important HowTos</h2>
+      
+      {isAdmin ? (
+        <CreateWikiLinkForm />
+      ) : null}
+
+      <h2 className="mb-4">HowTos, Templates, Documents</h2>
       <BootstrapTable
         bootstrap4
         hover
@@ -146,4 +160,17 @@ const HowToList = () => {
   );
 };
 
-export default HowToList;
+function mapStateToProps({ user }) {
+  return {
+    // helper function to handle admin authentication
+    // COMMENT: tobi thinks this should be somewhere more central to avoid redundant code
+    isAdmin: user.authenticatedUserId
+      ? user.users.find(({ id }) => user.authenticatedUserId === id)
+          .position === 1
+      : false,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+)(WikiLinkList);
