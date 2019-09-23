@@ -1,6 +1,8 @@
+@import '../../css/colors.scss';
+
 #footer {
   border-top: solid 1px;
-  border-color: #1b1b1b;
-  background: #f7f7f7;
+  border-color: $background_color_3;
+  background: $bdu-color_1;
   font-size: small;
 }
