@@ -20,7 +20,7 @@ import BugList from './Pages/BugList/BugList';
 import Dashboard from './Pages/Dashboard/Dashboard';
 import Spinner from './Spinner/Spinner';
 
-const App = () => {
+const App = ({ history }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAppData());
@@ -40,7 +40,7 @@ const App = () => {
   if (!authCheckHasFinished) {
     return (
       <div className="app">
-        <Navbar />
+        <Navbar history={history} />
         <main className="mainContent d-flex justify-content-center align-items-center">
           <Spinner xl />
         </main>
@@ -53,8 +53,7 @@ const App = () => {
     <Route
       {...rest}
       render={props =>
-        isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />
-      }
+        isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />}
     />
   );
   const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
@@ -65,8 +64,7 @@ const App = () => {
           <ComponentToRender {...props} />
         ) : (
           <Redirect to="/login" />
-        )
-      }
+        )}
     />
   );
   const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
@@ -77,8 +75,7 @@ const App = () => {
           <ComponentToRender {...props} />
         ) : (
           <Redirect to="/login" />
-        )
-      }
+        )}
     />
   );
 
@@ -87,6 +84,7 @@ const App = () => {
       <Navbar
         isAuthenticated={isAuthenticated}
         authenticatedUser={authenticatedUser}
+        history={history}
       />
       <main className="mainContent">
         <Switch>
