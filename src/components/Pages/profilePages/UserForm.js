@@ -1,232 +1,198 @@
 /* eslint-disable no-return-assign */
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 
-class UserForm extends Component {
-  constructor(props) {
-    super(props);
-    const { email, firstName, lastName, gender, food } = props;
-    this.state = {
-      email: email || '',
-      password: '',
-      confirmPassword: '',
-      firstName: firstName || '',
-      lastName: lastName || '',
-      gender: gender || 'm',
-      food: food || '',
-      signupPassword: '',
-      passwordsMatch: false,
-    };
+const UserForm = ({
+  email,
+  firstName,
+  lastName,
+  gender,
+  food,
+  context,
+  handleSubmit,
+}) => {
+  const [userFormState, setUserFormState] = useState({
+    email: email || '',
+    password: '',
+    confirmPassword: '',
+    firstName: firstName || '',
+    lastName: lastName || '',
+    gender: gender || '-',
+    food: food || '',
+    signupPassword: '',
+  });
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
 
-    this.confirmPasswordInput = null;
+  const confirmPasswordInput = useRef(null);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(e) {
-    const change = {};
-    change[e.target.name] = e.target.value;
+  function handleChange(e) {
     if (
       e.target.name === 'confirmPassword' ||
-      !!(e.target.name === 'password' && this.state.confirmPassword)
+      !!(e.target.name === 'password' && userFormState.confirmPassword)
     ) {
-      change.passwordsMatch =
-        this.state.password === e.target.value ||
-        this.state.confirmPassword === e.target.value;
+      setPasswordsMatch(
+        userFormState.password === e.target.value ||
+          userFormState.confirmPassword === e.target.value,
+      );
     }
-    this.setState(change);
+    setUserFormState({ ...userFormState, [e.target.name]: e.target.value });
   }
 
-  handleSubmit(e) {
+  function _handleSubmit(e) {
     e.preventDefault();
-    const {
-      email,
-      password,
-      confirmPassword,
-      firstName,
-      lastName,
-      gender,
-      food,
-      signupPassword,
-    } = this.state;
-    if (password !== confirmPassword) {
-      return this.confirmPasswordInput.focus();
+    if (userFormState.password !== userFormState.confirmPassword) {
+      confirmPasswordInput.focus();
+    } else {
+      handleSubmit(userFormState);
     }
-    return this.props.handleSubmit({
-      email,
-      password,
-      firstName,
-      lastName,
-      gender,
-      food,
-      signupPassword,
-    });
   }
 
-  render() {
-    const {
-      email,
-      password,
-      confirmPassword,
-      firstName,
-      lastName,
-      gender,
-      food,
-      signupPassword,
-      passwordsMatch,
-    } = this.state;
+  let confirmPasswordClass = 'form-control';
+  if (userFormState.confirmPassword.length > 0) {
+    confirmPasswordClass += passwordsMatch ? ' is-valid' : ' is-invalid';
+  }
+  const isEditContext = context === 'edit';
+  const enableSubmit =
+    (passwordsMatch || isEditContext) &&
+    userFormState.email &&
+    userFormState.firstName &&
+    userFormState.lastName &&
+    (userFormState.signupPassword || isEditContext);
 
-    const { context } = this.props;
-
-    let confirmPasswordClass = 'form-control';
-    if (confirmPassword.length > 0) {
-      confirmPasswordClass += passwordsMatch ? ' is-valid' : ' is-invalid';
-    }
-
-    const isEditContext = context === 'edit';
-    const disableSubmit =
-      (passwordsMatch || isEditContext) &&
-      email &&
-      firstName &&
-      lastName &&
-      (signupPassword || isEditContext);
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            value={email}
-            onChange={this.handleChange}
-            id="email"
-            name="email"
-            autoComplete="email"
-            aria-describedby="emailHelp"
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-        {isEditContext ? null : (
-          <div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                value={password}
-                onChange={this.handleChange}
-                id="password"
-                name="password"
-                autoComplete="password"
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                className={confirmPasswordClass}
-                value={confirmPassword}
-                ref={input => (this.confirmPasswordInput = input)}
-                onChange={this.handleChange}
-                id="confirmPassword"
-                name="confirmPassword"
-                autoComplete="confirmPassword"
-                placeholder="Confirm your password"
-                required
-              />
-              {!passwordsMatch && confirmPassword.length > 0 ? (
-                <small className="text-danger">Passwords don´t match.</small>
-              ) : null}
-            </div>
-          </div>
-        )}
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            className="form-control"
-            value={firstName}
-            onChange={this.handleChange}
-            id="firstName"
-            name="firstName"
-            autoComplete="given-name"
-            placeholder="First Name"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            className="form-control"
-            value={lastName}
-            onChange={this.handleChange}
-            id="lastName"
-            name="lastName"
-            autoComplete="family-name"
-            placeholder="Last Name"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="gender">Gender</label>
-          <select
-            className="form-control"
-            value={gender}
-            onChange={this.handleChange}
-            id="gender"
-            name="gender"
-            required
-          >
-            <option value="f">female</option>
-            <option value="m">male</option>
-            <option value="-">non-binary</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="food">Food Preference</label>
-          <input
-            type="text"
-            className="form-control"
-            id="food"
-            name="food"
-            autoComplete="food"
-            value={food}
-            onChange={this.handleChange}
-            placeholder="Veggie? Vegan? Allergies? Don't like tomatoes?"
-          />
-        </div>
-        {context === 'edit' ? null : (
-          <div className="form-group mt-2">
-            <label htmlFor="signupPassword">Signup Password</label>
+  return (
+    <form onSubmit={_handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          className="form-control"
+          value={userFormState.email}
+          onChange={handleChange}
+          id="email"
+          name="email"
+          autoComplete="email"
+          aria-describedby="emailHelp"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      {isEditContext ? null : (
+        <div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
             <input
-              type="text"
+              type="password"
               className="form-control"
-              value={signupPassword}
-              onChange={this.handleChange}
-              id="signupPassword"
-              name="signupPassword"
-              autoComplete="signupPassword"
-              placeholder="Get password from the BDU board members"
+              value={userFormState.password}
+              onChange={handleChange}
+              id="password"
+              name="password"
+              autoComplete="password"
+              placeholder="Enter your password"
               required
             />
           </div>
-        )}
-        <button
-          type="submit"
-          className="btn btn-lg btn-outline-info"
-          disabled={!disableSubmit}
-          style={{ cursor: disableSubmit ? 'pointer' : 'not-allowed' }}
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              className={confirmPasswordClass}
+              value={userFormState.confirmPassword}
+              ref={confirmPasswordInput}
+              onChange={handleChange}
+              id="confirmPassword"
+              name="confirmPassword"
+              autoComplete="confirmPassword"
+              placeholder="Confirm your password"
+              required
+            />
+            {!passwordsMatch && userFormState.confirmPassword.length > 0 ? (
+              <small className="text-danger">Passwords don´t match.</small>
+            ) : null}
+          </div>
+        </div>
+      )}
+      <div className="form-group">
+        <label htmlFor="firstName">First Name</label>
+        <input
+          type="text"
+          className="form-control"
+          value={userFormState.firstName}
+          onChange={handleChange}
+          id="firstName"
+          name="firstName"
+          autoComplete="given-name"
+          placeholder="First Name"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="lastName">Last Name</label>
+        <input
+          type="text"
+          className="form-control"
+          value={userFormState.lastName}
+          onChange={handleChange}
+          id="lastName"
+          name="lastName"
+          autoComplete="family-name"
+          placeholder="Last Name"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="gender">Gender</label>
+        <select
+          className="form-control"
+          value={userFormState.gender}
+          onChange={handleChange}
+          id="gender"
+          name="gender"
+          required
         >
-          {context === 'edit' ? 'Submit' : 'Signup'}
-        </button>
-      </form>
-    );
-  }
-}
+          <option value="f">female</option>
+          <option value="m">male</option>
+          <option value="-">non-binary</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="food">Food Preference</label>
+        <input
+          type="text"
+          className="form-control"
+          id="food"
+          name="food"
+          autoComplete="food"
+          value={userFormState.food}
+          onChange={handleChange}
+          placeholder="Veggie? Vegan? Allergies? Don't like tomatoes?"
+        />
+      </div>
+      {context === 'edit' ? null : (
+        <div className="form-group mt-2">
+          <label htmlFor="signupPassword">Signup Password</label>
+          <input
+            type="text"
+            className="form-control"
+            value={userFormState.signupPassword}
+            onChange={handleChange}
+            id="signupPassword"
+            name="signupPassword"
+            autoComplete="signupPassword"
+            placeholder="Get password from the BDU board members"
+            required
+          />
+        </div>
+      )}
+      <button
+        type="submit"
+        className="btn btn-lg btn-outline-info"
+        disabled={!enableSubmit}
+        style={{ cursor: enableSubmit ? 'pointer' : 'not-allowed' }}
+      >
+        {context === 'edit' ? 'Submit' : 'Signup'}
+      </button>
+    </form>
+  );
+};
 
 export default UserForm;
