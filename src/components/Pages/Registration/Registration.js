@@ -71,7 +71,6 @@ class Registration extends Component {
       isAdmin,
       authenticatedUserId,
       userList,
-      history,
       match: {
         params: { id: regId },
       },

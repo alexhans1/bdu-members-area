@@ -64,6 +64,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
     tournament.link.includes('https://')
   ) {
     const isFaceBookLink = tournament.link.includes('facebook');
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
     const linkLabel = isFaceBookLink ? <Facebook /> : <Link />;
     link = (
       <a

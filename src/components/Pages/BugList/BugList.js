@@ -61,8 +61,10 @@ const BugList = ({
                 isDummyField: true,
                 sort: true,
                 headerStyle: () => ({ maxWidth: '160px' }),
+                /* eslint-disable camelcase */
                 formatter: (a, { user_id }) => {
                   const user = users.find(({ id }) => id === user_id);
+                  /* eslint-enable camelcase */
                   if (user && user.name && user.vorname)
                     return `${user.vorname} ${user.name}`;
                   return null;

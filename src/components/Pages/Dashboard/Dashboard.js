@@ -58,7 +58,6 @@ const Dashboard = () => {
           moment(tournament.startDate).isBefore(moment().subtract(1, 'years')),
       ).length,
   );
-  console.log('activeUsersLastYear', activeUsersLastYear);
   const registeredUsers = users.filter(
     user =>
       user.tournaments.filter(tournament =>
@@ -81,6 +80,7 @@ const Dashboard = () => {
       count: tournaments.filter(
         ({ startDate, users: tournamentUsers }) =>
           moment(startDate).isBefore(date) &&
+          // eslint-disable-next-line camelcase
           tournamentUsers.some(({ _pivot_success }) =>
             ['win', 'win2', 'winESL', 'win2ESL'].includes(_pivot_success),
           ),
@@ -120,11 +120,11 @@ const Dashboard = () => {
               />
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
+                dataKey="x"
+                tick={{ fontSize: 'x-small' }}
                 tickFormatter={date =>
                   moment(date, 'YYYYDDMM').format('MMM YY')
                 }
-                dataKey="x"
-                tick={{ fontSize: 'x-small' }}
               />
               <YAxis unit="€" tick={{ fontSize: 'x-small' }} />
               <Tooltip
@@ -176,7 +176,7 @@ const Dashboard = () => {
                 labelLine={false}
               >
                 {activeUsersGenderData.map((entry, index) => (
-                  <Cell fill={COLORS[index % COLORS.length]} key={index} />
+                  <Cell fill={COLORS[index % COLORS.length]} key={entry.name} />
                 ))}
               </Pie>
               <Tooltip />
