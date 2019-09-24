@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './FlexTable.scss';
 import { X } from 'react-feather';
+
+import './FlexTable.scss';
 
 class FlexTable extends Component {
   handleToggleCollapse(rowIndex) {

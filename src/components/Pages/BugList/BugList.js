@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import BootstrapTable from 'react-bootstrap-table-next';
 import moment from 'moment';
+import { Check, X, Trash2 } from 'react-feather';
+
 import { BASE_URL, DATE_FORMAT } from '../../../constants/applicationConstants';
 import {
   GET_ALL_BUGS,
@@ -73,12 +75,16 @@ const BugList = ({
                 sort: true,
                 headerStyle: () => ({ maxWidth: '100px' }),
                 formatter: (cell, { id, status }) => {
-                  return (
-                    <i
+                  return status ? (
+                    <Check
                       role="button"
-                      className={`cursorPointer fas ${
-                        status ? 'fa-check' : 'fa-times'
-                      }`}
+                      onClick={() => {
+                        handleUpdate(id, status ? 0 : 1);
+                      }}
+                    />
+                  ) : (
+                    <X
+                      role="button"
                       onClick={() => {
                         handleUpdate(id, status ? 0 : 1);
                       }}
@@ -98,7 +104,7 @@ const BugList = ({
                     className="btn btn-outline-danger"
                     onClick={() => handleDelete(id)}
                   >
-                    <i className="fas fa-trash" />
+                    <Trash2 />
                   </button>
                 ),
               },

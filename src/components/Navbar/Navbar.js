@@ -15,6 +15,7 @@ import {
   Users,
   Edit,
 } from 'react-feather';
+
 import { logout } from '../../actions/AuthActions';
 import logo from './bdu_white_logo.png';
 import { calculateTotalUserDebt } from '../../helpers';
@@ -50,7 +51,7 @@ const NavbarDropdown = ({ link, pathname = '/', children = [] }) => {
 };
 
 const NavbarLink = ({ link, pathname = '/' }) => {
-  const isLinkActive = `/${link.url || ''}` === pathname;
+  const isLinkActive = `/${link.url || ''}` === pathname && !link.onClick;
   return (
     <li className={`nav-item ${isLinkActive ? 'active' : ''}`}>
       {link.onClick ? (
@@ -150,7 +151,7 @@ const Navbar = ({
         </span>
       ),
       icon: <User size={18} className="mr-1" />,
-      className: 'ml-auto align-collapse-right',
+      className: 'ml-lg-auto align-collapse-right',
       children: [
         {
           title: 'My Tournaments',

@@ -182,10 +182,7 @@ const Dashboard = () => {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-          <small>
-            <i className="fas fa-venus-mars" style={{ fontSize: '1.5rem' }} />{' '}
-            Active Users
-          </small>
+          <small>Active Users</small>
         </div>
         <div className="box">4</div>
         <div className="box">4</div>

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Login.scss';
 import { useDispatch } from 'react-redux';
+import { LogIn } from 'react-feather';
+
 import membersAreaImage from './BDU_memberArea_512.png';
 import { login } from '../../../actions/AuthActions';
 
@@ -24,7 +26,7 @@ const Login = () => {
       <div className="row d-flex align-items-center justify-content-center py-3">
         <div className="col-lg-4 col-md-5 col-sm-7 col-11 login-box p-4">
           <h4>
-            <i className="fas fa-sign-in-alt" /> Login
+            <LogIn />
           </h4>
           <hr />
           <form onSubmit={handleLogin}>

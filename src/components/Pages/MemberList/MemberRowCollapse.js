@@ -78,7 +78,7 @@ const MemberRowCollapse = ({ history, user }) => {
                 );
               }}
             >
-              <i className="fas fa-euro-sign" />
+              €‎
             </button>
           </span>
         </div>

@@ -1,13 +1,6 @@
 @import '../../../css/breakpoints.scss';
 
 #registration {
-  display: grid;
-  grid-template-columns: 1fr;
-
-  @include media-breakpoint-up(md) {
-    grid-template-columns: max-content 1fr;
-  }
-
   thead {
     display: none;
   }

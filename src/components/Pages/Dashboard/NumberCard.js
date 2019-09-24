@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ArrowUpRight, ArrowDownRight } from 'react-feather';
 
 const NumberCard = ({ title, number, percentageChange }) => {
   if (percentageChange) {
@@ -17,12 +18,11 @@ const NumberCard = ({ title, number, percentageChange }) => {
             }`}
           >
             {percentageChange > 0 && '+'}
-            {percentageChange}
-%
+            {percentageChange}%
             {percentageChange > 0 ? (
-              <i className="fas fa-arrow-up ml-1" />
+              <ArrowUpRight className="ml-1" />
             ) : (
-              <i className="fas fa-arrow-down ml-1" />
+              <ArrowDownRight className="ml-1" />
             )}
           </b>
         )}

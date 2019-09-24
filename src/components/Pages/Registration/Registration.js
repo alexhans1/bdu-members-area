@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Currency from 'react-currency-formatter';
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+
 import {
   attendanceStatuses,
   successTypes,
@@ -320,14 +321,7 @@ class Registration extends Component {
 
     return (
       <div id="registration" className="container page-content">
-        <i
-          role="button"
-          className="mt-1 py-4 cursorPointer fas fa-arrow-left d-none d-md-block"
-          onClick={() => {
-            history.goBack();
-          }}
-        />
-        {user && user.tournaments ? (
+        {user && user.tournaments && (
           <div className="row">
             <div className="col-12 col-md-9 col-lg-7 col-xl-6 offset-md-1">
               <div className="d-flex align-items-center">
@@ -409,7 +403,7 @@ class Registration extends Component {
               />
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     );
   }

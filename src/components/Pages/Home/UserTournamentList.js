@@ -5,6 +5,8 @@ import { confirmAlert } from 'react-confirm-alert';
 import Currency from 'react-currency-formatter';
 import BootstrapTable from 'react-bootstrap-table-next';
 import { useDispatch } from 'react-redux';
+import { Edit, Trash2 } from 'react-feather';
+
 import {
   attendanceStatuses,
   DATE_FORMAT,
@@ -114,9 +116,9 @@ const UserTournamentList = ({ tournaments, history }) => {
           ref={actionRefs}
           className="d-flex flex-wrap justify-content-center align-items-center"
         >
-          <i className="far fa-edit text-info" />
-          <i
-            className="far fa-trash-alt text-danger m-1 cursorPointer"
+          <Edit />
+          <Trash2
+            className="text-danger m-1 cursorPointer"
             role="button"
             onClick={e => {
               _deleteRegistration(row._pivot_id);

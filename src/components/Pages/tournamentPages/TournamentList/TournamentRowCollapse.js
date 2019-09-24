@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import $ from 'jquery';
 import { confirmAlert } from 'react-confirm-alert';
+import { Facebook, Link, Calendar } from 'react-feather';
+
 import FlexTable from '../../../FlexTable/FlexTable';
 import RegistrationModal from './RegistrationModal/RegistrationModal';
 import {
@@ -62,11 +64,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
     tournament.link.includes('https://')
   ) {
     const isFaceBookLink = tournament.link.includes('facebook');
-    const linkLabel = isFaceBookLink ? (
-      <i className="fab fa-lg fa-facebook-square" />
-    ) : (
-      <i className="fas fa-lg fa-link" />
-    );
+    const linkLabel = isFaceBookLink ? <Facebook /> : <Link />;
     link = (
       <a
         className="text-white"
@@ -181,7 +179,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
             data-toggle="tooltip"
             title="Add to calendar"
           >
-            <i className="far fa-calendar-alt" />
+            <Calendar />
           </button>
           <button
             type="button"

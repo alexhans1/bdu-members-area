@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './Home.scss';
+import { User, DollarSign, LogOut } from 'react-feather';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import './Home.scss';
 import UserTournamentList from './UserTournamentList';
 import { logout } from '../../../actions/AuthActions';
 
@@ -24,32 +26,35 @@ const Home = ({ history }) => {
           <span className="d-flex flex-column welcome-message">
             <span>Hi,</span>
             <b>
-              {user.vorname} 
-              {' '}
-              {user.name}
+              {user.vorname} {user.name}
             </b>
           </span>
         </div>
         <div className="d-flex align-items-center page-content">
           <Link to="edit">
-            <i className="fas fa-user mr-3" />
+            <User className="mr-3" />
             <span>Edit profile</span>
           </Link>
         </div>
         <div className="d-flex align-items-center page-content">
-          <a role="button" onClick={() => {}}>
-            <i className="fas fa-money-check-alt mr-3" />
+          <a
+            className="d-flex align-items-center"
+            role="button"
+            onClick={() => {}}
+          >
+            <DollarSign className="mr-3" />
             <span>Get transaction purpose</span>
           </a>
         </div>
         <div className="d-flex align-items-center page-content mt-4">
           <a
+            className="d-flex align-items-center"
             role="button"
             onClick={() => {
               dispatch(logout());
             }}
           >
-            <i className="fas fa-sign-out-alt mr-3" />
+            <LogOut className="mr-3" />
             <span>Logout</span>
           </a>
         </div>
