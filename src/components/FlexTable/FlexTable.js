@@ -52,7 +52,7 @@ class FlexTable extends Component {
           <div className="flex-table-row flex-table-head">
             {headColumns.map((headColumn, index) => (
               <div
-                key={`HeadRow_${Object.values(headColumn)[index]}`}
+                key={`HeadRow_${Object.values(headColumns)[index]}`}
                 className="flex-table-cell"
               >
                 <div>
@@ -78,7 +78,7 @@ class FlexTable extends Component {
         {bodyRows.map((bodyRow, rowIndex) => (
           <div
             role="button"
-            key={`BodyRow_${Object.values(bodyRow)[rowIndex]}`}
+            key={`BodyRow_${Object.values(bodyRows)[rowIndex]}`}
             id={`BodyRow_${tableName}_${rowIndex}`}
             onClick={
               actionOnRowClick
