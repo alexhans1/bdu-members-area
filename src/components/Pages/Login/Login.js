@@ -26,7 +26,7 @@ const Login = () => {
       <div className="row d-flex align-items-center justify-content-center py-3">
         <div className="col-lg-4 col-md-5 col-sm-7 col-11 login-box p-4">
           <h4>
-            <LogIn />
+            Login <LogIn />
           </h4>
           <hr />
           <form onSubmit={handleLogin}>

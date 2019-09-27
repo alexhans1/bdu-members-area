@@ -116,7 +116,6 @@ const UserTournamentList = ({ tournaments, history }) => {
           ref={actionRefs}
           className="d-flex flex-wrap justify-content-center align-items-center"
         >
-          <Edit />
           <Trash2
             className="text-danger m-1 cursorPointer"
             role="button"

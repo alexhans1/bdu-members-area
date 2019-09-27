@@ -53,7 +53,8 @@ const App = ({ history }) => {
     <Route
       {...rest}
       render={props =>
-        isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />}
+        isAuthenticated ? <Redirect to="/" /> : <ComponentToRender {...props} />
+      }
     />
   );
   const PrivateRoute = ({ component: ComponentToRender, ...rest }) => (
@@ -64,7 +65,8 @@ const App = ({ history }) => {
           <ComponentToRender {...props} />
         ) : (
           <Redirect to="/login" />
-        )}
+        )
+      }
     />
   );
   const AdminRoute = ({ component: ComponentToRender, ...rest }) => (
@@ -75,9 +77,12 @@ const App = ({ history }) => {
           <ComponentToRender {...props} />
         ) : (
           <Redirect to="/login" />
-        )}
+        )
+      }
     />
   );
+
+  const noPaddingPages = ['/login', '/signup'];
 
   return (
     <div className="app">
@@ -86,7 +91,12 @@ const App = ({ history }) => {
         authenticatedUser={authenticatedUser}
         history={history}
       />
-      <main className="mainContent">
+      <main
+        className="mainContent"
+        style={{
+          padding: noPaddingPages.includes(history.location.pathname) ? 0 : '',
+        }}
+      >
         <Switch>
           <AuthenticationRoute path="/login" component={Login} />
           <AuthenticationRoute path="/signup" component={Signup} />
