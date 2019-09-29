@@ -23,7 +23,7 @@ const membersTableColumns = [
     isDummyField: true,
     text: 'Name',
     sort: true,
-    formatter: (cellContent, row) => `${row.firstName} ${row.name}`,
+    formatter: (cellContent, row) => `${row.firstName} ${row.lastName}`,
   },
   {
     dataField: 'totalDebt',
