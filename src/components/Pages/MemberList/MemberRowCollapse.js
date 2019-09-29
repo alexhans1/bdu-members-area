@@ -33,7 +33,7 @@ const MemberRowCollapse = ({ history, user }) => {
       sort: true,
     },
     {
-      dataField: 'startdate',
+      dataField: 'startDate',
       text: 'Date',
       classes: 'd-none d-sm-table-cell',
       headerClasses: 'd-none d-sm-table-cell',
@@ -97,7 +97,7 @@ const MemberRowCollapse = ({ history, user }) => {
 
   const defaultSorted = [
     {
-      dataField: 'startdate',
+      dataField: 'startDate',
       order: 'desc',
     },
   ];
@@ -117,7 +117,7 @@ const MemberRowCollapse = ({ history, user }) => {
     >
       <div className="d-flex flex-column p-0 col-md-8 col-lg-6 col-xl-4">
         <h3 className="pr-4 pr-sm-0">
-          {user.vorname} {user.name}
+          {user.firstName} {user.lastName}
         </h3>
         <FlexTable
           key={`userTable_${user.id}`}
@@ -142,7 +142,7 @@ const MemberRowCollapse = ({ history, user }) => {
             bordered={false}
           />
         ) : (
-          <p>{user.vorname} has no registrations yet.</p>
+          <p>{user.firstName} has no registrations yet.</p>
         )}
       </div>
     </div>

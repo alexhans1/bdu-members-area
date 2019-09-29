@@ -15,18 +15,27 @@ const Home = ({ history }) => {
   );
   const tournaments = user.tournaments || [];
 
+  async function fetchTransactionPurpose() {
+    const response = await fetch(
+      `https://kouqz3b0rd.execute-api.us-east-1.amazonaws.com/prod/gettransactionpurpose?userId=${user.id}`,
+    );
+    if (response.status === 200) {
+      const transactionPurpose = await response.json();
+    }
+  }
+
   return (
     <div id="home" className="container-fluid">
       <div className="side-bar">
         <div className="page-content d-flex align-items-center">
           <div className="name-circle">
-            {user.vorname.substring(0, 1)}
-            {user.name.substring(0, 1)}
+            {user.firstName.substring(0, 1)}
+            {user.lastName.substring(0, 1)}
           </div>
           <span className="d-flex flex-column welcome-message">
             <span>Hi,</span>
             <b>
-              {user.vorname} {user.name}
+              {user.firstName} {user.lastName}
             </b>
           </span>
         </div>
@@ -40,7 +49,7 @@ const Home = ({ history }) => {
           <a
             className="d-flex align-items-center"
             role="button"
-            onClick={() => {}}
+            onClick={fetchTransactionPurpose}
           >
             <DollarSign className="mr-3" />
             <span>Get transaction purpose</span>

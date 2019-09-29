@@ -65,8 +65,8 @@ const BugList = ({
                 formatter: (a, { user_id }) => {
                   const user = users.find(({ id }) => id === user_id);
                   /* eslint-enable camelcase */
-                  if (user && user.name && user.vorname)
-                    return `${user.vorname} ${user.name}`;
+                  if (user && user.lastName && user.firstName)
+                    return `${user.firstName} ${user.lastName}`;
                   return null;
                 },
               },

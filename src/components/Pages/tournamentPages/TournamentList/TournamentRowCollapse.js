@@ -124,7 +124,7 @@ const TournamentRowCollapse = ({ tournament, history }) => {
     ? tournament.users
         .map(user => {
           return [
-            `${user.vorname} ${user.name}`,
+            `${user.firstName} ${user.lastName}`,
             user._pivot_role,
             user._pivot_teamname,
             user._pivot_comment,

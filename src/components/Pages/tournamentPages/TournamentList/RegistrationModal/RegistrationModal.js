@@ -103,7 +103,7 @@ class RegistrationModal extends Component {
                       <option value="-">None</option>
                       {users.map(user => (
                         <option key={`partner1List_${user.id}`} value={user.id}>
-                          {`${user.vorname} ${user.name}`}
+                          {`${user.firstName} ${user.lastName}`}
                         </option>
                       ))}
                     </select>
@@ -130,7 +130,7 @@ class RegistrationModal extends Component {
                           value={user.id}
                           disabled={user.id === parseInt(partner1, 10)}
                         >
-                          {`${user.vorname} ${user.name}`}
+                          {`${user.firstName} ${user.lastName}`}
                         </option>
                       ))}
                     </select>

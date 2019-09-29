@@ -4,15 +4,16 @@ import UserForm from '../UserForm';
 import { updateUser } from '../../../../actions/UserActions';
 
 const Profile = () => {
-  const { id, email, vorname, name, gender, food } = useSelector(({ user }) =>
-    user.users.find(({ id: _id }) => user.authenticatedUserId === _id),
+  const { id, email, firstName, lastName, gender, food } = useSelector(
+    ({ user }) =>
+      user.users.find(({ id: _id }) => user.authenticatedUserId === _id),
   );
 
   const dispatch = useDispatch();
   const handleUserUpdate = ({
     email: _email,
-    firstName,
-    lastName,
+    firstName: _firstName,
+    lastName: _lastName,
     _gender,
     _food,
   }) => {
@@ -20,8 +21,8 @@ const Profile = () => {
       updateUser({
         userId: id,
         email: _email,
-        firstName,
-        lastName,
+        firstName: _firstName,
+        lastName: _lastName,
         gender: _gender,
         food: _food,
       }),
@@ -35,8 +36,8 @@ const Profile = () => {
         context="edit"
         handleSubmit={handleUserUpdate}
         email={email}
-        firstName={vorname}
-        lastName={name}
+        firstName={firstName}
+        lastName={lastName}
         gender={gender}
         food={food}
       />

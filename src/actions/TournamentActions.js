@@ -8,6 +8,7 @@ import { alertTypes, BASE_URL } from '../constants/applicationConstants';
 import triggerAlert from './actionHelpers';
 
 export const getTournament = tournamentId => async dispatch => {
+  // Todo: is this fucntion ever used?
   const response = await fetch(`${BASE_URL}/tournament/${tournamentId}`, {
     method: 'GET',
     credentials: 'include',

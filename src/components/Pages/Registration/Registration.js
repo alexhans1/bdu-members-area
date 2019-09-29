@@ -91,8 +91,8 @@ class Registration extends Component {
           attendanceStatuses[statusName] === tournament._pivot_attended,
       ) || '';
     const dateFormat = 'DD.MM.YYYY';
-    const startdate = tournament.startdate
-      ? moment(tournament.startdate).format(dateFormat)
+    const startDate = tournament.startDate
+      ? moment(tournament.startDate).format(dateFormat)
       : '';
     const endDate = tournament.endDate
       ? moment(tournament.endDate).format(dateFormat)
@@ -113,7 +113,9 @@ class Registration extends Component {
       {
         header: 'User',
         field:
-          user.vorname && user.name ? `${user.vorname} ${user.name}` : null,
+          user.firstName && user.lastName
+            ? `${user.firstName} ${user.lastName}`
+            : null,
       },
       {
         header: 'Tournament',
@@ -122,8 +124,8 @@ class Registration extends Component {
       {
         header: 'Date',
         field:
-          tournament.startdate && tournament.startdate
-            ? `${startdate} - ${endDate}`
+          tournament.startDate && tournament.startDate
+            ? `${startDate} - ${endDate}`
             : null,
       },
       {
@@ -242,7 +244,7 @@ class Registration extends Component {
         header:
           tournament.format.toLowerCase() === 'opd' ? 'Partner 1' : 'Partner',
         field: partner1
-          ? `${partner1.vorname} ${partner1.name}`
+          ? `${partner1.firstName} ${partner1.name}`
           : successTypes
               .reduce(
                 (acc, { canHavePartner, id }) =>
@@ -257,9 +259,9 @@ class Registration extends Component {
         editType: Type.SELECT,
         options: [
           { id: null, label: '' },
-          ...userList.map(({ vorname, name, id }) => ({
+          ...userList.map(({ firstName, name, id }) => ({
             id,
-            label: `${vorname} ${name}`,
+            label: `${firstName} ${name}`,
           })),
         ],
       },
@@ -268,7 +270,7 @@ class Registration extends Component {
         field:
           tournament.format.toLowerCase() === 'opd'
             ? partner2
-              ? `${partner2.vorname} ${partner2.name}`
+              ? `${partner2.firstName} ${partner2.name}`
               : successTypes
                   .reduce(
                     (acc, { canHavePartner, id }) =>
@@ -284,9 +286,9 @@ class Registration extends Component {
         editType: Type.SELECT,
         options: [
           { id: null, bel: '' },
-          ...userList.map(({ vorname, name, id }) => ({
+          ...userList.map(({ firstName, name, id }) => ({
             id,
-            label: `${vorname} ${name}`,
+            label: `${firstName} ${name}`,
           })),
         ],
       },

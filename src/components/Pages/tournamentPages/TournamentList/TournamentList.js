@@ -23,7 +23,7 @@ const tableColumns = [
     style: { wordBreak: 'break-word' },
   },
   {
-    dataField: 'startdate',
+    dataField: 'startDate',
     isDummyField: true,
     text: 'Date',
     sort: true,
@@ -42,12 +42,12 @@ const tableColumns = [
         : 0;
     },
     formatter: (cellContent, row) =>
-      `${moment(row.startdate).format(DATE_FORMAT)} - ${moment(
+      `${moment(row.startDate).format(DATE_FORMAT)} - ${moment(
         row.endDate,
       ).format(DATE_FORMAT)}`,
   },
   {
-    dataField: 'ort',
+    dataField: 'location',
     text: 'Location',
     sort: true,
     style: { wordBreak: 'break-word' },
@@ -128,7 +128,7 @@ const TournamentList = ({ history }) => {
         columns={tableColumns}
         defaultSorted={[
           {
-            dataField: 'startdate',
+            dataField: 'startDate',
             order: 'desc',
           },
         ]}

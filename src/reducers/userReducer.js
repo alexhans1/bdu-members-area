@@ -62,7 +62,8 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         users: state.users.map(user => {
-          if (user.id !== action.payload.registration._pivot_user_id) return user;
+          if (user.id !== action.payload.registration._pivot_user_id)
+            return user;
           return {
             ...user,
             tournaments: [
@@ -80,7 +81,10 @@ const userReducer = (state = initialState, action) => {
           return {
             ...user,
             tournaments: user.tournaments.map(tournament => {
-              if (tournament._pivot_id && tournament._pivot_id === action.payload.registrationId)
+              if (
+                tournament._pivot_id &&
+                tournament._pivot_id === action.payload.registrationId
+              )
                 return {
                   ...tournament,
                   ...action.payload.registration,

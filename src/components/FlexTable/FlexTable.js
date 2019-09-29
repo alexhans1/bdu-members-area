@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { X } from 'react-feather';
 
@@ -50,18 +51,15 @@ class FlexTable extends Component {
       <div key={tableName} className="flex-table">
         {headColumns ? (
           <div className="flex-table-row flex-table-head">
-            {headColumns.map((headColumn, index) => (
-              <div
-                key={`HeadRow_${Object.values(headColumns)[index]}`}
-                className="flex-table-cell"
-              >
+            {headColumns.map((headColumn, headerIndex) => (
+              <div key={headColumn} className="flex-table-cell">
                 <div>
                   {sortColumn ? (
                     <button
                       type="button"
                       className="btn btn-sm btn-outline-info"
                       onClick={() => {
-                        sortColumn(index);
+                        sortColumn(headerIndex);
                       }}
                     >
                       {headColumn}
@@ -78,7 +76,7 @@ class FlexTable extends Component {
         {bodyRows.map((bodyRow, rowIndex) => (
           <div
             role="button"
-            key={`BodyRow_${Object.values(bodyRows)[rowIndex]}`}
+            key={`BodyRow_${rowIndex}`}
             id={`BodyRow_${tableName}_${rowIndex}`}
             onClick={
               actionOnRowClick
@@ -104,7 +102,7 @@ class FlexTable extends Component {
             >
               {bodyRow.map((column, columnIndex) => (
                 <div
-                  key={`BodyColumn_${Object.values(column)[columnIndex]}`}
+                  key={`BodyColumn_${columnIndex}`}
                   className="flex-table-cell"
                 >
                   {column}

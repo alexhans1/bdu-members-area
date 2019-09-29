@@ -19,11 +19,11 @@ const membersTableColumns = [
     hidden: true,
   },
   {
-    dataField: 'vorname',
+    dataField: 'firstName',
     isDummyField: true,
     text: 'Name',
     sort: true,
-    formatter: (cellContent, row) => `${row.vorname} ${row.name}`,
+    formatter: (cellContent, row) => `${row.firstName} ${row.name}`,
   },
   {
     dataField: 'totalDebt',
@@ -71,7 +71,7 @@ const MemberList = ({ history }) => {
   }));
   const enrichedUserList = users.map(user => {
     const totalPoints = user.tournaments.reduce((total, tournament) => {
-      const addedPoints = moment(tournament.startdate).isBefore(
+      const addedPoints = moment(tournament.startDate).isBefore(
         moment().subtract(1, 'years'),
       )
         ? 0

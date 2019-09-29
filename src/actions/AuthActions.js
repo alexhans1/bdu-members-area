@@ -7,6 +7,7 @@ import {
   SET_USER_LIST,
 } from '../constants/action-types';
 import triggerAlert from './actionHelpers';
+import { renameTournamentFields, renameUserFields } from '../helpers';
 
 export const getAppData = () => async dispatch => {
   const response = await fetch(`${BASE_URL}/currentUser`, {
@@ -30,27 +31,18 @@ export const getAppData = () => async dispatch => {
     );
     dispatch({
       type: SET_USER_LIST,
-      payload: { users },
+      payload: {
+        users: users.map(renameUserFields),
+      },
     });
     dispatch({
       type: ADD_TO_USER_ARRAY,
-      payload: { user: currentUser },
+      payload: { user: [currentUser].map(renameUserFields)[0] },
     });
     dispatch({
       type: SET_TOURNAMENT_LIST,
       payload: {
-        tournaments: tournaments.map(tournament => ({
-          ...tournament,
-          location: tournament.ort,
-          startDate: tournament.startdate,
-          endDate: tournament.enddate,
-          speakerPrice: tournament.speakerprice,
-          judgePrice: tournament.judgeprice,
-          teamSpots: tournament.teamspots,
-          judgeSpots: tournament.judgespots,
-          rankingFactor: tournament.rankingvalue,
-          comment: tournament.comments,
-        })),
+        tournaments: tournaments.map(renameTournamentFields),
       },
     });
     dispatch({
