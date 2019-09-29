@@ -1,5 +1,6 @@
 .spinner {
   width: 120px;
+  height: 26px;
   text-align: center;
 }
 
@@ -50,6 +51,7 @@
 
 .spinner.xl {
   width: 240px;
+  height: 50px;
 }
 
 .spinner.xl > div {
