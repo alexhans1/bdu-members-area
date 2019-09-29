@@ -1,3 +1,6 @@
+import triggerAlert from './actions/actionHelpers';
+import { alertTypes } from './constants/applicationConstants';
+
 export function calculateTotalUserDebt(user) {
   if (!user.tournaments) return undefined;
   return user.tournaments.reduce((total, tournament) => {
@@ -50,3 +53,22 @@ export const renameUserFields = ({ vorname, name, ...user }) => {
     tournaments,
   };
 };
+
+export function copyStringToClipboard(str) {
+  // Create new element
+  const el = document.createElement('textarea');
+  // Set value (string to be copied)
+  el.value = str;
+  // Set non-editable to avoid focus and move outside of view
+  el.setAttribute('readonly', '');
+  el.style = { position: 'absolute', left: '-9999px' };
+  document.body.appendChild(el);
+  // Select text inside element
+  el.select();
+  // Copy text to clipboard
+  document.execCommand('copy');
+  // Remove temporary element
+  document.body.removeChild(el);
+
+  triggerAlert(`Saved "${str}" to clipboard.`, alertTypes.INFO);
+}

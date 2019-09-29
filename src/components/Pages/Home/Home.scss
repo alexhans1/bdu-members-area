@@ -61,3 +61,15 @@
     cursor: unset;
   }
 }
+.transaction-purpose-modal {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  right: 25%;
+  left: 25%;
+  width: 50%;
+  height: min-content;
+  background-color: white;
+  border: 1px solid $background_color_4;
+  padding: 1rem;
+}
