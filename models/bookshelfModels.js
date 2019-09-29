@@ -103,6 +103,14 @@ module.exports = (Bookshelf) => {
     model: Transaction_Ids,
   });
 
+  const Wiki_Link = Bookshelf.Model.extend({
+    tableName: 'wiki_links',
+  });
+
+  const Wiki_Link_Col = Bookshelf.Collection.extend({
+    model: Wiki_Link,
+  });
+
   return {
     User,
     Users,
@@ -116,5 +124,7 @@ module.exports = (Bookshelf) => {
     Club_Debt_Col,
     Transaction_Ids,
     Transaction_Ids_Col,
+    Wiki_Link,
+    Wiki_Link_Col,
   };
 };

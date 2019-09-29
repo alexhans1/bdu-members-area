@@ -62,6 +62,13 @@ module.exports = ({ express, Bookshelf, passport }) => {
     Bookshelf,
     isAuthenticated,
   });
+  require('./wikiLinkAPI')({
+    router,
+    Bookshelf,
+    isAuthenticated,
+    isAdmin,
+    handleUnauthorized,
+  });
 
   return router;
 };
