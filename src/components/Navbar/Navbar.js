@@ -151,7 +151,7 @@ const Navbar = ({
         </span>
       ),
       icon: <User size={18} className="mr-1" />,
-      className: 'ml-lg-auto align-collapse-right',
+      className: 'ml-md-auto align-collapse-right',
       children: [
         {
           title: 'My Tournaments',
@@ -176,7 +176,7 @@ const Navbar = ({
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
       <a className="navbar-brand" href="#">
         <img src={logo} className="mr-1" width="80" alt="logo" />
       </a>
