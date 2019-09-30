@@ -23,11 +23,10 @@ const CreateWikiLinkForm = () => {
       },
       body: jsonData,
     });
-    if (response.status === 200) {
-      triggerAlert(response.message, alertTypes.SUCCESS);
-    } else {
-      triggerAlert(response.message, alertTypes.WARNING);
-    }
+    triggerAlert(
+      response.message,
+      response.status === 200 ? alertTypes.SUCCESS : alertTypes.WARNING,
+    );
   };
 
   return (
