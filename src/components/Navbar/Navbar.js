@@ -98,10 +98,19 @@ const Navbar = ({
 
   const navbarLinks = [];
   if (isAuthenticated) {
-    navbarLinks.push({
-      title: 'Tournaments',
-      icon: <Award size={18} className="mr-1" />,
-    });
+    navbarLinks.push(
+      ...[
+        {
+          title: 'Tournaments',
+          icon: <Award size={18} className="mr-1" />,
+        },
+        {
+          title: 'HowTos & Docs',
+          url: 'wikiLinks',
+          icon: <Award size={18} className="mr-1" />,
+        },
+      ],
+    );
   } else {
     navbarLinks.push(
       ...[

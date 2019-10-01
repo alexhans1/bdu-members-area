@@ -7,7 +7,6 @@
     "allowImportExportEverywhere": false,
     "codeFrame": false
   },
-  "extends": ["airbnb", "prettier"],
   "env": {
     "browser": true,
     "jest": true
@@ -22,6 +21,8 @@
     "no-case-declarations": 0,
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "no-nested-ternary": 0,
+    "no-param-reassign": 0,
+    "no-undef": 0,
     "no-underscore-dangle": 0,
     "react/jsx-curly-newline": ["off"],
     "react/jsx-filename-extension": ["off"],

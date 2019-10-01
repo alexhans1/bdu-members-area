@@ -112,6 +112,25 @@ const Home = ({ history }) => {
             <span>Logout</span>
           </a>
         </div>
+        <div className="d-flex align-items-center page-content mt-4">
+          <a
+            role="button"
+            onClick={() => {
+              dispatch(logout());
+            }}
+          >
+            <i className="fas fa-sign-out-alt mr-3" />
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+      <div className="page-content">
+        <h1 className="py-3"> My Tournaments</h1>
+        {tournaments.length ? (
+          <UserTournamentList tournaments={tournaments} history={history} />
+        ) : (
+          <h4>Your registered tournaments will be listed here.</h4>
+        )}
       </div>
       <div className="page-content">
         <h2 className="py-3"> My Tournaments</h2>

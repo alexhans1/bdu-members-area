@@ -1,24 +1,25 @@
-import React, { useEffect } from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import './App.scss';
-import 'react-notifications/lib/notifications.css';
-import { NotificationContainer } from 'react-notifications';
-import { getAppData } from '../actions/AuthActions';
-import Navbar from './Navbar/Navbar';
-import Footer from './Footer/Footer';
-import Login from './Pages/Login/Login';
-import Signup from './Pages/profilePages/Signup/Signup';
-import Home from './Pages/Home/Home';
-import Profile from './Pages/profilePages/Profile/Profile';
-import TournamentList from './Pages/tournamentPages/TournamentList/TournamentList';
-import CreateTournament from './Pages/tournamentPages/CreateTournament/CreateTournament';
-import EditTournament from './Pages/tournamentPages/EditTournament/EditTournament';
-import MemberList from './Pages/MemberList/MemberList';
-import Registration from './Pages/Registration/Registration';
-import BugList from './Pages/BugList/BugList';
-import Dashboard from './Pages/Dashboard/Dashboard';
-import Spinner from './Spinner/Spinner';
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import "./App.scss";
+import "react-notifications/lib/notifications.css";
+import { NotificationContainer } from "react-notifications";
+import { getAppData } from "../actions/AuthActions";
+import Navbar from "./Navbar/Navbar";
+import Footer from "./Footer/Footer";
+import Login from "./Pages/Login/Login";
+import Signup from "./Pages/profilePages/Signup/Signup";
+import Home from "./Pages/Home/Home";
+import Profile from "./Pages/profilePages/Profile/Profile";
+import TournamentList from "./Pages/tournamentPages/TournamentList/TournamentList";
+import CreateTournament from "./Pages/tournamentPages/CreateTournament/CreateTournament";
+import EditTournament from "./Pages/tournamentPages/EditTournament/EditTournament";
+import MemberList from "./Pages/MemberList/MemberList";
+import Registration from "./Pages/Registration/Registration";
+import BugList from "./Pages/BugList/BugList";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import Spinner from "./Spinner/Spinner";
+import WikiLinkList from "./Pages/WikiLinkList/WikiLinkList";
 
 const App = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,12 +30,12 @@ const App = ({ history }) => {
   const {
     isAuthenticated,
     authenticatedUser,
-    authCheckHasFinished,
+    authCheckHasFinished
   } = useSelector(({ user }) => ({
     ...user,
     authenticatedUser: user.authenticatedUserId
       ? user.users.find(({ id }) => user.authenticatedUserId === id)
-      : {},
+      : {}
   }));
 
   if (!authCheckHasFinished) {
@@ -82,7 +83,7 @@ const App = ({ history }) => {
     />
   );
 
-  const noPaddingPages = ['/login', '/signup'];
+  const noPaddingPages = ["/login", "/signup"];
 
   return (
     <div className="app">
@@ -94,7 +95,7 @@ const App = ({ history }) => {
       <main
         className="mainContent"
         style={{
-          padding: noPaddingPages.includes(history.location.pathname) ? 0 : '',
+          padding: noPaddingPages.includes(history.location.pathname) ? 0 : ""
         }}
       >
         <Switch>
@@ -108,6 +109,7 @@ const App = ({ history }) => {
 
           <PrivateRoute path="/registration/:id" component={Registration} />
           <PrivateRoute path="/dashboard" component={Dashboard} />
+          <PrivateRoute path="/wikiLinks" component={WikiLinkList} />
 
           <AdminRoute path="/createTournament" component={CreateTournament} />
 
