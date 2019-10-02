@@ -1,3 +1,16 @@
+.wiki-links-form {
+  display: grid;
+  grid-gap: 0 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  margin-top: 1rem;
+
+  button {
+    grid-column: 1;
+    width: 150px;
+  }
+}
+
 .collapseTournamentContainer {
   display: flex;
   flex-direction: column;
