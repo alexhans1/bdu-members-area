@@ -8,9 +8,12 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // sends failure login state back to angular
   router.route('/failure').get((req, res) => {
-    console.error(req.flash().error || 'Error during login. Check username and password.');
+    console.error(
+      req.flash().error || 'Error during login. Check username and password.',
+    );
     res.status(409).json({
-      message: req.flash().error || 'Error during login. Check username and password.',
+      message:
+        req.flash().error || 'Error during login. Check username and password.',
     });
   });
 
@@ -127,19 +130,24 @@ module.exports = ({ router, Bookshelf, passport }) => {
 
   // SECOND: RENDER THE RESET PASSWORD PAGE
   router.route('/reset/:token').get((req, res) => {
-    new Models.User({ resetPasswordToken: req.params.token }).fetch().then(user => {
-      if (!user) {
-        console.log('Password reset token is invalid.');
-        // res.status(500).json({error: true, data: {}, message: 'Password reset token is invalid.'});
-        req.flash('error', 'Password reset token is invalid.');
-        // return res.redirect('/forgot');
-      } else if (Date.now() > user.get('resetPasswordExpires')) {
-        // res.status(500).json({error: true, data: {}, message: 'Password reset token has expired.'});
-        req.flash('error', 'Password reset token has expired.');
-      } // else {
-      res.render('reset.ejs', { message: req.flash('error'), user: user || null });
-      // }
-    });
+    new Models.User({ resetPasswordToken: req.params.token })
+      .fetch()
+      .then(user => {
+        if (!user) {
+          console.log('Password reset token is invalid.');
+          // res.status(500).json({error: true, data: {}, message: 'Password reset token is invalid.'});
+          req.flash('error', 'Password reset token is invalid.');
+          // return res.redirect('/forgot');
+        } else if (Date.now() > user.get('resetPasswordExpires')) {
+          // res.status(500).json({error: true, data: {}, message: 'Password reset token has expired.'});
+          req.flash('error', 'Password reset token has expired.');
+        } // else {
+        res.render('reset.ejs', {
+          message: req.flash('error'),
+          user: user || null,
+        });
+        // }
+      });
   });
 
   // THIRD: RESET PASSWORD METHOD

@@ -1,4 +1,10 @@
-module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized }) => {
+module.exports = ({
+  router,
+  Bookshelf,
+  isAuthenticated,
+  isAdmin,
+  handleUnauthorized,
+}) => {
   console.info('> adding user routes...');
   // Register the authentication middleware
   // for all URIs use the isAuthenticated function
@@ -12,7 +18,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     if (req.user.id !== parseInt(req.params.id, 10) && !isAdmin(req)) {
       return handleUnauthorized(
         res,
-        `User is not authorized to get user information of user with the ID: "${req.params.id}"`,
+        `User is not authorized to get user information of user with the ID: "${
+          req.params.id
+        }"`,
       );
     }
     try {
@@ -20,10 +28,14 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .fetch({ withRelated: ['tournaments'] })
         .then(user => {
           if (!user) {
-            console.error(`The user with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The user with the ID "${req.params.id}" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
-              message: `The user with the ID "${req.params.id}" is not in the database.`,
+              message: `The user with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           } else {
             res.status(200).json(user.toJSON());
@@ -82,7 +94,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     if (req.user.id !== parseInt(req.params.id, 10) && !isAdmin(req)) {
       return handleUnauthorized(
         res,
-        `User is not authorized to edit user information of user with the ID: "${req.params.id}"`,
+        `User is not authorized to edit user information of user with the ID: "${
+          req.params.id
+        }"`,
       );
     }
     try {
@@ -90,10 +104,14 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .fetch({ require: true })
         .then(user => {
           if (!user) {
-            console.error(`The user with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The user with the ID "${req.params.id}" is not in the database.`,
+            );
             return res.status(404).json({
               error: true,
-              message: `The user with the ID "${req.params.id}" is not in the database.`,
+              message: `The user with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           }
           user
@@ -106,7 +124,12 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
               new_tournament_count: req.body.new_tournament_count,
             })
             .then(updatedUser => {
-              res.status(200).json({ user: updatedUser, message: 'Update user successful.' });
+              res
+                .status(200)
+                .json({
+                  user: updatedUser,
+                  message: 'Update user successful.',
+                });
             });
         })
         .catch(err => {
@@ -125,7 +148,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
     if (req.user.id !== req.params.id && !isAdmin(req)) {
       return handleUnauthorized(
         res,
-        `User is not authorized to delete user information of user with the ID: "${req.params.id}"`,
+        `User is not authorized to delete user information of user with the ID: "${
+          req.params.id
+        }"`,
       );
     }
     try {
@@ -133,10 +158,14 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         .fetch({ require: true })
         .then(user => {
           if (!user) {
-            console.error(`The user with the ID "${req.params.id}" is not in the database.`);
+            console.error(
+              `The user with the ID "${req.params.id}" is not in the database.`,
+            );
             res.status(404).json({
               error: true,
-              message: `The user with the ID "${req.params.id}" is not in the database.`,
+              message: `The user with the ID "${
+                req.params.id
+              }" is not in the database.`,
             });
           } else {
             user.destroy();
@@ -147,7 +176,9 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         });
     } catch (err) {
       console.error(`Error while deleting user. Error: ${err.message}`);
-      res.status(500).json({ error: true, message: 'Error while deleting user.' });
+      res
+        .status(500)
+        .json({ error: true, message: 'Error while deleting user.' });
     }
   });
 

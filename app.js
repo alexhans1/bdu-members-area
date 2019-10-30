@@ -8,9 +8,25 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const sslRedirect = require('heroku-ssl-redirect');
 const flash = require('req-flash');
+const httpRequestLogger = require('morgan');
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+// browser sessions for authentication
+const session = require('express-session');
+const mysql = require('mysql');
+const MySQLStore = require('express-mysql-session')(session);
+const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
+
+const _bookshelf = require('bookshelf');
+const _knex = require('knex');
+
+const conn = require('./knexfile.js');
+
+// connect to database
+const knex = _knex(conn[process.env.NODE_ENV || 'development']); // require knex query binder;
+const Bookshelf = _bookshelf(knex); // require Bookshelf ORM Framework;
 
 // https redirect
 app.use(sslRedirect());
@@ -19,6 +35,8 @@ app.use(sslRedirect());
 const whitelist = [
   'http://local.members.debating.de:3000',
   'http://local.members.debating.de:3006',
+  'http://members.debating.de',
+  'https://members.debating.de'
 ];
 const corsOptions = {
   origin: whitelist,
@@ -32,31 +50,15 @@ app.use(cors(corsOptions));
 
 // add parsers for body and cookies
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({
-  extended: false,
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  }),
+);
 app.use(cookieParser());
 
 // add HTTP Request logging
-app.use(require('morgan')('tiny'));
-
-// connect to database
-let conn;
-let knex;
-let Bookshelf;
-try {
-  conn = require('./knexfile.js'); // read out the DB Conn Data
-  knex = require('knex')(conn[process.env.NODE_ENV || 'local']); // require knex query binder
-  Bookshelf = require('bookshelf')(knex); // require Bookshelf ORM Framework
-} catch (ex) {
-  console.error(ex.message);
-}
-
-// browser sessions for authentication
-const session = require('express-session');
-const mysql = require('mysql');
-const MySQLStore = require('express-mysql-session')(session);
-const passport = require('passport'); // Passport is the library we will use to handle storing users within HTTP sessions
+app.use(httpRequestLogger('tiny'));
 
 // sessionStore options
 const options = {
@@ -76,10 +78,16 @@ const options = {
 
 // connect to the db
 const dbConnectionInfo = {
-  host: process.env.NODE_ENV !== 'production' ? 'localhost' : 'us-cdbr-iron-east-03.cleardb.net',
+  host:
+    process.env.NODE_ENV !== 'production'
+      ? 'localhost'
+      : 'us-cdbr-iron-east-03.cleardb.net',
   port: 3306,
   user: process.env.NODE_ENV !== 'production' ? 'root' : 'bb41eedfd379a8',
-  password: process.env.NODE_ENV !== 'production' ? process.env.localDBPassword : process.env.clearDB_password,
+  password:
+    process.env.NODE_ENV !== 'production'
+      ? process.env.localDBPassword
+      : process.env.clearDB_password,
   database: 'heroku_9b6f95eb7a9adf8',
   connectionLimit: 10, // if you use a pool like I did
 };
@@ -87,17 +95,19 @@ const dbConnectionInfo = {
 const pool = mysql.createPool(dbConnectionInfo); // create connection pool
 const sessionStore = new MySQLStore(options, pool);
 
-app.use(session({
-  secret: 'cookie_secret',
-  store: sessionStore,
-  resave: false,
-  unset: 'destroy',
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 1000 * 60 * 60 * 24 * 200, // 200 days // The maximum age of a valid session; milliseconds.
-  },
-}));
+app.use(
+  session({
+    secret: 'cookie_secret',
+    store: sessionStore,
+    resave: false,
+    unset: 'destroy',
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 24 * 200, // 200 days // The maximum age of a valid session; milliseconds.
+    },
+  }),
+);
 
 // use passport & sessions
 app.use(passport.initialize());
@@ -111,13 +121,6 @@ app.use(flash());
 
 // add basic routes needed in all environments
 app.use('/', require('./routes/')({ express, Bookshelf, passport }));
-
-// setup scheduled jobs
-if (process.env.NODE_ENV === 'production') {
-  require('./scheduled_jobs/sendDebtMails');
-  require('./scheduled_jobs/saveTotalClubDebt');
-  require('./scheduled_jobs/checkTransactionsService/checkBankTransactions');
-}
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
