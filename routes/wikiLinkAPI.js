@@ -1,5 +1,11 @@
-module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthorized}) => {
-  console.info('> adding bugs routes...');
+module.exports = ({
+  router,
+  Bookshelf,
+  isAuthenticated,
+  isAdmin,
+  handleUnauthorized,
+}) => {
+  console.info('> adding wikiLinks routes...');
   // Register the authentication middleware
   // for all URIs use the isAuthenticated function
   router.use('/tournament', isAuthenticated);
@@ -16,11 +22,13 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
         res.json({ error: false, data: links });
       })
       .catch(err => {
-        console.error(`Error while getting all wikiLinks. Error message:\n${err}`);
+        console.error(
+          `Error while getting all wikiLinks. Error message:\n${err.message}`,
+        );
         res.json({
           error: true,
           err,
-          message: `Error while getting all wikiLinks. Error message:\n${err}`,
+          message: `Error while getting all wikiLinks.`,
         });
       });
   });
@@ -28,30 +36,41 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
   console.info('> > adding post wikiLinks route...');
   router.route('/wikiLinks').post((req, res) => {
     if (!isAdmin(req))
-      return handleUnauthorized(res, 'User is not authorized to create new wiki links.');
+      return handleUnauthorized(
+        res,
+        'User is not authorized to create new wiki links.',
+      );
     Models.Wiki_Link.forge({
       title: req.body.title,
       url: req.body.url,
       topic: req.body.topic,
-      description: req.body.description
+      description: req.body.description,
     })
-    .save()
-    .then((wikiLink) => {
-      console.log('Post wikiLink successful.');
-      res.status(200).json({ wikiLink, message: 'Report wikiLink successful.' });
-    })
-    .catch(err => {
-      console.log(`Error while reporting new wikiLink. Error: \n${err}`);
-      res.status(500).json({
-        message: 'Error while reporting new wikiLink.',
+      .save()
+      .then(wikiLink => {
+        console.log('Post wikiLink successful.');
+        res
+          .status(200)
+          .json({ wikiLink, message: 'Adding document successful.' });
+      })
+      .catch(err => {
+        console.log(`Error while adding new wikiLink. Error: \n${err.message}`);
+        res
+          .status(500)
+          .json({
+            message: 'Error while adding new wikiLink.',
+          });
       });
-    });
   });
 
   console.info('> > adding put wikiLinks route...');
   router.route('/wikiLinks/:id').put((req, res) => {
     if (!isAdmin(req))
-      return handleUnauthorized(res, 'User is not authorized to create new wiki links.');
+      return handleUnauthorized(
+        res,
+        'User is not authorized to create new wiki links.',
+      );
+
     Models.Wiki_Link_Col.forge({ id: req.params.id })
       .fetch({ require: true })
       .then(wikiLink => {
@@ -63,39 +82,55 @@ module.exports = ({ router, Bookshelf, isAuthenticated, isAdmin, handleUnauthori
       })
       .then(() => {
         console.log('Updating wikiLink successful.');
-        res.status(200).json({ error: false, message: 'Updating wikiLink successful.' });
+        res
+          .status(200)
+          .json({ error: false, message: 'Updating wikiLink successful.' });
       })
       .catch(err => {
         console.error(`Error while updating wikiLink. Error: ${err.message}`);
         res.json({ error: true, message: 'Error while updating wikiLink.' });
       });
-    
   });
 
-  // TODO add the deletion API
-  
-  /* console.info('> > adding delete Bugs route...');
-  router.route('/bugs/:id').delete((req, res) => {
+  console.info('> > adding delete wikiLinks route...');
+  router.route('/wikiLinks/:id').delete((req, res) => {
     // Check if session user is authorized
-    if (req.user.position === 1) {
-      Models.Bug.forge({ id: req.params.id })
-        .fetch({ require: true })
-        .then(bug => {
-          bug.destroy();
-        })
-        .then(() => {
-          console.log('Deleting bug successful');
-          res.status(200).json({ error: false, message: 'Deleting bug successful.' });
-        })
-        .catch(err => {
-          console.error(`Error while deleting bug. Error: ${err.message}`);
-          res.json({ error: true, message: 'Error while deleting bug.' });
-        });
-    } else {
-      console.log('User is not authorized to delete bug');
-      res.json({ error: true, message: 'Unauthorized' });
-    }
-  }); */
+    if (!isAdmin(req))
+      return handleUnauthorized(
+        res,
+        'User is not authorized to create new wiki links.',
+      );
+
+    Models.Wiki_Link.forge({ id: req.params.id })
+      .fetch({ require: true })
+      .then(wikiLink => {
+        if (!wikiLink) {
+          console.error(
+            `The tournament with the ID "${
+              req.params.id
+            }" is not in the database.`,
+          );
+          res.status(404).json({
+            error: true,
+            message: `The tournament with the ID "${
+              req.params.id
+            }" is not in the database.`,
+          });
+        } else {
+          wikiLink.destroy();
+        }
+      })
+      .then(() => {
+        console.log('Deleting wikiLink successful');
+        res
+          .status(200)
+          .json({ error: false, message: 'Deleting wikiLink successful.' });
+      })
+      .catch(err => {
+        console.error(`Error while deleting bug. Error: ${err.message}`);
+        res.json({ error: true, message: 'Error while deleting wikiLink.' });
+      });
+  });
 
   return router;
 };
