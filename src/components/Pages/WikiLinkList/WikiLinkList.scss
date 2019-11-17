@@ -4,11 +4,6 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
   margin-top: 1rem;
-
-  button {
-    grid-column: 1;
-    width: 150px;
-  }
 }
 
 .collapseTournamentContainer {

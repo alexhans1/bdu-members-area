@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
 import BootstrapTable from 'react-bootstrap-table-next';
+
 import './WikiLinkList.scss';
-import { BASE_URL, DATE_FORMAT } from '../../../constants/applicationConstants';
+import triggerAlert from '../../../actions/actionHelpers';
+import {
+  alertTypes,
+  BASE_URL,
+  DATE_FORMAT,
+} from '../../../constants/applicationConstants';
 
 // feature for expanded rows disabled, keep code fragments for possible later use
 
@@ -13,59 +20,66 @@ import {
   TOGGLE_SHOW_PREV_TOURNAMENTS,
 } from '../../../../constants/action-types'; */
 
-import CreateWikiLinkForm from './CreateWikiLinkForm';
-
-// define the bootstrap table colums
-const tableColumns = [
-  {
-    dataField: 'id',
-    text: 'ID',
-    hidden: true,
-  },
-  {
-    dataField: 'title',
-    text: 'Title',
-    sort: true,
-    style: { wordBreak: 'break-word' },
-  },
-  {
-    dataField: 'url',
-    text: 'Link',
-    style: { wordBreak: 'break-word' },
-  },
-  {
-    dataField: 'topic',
-    text: 'Topic',
-    sort: true,
-    classes: 'd-none d-lg-table-cell',
-    headerClasses: 'd-none d-lg-table-cell',
-    formatter: (cellContent, row) => row.topic.toUpperCase(),
-  },
-  {
-    dataField: 'created_at',
-    isDummyField: true,
-    text: 'Added to Collection',
-    sort: true,
-    sortFunc: (a, b, order) => {
-      if (order === 'asc') {
-        return moment(a).isAfter(moment(b))
-          ? 1
-          : moment(a).isBefore(moment(b))
-          ? -1
-          : 0;
-      }
-      return moment(a).isAfter(moment(b))
-        ? -1
-        : moment(a).isBefore(moment(b))
-        ? 1
-        : 0;
-    },
-    formatter: (cellContent, addedAt) =>
-      `${moment(addedAt).format(DATE_FORMAT)}`,
-  },
-];
+import CreateWikiLinkModal from './CreateWikiLinkModal';
 
 const WikiLinkList = ({ isAdmin }) => {
+  // define the bootstrap table colums
+  const tableColumns = [
+    {
+      dataField: 'id',
+      text: 'ID',
+      hidden: true,
+    },
+    {
+      dataField: 'title',
+      text: 'Title',
+      sort: true,
+      style: { wordBreak: 'break-word' },
+    },
+    {
+      dataField: 'url',
+      text: 'Link',
+      style: { wordBreak: 'break-word' },
+      formatter: (cellContent, row) => {
+        return (
+          <a href={row.url} target="_blank">
+            Open Document
+          </a>
+        );
+      },
+    },
+    {
+      dataField: 'topic',
+      text: 'Topic',
+      sort: true,
+      classes: 'd-none d-lg-table-cell',
+      headerClasses: 'd-none d-lg-table-cell',
+      formatter: (cellContent, row) => row.topic.toUpperCase(),
+    },
+    {
+      dataField: 'created_at',
+      isDummyField: true,
+      text: 'Added to Collection',
+      sort: true,
+      sortFunc: (a, b, order) => {
+        if (order === 'asc') {
+          return moment(a).isAfter(moment(b))
+            ? 1
+            : moment(a).isBefore(moment(b))
+            ? -1
+            : 0;
+        }
+        return moment(a).isAfter(moment(b))
+          ? -1
+          : moment(a).isBefore(moment(b))
+          ? 1
+          : 0;
+      },
+      formatter: (cellContent, addedAt) =>
+        `${moment(addedAt).format(DATE_FORMAT)}`,
+    },
+  ];
+
   // code disabled, keep for possible later use
   /* const { expandedTournamentId, tournaments } = useSelector(
     ({
@@ -94,24 +108,46 @@ const WikiLinkList = ({ isAdmin }) => {
   // add the entry list to the state of the component
   const [entryList, setEntryList] = useState([]);
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  async function fetchWikiLinks() {
+    const response = await fetch(`${BASE_URL}/wikiLinks`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    if (response.status === 200) {
+      const { data: links } = await response.json();
+      if (links) setEntryList(links);
+    }
+  }
+
   // define behaviour on render of the component
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(`${BASE_URL}/wikiLinks`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (response.status === 200) {
-        const { data: links } = await response.json();
-        if (links) setEntryList(links);
-      }
-    }
-    fetchData();
-  }, [entryList]); // do not rerender if entryList has not changed. COMMENT: tobi is unsure if the code is correct for inteded behaviour
+    fetchWikiLinks();
+  }, []); // only render one time
 
   // definde behaviour of onClick of an entry
   const expandRow = {
-    renderer: row => <p>{row.description}</p>,
+    renderer: row => (
+      <div>
+        <p>{row.description}</p>
+        <p>
+          URL:{' '}
+          <a href={row.url} target="_blank">
+            {row.url}
+          </a>
+        </p>
+        <button
+          onClick={() => {
+            handleDeleteClick(row.id);
+          }}
+          type="button"
+          className="btn btn-outline-danger ml-2"
+        >
+          Delete
+        </button>
+      </div>
+    ),
     onlyOneExpanding: false,
     onExpand: (row, isExpand, rowIndex, e) => {
       // setExpandedTournamentId(isExpand ? row.id : null);
@@ -126,11 +162,69 @@ const WikiLinkList = ({ isAdmin }) => {
     // expanded: [expandedTournamentId],
   };
 
+  const handleDeleteClick = linkId => {
+    confirmAlert({
+      title: 'Confirm',
+      message: 'Are you sure you want to delete this link?',
+      buttons: [
+        {
+          label: 'Yes',
+          class: 'btn btn-success',
+          onClick: () => deleteWikiLink(linkId),
+        },
+        {
+          label: 'No',
+          onClick: () => {},
+        },
+      ],
+    });
+  };
+
+  async function deleteWikiLink(linkId) {
+    const response = await fetch(`${BASE_URL}/wikiLinks/${linkId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    const body = await response.json();
+    if (response.status === 200) {
+      triggerAlert(body.message, alertTypes.SUCCESS);
+      fetchWikiLinks();
+    } else triggerAlert(body.message, alertTypes.WARNING);
+  }
+
+  const handleAddedWikiLink = () => {
+    fetchWikiLinks();
+    setModalIsOpen(false);
+  };
   return (
     <div className="container-fluid page-content">
-      {isAdmin ? <CreateWikiLinkForm /> : null}
-
       <h2 className="mb-4">HowTos, Templates, Documents</h2>
+      <p>
+        Find a selection of HowTos, Templates and other documents that are
+        usefull for debating.
+      </p>
+      {isAdmin ? (
+        <p>
+          As an admin, you can add new links to documents:
+          <button
+            className="btn btn-outline-success ml-3"
+            type="button"
+            onClick={() => {
+              setModalIsOpen(true);
+            }}
+          >
+            Add Document
+          </button>
+          <CreateWikiLinkModal
+            isOpen={modalIsOpen}
+            closeModal={() => {
+              setModalIsOpen(false);
+            }}
+            handleAddedWikiLink={handleAddedWikiLink}
+          />
+        </p>
+      ) : null}
+      <p></p>
       <BootstrapTable
         bootstrap4
         hover
