@@ -2,7 +2,7 @@
   "name": "bdu-members-area",
   "version": "1.0.0",
   "scripts": {
-    "deploy": "echo \"No deploy script yet\" && exit 1"
+    "deploy:server": "git subtree push --prefix server heroku master"
   },
   "repository": {
     "type": "git",

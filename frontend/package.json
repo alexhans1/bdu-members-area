@@ -29,7 +29,8 @@
   },
   "scripts": {
     "start": "cross-env HOST=local.members.debating.de PORT=3006 react-scripts start",
-    "build": "react-scripts build",
+    "deploy:staging": "npm run build && surge --domain members-area-staging.surge.sh --project ./build",
+    "build": "rimraf ./build && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
