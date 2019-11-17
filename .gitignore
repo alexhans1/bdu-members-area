@@ -27,3 +27,6 @@ yarn-error.log*
 
 npm-debug.log
 /dumps
+/builds
+run*.js
+testRunner.js
