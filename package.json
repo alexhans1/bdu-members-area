@@ -1,0 +1,22 @@
+{
+  "name": "bdu-members-area",
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "echo \"No deploy script yet\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexhans1/bdu-members-area.git"
+  },
+  "keywords": [],
+  "author": "Alexander Hans",
+  "contributors": [
+    "Alexander Hans",
+    "Tobias Münch"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexhans1/bdu-members-area/issues"
+  },
+  "homepage": "https://github.com/alexhans1/bdu-members-area#readme"
+}
