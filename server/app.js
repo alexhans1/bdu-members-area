@@ -36,7 +36,8 @@ const whitelist = [
   'http://local.members.debating.de:3000',
   'http://local.members.debating.de:3006',
   'http://members.debating.de',
-  'https://members.debating.de'
+  'https://members.debating.de',
+  'http://members-area-staging.surge.sh',
 ];
 const corsOptions = {
   origin: whitelist,
