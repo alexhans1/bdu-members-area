@@ -28,8 +28,8 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "cross-env HOST=local.members.debating.de PORT=3006 react-scripts start",
-    "deploy:staging": "npm run build && surge --domain members-area-staging.surge.sh --project ./build",
+    "start": "cross-env REACT_APP_SERVER_URL=http://localhost:8080 HOST=local.members.debating.de PORT=3006 react-scripts start",
+    "deploy:staging": "REACT_APP_SERVER_URL=https://members-area-server.herokuapp.com npm run build && mv build/index.html build/200.html && surge --domain staging.members.debating.de --project ./build",
     "build": "rimraf ./build && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,7 +45,6 @@
   ],
   "devDependencies": {
     "cross-env": "^6.0.2",
-    "node-sass": "^4.13.0",
-    "prettier": "^1.18.2"
+    "node-sass": "^4.13.0"
   }
 }

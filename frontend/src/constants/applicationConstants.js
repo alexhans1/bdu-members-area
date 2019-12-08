@@ -1,7 +1,4 @@
-export const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://debate-now-api.herokuapp.com'
-    : 'http://localhost:8080';
+export const BASE_URL = process.env.REACT_APP_SERVER_URL;
 
 export const alertTypes = {
   INFO: 'INFO',
