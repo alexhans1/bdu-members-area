@@ -1,28 +1,39 @@
-const sgMail = require("@sendgrid/mail");
+const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
+const winston = require('winston');
+const logger = winston.createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+});
+
 let Bookshelf;
-const knex = require("knex")({
-  client: "mysql",
+const knex = require('knex')({
+  client: 'mysql',
   connection: {
-    host: "us-cdbr-iron-east-03.cleardb.net",
-    user: "bb41eedfd379a8",
+    host: 'us-cdbr-iron-east-03.cleardb.net',
+    user: 'bb41eedfd379a8',
     password: process.env.clearDB_password,
-    database: "heroku_9b6f95eb7a9adf8",
-    charset: "utf8"
+    database: 'heroku_9b6f95eb7a9adf8',
+    charset: 'utf8',
   },
   pool: {
     max: 10,
-    min: 0
+    min: 0,
   },
   migrations: {
-    tableName: "knex_migrations"
-  }
+    tableName: 'knex_migrations',
+  },
 }); // require knex query binder
-Bookshelf = require("bookshelf")(knex); // require Bookshelf ORM Framework
+Bookshelf = require('bookshelf')(knex); // require Bookshelf ORM Framework
 
 // DEFINE MODELS
-const Models = require("./bookshelfModels.js")(Bookshelf);
+const Models = require('./bookshelfModels.js')(Bookshelf);
 
 // GENERATE EMAIL ARRAY
 const successIDs = [];
@@ -37,15 +48,15 @@ async function buildEmailArr() {
         .toISOString()
         .substring(
           0,
-          10
-        )}' and r.price_paid is not null and r.price_owed is not null and r.price_owed != r.price_paid;`
+          10,
+        )}' and r.price_paid is not null and r.price_owed is not null and r.price_owed != r.price_paid;`,
     );
     const debtfulRegistrations = JSON.parse(JSON.stringify(result))[0];
     return debtfulRegistrations.reduce(
       (
         emailObject,
         { userId, vorname, name, email, tournamentName, debt, registrationId },
-        i
+        i,
       ) => {
         // add user to emailObject if not yet there
         if (!(userId in emailObject)) {
@@ -55,13 +66,13 @@ async function buildEmailArr() {
             email,
             tournaments: [],
             total_debt: 0,
-            transaction_purpose: "Xu6F"
+            transaction_purpose: 'Xu6F',
           };
         }
         // add the tournament
         emailObject[userId].tournaments.push({
           name: tournamentName,
-          debt: Math.round(debt * 100) / 100
+          debt: Math.round(debt * 100) / 100,
         });
         // add debt to user's total debt
         emailObject[userId].total_debt += Math.round(debt * 100) / 100;
@@ -81,28 +92,28 @@ async function buildEmailArr() {
                     .reduce(
                       (purpose, { name }) =>
                         purpose + ` ${name.substring(0, 20)},`,
-                      emailObject[id].transaction_purpose + "gT7u"
+                      emailObject[id].transaction_purpose + 'gT7u',
                     )
                     .slice(0, -1)
-                    .substring(0, 140)
-                }
+                    .substring(0, 140),
+                },
               ];
             return acc;
           }, []);
         }
         return emailObject;
       },
-      {}
+      {},
     );
-  } catch (ex) {
-    console.error(ex);
-    return [];
+  } catch (err) {
+    logger.error('Error while building email array. Error:\n', err);
+    throw new Error('Error while building email array');
   }
 }
 
 async function sendDebtMails(emailArr) {
   if (!emailArr.length) {
-    console.log("NO EMAILS TO SEND\n");
+    logger.info('NO EMAILS TO SEND');
     return;
   }
 
@@ -110,69 +121,70 @@ async function sendDebtMails(emailArr) {
   const messageArr = emailArr.map(function(obj) {
     return {
       to: obj.email,
-      from: "finanzen@debating.de",
-      subject: "BDU Tournament Debts",
-      templateId: "d-e8c7e977147c40048b308050ecdff978",
+      from: 'finanzen@debating.de',
+      subject: 'BDU Tournament Debts',
+      templateId: 'd-e8c7e977147c40048b308050ecdff978',
       dynamic_template_data: {
         vorname: obj.vorname,
         tournaments: obj.tournaments,
         total_debt: obj.total_debt,
-        transaction_purpose: obj.transaction_purpose
-      }
+        transaction_purpose: obj.transaction_purpose,
+      },
     };
   });
 
   try {
     const responses = await Promise.all(
-      messageArr.map(msg => sgMail.send(msg))
+      messageArr.map(msg => sgMail.send(msg)),
     );
     responses.forEach((response, i) => {
       if (response[0].statusCode !== 202) {
-        console.error("Error response received");
-        console.error(response);
+        logger.error('Error response received. Response:\n', response);
         totalErrors++;
       } else {
-        console.info(
-          `\nSent email to ${emailArr[i].vorname} ${emailArr[i].name}.\n`
+        logger.info(
+          `Sent email to ${emailArr[i].vorname} ${emailArr[i].name}.`,
         );
         successIDs.push(emailArr[i].id);
       }
     });
-  } catch (ex) {
-    console.error(ex);
-    totalErrors++;
+  } catch (err) {
+    logger.error('Error while sending debt mail. Error:\n', err);
+    throw new Error('Error while sending debt mail');
   }
 }
 
 async function setLastMail() {
   if (successIDs.length) {
-    console.log("Length of successIDs Array:", successIDs.length);
+    logger.info(`Length of successIDs Array: ${successIDs.length}`);
 
     try {
-      const x = await Models.User.where("id", "IN", successIDs).save(
+      const response = await Models.User.where('id', 'IN', successIDs).save(
         { last_mail: new Date() },
-        { patch: true }
+        { patch: true },
       );
-      console.log(x.toJSON());
-      console.log("Successfully saved new last mail date.\n");
-    } catch (ex) {
-      console.error(ex);
+      logger.debug('Set last mail response:\n', response.toJSON());
+      logger.info('Successfully saved new last mail date.');
+    } catch (err) {
+      logger.error('Error while setting last email. Error:\n', err);
+      throw new Error('Error while setting last email');
     }
   }
 }
 
 function logSummary(emailArr) {
-  console.log("\n ✔✔✔ Finished Sending Debt Emails ✔✔✔ \n");
+  logger.info(' ✔✔✔ Finished Sending Debt Emails ✔✔✔ ');
   if (emailArr.length) {
-    console.log(`Tried to send ${emailArr.length} emails`);
-    console.log(`Success: ${successIDs.length}`);
-    console.log(`Errors: ${totalErrors}`);
+    logger.info(`Tried to send ${emailArr.length} emails`);
+    logger.info(`Success: ${successIDs.length}`);
+    logger.info(`Errors: ${totalErrors}`);
   }
 }
 
 exports.handler = async function execute() {
-  console.log("\n 💌💌💌 Starting Email Service 💌💌💌 \n");
+  logger.info('💌💌💌 Starting Email Service 💌💌💌');
   const emailArr = await buildEmailArr();
+  logger.debug('emailArr:', emailArr);
   await sendDebtMails(emailArr);
   await setLastMail();
   logSummary(emailArr);
