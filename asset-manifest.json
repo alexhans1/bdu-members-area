@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "staging.members.debating.de/static/css/main.671b5ece.chunk.css",
-    "main.js": "staging.members.debating.de/static/js/main.8503bfcd.chunk.js",
-    "main.js.map": "staging.members.debating.de/static/js/main.8503bfcd.chunk.js.map",
-    "runtime-main.js": "staging.members.debating.de/static/js/runtime-main.fa05ded7.js",
-    "runtime-main.js.map": "staging.members.debating.de/static/js/runtime-main.fa05ded7.js.map",
-    "static/css/2.8d3bc7db.chunk.css": "staging.members.debating.de/static/css/2.8d3bc7db.chunk.css",
-    "static/js/2.9e62b1c0.chunk.js": "staging.members.debating.de/static/js/2.9e62b1c0.chunk.js",
-    "static/js/2.9e62b1c0.chunk.js.map": "staging.members.debating.de/static/js/2.9e62b1c0.chunk.js.map",
-    "index.html": "staging.members.debating.de/index.html",
-    "precache-manifest.de5b63a03358e619df1c7075c62a07ef.js": "staging.members.debating.de/precache-manifest.de5b63a03358e619df1c7075c62a07ef.js",
-    "service-worker.js": "staging.members.debating.de/service-worker.js",
-    "static/css/2.8d3bc7db.chunk.css.map": "staging.members.debating.de/static/css/2.8d3bc7db.chunk.css.map",
-    "static/css/main.671b5ece.chunk.css.map": "staging.members.debating.de/static/css/main.671b5ece.chunk.css.map",
-    "static/js/2.9e62b1c0.chunk.js.LICENSE": "staging.members.debating.de/static/js/2.9e62b1c0.chunk.js.LICENSE",
-    "static/media/BDU_memberArea_512.png": "staging.members.debating.de/static/media/BDU_memberArea_512.e6068b21.png",
-    "static/media/Login.scss": "staging.members.debating.de/static/media/background.d2392e02.jpg",
-    "static/media/bdu_white_logo.png": "staging.members.debating.de/static/media/bdu_white_logo.10ca96f4.png",
-    "static/media/notifications.css": "staging.members.debating.de/static/media/notification.c0d3c94c.eot",
-    "static/media/Signup.scss": "staging.members.debating.de/static/media/pexels-photo-417023.4886985f.jpeg"
+    "main.css": "/static/css/main.44e47642.chunk.css",
+    "main.js": "/static/js/main.fe751af8.chunk.js",
+    "main.js.map": "/static/js/main.fe751af8.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.e26ce1cb.js",
+    "runtime-main.js.map": "/static/js/runtime-main.e26ce1cb.js.map",
+    "static/css/2.fa73da27.chunk.css": "/static/css/2.fa73da27.chunk.css",
+    "static/js/2.9e62b1c0.chunk.js": "/static/js/2.9e62b1c0.chunk.js",
+    "static/js/2.9e62b1c0.chunk.js.map": "/static/js/2.9e62b1c0.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.06e45ea14b67967abb8ddb5337dd9052.js": "/precache-manifest.06e45ea14b67967abb8ddb5337dd9052.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.fa73da27.chunk.css.map": "/static/css/2.fa73da27.chunk.css.map",
+    "static/css/main.44e47642.chunk.css.map": "/static/css/main.44e47642.chunk.css.map",
+    "static/js/2.9e62b1c0.chunk.js.LICENSE": "/static/js/2.9e62b1c0.chunk.js.LICENSE",
+    "static/media/BDU_memberArea_512.png": "/static/media/BDU_memberArea_512.e6068b21.png",
+    "static/media/Login.scss": "/static/media/background.d2392e02.jpg",
+    "static/media/bdu_white_logo.png": "/static/media/bdu_white_logo.10ca96f4.png",
+    "static/media/notifications.css": "/static/media/notification.c0d3c94c.eot",
+    "static/media/Signup.scss": "/static/media/pexels-photo-417023.4886985f.jpeg"
   },
   "entrypoints": [
-    "static/js/runtime-main.fa05ded7.js",
-    "static/css/2.8d3bc7db.chunk.css",
+    "static/js/runtime-main.e26ce1cb.js",
+    "static/css/2.fa73da27.chunk.css",
     "static/js/2.9e62b1c0.chunk.js",
-    "static/css/main.671b5ece.chunk.css",
-    "static/js/main.8503bfcd.chunk.js"
+    "static/css/main.44e47642.chunk.css",
+    "static/js/main.fe751af8.chunk.js"
   ]
 }
